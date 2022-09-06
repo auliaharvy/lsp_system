@@ -10,11 +10,13 @@
       <div class="login-content">
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
           <div class="title-wrap">
-            <img
-              class="logo"
-              alt="Laravue"
-              :src="logo"
-            >
+            <router-link to="/">
+              <img
+                class="logo"
+                alt="Laravue"
+                :src="logo"
+              >
+            </router-link>
             <h3 class="title">
               {{ $t('login.title') }}
               <lang-select class="set-language" />

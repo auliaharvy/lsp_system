@@ -22,6 +22,7 @@ import nestedRoutes from './modules/nested';
 import errorRoutes from './modules/error';
 import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
+import masterRoutes from './modules/master-data';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -58,6 +59,13 @@ export const constantRoutes = [
       },
     ],
   },
+  // front page
+  {
+    path: '/',
+    component: () => import('@/views/frontpage/index'),
+    hidden: true,
+  },
+
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -140,6 +148,7 @@ export const asyncRoutes = [
   chartsRoutes,
   nestedRoutes,
   tableRoutes,
+  masterRoutes,
   adminRoutes,
   {
     path: '/theme',

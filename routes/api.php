@@ -21,6 +21,21 @@ use \App\Laravue\Acl;
 Route::namespace('Api')->group(function() {
     Route::post('auth/login', 'AuthController@login');
     Route::group(['middleware' => 'auth:sanctum'], function () {
+        // TUK Routes
+        Route::apiResource('tuk', 'TukController');
+        Route::post('tuk/update', 'TukController@update');
+
+        // Assesor Routes
+        Route::apiResource('assesor', 'AssesorController');
+        Route::post('assesor/update', 'AssesorController@update');
+
+        // Skema
+        Route::apiResource('skema/kategori', 'AsesmenKategoriController');
+        Route::apiResource('skema', 'SkemaController');
+        Route::post('skema/upload/unit', 'SkemaController@uploadUnit');
+        Route::post('skema/add/unit', 'SkemaController@storeUnit');
+        Route::post('skema/upload/elemen', 'SkemaController@uploadElemenUnit');
+
         // Auth routes
         Route::get('auth/user', 'AuthController@user');
         Route::post('auth/logout', 'AuthController@logout');

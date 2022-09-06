@@ -9,6 +9,7 @@ import enLocale from './en';
 import ruLocale from './ru';
 import zhLocale from './zh';
 import viLocale from './vi';
+import idLocale from './id';
 
 Vue.use(VueI18n);
 
@@ -16,6 +17,9 @@ const messages = {
   en: {
     ...enLocale,
     ...elementEnLocale,
+  },
+  id: {
+    ...idLocale,
   },
   ru: {
     ...ruLocale,
@@ -45,7 +49,7 @@ export function getLanguage() {
       return locale;
     }
   }
-  return 'en';
+  return 'id';
 }
 const i18n = new VueI18n({
   // set locale
