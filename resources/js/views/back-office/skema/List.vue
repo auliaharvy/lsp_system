@@ -13,134 +13,164 @@
       </el-button>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="No" width="80">
-        <template slot-scope="scope">
-          <span>{{ scope.row.index }}</span>
-        </template>
-      </el-table-column>
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :header-cell-style="{ background: '#C0C0C0', color: 'white' }">
+      <el-table-column label="Skema Sertifikasi">
+        <el-table-column align="center" label="No" width="80">
+          <template slot-scope="scope">
+            <span>{{ scope.row.index }}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <div class="filter-container">
-            <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateElemen(scope.row.children)">
-              {{ $t('table.export') }} Template
-            </el-button>
-            <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'elemen')">
-              Upload Elemen Unit Kompetensi
-            </el-button>
-          </div>
-          <el-table v-loading="loading" :data="scope.row.children" border fit highlight-current-row style="width: 100%">
-            <el-table-column type="expand">
-              <template slot-scope="row">
-                <el-table v-loading="loading" :data="row.row.elemen" border fit highlight-current-row style="width: 100%">
-                  <el-table-column align="center" label="KUK">
-                    <template slot-scope="elemen">
-                      <span>{{ elemen.row.kuk }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column align="center" label="Pertanyaan KUK">
-                    <template slot-scope="elemen">
-                      <span>{{ elemen.row.pertanyaan_kuk }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column align="center" label="Jumlah Bukti">
-                    <template slot-scope="elemen">
-                      <span>{{ elemen.row.jumlah_bukti }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column align="center" label="Bukti">
-                    <template slot-scope="elemen">
-                      <span>{{ elemen.row.bukti }}</span>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="Kode Unit">
-              <template slot-scope="row">
-                <span>{{ row.row.kode_unit }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="Unit Kompetensi">
-              <template slot-scope="row">
-                <span>{{ row.row.unit_kompetensi }}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </template>
-      </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <br>
+            <div class="filter-container">
+              <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateElemen(scope.row.children)">
+                {{ $t('table.export') }} Template
+              </el-button>
+              <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'elemen')">
+                Upload Elemen Unit Kompetensi
+              </el-button>
+            </div>
 
-      <el-table-column align="center" :label="$t('skema.table.code')">
-        <template slot-scope="scope">
-          <span>{{ scope.row.kode_skema }}</span>
-        </template>
-      </el-table-column>
+            <el-table v-loading="loading" :data="scope.row.children" border fit highlight-current-row style="width: 80%" :header-cell-style="{ background: '#C0C0C0', color: 'white' }" class="table-child">
+              <el-table-column label="Unit Kompetensi">
+                <el-table-column type="expand">
+                  <template slot-scope="row">
+                    <br>
+                    <div class="filter-container">
+                      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateKuk(row.row.elemen)">
+                        {{ $t('table.export') }} Template
+                      </el-button>
+                      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'kuk')">
+                        Upload KUK Elemen
+                      </el-button>
+                    </div>
 
-      <el-table-column align="center" :label="$t('skema.table.skema')">
-        <template slot-scope="scope">
-          <span>{{ scope.row.skema_sertifikasi }}</span>
-        </template>
-      </el-table-column>
+                    <el-table v-loading="loading" :data="row.row.elemen" border fit highlight-current-row style="width: 80%" :header-cell-style="{ background: '#C0C0C0', color: 'white' }" class="table-child">
+                      <el-table-column label="Elemen Unit Kompetensi">
 
-      <el-table-column align="center" :label="$t('skema.table.category')" min-width="150px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.nama_kategori }}</span>
-        </template>
-      </el-table-column>
+                        <el-table-column type="expand">
+                          <template slot-scope="elemen">
+                            <el-table v-loading="loading" :data="elemen.row.kuk" border fit highlight-current-row style="width: 80%" :header-cell-style="{ background: '#C0C0C0', color: 'white' }" class="table-child">
+                              <el-table-column label="KUK">
 
-      <el-table-column align="center" :label="$t('skema.table.unit_qty')">
-        <template slot-scope="scope">
-          <span>{{ scope.row.jumlah_unit_count }}</span>
-        </template>
-      </el-table-column>
+                                <el-table-column align="center" label="KUK">
+                                  <template slot-scope="kuk">
+                                    <span>{{ kuk.row.kuk }}</span>
+                                  </template>
+                                </el-table-column>
 
-      <el-table-column align="center" :label="$t('skema.table.kblui')">
-        <template slot-scope="scope">
-          <span>{{ scope.row.kblui }}</span>
-        </template>
-      </el-table-column>
+                                <el-table-column align="center" label="Pertanyaan KUK">
+                                  <template slot-scope="kuk">
+                                    <span>{{ kuk.row.pertanyaan_kuk }}</span>
+                                  </template>
+                                </el-table-column>
 
-      <el-table-column align="center" :label="$t('skema.table.kbji')">
-        <template slot-scope="scope">
-          <span>{{ scope.row.kbji }}</span>
-        </template>
-      </el-table-column>
+                                <el-table-column align="center" label="Bukti">
+                                  <template slot-scope="kuk">
+                                    <span>{{ kuk.row.bukti }}</span>
+                                  </template>
+                                </el-table-column>
 
-      <el-table-column align="center" :label="$t('skema.table.jenjang')">
-        <template slot-scope="scope">
-          <span>{{ scope.row.jenjang }}</span>
-        </template>
-      </el-table-column>
+                              </el-table-column>
+                            </el-table>
+                          </template>
+                        </el-table-column>
 
-      <el-table-column align="center" :label="$t('skema.table.sector_code')">
-        <template slot-scope="scope">
-          <span>{{ scope.row.kode_sektor }}</span>
-        </template>
-      </el-table-column>
+                        <el-table-column align="center" label="Elemen">
+                          <template slot-scope="elemen">
+                            <span>{{ elemen.row.nama_elemen }}</span>
+                          </template>
+                        </el-table-column>
 
-      <el-table-column align="center" :label="$t('skema.table.visibility')">
-        <template slot-scope="scope">
-          <span>{{ scope.row.visibilitas }}</span>
-        </template>
-      </el-table-column>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Kode Unit">
+                  <template slot-scope="row">
+                    <span>{{ row.row.kode_unit }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Unit Kompetensi">
+                  <template slot-scope="row">
+                    <span>{{ row.row.unit_kompetensi }}</span>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </el-table>
 
-      <el-table-column align="center" label="Actions" min-width="120">
-        <template slot-scope="scope">
-          <el-button-group>
-            <el-tooltip class="item" effect="dark" content="Upload Unit Kompetensi" placement="top-end">
-              <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-upload2" @click="handleUpload(scope.row, 'unit')" />
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="Show Detail" placement="top-end">
-              <el-button v-permission="['manage user']" type="warning" size="small" icon="el-icon-search" @click="handleUpdate(scope.row)" />
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
-              <el-button v-permission="['manage user']" size="small" icon="el-icon-edit-outline" @click="handleUpdate(scope.row)" />
-            </el-tooltip>
-          </el-button-group>
-        </template>
-      </el-table-column>
+          </template>
+        </el-table-column>
 
+        <el-table-column align="center" :label="$t('skema.table.code')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.kode_skema }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" :label="$t('skema.table.skema')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.skema_sertifikasi }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" :label="$t('skema.table.category')" min-width="150px">
+          <template slot-scope="scope">
+            <span>{{ scope.row.nama_kategori }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" :label="$t('skema.table.unit_qty')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.jumlah_unit_count }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" :label="$t('skema.table.kblui')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.kblui }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" :label="$t('skema.table.kbji')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.kbji }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" :label="$t('skema.table.jenjang')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.jenjang }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" :label="$t('skema.table.sector_code')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.kode_sektor }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" :label="$t('skema.table.visibility')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.visibilitas }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="Actions" min-width="120">
+          <template slot-scope="scope">
+            <el-button-group>
+              <el-tooltip class="item" effect="dark" content="Upload Unit Kompetensi" placement="top-end">
+                <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-upload2" @click="handleUpload(scope.row, 'unit')" />
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
+                <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdate(scope.row)" />
+              </el-tooltip>
+            </el-button-group>
+          </template>
+        </el-table-column>
+      </el-table-column>
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
@@ -285,6 +315,7 @@ const skemaResource = new Resource('skema');
 const kategoriResource = new Resource('skema/kategori');
 const uploadUnitResource = new Resource('skema/upload/unit');
 const uploadElemenUnitResource = new Resource('skema/upload/elemen');
+const uploadKukResource = new Resource('skema/upload/kuk');
 
 export default {
   name: 'SkemaList',
@@ -526,6 +557,26 @@ export default {
             this.creating = false;
           });
       }
+      if (this.jenisUpload === 'kuk') {
+        uploadKukResource.store(this.uploadTableData).then(() => {
+          this.getList();
+          this.dialogUploadUnitVisible = false;
+          this.resetUpload();
+          this.$notify({
+            title: 'Success',
+            message: 'Upload successfully',
+            type: 'success',
+            duration: 2000,
+          });
+        })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => {
+            this.loading = false;
+            this.creating = false;
+          });
+      }
     },
     handleDownload() {
       this.downloading = true;
@@ -544,8 +595,23 @@ export default {
     handleDownloadTemplateElemen(list) {
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['kode_unit', 'unit_kompetensi', 'kuk', 'pertanyaan_kuk', 'jumlah_bukti', 'jenis_bukti_id', 'bukti'];
+        const tHeader = ['kode_unit', 'unit_kompetensi', 'nama_elemen'];
         const filterVal = ['kode_unit', 'unit_kompetensi'];
+        const data = this.formatJson(filterVal, list);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'Template Upload Elemen unit skema',
+        });
+        this.downloading = false;
+      });
+    },
+    handleDownloadTemplateKuk(list) {
+      console.log(list);
+      this.downloading = true;
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['id_elemen', 'nama_elemen', 'kuk', 'pertanyaan_kuk', 'jumlah_bukti', 'jenis_bukti', 'bukti'];
+        const filterVal = ['id_elemen', 'nama_elemen'];
         const data = this.formatJson(filterVal, list);
         excel.export_json_to_excel({
           header: tHeader,
@@ -563,7 +629,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.table-child {
+  align-items: center;
+  text-align: center;
+}
 .grid-content {
   border-radius: 4px;
   min-height: 36px;

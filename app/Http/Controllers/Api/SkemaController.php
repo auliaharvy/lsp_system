@@ -15,6 +15,7 @@ use App\Laravue\JsonResponse;
 use App\Laravue\Models\Skema;
 use App\Laravue\Models\SkemaUnit;
 use App\Laravue\Models\SkemaElemenUnit;
+use App\Laravue\Models\SkemaKukElemen;
 use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
@@ -256,7 +257,6 @@ class SkemaController extends BaseController
 
     public function uploadElemenUnit(Request $request)
     {   
-        
             DB::beginTransaction();
             try {
                 $params = $request->all();
@@ -269,20 +269,11 @@ class SkemaController extends BaseController
                     if ($validator->fails()) {
                         return response()->json(['errors' => $validator->errors()], 403);
                     } else {
-                        $kuk = $params[$i]['kuk'];
-                        $foundKuk= SkemaElemenUnit::where('kuk', $kuk)->first();
-                        if ($foundKuk) {
-                            return response()->json(['error' => 'KUK ' . $kuk . ' sudah pernah di upload'], 403);
-                        } 
                         $kode_unit = $params[$i]['kode_unit'];
                         $skemaUnit= SkemaUnit::where('kode_unit', $kode_unit)->first();
                         $unitElemen = SkemaElemenUnit::create([
-                            'id_unit_kompetensi' => $skemaUnit->id,
-                            'kuk' => $params[$i]['kuk'],
-                            'pertanyaan_kuk' => $params[$i]['pertanyaan_kuk'],
-                            'jumlah_bukti' => $params[$i]['jumlah_bukti'],
-                            'jenis_bukti_id' => $params[$i]['jenis_bukti_id'],
-                            'bukti' => $params[$i]['bukti'],
+                            'id_unit' => $skemaUnit->id,
+                            'nama_elemen' => $params[$i]['nama_elemen'],
                         ]);
                     }
                 }
@@ -293,8 +284,45 @@ class SkemaController extends BaseController
                 return response()->json(['message' => $e->getMessage()], 400);
                 //return $e->getMessage();
             }
-            
+    }
+
+    public function uploadKuk(Request $request)
+    {   
+        DB::beginTransaction();
+        try {
+            $params = $request->all();
+            for ($i = 0; $i < count($params); $i++) {
+                $validator = Validator::make(
+                    $params[$i],
+                    $this->getValidationKukRules(),
+                );
         
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 403);
+                } else {
+                    $foundElemen = SkemaElemenUnit::where('id', $params[$i]['id_elemen'])->first();
+                    if ($foundElemen) {
+                        $kuk = SkemaKukElemen::create([
+                            'id_elemen' => $params[$i]['id_elemen'],
+                            'kuk' => $params[$i]['kuk'],
+                            'pertanyaan_kuk' => $params[$i]['pertanyaan_kuk'],
+                            'jumlah_bukti' => $params[$i]['jumlah_bukti'],
+                            'jenis_bukti_id' => $params[$i]['jenis_bukti_id'],
+                            'bukti' => $params[$i]['bukti'],
+                        ]);
+                    } else {
+                        return response()->json(['error' => 'Elemen ' . $params[$i]["nama_elemen"]. ' Belum ada, silakan buat elemen terlebih dahulu'], 403);
+                    }
+                    
+                }
+            }
+            DB::commit();
+            return response()->json(['message' => "Success Upload Elemen Unit Skema"], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => $e->getMessage()], 400);
+            //return $e->getMessage();
+        }
     }
 
     private function getValidationRules($isNew = true)
@@ -318,6 +346,14 @@ class SkemaController extends BaseController
     {
         return [
             'kode_unit' => 'required',
+            'nama_elemen' => 'required',
+        ];
+    }
+
+    private function getValidationKukRules()
+    {
+        return [
+            'id_elemen' => 'required',
             'kuk' => 'required',
         ];
     }

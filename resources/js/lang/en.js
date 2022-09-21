@@ -252,4 +252,25 @@ export default {
       name: 'Category Name',
     },
   },
+
+  perangkat: {
+    table: {
+      skema: 'Certification Scheme',
+      name: 'Perangkat Name',
+      code: 'Perangkat Code',
+      versi: 'Version',
+      desc: 'Description',
+      browse: 'Browse',
+      detailName: 'Perangkat Detail Name',
+      type: 'Test Type',
+      qty: 'Total Question',
+      duration: 'Duration (hour)',
+      master: 'Master Perangkat',
+    },
+    dialog: {
+      addNew: 'Add New',
+      edit: 'Edit',
+      upload: 'Upload',
+    },
+  },
 };

@@ -23,6 +23,7 @@ import errorRoutes from './modules/error';
 import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
 import masterRoutes from './modules/master-data';
+import perangkatRoutes from './modules/perangkat';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -62,7 +63,14 @@ export const constantRoutes = [
   // front page
   {
     path: '/',
+    name: 'homepage',
     component: () => import('@/views/frontpage/index'),
+    hidden: true,
+  },
+
+  {
+    path: '/form-apl-02',
+    component: () => import('@/views/frontpage/form-apl-02/index'),
     hidden: true,
   },
 
@@ -148,6 +156,7 @@ export const asyncRoutes = [
   chartsRoutes,
   nestedRoutes,
   tableRoutes,
+  perangkatRoutes,
   masterRoutes,
   adminRoutes,
   {

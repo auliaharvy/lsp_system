@@ -20,7 +20,20 @@ use \App\Laravue\Acl;
 
 Route::namespace('Api')->group(function() {
     Route::post('auth/login', 'AuthController@login');
+    // APL 02 / Pendaftaran Routes
+    Route::post('uji-kompetensi-daftar', 'UjiKompController@store');
+    Route::get('skema-get', 'SkemaController@index');
+    Route::get('tuk-get', 'TukController@index');
     Route::group(['middleware' => 'auth:sanctum'], function () {
+        // Perangkat Routes
+        Route::apiResource('perangkat-asesmen', 'PerangkatAsesmenController');
+        Route::get('detail-perangkat-asesmen', 'PerangkatAsesmenController@indexDetail');
+        Route::post('detail-perangkat-asesmen', 'PerangkatAsesmenController@storeDetail');
+        Route::get('jenis-perangkat', 'PerangkatAsesmenController@indexJenis');
+
+        // APL 02 / Pendaftaran Routes
+        Route::apiResource('uji-kompetensi', 'UjiKompController');
+
         // TUK Routes
         Route::apiResource('tuk', 'TukController');
         Route::post('tuk/update', 'TukController@update');
@@ -35,6 +48,7 @@ Route::namespace('Api')->group(function() {
         Route::post('skema/upload/unit', 'SkemaController@uploadUnit');
         Route::post('skema/add/unit', 'SkemaController@storeUnit');
         Route::post('skema/upload/elemen', 'SkemaController@uploadElemenUnit');
+        Route::post('skema/upload/kuk', 'SkemaController@uploadKuk');
 
         // Auth routes
         Route::get('auth/user', 'AuthController@user');

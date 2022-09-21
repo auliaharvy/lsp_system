@@ -243,12 +243,33 @@ export default {
       visibility: 'Visibilitas',
     },
     dialog: {
-      addNew: 'Add New',
+      addNew: 'Tambah Baru',
       edit: 'Edit',
       upload: 'Upload',
     },
     kategori: {
       name: 'Nama Kategori',
+    },
+  },
+
+  perangkat: {
+    table: {
+      skema: 'Skema Sertifikasi',
+      name: 'Nama Perangkat',
+      code: 'Kode Perangkat',
+      versi: 'Versi',
+      desc: 'Deskripsi',
+      browse: 'Browse',
+      detailName: 'Nama Detail Perangkat',
+      type: 'Jenis Uji',
+      qty: 'Jumlah Soal',
+      duration: 'Durasi (jam)',
+      master: 'Master Perangkat',
+    },
+    dialog: {
+      addNew: 'Tambah Baru',
+      edit: 'Edit',
+      upload: 'Upload',
     },
   },
 };

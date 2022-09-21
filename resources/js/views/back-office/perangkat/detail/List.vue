@@ -20,33 +20,51 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.code')">
+      <el-table-column align="center" :label="$t('perangkat.table.code')">
         <template slot-scope="scope">
-          <span>{{ scope.row.kode_tuk }}</span>
+          <span>{{ scope.row.kode_perangkat }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.name')">
+      <el-table-column align="center" :label="$t('perangkat.table.name')">
         <template slot-scope="scope">
-          <span>{{ scope.row.alamat }}</span>
+          <span>{{ scope.row.nama_perangkat }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.address')" min-width="150px">
+      <el-table-column align="center" :label="$t('perangkat.table.detailName')" min-width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.alamat }}</span>
+          <span>{{ scope.row.nama }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.telp')">
+      <el-table-column align="center" :label="$t('perangkat.table.versi')">
         <template slot-scope="scope">
-          <span>{{ scope.row.no_telp }}</span>
+          <span>{{ scope.row.versi }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.email')">
+      <el-table-column align="center" :label="$t('perangkat.table.type')">
         <template slot-scope="scope">
-          <span>{{ scope.row.email }}</span>
+          <span>{{ scope.row.jenis }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="$t('perangkat.table.qty')">
+        <template slot-scope="scope">
+          <span>{{ scope.row.jumlah_soal }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="$t('perangkat.table.duration')">
+        <template slot-scope="scope">
+          <span>{{ scope.row.waktu_pengerjaan }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="$t('perangkat.table.desc')">
+        <template slot-scope="scope">
+          <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
 
@@ -64,53 +82,69 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
 
-    <el-dialog :title="$t('tuk.dialog.addNew')" :visible.sync="dialogFormVisible">
-      <div v-loading="tukCreating" class="form-container">
-        <el-form ref="tukForm" :rules="rules" :model="newTuk" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('tuk.table.code')" prop="kode_tuk">
-            <el-input v-model="newTuk.kode_tuk" />
+    <el-dialog :title="$t('perangkat  .dialog.addNew')" :visible.sync="dialogFormVisible">
+      <div v-loading="creating" class="form-container">
+        <el-form ref="dataForm" :rules="rules" :model="newData" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('perangkat.table.master')" prop="id_perangkat">
+            <el-select v-model="newData.id_perangkat" filterable clearable class="filter-item full" :placeholder="$t('perangkat.table.master')">
+              <el-option v-for="item in listPerangkat" :key="item.id" :label="item.nama_perangkat" :value="item.id" />
+            </el-select>
           </el-form-item>
-          <el-form-item :label="$t('table.name')" prop="nama">
-            <el-input v-model="newTuk.nama" />
+          <el-form-item :label="$t('perangkat.table.detailName')" prop="nama">
+            <el-input v-model="newData.nama" />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.address')" prop="alamat">
-            <el-input v-model="newTuk.alamat" />
+          <el-form-item :label="$t('perangkat.table.code')" prop="kode">
+            <el-input v-model="newData.kode" />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.telp')" prop="no_telp">
-            <el-input v-model="newTuk.no_telp" />
+          <el-form-item :label="$t('perangkat.table.type')" prop="id_jenis_perangkat">
+            <el-select v-model="newData.id_jenis_perangkat" filterable clearable class="filter-item full" :placeholder="$t('perangkat.table.type')">
+              <el-option v-for="item in listJenis" :key="item.id" :label="item.nama" :value="item.id" />
+            </el-select>
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.email')" prop="email">
-            <el-input v-model="newTuk.email" />
+          <el-form-item :label="$t('perangkat.table.versi')" prop="versi">
+            <el-input v-model="newData.versi" />
           </el-form-item>
+          <el-form-item :label="$t('perangkat.table.qty')" prop="jumlah_soal">
+            <el-input v-model="newData.jumlah_soal" />
+          </el-form-item>
+          <el-form-item :label="$t('perangkat.table.duration')" prop="waktu_pengerjaan">
+            <el-input v-model="newData.waktu_pengerjaan" />
+          </el-form-item>
+          <el-form-item :label="$t('perangkat.table.desc')" prop="description">
+            <el-input v-model="newData.description" type="textarea" />
+          </el-form-item>
+          <!-- <el-form-item :label="$t('perangkat.table.browse')" prop="browse">
+            <el-input v-model="newData.browse" />
+          </el-form-item> -->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createTuk()">
+          <el-button type="primary" @click="create()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
 
-    <el-dialog :title="$t('tuk.dialog.addNew') + ' ' + editedTuk.nama" :visible.sync="dialogFormUpdateVisible">
-      <div v-loading="tukCreating" class="form-container">
-        <el-form ref="tukForm" :rules="rules" :model="editedTuk" label-position="left" label-width="150px" style="max-width: 500px;">
+    <el-dialog :title="$t('tuk.dialog.addNew') + ' ' + editedData.nama" :visible.sync="dialogFormUpdateVisible">
+      <div v-loading="creating" class="form-container">
+        <el-form ref="dataForm" :rules="rules" :model="editedData" label-position="left" label-width="150px" style="max-width: 500px;">
           <el-form-item :label="$t('tuk.table.code')" prop="kode_tuk">
-            <el-input v-model="editedTuk.kode_tuk" />
+            <el-input v-model="editedData.kode_tuk" />
           </el-form-item>
           <el-form-item :label="$t('table.name')" prop="nama">
-            <el-input v-model="editedTuk.nama" />
+            <el-input v-model="editedData.nama" />
           </el-form-item>
           <el-form-item :label="$t('tuk.table.address')" prop="alamat">
-            <el-input v-model="editedTuk.alamat" />
+            <el-input v-model="editedData.alamat" />
           </el-form-item>
           <el-form-item :label="$t('tuk.table.telp')" prop="no_telp">
-            <el-input v-model="editedTuk.no_telp" />
+            <el-input v-model="editedData.no_telp" />
           </el-form-item>
           <el-form-item :label="$t('tuk.table.email')" prop="email">
-            <el-input v-model="editedTuk.email" />
+            <el-input v-model="editedData.email" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -128,6 +162,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
@@ -135,23 +170,27 @@ import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
 
 const userResource = new UserResource();
-const tukResource = new Resource('tuk');
+const detailPerangkatAsesmenResource = new Resource('detail-perangkat-asesmen');
+const perangkatAsesmenResource = new Resource('perangkat-asesmen');
+const jenisResource = new Resource('jenis-perangkat');
 
 export default {
-  name: 'UserList',
+  name: 'DetailPerangkatAsemenList',
   components: { Pagination },
   directives: { waves, permission },
   data() {
     return {
       list: null,
+      listPerangkat: null,
+      listJenis: null,
       total: 0,
       loading: true,
       downloading: false,
-      tukCreating: false,
+      creating: false,
       dialogFormVisible: false,
       dialogFormUpdateVisible: false,
-      newTuk: {},
-      editedTuk: {
+      newData: {},
+      editedData: {
         id: 0,
         kode_tuk: '',
         nama: '',
@@ -166,16 +205,17 @@ export default {
         role: '',
       },
       rules: {
-        kode_tuk: [{ required: true, message: 'Kode TUK is required', trigger: 'change' }],
-        nama: [{ required: true, message: 'Nama TUK is required', trigger: 'blur' }],
-        alamat: [{ required: true, message: 'Alamat TUK is required', trigger: 'blur' }],
-        no_telp: [{ required: true, message: 'No Telephone is required', trigger: 'blur' }],
-        email: [
-          { required: true, message: 'Email is required', trigger: 'blur' },
-          { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
-        ],
+        nama: [{ required: true, message: 'Nama Detail Perangkat is required', trigger: 'blur' }],
+        kode: [{ required: true, message: 'Kode Detail Perangkat is required', trigger: 'blur' }],
+        id_perangkat: [{ required: true, message: 'Master Perangkat is required', trigger: 'blur' }],
       },
     };
+  },
+  computed: {
+    ...mapGetters([
+      'username',
+      'userId',
+    ]),
   },
   created() {
     this.getList();
@@ -184,27 +224,33 @@ export default {
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
-      const { data, meta } = await tukResource.list(this.query);
+      // get data skema
+      const dataPerangkat = await perangkatAsesmenResource.list();
+      this.listPerangkat = dataPerangkat.data;
+      // get data skema
+      const dataJenis = await jenisResource.list();
+      this.listJenis = dataJenis.data;
+      // get data perangkat / list table
+      const { data, meta } = await detailPerangkatAsesmenResource.list(this.query);
       this.list = data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
       this.total = meta.total;
       this.loading = false;
-      console.log(this.list);
     },
     handleFilter() {
       this.query.page = 1;
       this.getList();
     },
-    resetNewTuk() {
-      this.newTuk = {};
+    resetnewData() {
+      this.newData = {};
     },
     handleCreate() {
-      this.resetNewTuk();
+      this.resetnewData();
       this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['tukForm'].clearValidate();
+        this.$refs['dataForm'].clearValidate();
       });
     },
     handleDelete(id, name) {
@@ -229,20 +275,21 @@ export default {
         });
       });
     },
-    createTuk() {
+    create() {
       this.loading = true;
-      this.$refs['tukForm'].validate((valid) => {
+      this.newData.author = this.userId;
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.tukCreating = true;
-          tukResource
-            .store(this.newTuk)
+          this.creating = true;
+          detailPerangkatAsesmenResource
+            .store(this.newData)
             .then(response => {
               this.$message({
-                message: 'New TUK ' + this.newTuk.nama + ' has been created successfully.',
+                message: 'New TUK ' + this.newData.nama + ' has been created successfully.',
                 type: 'success',
                 duration: 5 * 1000,
               });
-              this.resetNewTuk();
+              this.resetnewData();
               this.dialogFormVisible = false;
               this.handleFilter();
             })
@@ -251,7 +298,7 @@ export default {
             })
             .finally(() => {
               this.loading = true;
-              this.tukCreating = false;
+              this.creating = false;
             });
         } else {
           console.log('error submit!!');
@@ -260,13 +307,13 @@ export default {
       });
     },
     handleUpdate(tuk) {
-      this.editedTuk = tuk;
+      this.editedData = tuk;
       this.dialogFormUpdateVisible = true;
-      console.log(this.editedTuk);
+      console.log(this.editedData);
     },
     updateData() {
       this.loading = true;
-      tukResource.update(this.editedTuk.id, this.editedTuk).then(() => {
+      detailPerangkatAsesmenResource.update(this.editedData.id, this.editedData).then(() => {
         this.getList();
         this.dialogFormUpdateVisible = false;
         this.$notify({
@@ -281,7 +328,7 @@ export default {
         })
         .finally(() => {
           this.loading = true;
-          this.tukCreating = false;
+          this.creating = false;
         });
     },
     handleDownload() {

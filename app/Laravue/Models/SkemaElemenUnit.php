@@ -1,6 +1,6 @@
 <?php
 /**
- * File Skema.php
+ * File SkemaElemen.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System
@@ -12,9 +12,10 @@ use App\Laravue\Acl;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Laravue\Models\SkemaKukElemen;
 
 /**
- * Class Skema Elemen
+ * Class SkemaElemen
  *
  * @package App\Laravue\Models
  */
@@ -29,21 +30,19 @@ class SkemaElemenUnit extends Model
      * @return Builder
      */
     protected $table = "mst_skema_sertifikasi_elemen_kompetensi";
-    protected $fillable = ['id_unit_kompetensi','kuk', 'pertanyaan_kuk', 'jumlah_bukti', 'jenis_bukti_id', 'bukti'];
+    protected $fillable = ['id_unit','nama_elemen'];
 
-    public function getSkemaElemenUnit($unit_id)
+    public function getSkemaElemen($unit_id)
     {
-        $skemaUnit = SkemaElemenUnit::where('id_unit_kompetensi', $unit_id)
+        $skemaElemenUnit = SkemaElemenUnit::where('id_unit', $unit_id)
         ->select('mst_skema_sertifikasi_elemen_kompetensi.*')
         ->get();
+        
         $plunckData = array();
-        foreach($skemaUnit as $row):
-            $data['kuk'] = $row->kuk;
-            $data['pertanyaan_kuk'] = $row->pertanyaan_kuk;
-            $data['jumlah_bukti'] = $row->jumlah_bukti;
-            $data['jenis_bukti_id'] = $row->jenis_bukti_id;
-            $data['nama_jenis_bukti'] = $row->jenis_bukti_id;
-            $data['bukti'] = $row->pertanyaan_kuk;
+        foreach($skemaElemenUnit as $row):
+            $data['kuk'] = SkemaKukElemen::getSkemaKukElemen($row->id);
+            $data['id_elemen'] = $row->id;
+            $data['nama_elemen'] = $row->nama_elemen;
             $plunckData[] = $data;
 		endforeach;
 		return $plunckData;

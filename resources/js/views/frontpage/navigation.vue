@@ -7,7 +7,7 @@
       <el-menu-item index="2-1">Pemegang Sertifikat</el-menu-item>
       <el-menu-item index="2-2">Asesor Kompetensi</el-menu-item>
     </el-submenu>
-    <el-menu-item index="3">Uji Kompetensi</el-menu-item>
+    <el-menu-item index="form-apl-02">Uji Kompetensi</el-menu-item>
     <el-menu-item index="3">Kontak</el-menu-item>
     <el-submenu index="2">
       <template slot="title">Penelusuran Tamatan</template>
