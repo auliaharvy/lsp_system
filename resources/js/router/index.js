@@ -24,6 +24,7 @@ import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
 import masterRoutes from './modules/master-data';
 import perangkatRoutes from './modules/perangkat';
+import persiapanRoutes from './modules/persiapan';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -151,6 +152,7 @@ export const constantRoutes = [
 ];
 
 export const asyncRoutes = [
+  persiapanRoutes,
   permissionRoutes,
   componentRoutes,
   chartsRoutes,

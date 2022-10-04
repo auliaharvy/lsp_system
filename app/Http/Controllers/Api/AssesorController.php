@@ -134,7 +134,6 @@ class AssesorController extends BaseController
             try {
                 $email = $request->get('email');
                 $foundAsesor = Assesor::where('email', $email)->first();
-                // TODO ubah proses jika mengubah email pada database user
                 $foundUser = User::where('email', $email)->first();
                 if ($foundAsesor && $foundAsesor->id !== $assesor->id) {
                     return response()->json(['error' => 'Email has been taken'], 403);

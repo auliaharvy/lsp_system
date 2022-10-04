@@ -24,7 +24,13 @@ Route::namespace('Api')->group(function() {
     Route::post('uji-kompetensi-daftar', 'UjiKompController@store');
     Route::get('skema-get', 'SkemaController@index');
     Route::get('tuk-get', 'TukController@index');
+    Route::apiResource('jadwal-get', 'JadwalController');
+
     Route::group(['middleware' => 'auth:sanctum'], function () {
+
+        // Jadwal Routes
+        Route::apiResource('jadwal', 'JadwalController');
+
         // Perangkat Routes
         Route::apiResource('perangkat-asesmen', 'PerangkatAsesmenController');
         Route::get('detail-perangkat-asesmen', 'PerangkatAsesmenController@indexDetail');

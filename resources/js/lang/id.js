@@ -201,6 +201,23 @@ export default {
     },
   },
 
+  // Jadwal
+  jadwal: {
+    table: {
+      skema: 'Skema Sertifikasi',
+      pesyaratan: 'Persyaratan',
+      tuk: 'TUK',
+      perangkat: 'Perangkat',
+      asesor: 'Assesor',
+      start: 'Mulai',
+      end: 'Berakhir',
+    },
+    dialog: {
+      addNew: 'Add New',
+      edit: 'Edit',
+    },
+  },
+
   // TUK
   tuk: {
     table: {

@@ -1,6 +1,6 @@
 <?php
 /**
- * File UjiKomp.php
+ * File UjiKompApl1.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System
@@ -19,7 +19,7 @@ use App\Laravue\Models\SkemaElemenUnit;
  *
  * @package App\Laravue\Models
  */
-class UjiKomp extends Model
+class UjiKompApl1 extends Model
 {
     public $guard_name = 'api';
 
@@ -29,7 +29,7 @@ class UjiKomp extends Model
      * @param $query
      * @return Builder
      */
-    protected $table = "trx_uji_komp_apl_02";
+    protected $table = "trx_uji_komp_apl_01";
     protected $fillable = ['id_skema','id_tuk', 'nik', 'nama_lengkap', 'nama_sekolah', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin',
                             'alamat', 'kode_pos', 'no_hp', 'email', 'tingkatan', 'foto', 'identitas', 'raport', 'sertifikat', 'status'];
 }

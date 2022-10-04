@@ -10,10 +10,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\MasterResource;
+use App\Http\Resources\JadwalResource;
 use App\Laravue\JsonResponse;
-use App\Laravue\Models\UjiKompApl1;
+use App\Laravue\Models\Jadwal;
+use App\Laravue\Models\JadwalAsesor;
 use App\Laravue\Models\Tuk;
 use App\Laravue\Models\Skema;
+use App\Laravue\Models\Asesor;
+use App\Laravue\Models\Perangkat;
 use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
@@ -30,7 +34,7 @@ use Validator;
  *
  * @package App\Http\Controllers\Api
  */
-class UjiKompController extends BaseController
+class JadwalController extends BaseController
 {
     const ITEM_PER_PAGE = 15;
 
@@ -46,17 +50,21 @@ class UjiKompController extends BaseController
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
 
-        $query = UjiKomp::query();
-        $query->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_uji_komp_apl_01.id_skema');
-        $query->join('mst_tuk as c', 'c.id', '=', 'trx_uji_komp_apl_01.id_tuk')
-        ->select('trx_uji_komp_apl_01.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk');
+        $query = Jadwal::query();
+        $query->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema');
+        $query->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk');
+        $query->join('mst_perangkat_asesmen as d', 'd.id', '=', 'trx_jadwal_asesmen.id_perangkat');
+        $query->join('rel_jadwal_has_asesor as e', 'e.id_jadwal', '=', 'trx_jadwal_asesmen.id');
+        $query->join('mst_asesor as f', 'f.id', '=', 'e.id_asesor')
+        ->groupBy('trx_jadwal_asesmen.id')
+        ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'd.nama_perangkat', 'f.nama as nama_asesor');
 
         if (!empty($keyword)) {
-            $query->where('nama_lengkap', 'LIKE', '%' . $keyword . '%');
-            $query->orWhere('nama_sekolah', 'LIKE', '%' . $keyword . '%');
+            $query->where('b.skema_sertifikasi', 'LIKE', '%' . $keyword . '%');
+            $query->orWhere('c.nama', 'LIKE', '%' . $keyword . '%');
         }
 
-        return MasterResource::collection($query->paginate($limit));
+        return JadwalResource::collection($query->paginate($limit));
     }
 
     /**
@@ -78,28 +86,28 @@ class UjiKompController extends BaseController
             DB::beginTransaction();
             try {
                 $params = $request->all();
-                $skema = UjiKomp::create([
+                $jadwal = Jadwal::create([
                     'id_skema' => $params['id_skema'],
                     'id_tuk' => $params['id_tuk'],
-                    'nik' => $params['nik'],
-                    'nama_lengkap' => $params['nama_lengkap'],
-                    'nama_sekolah' => $params['nama_sekolah'],
-                    'tempat_lahir' => $params['tempat_lahir'],
-                    'tanggal_lahir' => $params['tanggal_lahir'],
-                    'jenis_kelamin' => $params['jenis_kelamin'],
-                    'alamat' => $params['alamat'],
-                    'kode_pos' => $params['kode_pos'],
-                    'no_hp' => $params['no_hp'],
-                    'email' => $params['email'],
-                    'tingkatan' => $params['tingkatan'],
-                    'foto' => $params['foto'],
-                    'identitas' => $params['identitas'],
-                    'raport' => $params['raport'],
-                    'sertifikat' => $params['sertifikat'],
-                    'status' => 0,
+                    'id_perangkat' => $params['id_perangkat'],
+                    'persyaratan' => $params['persyaratan'],
+                    // 'jadwal' => $params['jadwal'],
+                    'start_date' => $params['start_date'],
+                    'end_date' => $params['end_date'],
                 ]);
+
+                // create relation asesor
+                $asesor = $params['asesor'];
+                $asesorCount = count($asesor);
+                for($i=0; $i < $asesorCount ; $i++) {
+                    $jadwalAsesor = JadwalAsesor::create([
+                        'id_asesor' => $asesor[$i],
+                        'id_jadwal' => $jadwal->id,
+                    ]);
+                }
+
                 DB::commit();
-                return response()->json(['message' => "Success Create Skema"], 200);
+                return response()->json(['message' => "Success Create Jadwal"], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
@@ -192,7 +200,7 @@ class UjiKompController extends BaseController
     private function getValidationRules($isNew = true)
     {
         return [
-            'nik' => 'required',
+            'id_skema' => 'required',
         ];
     }
 }

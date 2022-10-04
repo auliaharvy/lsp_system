@@ -1,6 +1,7 @@
 <template>
   <el-container class="app-container">
     <el-header>
+      <!-- TODO: Buat halaman kedua dan ketiga -->
       <el-steps :active="active" finish-status="success" simple>
         <el-step title="Profil Peserta" />
         <el-step title="Dokumen Portofolio" />
@@ -8,7 +9,7 @@
       </el-steps>
     </el-header>
     <el-main>
-      <div class="form">
+      <div v-if="active === 0" class="form">
         <el-form
           ref="form"
           :model="form"

@@ -201,6 +201,23 @@ export default {
     },
   },
 
+  // Jadwal
+  jadwal: {
+    table: {
+      skema: 'Certification Scheme',
+      pesyaratan: 'Requirement',
+      tuk: 'TUK',
+      perangkat: 'Perangkat',
+      asesor: 'Assesor',
+      start: 'Start Date',
+      end: 'End Date',
+    },
+    dialog: {
+      addNew: 'Add New',
+      edit: 'Edit',
+    },
+  },
+
   // TUK
   tuk: {
     table: {
@@ -253,6 +270,7 @@ export default {
     },
   },
 
+  // perangkat
   perangkat: {
     table: {
       skema: 'Certification Scheme',
