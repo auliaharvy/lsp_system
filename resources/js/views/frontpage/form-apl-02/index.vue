@@ -16,6 +16,24 @@
           label-width="250px"
           :label-position="labelPosition"
         >
+          <el-form-item :label="$t('jadwal.table.jadwal')" prop="id_jadwal">
+            <el-select
+              v-model="dataTrx.id_jadwal"
+              filterable
+              clearable
+              class="filter-item full"
+              :placeholder="$t('jadwal.table.jadwal')"
+              @change="onJadwalSelect()"
+            >
+              <el-option
+                v-for="item in listJadwal"
+                :key="item.id"
+                :label="item.start_date + ' - ' + item.nama_skema"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+
           <el-form-item :label="$t('skema.table.skema')" prop="skema_id">
             <el-select
               v-model="dataTrx.id_skema"
@@ -29,9 +47,29 @@
                 :key="item.id"
                 :label="item.skema_sertifikasi"
                 :value="item.id"
+                disabled
               />
             </el-select>
           </el-form-item>
+
+          <el-form-item label="Tempat Uji Kompetensi" prop="id_tuk">
+            <el-select
+              v-model="dataTrx.id_tuk"
+              filterable
+              clearable
+              class="filter-item full"
+              placeholder="Pilih TUK"
+            >
+              <el-option
+                v-for="item in listTuk"
+                :key="item.id"
+                :label="item.nama"
+                :value="item.id"
+                disabled
+              />
+            </el-select>
+          </el-form-item>
+
           <el-form-item label="NIK">
             <el-input v-model="dataTrx.nik" />
           </el-form-item>
@@ -83,28 +121,205 @@
               <el-option label="XII" value="xii" />
             </el-select>
           </el-form-item>
-          <el-form-item label="Tempat Uji Kompetensi" prop="id_tuk">
-            <el-select
-              v-model="dataTrx.id_tuk"
-              filterable
-              clearable
-              class="filter-item full"
-              placeholder="Pilih TUK"
-            >
-              <el-option
-                v-for="item in listTuk"
-                :key="item.id"
-                :label="item.nama"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">Create</el-button>
-            <el-button>Cancel</el-button>
-          </el-form-item>
         </el-form>
       </div>
+
+      <div v-if="active === 1" class="form">
+        <h3>UPLOAD BUKTI PENDUKUNG</h3>
+        <p>
+          Cantumkan satu atau beberapa bukti pendukung (portofolio, sertifikat,
+          ijazah dll) yang terkait dengan skema atau unit kompetensi yang telah
+          diambil. Kemudian jika dimungkinkan scan dan upload dokumen tersebut
+          kedalam sistem ini
+        </p>
+        <el-divider />
+
+        <el-table
+          v-loading="loading"
+          :data="selectedSkema.children"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Kode Unit">
+            <template slot-scope="scope">
+              <span>{{ scope.row.kode_unit }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="left"
+            label="Judul Unit Kompetensi"
+            min-width="200px"
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.unit_kompetensi }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <br>
+        <el-card class="box-card">
+          <p>
+            Pada bagian ini, anda diminta untuk memilih bukti-bukti pendukung
+            yang anda anggap relevan terhadap setiap elemen/KUK unit kompetensi.
+            Pilihan dapat lebih dari 1(Satu) bukti pendukung.
+          </p>
+        </el-card>
+        <br>
+        <el-form
+          ref="form"
+          :model="form"
+          label-width="250px"
+          :label-position="labelPosition"
+        >
+          <el-form-item :label="$t('jadwal.table.foto')" prop="foto">
+            <el-upload
+              class="upload-demo"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :limit="1"
+              :before-upload="beforeAvatarUpload"
+              :on-success="handleFotoSuccess"
+              :file-list="dataTrx.foto"
+            >
+              <el-button size="small" type="primary">Click to upload</el-button>
+              <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 2MB</div>
+            </el-upload>
+          </el-form-item>
+
+          <el-form-item :label="$t('jadwal.table.identitas')" prop="identitas">
+            <el-upload
+              class="upload-demo"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :limit="1"
+              :before-upload="beforeAvatarUpload"
+              :on-success="handleIdentitasSuccess"
+              :file-list="dataTrx.identitas"
+            >
+              <el-button size="small" type="primary">Click to upload</el-button>
+              <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 2MB</div>
+            </el-upload>
+          </el-form-item>
+
+          <el-form-item :label="$t('jadwal.table.raport')" prop="identitas">
+            <el-upload
+              class="upload-demo"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :limit="1"
+              :before-upload="beforeAvatarUpload"
+              :on-success="handleRaportSuccess"
+              :file-list="dataTrx.raport"
+            >
+              <el-button size="small" type="primary">Click to upload</el-button>
+              <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 2MB</div>
+            </el-upload>
+          </el-form-item>
+
+          <el-form-item :label="$t('jadwal.table.sertifikat')" prop="identitas">
+            <el-upload
+              class="upload-demo"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :limit="1"
+              :before-upload="beforeAvatarUpload"
+              :on-success="handleSertifikatSuccess"
+              :file-list="dataTrx.sertifikat"
+            >
+              <el-button size="small" type="primary">Click to upload</el-button>
+              <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 2MB</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <br>
+      </div>
+
+      <div v-if="active === 2" class="form">
+        <h3>FR-APL 02 ASESMEN MANDIRI</h3>
+        <p>
+          Pastikan anda kompeten sesuai dengan elemen dan kuk yang ada pada setiap unit-unit kompetensi berikuti ini.
+          Pasangkan elemen/kuk dengan bukti pendukung yang telah anda sebutkan sebelumnya.
+        </p>
+        <el-divider />
+
+        <el-table
+          v-loading="loading"
+          :data="listKuk"
+          border
+          fit
+          highlight-current-row
+          row-key="index"
+          default-expand-all
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="No" width="50px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.index }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column align="center" label="Kode Unit">
+            <template slot-scope="scope">
+              <span>{{ scope.row.kode_unit }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="left"
+            label="Judul Unit Kompetensi / Elemen Kompetensi / Kriteria Unjuk Kerja(KUK)"
+            min-width="200px"
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.type === 'unitKomp'"><b>{{ scope.row.unit_kompetensi }}</b></span>
+              <span v-else-if="scope.row.type === 'elemen'"><b>{{ scope.row.nama_elemen }}</b></span>
+              <span v-else>{{ scope.row.kuk }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="center"
+            label="K / BK"
+            min-width="80px"
+          >
+            <template slot="header">
+              <span>K / BK</span>
+              <el-select v-model="kompeten" class="filter-item" placeholder="B/BK">
+                <el-option :key="0" label="Kompeten" :value="0" />
+                <el-option :key="1" label="Belum Kompeten" :value="1" />
+              </el-select>
+            </template>
+            <template slot-scope="scope">
+              <el-select v-if="scope.row.type === 'kuk'" v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
+                <el-option :key="0" label="Kompeten" :value="0" />
+                <el-option :key="1" label="Belum Kompeten" :value="1" />
+              </el-select>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="center"
+            label="Bukti Pendukung"
+            min-width="80px"
+          >
+            <template slot-scope="scope">
+              <el-select
+                v-if="scope.row.type === 'kuk'"
+                v-model="scope.row.bukti_pendukung"
+                placeholder="pilih tingkatan kelas"
+                disabled
+              >
+                <el-option label="Raport" value="raport" />
+                <el-option label="KTP" value="ktp" />
+                <el-option label="Sertifikat" value="sertifikat" />
+              </el-select>
+            </template>
+          </el-table-column>
+        </el-table>
+        <br>
+        <br>
+      </div>
+      <el-button @click="back">Prev</el-button>
+      <el-button type="primary" @click="onSubmit">Next</el-button>
       <router-link :to="{ name: 'homepage' }">
         <el-button style="margin-top: 12px">back to home</el-button>
       </router-link>
@@ -114,6 +329,7 @@
 
 <script>
 import Resource from '@/api/resource';
+const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 
@@ -121,8 +337,13 @@ export default {
   components: {},
   data() {
     return {
+      kompeten: null,
+      loading: false,
       listSkema: null,
       listTuk: null,
+      listJadwal: null,
+      listKuk: [],
+      selectedSkema: {},
       dataTrx: {},
       form: {
         name: '',
@@ -149,8 +370,18 @@ export default {
   created() {
     this.getListSkema();
     this.getListTuk();
+    this.getListJadwal();
   },
   methods: {
+    allKompeten() {
+      for (var i = 0; i < this.listKuk.length; i++) {
+        var kuk = this.kukList[i];
+        if (kuk.type === 'kuk'){
+          console.log(kuk);
+          // kuk.is_kompeten = this.kompeten;
+        }
+      }
+    },
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
@@ -159,9 +390,50 @@ export default {
       const { data } = await tukResource.list();
       this.listTuk = data;
     },
+    async getListJadwal() {
+      const { data } = await jadwalResource.list();
+      this.listJadwal = data;
+    },
+    onJadwalSelect() {
+      var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var skemaId = this.listSkema.find((x) => x.id === jadwal.id_skema);
+      this.selectedSkema = skemaId;
+      var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      this.dataTrx.id_skema = skemaId.id;
+      this.dataTrx.id_tuk = tukId.id;
+      this.getKuk();
+    },
+    getKuk(){
+      var number = 1;
+      var unitKomp = this.selectedSkema.children;
+      var kuk = [];
+      unitKomp.forEach((element, index) => {
+        element['type'] = 'unitKomp';
+        element['index'] = number++;
+        kuk.push(element);
+        element.elemen.forEach((element, index) => {
+          element['type'] = 'elemen';
+          kuk.push(element);
+          element.kuk.forEach((element, index) => {
+            element['type'] = 'kuk';
+            element['bukti_pendukung'] = 'raport';
+            kuk.push(element);
+          });
+        });
+      });
+      // var elemen = unitKomp.elemen;
+      // var kuk = elemen.kuk;
+      this.listKuk = kuk;
+      console.log(this.listKuk);
+    },
     onSubmit() {
       if (this.active++ > 2) {
         this.active = 0;
+      }
+    },
+    back() {
+      if (this.active-- < 0) {
+        this.active = 2;
       }
     },
     onResize() {
@@ -172,6 +444,26 @@ export default {
       } else {
         this.labelPosition = 'top';
       }
+    },
+    handleFotoSuccess(res, file) {
+      this.dataTrx.foto = URL.createObjectURL(file.raw);
+    },
+    handleIdentitasSuccess(res, file) {
+      this.dataTrx.identitas = URL.createObjectURL(file.raw);
+    },
+    handleRaportSuccess(res, file) {
+      this.dataTrx.raport = URL.createObjectURL(file.raw);
+    },
+    handleSertifikatSuccess(res, file) {
+      this.dataTrx.sertifikat = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isLt2M) {
+        this.$message.error('Document size can not exceed 2MB!');
+      }
+      return isLt2M;
     },
   },
 };

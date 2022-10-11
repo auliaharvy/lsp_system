@@ -211,6 +211,7 @@ export default {
       asesor: 'Assesor',
       start: 'Mulai',
       end: 'Berakhir',
+      jadwal: 'Jadwal',
     },
     dialog: {
       addNew: 'Add New',

@@ -9,8 +9,14 @@ import router from '@/router';
 import i18n from './lang'; // Internationalization
 import '@/icons'; // icon
 import '@/permission'; // permission control
+import TreeTableComponent from 'element-ui-tree-table';
+// import 'element-ui-tree-table/dist/index.css';
 
 import * as filters from './filters'; // global filters
+
+Vue.use(TreeTableComponent, {
+  prefix: 'i', // 可选
+});
 
 Vue.use(ElementUI, {
   size: Cookies.get('size') || 'medium', // set element-ui default size

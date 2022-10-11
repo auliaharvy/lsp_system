@@ -3450,7 +3450,15 @@
   "resolved" "https://registry.npmjs.org/elegant-spinner/-/elegant-spinner-1.0.1.tgz"
   "version" "1.0.1"
 
-"element-ui@^2.13.2":
+"element-ui-tree-table@^1.0.3":
+  "integrity" "sha512-ZrDI9Z1Jm6cUyAsfoieSShv0l5JfIh7+z83kxVLu8cY74vHLlS4rr9lfYN8Sy4wNsDhY600TUEvWIFdNz5uGpA=="
+  "resolved" "https://registry.npmjs.org/element-ui-tree-table/-/element-ui-tree-table-1.0.3.tgz"
+  "version" "1.0.3"
+  dependencies:
+    "element-ui" "^2.7.2"
+    "vue" "^2.5.2"
+
+"element-ui@^2.13.2", "element-ui@^2.7.2":
   "integrity" "sha512-dx45nQLt4Hn87/Z9eRr3ex6KFZbxlFAwEU3QoW3wA5EsYftvHTyL9Pq7VnXXD7hu1Eiaup2jcs6kp+/VSFmXuA=="
   "resolved" "https://registry.npmjs.org/element-ui/-/element-ui-2.15.9.tgz"
   "version" "2.15.9"
@@ -9012,7 +9020,7 @@
   "resolved" "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^2.5.17", "vue@2.6.10":
+"vue@^2.5.17", "vue@^2.5.2", "vue@2.6.10":
   "integrity" "sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-2.6.10.tgz"
   "version" "2.6.10"

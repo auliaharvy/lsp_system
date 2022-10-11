@@ -34,7 +34,8 @@ class SkemaKukElemen extends Model
     public function getSkemaKukElemen($unit_id)
     {
         $skemaUnit = SkemaKukElemen::where('id_elemen', $unit_id)
-        ->select('mst_skema_sertifikasi_kuk_elemen.*')
+        ->select('mst_skema_sertifikasi_kuk_elemen.*', 'a.nama as nama_jenis_bukti')
+        ->join('mst_jenis_bukti as a', 'a.id', '=', 'mst_skema_sertifikasi_kuk_elemen.jenis_bukti_id')
         ->get();
         $plunckData = array();
         foreach($skemaUnit as $row):
@@ -42,7 +43,7 @@ class SkemaKukElemen extends Model
             $data['pertanyaan_kuk'] = $row->pertanyaan_kuk;
             $data['jumlah_bukti'] = $row->jumlah_bukti;
             $data['jenis_bukti_id'] = $row->jenis_bukti_id;
-            $data['nama_jenis_bukti'] = $row->jenis_bukti_id;
+            $data['nama_jenis_bukti'] = $row->nama_jenis_bukti;
             $data['bukti'] = $row->pertanyaan_kuk;
             $plunckData[] = $data;
 		endforeach;
