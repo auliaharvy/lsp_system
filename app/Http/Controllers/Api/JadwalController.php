@@ -91,7 +91,7 @@ class JadwalController extends BaseController
                     'id_tuk' => $params['id_tuk'],
                     'id_perangkat' => $params['id_perangkat'],
                     'persyaratan' => $params['persyaratan'],
-                    // 'jadwal' => $params['jadwal'],
+                    'jadwal' => $params['jadwal'],
                     'start_date' => $params['start_date'],
                     'end_date' => $params['end_date'],
                 ]);

@@ -39,6 +39,7 @@ class SkemaKukElemen extends Model
         ->get();
         $plunckData = array();
         foreach($skemaUnit as $row):
+            $data['id'] = $row->id;
             $data['kuk'] = $row->kuk;
             $data['pertanyaan_kuk'] = $row->pertanyaan_kuk;
             $data['jumlah_bukti'] = $row->jumlah_bukti;

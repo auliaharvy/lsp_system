@@ -25,9 +25,18 @@ Route::namespace('Api')->group(function() {
     Route::get('skema-get', 'SkemaController@index');
     Route::get('tuk-get', 'TukController@index');
     Route::get('jadwal-get', 'JadwalController@index');
+    Route::post('uji-komp-post', 'UjiKompController@store');
+    Route::get('uji-komp-get', 'UjiKompController@index');
 
+    Route::get('mst-ia03-get', 'UjiKompController@indexIa03');
+    Route::get('mst-ia11-get', 'UjiKompController@indexIa11');
+    Route::get('mst-ak-03-get', 'UjiKompController@indexAk03');
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
+        Route::post('uji-komp-ia-01', 'UjiKompController@storeIa01');
+        Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
+        Route::post('uji-komp-ia-03', 'UjiKompController@storeIa03');
+        Route::post('uji-komp-ia-11', 'UjiKompController@storeIa11');
         // Jadwal Routes
         Route::apiResource('jadwal', 'JadwalController');
 

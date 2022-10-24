@@ -1,14 +1,25 @@
 <template>
   <el-carousel indicator-position="outside" height="500px">
-    <el-carousel-item v-for="item in 4" :key="item">
-      <h3>{{ item }}</h3>
+    <el-carousel-item v-for="item in image" :key="item">
+      <img
+        alt="Image"
+        :src="item"
+      >
     </el-carousel-item>
   </el-carousel>
 </template>
 
 <script>
+import hero1 from '@/assets/login/slide11.jpg';
+import hero2 from '@/assets/login/slide31.jpg';
+import hero3 from '@/assets/login/slide21.png';
 export default {
   name: 'HeroSection',
+  data() {
+    return {
+      image: [hero1, hero2, hero3],
+    };
+  },
 };
 </script>
 

@@ -43,6 +43,7 @@ class SkemaElemenUnit extends Model
             $data['kuk'] = SkemaKukElemen::getSkemaKukElemen($row->id);
             $data['id_elemen'] = $row->id;
             $data['nama_elemen'] = $row->nama_elemen;
+            $data['benchmark'] = $row->benchmark;
             $plunckData[] = $data;
 		endforeach;
 		return $plunckData;

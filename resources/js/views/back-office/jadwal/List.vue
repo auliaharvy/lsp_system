@@ -52,6 +52,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" :label="$t('jadwal.table.nama')">
+        <template slot-scope="scope">
+          <span>{{ scope.row.jadwal }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" :label="$t('jadwal.table.skema')">
         <template slot-scope="scope">
           <span>{{ scope.row.nama_skema }}</span>
@@ -149,6 +155,13 @@
                 :value="item.id"
               />
             </el-select>
+          </el-form-item>
+
+          <el-form-item :label="$t('jadwal.table.nama')" prop="jadwal">
+            <el-input
+              v-model="newData.jadwal"
+              placeholder="Masukan nama jadwal"
+            />
           </el-form-item>
 
           <el-form-item :label="$t('jadwal.table.tuk')" prop="id_tuk">

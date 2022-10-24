@@ -1,7 +1,6 @@
 <template>
   <el-container class="app-container">
     <el-header>
-      <!-- TODO: Buat halaman kedua dan ketiga -->
       <el-steps :active="active" finish-status="success" simple>
         <el-step title="Profil Peserta" />
         <el-step title="Dokumen Portofolio" />
@@ -12,7 +11,8 @@
       <div v-if="active === 0" class="form">
         <el-form
           ref="form"
-          :model="form"
+          :rules="rules"
+          :model="dataTrx"
           label-width="250px"
           :label-position="labelPosition"
         >
@@ -28,7 +28,7 @@
               <el-option
                 v-for="item in listJadwal"
                 :key="item.id"
-                :label="item.start_date + ' - ' + item.nama_skema"
+                :label=" item.jadwal + ' / ' + item.start_date + ' - ' + item.nama_skema"
                 :value="item.id"
               />
             </el-select>
@@ -73,7 +73,7 @@
           <el-form-item label="NIK">
             <el-input v-model="dataTrx.nik" />
           </el-form-item>
-          <el-form-item label="Nama Lengkap">
+          <el-form-item label="Nama Lengkap" prop="nama_lengkap">
             <el-input v-model="dataTrx.nama_lengkap" />
           </el-form-item>
           <el-form-item label="Nama Sekolah">
@@ -81,7 +81,7 @@
           </el-form-item>
           <el-form-item label="Tempat - Tanggal Lahir">
             <el-col :span="11">
-              <el-input v-model="dataTrx.tempal_lahir" />
+              <el-input v-model="dataTrx.tempat_lahir" />
             </el-col>
             <el-col class="line" :span="2">-</el-col>
             <el-col :span="11">
@@ -95,8 +95,8 @@
           </el-form-item>
           <el-form-item label="Jenis Kelamin">
             <el-radio-group v-model="dataTrx.jenis_kelamin">
-              <el-radio label="Laki - Laki" />
-              <el-radio label="Perempuan" />
+              <el-radio v-model="dataTrx.jenis_kelamin" label="Laki - Laki" />
+              <el-radio v-model="dataTrx.jenis_kelamin" label="Perempuan" />
             </el-radio-group>
           </el-form-item>
           <el-form-item label="Alamat">
@@ -108,7 +108,7 @@
           <el-form-item label="No HP">
             <el-input v-model="dataTrx.no_hp" />
           </el-form-item>
-          <el-form-item label="Email">
+          <el-form-item label="Email" prop="email">
             <el-input v-model="dataTrx.email" />
           </el-form-item>
           <el-form-item label="Tingkatan Kelas">
@@ -170,7 +170,7 @@
         <br>
         <el-form
           ref="form"
-          :model="form"
+          :model="dataTrx"
           label-width="250px"
           :label-position="labelPosition"
         >
@@ -191,7 +191,6 @@
           <el-form-item :label="$t('jadwal.table.identitas')" prop="identitas">
             <el-upload
               class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
               :limit="1"
               :before-upload="beforeAvatarUpload"
               :on-success="handleIdentitasSuccess"
@@ -205,7 +204,6 @@
           <el-form-item :label="$t('jadwal.table.raport')" prop="identitas">
             <el-upload
               class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
               :limit="1"
               :before-upload="beforeAvatarUpload"
               :on-success="handleRaportSuccess"
@@ -219,7 +217,6 @@
           <el-form-item :label="$t('jadwal.table.sertifikat')" prop="identitas">
             <el-upload
               class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
               :limit="1"
               :before-upload="beforeAvatarUpload"
               :on-success="handleSertifikatSuccess"
@@ -319,7 +316,8 @@
         <br>
       </div>
       <el-button @click="back">Prev</el-button>
-      <el-button type="primary" @click="onSubmit">Next</el-button>
+      <el-button v-if="active !== 2" type="primary" @click="onSubmit">Next</el-button>
+      <el-button v-else type="primary" @click="sendData">Submit</el-button>
       <router-link :to="{ name: 'homepage' }">
         <el-button style="margin-top: 12px">back to home</el-button>
       </router-link>
@@ -329,6 +327,7 @@
 
 <script>
 import Resource from '@/api/resource';
+const ujiKompResource = new Resource('uji-komp-post');
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
@@ -358,6 +357,14 @@ export default {
       active: 0,
       isWide: true,
       labelPosition: 'left',
+      rules: {
+        id_jadwal: [{ required: true, message: 'Jadwal is required', trigger: 'change' }],
+        nama_lengkap: [{ required: true, message: 'Nama Lengkap is required', trigger: 'blur' }],
+        email: [
+          { required: true, message: 'Email is required', trigger: 'blur' },
+          { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
+        ],
+      },
     };
   },
   beforeDestroy() {
@@ -464,6 +471,31 @@ export default {
         this.$message.error('Document size can not exceed 2MB!');
       }
       return isLt2M;
+    },
+    reset() {
+      this.dataTrx = {};
+    },
+    sendData() {
+      this.loading = true;
+      this.dataTrx.detail_apl_02 = this.listKuk;
+      console.log(this.dataTrx);
+      ujiKompResource
+        .store(this.dataTrx)
+        .then(response => {
+          this.$message({
+            message: 'New Uji Kompetensi ' + this.dataTrx.nama_lengkap + ' has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.reset();
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
 };

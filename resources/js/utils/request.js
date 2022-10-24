@@ -1,5 +1,5 @@
 import '@/bootstrap';
-import { Message } from 'element-ui';
+import { MessageBox } from 'element-ui';
 // import { isLogged, setLogged } from '@/utils/auth';
 
 // Create axios instance
@@ -42,11 +42,25 @@ service.interceptors.response.use(
       message = error.response.data.error;
     }
 
-    Message({
-      message: message,
-      type: 'error',
-      duration: 5 * 1000,
-    });
+    MessageBox.confirm(error.response.data.message,
+      message,
+      {
+        confirmButtonText: 'OK',
+        type: '"warning"',
+        callback: action => {
+          if (error.response.data.message === 'Unauthenticated.') {
+            window.location.reload();
+          } else {
+            null;
+          }
+        },
+      }
+    );
+    // Message({
+    //   message: message,
+    //   type: 'error',
+    //   duration: 5 * 1000,
+    // });
     return Promise.reject(error);
   }
 );

@@ -219,6 +219,24 @@ export default {
     },
   },
 
+  uji: {
+    table: {
+      no: 'No',
+      code: 'Scheme Code',
+      skema: 'Certification Scheme',
+      pesyaratan: 'Requirement',
+      tuk: 'TUK',
+      perangkat: 'Perangkat',
+      asesor: 'Assesor',
+      jadwal: 'schedule',
+      asesi: 'Asesi',
+    },
+    dialog: {
+      addNew: 'Add New',
+      edit: 'Edit',
+    },
+  },
+
   // TUK
   tuk: {
     table: {
