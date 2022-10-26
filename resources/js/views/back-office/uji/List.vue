@@ -146,7 +146,7 @@
 
       <el-table-column align="center" :label="$t('uji.table.schedule')">
         <template slot-scope="scope">
-          <span>{{ scope.row.mulai }} - {{ scope.row.selesai }} / {{ scope.row.skema_sertifikasi }}</span>
+          <span>   {{ scope.row.jadwal }} : {{ scope.row.skema_sertifikasi }} / {{ scope.row.mulai }}  </span>
         </template>
       </el-table-column>
 

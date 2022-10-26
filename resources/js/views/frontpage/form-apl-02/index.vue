@@ -11,6 +11,7 @@
       <div v-if="active === 0" class="form">
         <el-form
           ref="form"
+          v-loading="loading"
           :rules="rules"
           :model="dataTrx"
           label-width="250px"
@@ -280,7 +281,7 @@
           >
             <template slot="header">
               <span>K / BK</span>
-              <el-select v-model="kompeten" class="filter-item" placeholder="B/BK">
+              <el-select v-model="kompeten" class="filter-item" placeholder="B/BK" @change="allKompeten()">
                 <el-option :key="0" label="Kompeten" :value="0" />
                 <el-option :key="1" label="Belum Kompeten" :value="1" />
               </el-select>
@@ -336,8 +337,8 @@ export default {
   components: {},
   data() {
     return {
-      kompeten: null,
-      loading: false,
+      kompeten: 0,
+      loading: true,
       listSkema: null,
       listTuk: null,
       listJadwal: null,
@@ -373,21 +374,29 @@ export default {
   mounted() {
     window.addEventListener('resize', this.onResize);
     this.onResize();
+    this.allKompeten();
   },
   created() {
+    this.loading = true;
     this.getListSkema();
     this.getListTuk();
     this.getListJadwal();
+    this.loading = false;
   },
   methods: {
     allKompeten() {
-      for (var i = 0; i < this.listKuk.length; i++) {
-        var kuk = this.kukList[i];
-        if (kuk.type === 'kuk'){
-          console.log(kuk);
-          // kuk.is_kompeten = this.kompeten;
-        }
-      }
+      this.loading = true;
+      this.listKuk.forEach((element, index) => {
+        element['is_kompeten'] = this.kompeten;
+      });
+      // for (var i = 0; i < this.listKuk.length; i++) {
+      //   if (this.listKuk[i].type === 'kuk'){
+      //     this.listKuk[i].is_kompeten = data;
+      //     console.log(this.listKuk[i].is_kompeten);
+      //     console.log(data);
+      //   }
+      // }
+      this.loading = false;
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -423,6 +432,7 @@ export default {
           kuk.push(element);
           element.kuk.forEach((element, index) => {
             element['type'] = 'kuk';
+            element['is_kompeten'] = 0;
             element['bukti_pendukung'] = 'raport';
             kuk.push(element);
           });
@@ -488,6 +498,7 @@ export default {
             duration: 5 * 1000,
           });
           this.reset();
+          this.$router.push({ name: 'home' });
         })
         .catch(error => {
           console.log(error);

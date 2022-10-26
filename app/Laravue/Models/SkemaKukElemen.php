@@ -45,7 +45,7 @@ class SkemaKukElemen extends Model
             $data['jumlah_bukti'] = $row->jumlah_bukti;
             $data['jenis_bukti_id'] = $row->jenis_bukti_id;
             $data['nama_jenis_bukti'] = $row->nama_jenis_bukti;
-            $data['bukti'] = $row->pertanyaan_kuk;
+            $data['bukti'] = $row->bukti;
             $plunckData[] = $data;
 		endforeach;
 		return $plunckData;

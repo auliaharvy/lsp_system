@@ -305,10 +305,10 @@ class SkemaController extends BaseController
                         $kuk = SkemaKukElemen::create([
                             'id_elemen' => $params[$i]['id_elemen'],
                             'kuk' => $params[$i]['kuk'],
-                            'pertanyaan_kuk' => $params[$i]['pertanyaan_kuk'],
-                            'jumlah_bukti' => $params[$i]['jumlah_bukti'],
-                            'jenis_bukti_id' => $params[$i]['jenis_bukti_id'],
-                            'bukti' => $params[$i]['bukti'],
+                            'pertanyaan_kuk' => $params[$i]['kuk'],
+                            'jumlah_bukti' => 1,
+                            'jenis_bukti_id' => 2,
+                            'bukti' => 'Raport',
                         ]);
                     } else {
                         return response()->json(['error' => 'Elemen ' . $params[$i]["nama_elemen"]. ' Belum ada, silakan buat elemen terlebih dahulu'], 403);

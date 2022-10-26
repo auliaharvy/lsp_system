@@ -28,7 +28,7 @@
 
       <el-table-column align="center" :label="$t('tuk.table.name')">
         <template slot-scope="scope">
-          <span>{{ scope.row.alamat }}</span>
+          <span>{{ scope.row.nama }}</span>
         </template>
       </el-table-column>
 

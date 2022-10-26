@@ -60,7 +60,7 @@
         </el-table>
 
         <br>
-        <a target="_blank" href="/file/test.pdf">
+        <a target="_blank" :href="'/file/fr-02/' + selectedSkema.kode_skema + '.pdf'">
           <el-button type="primary">
             Klik untuk melihat soal
           </el-button>

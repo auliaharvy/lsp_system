@@ -8,12 +8,12 @@
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateUnitKompetensi">
         {{ $t('table.export') }}
       </el-button>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :header-cell-style="{ background: '#C0C0C0', color: 'white' }">
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }">
       <el-table-column label="Skema Sertifikasi">
         <el-table-column align="center" label="No" width="80">
           <template slot-scope="scope">
@@ -25,65 +25,46 @@
           <template slot-scope="scope">
             <br>
             <div class="filter-container">
-              <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateElemen(scope.row.children)">
-                {{ $t('table.export') }} Template
-              </el-button>
-              <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'elemen')">
-                Upload Elemen Unit Kompetensi
-              </el-button>
+              <el-row>
+                <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateElemen(scope.row.children)">
+                  {{ $t('table.export') }} Template Elemen Unit Kompetensi
+                </el-button>
+                <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'elemen')">
+                  Upload Elemen Unit Kompetensi
+                </el-button>
+              </el-row>
+
+              <el-row>
+                <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateKuk(scope.row.children)">
+                  {{ $t('table.export') }} Template Kuk
+                </el-button>
+                <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'kuk')">
+                  Upload KUK Elemen
+                </el-button>
+              </el-row>
+
             </div>
 
-            <el-table v-loading="loading" :data="scope.row.children" border fit highlight-current-row style="width: 80%" :header-cell-style="{ background: '#C0C0C0', color: 'white' }" class="table-child">
+            <el-table v-loading="loading" :data="scope.row.children" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
               <el-table-column label="Unit Kompetensi">
                 <el-table-column type="expand">
                   <template slot-scope="row">
-                    <br>
-                    <div class="filter-container">
-                      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateKuk(row.row.elemen)">
-                        {{ $t('table.export') }} Template
-                      </el-button>
-                      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'kuk')">
-                        Upload KUK Elemen
-                      </el-button>
-                    </div>
+                    <el-table v-loading="loading" :data="row.row.elemen" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
+                      <el-table-column type="expand">
+                        <template slot-scope="elemen">
+                          <span style="font-weight: bold;">KUK Elemen</span>
+                          <ul>
+                            <li v-for="item in elemen.row.kuk" :key="item.id">
+                              {{ item.kuk }}
+                            </li>
+                          </ul>
+                        </template>
+                      </el-table-column>
 
-                    <el-table v-loading="loading" :data="row.row.elemen" border fit highlight-current-row style="width: 80%" :header-cell-style="{ background: '#C0C0C0', color: 'white' }" class="table-child">
-                      <el-table-column label="Elemen Unit Kompetensi">
-
-                        <el-table-column type="expand">
-                          <template slot-scope="elemen">
-                            <el-table v-loading="loading" :data="elemen.row.kuk" border fit highlight-current-row style="width: 80%" :header-cell-style="{ background: '#C0C0C0', color: 'white' }" class="table-child">
-                              <el-table-column label="KUK">
-
-                                <el-table-column align="center" label="KUK">
-                                  <template slot-scope="kuk">
-                                    <span>{{ kuk.row.kuk }}</span>
-                                  </template>
-                                </el-table-column>
-
-                                <el-table-column align="center" label="Pertanyaan KUK">
-                                  <template slot-scope="kuk">
-                                    <span>{{ kuk.row.pertanyaan_kuk }}</span>
-                                  </template>
-                                </el-table-column>
-
-                                <el-table-column align="center" label="Bukti">
-                                  <template slot-scope="kuk">
-                                    <span>{{ kuk.row.bukti }}</span>
-                                  </template>
-                                </el-table-column>
-
-                              </el-table-column>
-                            </el-table>
-                          </template>
-                        </el-table-column>
-
-                        <el-table-column align="center" label="Elemen">
-                          <template slot-scope="elemen">
-                            <span>{{ elemen.row.nama_elemen }}</span>
-                          </template>
-                        </el-table-column>
-
+                      <el-table-column align="left" label="Elemen">
+                        <template slot-scope="elemen">
+                          <span>{{ elemen.row.nama_elemen }}</span>
+                        </template>
                       </el-table-column>
                     </el-table>
                   </template>
@@ -93,7 +74,7 @@
                     <span>{{ row.row.kode_unit }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="Unit Kompetensi">
+                <el-table-column align="left" label="Unit Kompetensi" min-width="150px">
                   <template slot-scope="row">
                     <span>{{ row.row.unit_kompetensi }}</span>
                   </template>
@@ -104,25 +85,25 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.code')">
+        <el-table-column align="center" :label="$t('skema.table.code')" min-width="200px">
           <template slot-scope="scope">
             <span>{{ scope.row.kode_skema }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.skema')">
+        <el-table-column align="left" :label="$t('skema.table.skema')" min-width="250px">
           <template slot-scope="scope">
             <span>{{ scope.row.skema_sertifikasi }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.category')" min-width="150px">
+        <el-table-column align="center" :label="$t('skema.table.category')" min-width="100px">
           <template slot-scope="scope">
             <span>{{ scope.row.nama_kategori }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.unit_qty')">
+        <!-- <el-table-column align="center" :label="$t('skema.table.unit_qty')">
           <template slot-scope="scope">
             <span>{{ scope.row.jumlah_unit_count }}</span>
           </template>
@@ -138,7 +119,7 @@
           <template slot-scope="scope">
             <span>{{ scope.row.kbji }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column align="center" :label="$t('skema.table.jenjang')">
           <template slot-scope="scope">
@@ -146,17 +127,17 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.sector_code')">
+        <el-table-column align="center" :label="$t('skema.table.sector_code')" min-width="80px">
           <template slot-scope="scope">
             <span>{{ scope.row.kode_sektor }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.visibility')">
+        <!-- <el-table-column align="center" :label="$t('skema.table.visibility')">
           <template slot-scope="scope">
             <span>{{ scope.row.visibilitas }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column align="center" label="Actions" min-width="120">
           <template slot-scope="scope">
@@ -233,9 +214,9 @@
               <el-option v-for="item in kategori" :key="item.id" :label="item.nama" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('skema.table.unit_qty')" prop="jumlah_unit">
+          <!-- <el-form-item :label="$t('skema.table.unit_qty')" prop="jumlah_unit">
             <el-input v-model="editedSkema.jumlah_unit" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item :label="$t('skema.table.kblui')" prop="kblui">
             <el-input v-model="editedSkema.kblui" />
           </el-form-item>
@@ -335,6 +316,7 @@ export default {
       kategori: [],
       uploadTableData: [],
       uploadTableHeader: [],
+      kukTemplateData: [],
       newSkema: {},
       editedSkema: {
         id: 0,
@@ -357,7 +339,7 @@ export default {
         kode_skema: [{ required: true, message: 'Kode Skema is required', trigger: 'change' }],
         skema_sertifikasi: [{ required: true, message: 'Skema Sertifikasi is required', trigger: 'blur' }],
         kategori_id: [{ required: true, message: 'Kategori Skema is required', trigger: 'blur' }],
-        jumlah_unit: [{ required: true, message: 'Jumlah Unit is required', trigger: 'blur' }],
+        // jumlah_unit: [{ required: true, message: 'Jumlah Unit is required', trigger: 'blur' }],
         kblui: [{ required: true, message: 'KBLUI is required', trigger: 'blur' }],
         kbji: [{ required: true, message: 'KBJI is required', trigger: 'blur' }],
         jenjang: [{ required: true, message: 'Jenjang is required', trigger: 'blur' }],
@@ -592,6 +574,20 @@ export default {
         this.downloading = false;
       });
     },
+    handleDownloadTemplateUnitKompetensi() {
+      this.downloading = true;
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['id_skema', 'skema_sertifikasi', 'kode_unit', 'unit_kompetensi'];
+        const filterVal = ['id', 'skema_sertifikasi', 'kode_unit', 'unit_kompetensi'];
+        const data = this.formatJson(filterVal, this.list);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'template import element unit',
+        });
+        this.downloading = false;
+      });
+    },
     handleDownloadTemplateElemen(list) {
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {
@@ -608,15 +604,25 @@ export default {
     },
     handleDownloadTemplateKuk(list) {
       console.log(list);
+      var dataDownload = [];
+      for (var i = 0; i < list.length; i++) {
+        var elemen = list[i].elemen;
+        for (var x = 0; x < elemen.length; x++) {
+          // console.log(elemen[x]);
+          dataDownload.push(elemen[x]);
+        }
+        console.log(dataDownload);
+      }
+      console.log(dataDownload);
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['id_elemen', 'nama_elemen', 'kuk', 'pertanyaan_kuk', 'jumlah_bukti', 'jenis_bukti', 'bukti'];
+        const tHeader = ['id_elemen', 'nama_elemen', 'kuk'];
         const filterVal = ['id_elemen', 'nama_elemen'];
-        const data = this.formatJson(filterVal, list);
+        const data = this.formatJson(filterVal, dataDownload);
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: 'Template Upload Elemen unit skema',
+          filename: 'Template Upload KUK Elemen',
         });
         this.downloading = false;
       });

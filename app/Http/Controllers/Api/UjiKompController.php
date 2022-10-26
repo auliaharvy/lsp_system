@@ -65,7 +65,7 @@ class UjiKompController extends BaseController
         $query->join('mst_skema_sertifikasi as d', 'd.id', '=', 'b.id_skema');
         $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk')
         ->select('trx_uji_komp.*', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
-        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk');
+        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal');
 
         if (!empty($keyword)) {
             $query->where('b.id_jadwal', 'LIKE', '%' . $jadwal . '%');
