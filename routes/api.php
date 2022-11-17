@@ -26,11 +26,18 @@ Route::namespace('Api')->group(function() {
     Route::get('tuk-get', 'TukController@index');
     Route::get('jadwal-get', 'JadwalController@index');
     Route::post('uji-komp-post', 'UjiKompController@store');
+    Route::post('new-user-uji', 'UjiKompController@newUser');
+    Route::post('check-user-uji', 'UjiKompController@checkUser');
     Route::get('uji-komp-get', 'UjiKompController@index');
 
     Route::get('mst-ia03-get', 'UjiKompController@indexIa03');
     Route::get('mst-ia11-get', 'UjiKompController@indexIa11');
     Route::get('mst-ak-03-get', 'UjiKompController@indexAk03');
+
+    //detail FR
+    Route::get('detail/apl-01/{id}', 'UjiKompController@showApl01');
+
+
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
         Route::post('uji-komp-ia-01', 'UjiKompController@storeIa01');

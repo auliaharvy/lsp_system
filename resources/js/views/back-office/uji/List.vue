@@ -1,6 +1,20 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-select
+        v-model="query.id_jadwal"
+        filterable
+        clearable
+        class="filter-item full"
+        :placeholder="$t('jadwal.table.jadwal')"
+      >
+        <el-option
+          v-for="item in listJadwal"
+          :key="item.id"
+          :label="item.jadwal + ' / ' + item.start_date + ' - ' + item.nama_skema"
+          :value="item.id"
+        />
+      </el-select>
       <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
@@ -13,7 +27,7 @@
       </el-button>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }">
       <el-table-column align="center" label="No" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.index }}</span>
@@ -34,7 +48,7 @@
                 <ul>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-APL-01" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-01', params: { id_apl_01: scope.row.id_apl_01 }}">
+                      <router-link :to="{ name: 'form-apl-01', params: { id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">APL 01  <i v-if="scope.row.id_apl_01 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
@@ -144,22 +158,45 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('uji.table.schedule')">
+      <el-table-column align="left" :label="$t('uji.table.schedule')" min-width="100px">
         <template slot-scope="scope">
-          <span>   {{ scope.row.jadwal }} : {{ scope.row.skema_sertifikasi }} / {{ scope.row.mulai }}  </span>
+          <span> {{ scope.row.jadwal }} </span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('uji.table.asesi')">
+      <el-table-column align="left" :label="$t('uji.table.skema')" min-width="150px">
+        <template slot-scope="scope">
+          <span> {{ scope.row.kode_skema }} / {{ scope.row.skema_sertifikasi }} </span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="left" :label="$t('jadwal.table.asesor')">
+        <template slot-scope="scope">
+          <div
+            v-for="(asesor, i) in scope.row.asesor"
+            :key="asesor.nama_asesor"
+          >
+            {{ i + 1 + '. ' + asesor.nama_asesor }}
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="left" :label="$t('uji.table.asesi')">
         <template slot-scope="scope">
           <span>{{ scope.row.nama_peserta }} ({{ scope.row.email_peserta }})</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="$t('uji.table.mulai')">
+        <template slot-scope="scope">
+          <span> {{ scope.row.mulai }} </span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Status">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status === 1" type="success" effect="dark"> Selesai </el-tag>
-          <el-tag v-if="scope.row.status === 0" type="danger" effect="dark"> Belum Selesai </el-tag>
+          <el-tag v-if="scope.row.status === 0" type="warning" effect="dark"> Belum Selesai </el-tag>
         </template>
       </el-table-column>
 
@@ -256,6 +293,7 @@ import permission from '@/directive/permission'; // Permission directive
 const userResource = new UserResource();
 const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
+const jadwalResource = new Resource('jadwal-get');
 
 export default {
   name: 'PerangkatAsemenList',
@@ -265,6 +303,7 @@ export default {
     return {
       list: null,
       listSkema: null,
+      listJadwal: null,
       total: 0,
       loading: true,
       downloading: false,
@@ -285,6 +324,7 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
+        user_id: null,
       },
       rules: {
         kode_perangkat: [{ required: true, message: 'Kode Perangkat is required', trigger: 'change' }],
@@ -304,13 +344,18 @@ export default {
     ...mapGetters([
       'username',
       'userId',
+      'roles',
+      'user',
     ]),
   },
   created() {
     this.getList();
+    this.getListJadwal();
   },
   methods: {
     async getList() {
+      this.query.role = this.roles[0];
+      this.query.user_id = this.userId;
       const { limit, page } = this.query;
       this.loading = true;
       // get data skema
@@ -324,6 +369,10 @@ export default {
       });
       this.total = meta.total;
       this.loading = false;
+    },
+    async getListJadwal() {
+      const { data } = await jadwalResource.list();
+      this.listJadwal = data;
     },
     handleFilter() {
       this.query.page = 1;

@@ -29,7 +29,7 @@
               <el-option
                 v-for="item in listJadwal"
                 :key="item.id"
-                :label=" item.jadwal + ' / ' + item.start_date + ' - ' + item.nama_skema"
+                :label="item.jadwal + ' / ' + item.start_date + ' - ' + item.nama_skema"
                 :value="item.id"
               />
             </el-select>
@@ -176,56 +176,16 @@
           :label-position="labelPosition"
         >
           <el-form-item :label="$t('jadwal.table.foto')" prop="foto">
-            <el-upload
-              class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :limit="1"
-              :before-upload="beforeAvatarUpload"
-              :on-success="handleFotoSuccess"
-              :file-list="dataTrx.foto"
-            >
-              <el-button size="small" type="primary">Click to upload</el-button>
-              <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 2MB</div>
-            </el-upload>
+            <input type="file" @change="handleFotoSuccess">
           </el-form-item>
-
           <el-form-item :label="$t('jadwal.table.identitas')" prop="identitas">
-            <el-upload
-              class="upload-demo"
-              :limit="1"
-              :before-upload="beforeAvatarUpload"
-              :on-success="handleIdentitasSuccess"
-              :file-list="dataTrx.identitas"
-            >
-              <el-button size="small" type="primary">Click to upload</el-button>
-              <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 2MB</div>
-            </el-upload>
+            <input type="file" @change="handleIdentitasSuccess">
           </el-form-item>
-
-          <el-form-item :label="$t('jadwal.table.raport')" prop="identitas">
-            <el-upload
-              class="upload-demo"
-              :limit="1"
-              :before-upload="beforeAvatarUpload"
-              :on-success="handleRaportSuccess"
-              :file-list="dataTrx.raport"
-            >
-              <el-button size="small" type="primary">Click to upload</el-button>
-              <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 2MB</div>
-            </el-upload>
+          <el-form-item :label="$t('jadwal.table.raport')" prop="raport">
+            <input type="file" @change="handleRaportSuccess">
           </el-form-item>
-
-          <el-form-item :label="$t('jadwal.table.sertifikat')" prop="identitas">
-            <el-upload
-              class="upload-demo"
-              :limit="1"
-              :before-upload="beforeAvatarUpload"
-              :on-success="handleSertifikatSuccess"
-              :file-list="dataTrx.sertifikat"
-            >
-              <el-button size="small" type="primary">Click to upload</el-button>
-              <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 2MB</div>
-            </el-upload>
+          <el-form-item :label="$t('jadwal.table.sertifikat')" prop="sertifikat">
+            <input type="file" @change="handleSertifikatSuccess">
           </el-form-item>
         </el-form>
         <br>
@@ -234,8 +194,9 @@
       <div v-if="active === 2" class="form">
         <h3>FR-APL 02 ASESMEN MANDIRI</h3>
         <p>
-          Pastikan anda kompeten sesuai dengan elemen dan kuk yang ada pada setiap unit-unit kompetensi berikuti ini.
-          Pasangkan elemen/kuk dengan bukti pendukung yang telah anda sebutkan sebelumnya.
+          Pastikan anda kompeten sesuai dengan elemen dan kuk yang ada pada
+          setiap unit-unit kompetensi berikuti ini. Pasangkan elemen/kuk dengan
+          bukti pendukung yang telah anda sebutkan sebelumnya.
         </p>
         <el-divider />
 
@@ -274,20 +235,26 @@
             </template>
           </el-table-column>
 
-          <el-table-column
-            align="center"
-            label="K / BK"
-            min-width="80px"
-          >
+          <el-table-column align="center" label="K / BK" min-width="80px">
             <template slot="header">
               <span>K / BK</span>
-              <el-select v-model="kompeten" class="filter-item" placeholder="B/BK" @change="allKompeten()">
+              <el-select
+                v-model="kompeten"
+                class="filter-item"
+                placeholder="B/BK"
+                @change="allKompeten()"
+              >
                 <el-option :key="0" label="Kompeten" :value="0" />
                 <el-option :key="1" label="Belum Kompeten" :value="1" />
               </el-select>
             </template>
             <template slot-scope="scope">
-              <el-select v-if="scope.row.type === 'kuk'" v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
+              <el-select
+                v-if="scope.row.type === 'kuk'"
+                v-model="scope.row.is_kompeten"
+                class="filter-item"
+                placeholder="B/BK"
+              >
                 <el-option :key="0" label="Kompeten" :value="0" />
                 <el-option :key="1" label="Belum Kompeten" :value="1" />
               </el-select>
@@ -315,28 +282,90 @@
         </el-table>
         <br>
         <br>
+        <img :src="testPng">
       </div>
       <el-button @click="back">Prev</el-button>
       <el-button v-if="active !== 2" type="primary" @click="onSubmit">Next</el-button>
-      <el-button v-else type="primary" @click="sendData">Submit</el-button>
+      <el-button v-else type="primary" @click="checkUser">Submit</el-button>
+      <!-- <el-button type="primary" @click="checkUser">Save</el-button> -->
       <router-link :to="{ name: 'homepage' }">
         <el-button style="margin-top: 12px">back to home</el-button>
       </router-link>
     </el-main>
+    <el-dialog :title="'Create new user'" :visible.sync="dialogNewUser">
+      <div v-loading="loading" class="form-container">
+        <el-form
+          ref="userForm"
+          :rules="rules"
+          :model="dataTrx"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px"
+        >
+          <el-form-item :label="$t('user.name')" prop="name">
+            <el-input v-model="dataTrx.nama_lengkap" />
+          </el-form-item>
+          <el-form-item :label="$t('user.email')" prop="email">
+            <el-input v-model="dataTrx.email" />
+          </el-form-item>
+          <el-form-item :label="$t('user.password')" prop="password">
+            <el-input v-model="dataTrx.password" show-password />
+          </el-form-item>
+          <el-form-item :label="$t('user.confirmPassword')" prop="confirmPassword">
+            <el-input v-model="dataTrx.confirmPassword" show-password />
+          </el-form-item>
+          <el-form-item
+            label="Tanda Tangan"
+          >
+            <vueSignature
+              ref="signature"
+              :sig-option="option"
+              :w="'300px'"
+              :h="'150px'"
+              :disabled="false"
+              style="border-style: outset"
+            />
+            <el-button size="small" @click="clear">Clear</el-button>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="newUser()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
   </el-container>
 </template>
 
 <script>
+import vueSignature from 'vue-signature';
 import Resource from '@/api/resource';
 const ujiKompResource = new Resource('uji-komp-post');
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
+const checkUserResource = new Resource('check-user-uji');
+const newUserResource = new Resource('new-user-uji');
 
 export default {
-  components: {},
+  components: {
+    vueSignature,
+  },
   data() {
+    var validateConfirmPassword = (rule, value, callback) => {
+      if (value !== this.dataTrx.password) {
+        callback(new Error('Password is mismatched!'));
+      } else {
+        callback();
+      }
+    };
     return {
+      option: {
+        penColor: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(255,255,255)',
+      },
+      dataUrl: 'https://avatars2.githubusercontent.com/u/17644818?s=460&v=4',
       kompeten: 0,
       loading: true,
       listSkema: null,
@@ -345,6 +374,7 @@ export default {
       listKuk: [],
       selectedSkema: {},
       dataTrx: {},
+      testPng: null,
       form: {
         name: '',
         region: '',
@@ -355,15 +385,36 @@ export default {
         resource: '',
         desc: '',
       },
+      dialogImageUrl: null,
+      dialogImageVisible: false,
       active: 0,
       isWide: true,
+      dialogNewUser: false,
       labelPosition: 'left',
       rules: {
-        id_jadwal: [{ required: true, message: 'Jadwal is required', trigger: 'change' }],
-        nama_lengkap: [{ required: true, message: 'Nama Lengkap is required', trigger: 'blur' }],
+        id_jadwal: [
+          { required: true, message: 'Jadwal is required', trigger: 'change' },
+        ],
+        nama_lengkap: [
+          {
+            required: true,
+            message: 'Nama Lengkap is required',
+            trigger: 'blur',
+          },
+        ],
         email: [
           { required: true, message: 'Email is required', trigger: 'blur' },
-          { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
+          {
+            type: 'email',
+            message: 'Please input correct email address',
+            trigger: ['blur', 'change'],
+          },
+        ],
+        password: [
+          { required: true, message: 'Password is required', trigger: 'blur' },
+        ],
+        confirmPassword: [
+          { validator: validateConfirmPassword, trigger: 'blur' },
         ],
       },
     };
@@ -384,6 +435,16 @@ export default {
     this.loading = false;
   },
   methods: {
+    saveSign() {
+      var _this = this;
+      var png = _this.$refs.signature.save();
+      this.testPng = _this.$refs.signature.save();
+      var jpeg = _this.$refs.signature.save('image/jpeg');
+      var svg = _this.$refs.signature.save('image/svg+xml');
+      console.log(png);
+      console.log(jpeg);
+      console.log(svg);
+    },
     allKompeten() {
       this.loading = true;
       this.listKuk.forEach((element, index) => {
@@ -397,6 +458,10 @@ export default {
       //   }
       // }
       this.loading = false;
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogImageVisible = true;
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -419,7 +484,7 @@ export default {
       this.dataTrx.id_tuk = tukId.id;
       this.getKuk();
     },
-    getKuk(){
+    getKuk() {
       var number = 1;
       var unitKomp = this.selectedSkema.children;
       var kuk = [];
@@ -462,17 +527,25 @@ export default {
         this.labelPosition = 'top';
       }
     },
-    handleFotoSuccess(res, file) {
-      this.dataTrx.foto = URL.createObjectURL(file.raw);
+    handleFotoSuccess(e) {
+      const files = e.target.files;
+      const rawFile = files[0]; // only use files[0]
+      this.dataTrx.foto = rawFile;
     },
-    handleIdentitasSuccess(res, file) {
-      this.dataTrx.identitas = URL.createObjectURL(file.raw);
+    handleIdentitasSuccess(e) {
+      const files = e.target.files;
+      const rawFile = files[0]; // only use files[0]
+      this.dataTrx.identitas = rawFile;
     },
-    handleRaportSuccess(res, file) {
-      this.dataTrx.raport = URL.createObjectURL(file.raw);
+    handleRaportSuccess(e) {
+      const files = e.target.files;
+      const rawFile = files[0]; // only use files[0]
+      this.dataTrx.raport = rawFile;
     },
-    handleSertifikatSuccess(res, file) {
-      this.dataTrx.sertifikat = URL.createObjectURL(file.raw);
+    handleSertifikatSuccess(e) {
+      const files = e.target.files;
+      const rawFile = files[0]; // only use files[0]
+      this.dataTrx.sertifikat = rawFile;
     },
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -485,22 +558,113 @@ export default {
     reset() {
       this.dataTrx = {};
     },
+    newUser() {
+      this.dataTrx.signature = this.$refs.signature.save();
+      const formData = new FormData();
+      formData.append('id_skema', this.dataTrx.id_skema);
+      formData.append('id_tuk', this.dataTrx.id_tuk);
+      formData.append('id_jadwal', this.dataTrx.id_jadwal);
+      formData.append('nik', this.dataTrx.nik);
+      formData.append('nama_lengkap', this.dataTrx.nama_lengkap);
+      formData.append('nama_sekolah', this.dataTrx.nama_sekolah);
+      formData.append('tempat_lahir', this.dataTrx.tempat_lahir);
+      formData.append('tanggal_lahir', this.dataTrx.tanggal_lahir);
+      formData.append('jenis_kelamin', this.dataTrx.jenis_kelamin);
+      formData.append('alamat', this.dataTrx.alamat);
+      formData.append('kode_pos', this.dataTrx.kode_pos);
+      formData.append('no_hp', this.dataTrx.no_hp);
+      formData.append('email', this.dataTrx.email);
+      formData.append('tingkatan', this.dataTrx.tingkatan);
+      // formData.append('detail_apl_02', this.dataTrx.detail_apl_02);
+      formData.append('foto', this.dataTrx.foto);
+      formData.append('identitas', this.dataTrx.identitas);
+      formData.append('raport', this.dataTrx.raport);
+      formData.append('sertifikat', this.dataTrx.sertifikat);
+      formData.append('password', this.dataTrx.password);
+      formData.append('confirmPassowrd', this.dataTrx.confirmPassowrd);
+      formData.append('signature', this.dataTrx.signature);
+      console.log(formData);
+      newUserResource
+        .store(formData)
+        .then((response) => {
+          this.sendData();
+          this.loading = false;
+          // this.dialogNewUser = false;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    checkUser() {
+      checkUserResource
+        .store(this.dataTrx)
+        .then((response) => {
+          if (response.msg === 'User sudah terdaftar') {
+            this.sendData();
+          } else {
+            this.loading = false;
+            this.dialogNewUser = true;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    clear() {
+      var _this = this;
+      _this.$refs.signature.clear();
+    },
     sendData() {
       this.loading = true;
       this.dataTrx.detail_apl_02 = this.listKuk;
-      console.log(this.dataTrx);
+      const uploadData = new FormData();
+      uploadData.append('id_skema', this.dataTrx.id_skema);
+      uploadData.append('id_tuk', this.dataTrx.id_tuk);
+      uploadData.append('id_jadwal', this.dataTrx.id_jadwal);
+      uploadData.append('nik', this.dataTrx.nik);
+      uploadData.append('nama_lengkap', this.dataTrx.nama_lengkap);
+      uploadData.append('nama_sekolah', this.dataTrx.nama_sekolah);
+      uploadData.append('tempat_lahir', this.dataTrx.tempat_lahir);
+      uploadData.append('tanggal_lahir', this.dataTrx.tanggal_lahir);
+      uploadData.append('jenis_kelamin', this.dataTrx.jenis_kelamin);
+      uploadData.append('alamat', this.dataTrx.alamat);
+      uploadData.append('kode_pos', this.dataTrx.kode_pos);
+      uploadData.append('no_hp', this.dataTrx.no_hp);
+      uploadData.append('email', this.dataTrx.email);
+      uploadData.append('tingkatan', this.dataTrx.tingkatan);
+      var arrayDetail = JSON.stringify(this.dataTrx.detail_apl_02);
+      uploadData.append('detail_apl_02', arrayDetail);
+      uploadData.append('foto', this.dataTrx.foto);
+      uploadData.append('identitas', this.dataTrx.identitas);
+      uploadData.append('raport', this.dataTrx.raport);
+      uploadData.append('sertifikat', this.dataTrx.sertifikat);
+      uploadData.append('password', this.dataTrx.password);
+      uploadData.append('confirmPassowrd', this.dataTrx.confirmPassowrd);
+      console.log(uploadData);
       ujiKompResource
-        .store(this.dataTrx)
-        .then(response => {
+        .store(uploadData)
+        .then((response) => {
           this.$message({
-            message: 'New Uji Kompetensi ' + this.dataTrx.nama_lengkap + ' has been created successfully.',
+            message:
+              'New Uji Kompetensi ' +
+              this.dataTrx.nama_lengkap +
+              ' has been created successfully.',
             type: 'success',
             duration: 5 * 1000,
           });
+          this.dialogNewUser = false;
           this.reset();
-          this.$router.push({ name: 'home' });
+          this.$router.push({ name: 'login' });
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
         })
@@ -513,6 +677,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.excel-upload-input{
+  display: none;
+  z-index: -9999;
+}
 .form {
   padding-right: 50px;
   padding-left: 50px;

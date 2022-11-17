@@ -73,7 +73,7 @@
           <el-table-column
             align="left"
             label="Judul Unit Kompetensi / Elemen Kompetensi / Kriteria Unjuk Kerja(KUK)"
-            min-width="200px"
+            min-width="300px"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.type === 'unitKomp'"><b>{{ scope.row.unit_kompetensi }}</b></span>
@@ -85,7 +85,7 @@
           <el-table-column
             align="center"
             label="Benchmark (SOP / Spesifikasi Produk Industri)"
-            min-width="200px"
+            min-width="100px"
           >
             <template slot-scope="scope">
               <span><b>{{ scope.row.benchmark }}</b></span>
@@ -115,7 +115,7 @@
           <el-table-column
             align="center"
             label="Penilaian Lanjut"
-            min-width="80px"
+            min-width="120px"
           >
             <template slot-scope="scope">
               <el-input

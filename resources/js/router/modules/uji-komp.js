@@ -20,6 +20,13 @@ const ujiRoutes = {
       meta: { title: 'List', icon: 'list', permissions: ['manage user'] },
     },
     {
+      path: 'form-apl-01',
+      component: () => import('@/views/back-office/uji/fr_apl/01/index'),
+      name: 'form-apl-01',
+      meta: { title: 'Form APL 01', icon: 'date', permissions: ['manage user'] },
+      hidden: true,
+    },
+    {
       path: 'form-ia-01',
       component: () => import('@/views/back-office/uji/fr_ia/01/index'),
       name: 'form-ia-01',

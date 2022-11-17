@@ -9,6 +9,7 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Resources\MasterResource;
+use App\Http\Resources\UjiKompResource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\UjiKomp;
 use App\Laravue\Models\UjiKompApl1;
@@ -22,6 +23,7 @@ use App\Laravue\Models\UjiKompIa03Detail;
 use App\Laravue\Models\UjiKompIa11;
 use App\Laravue\Models\UjiKompIa11Detail;
 use App\Laravue\Models\Tuk;
+use App\Laravue\Models\JadwalAsesor;
 use App\Laravue\Models\Skema;
 use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
@@ -36,6 +38,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Validator;
+use File;
+use App\Image;
+use Carbon\Carbon;
 
 /**
  * Class UjiKompController
@@ -57,7 +62,10 @@ class UjiKompController extends BaseController
         $searchParams = $request->all();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
-        $jadwal = Arr::get($searchParams, 'di_jadwal', '');
+        $jadwal = Arr::get($searchParams, 'id_jadwal', '');
+        $user_id = Arr::get($searchParams, 'user_id', '');
+        $role = Arr::get($searchParams, 'role', '');
+        $foundUser = User::where('id',$user_id)->first();
 
         $query = UjiKomp::query();
         $query->join('trx_uji_komp_apl_01 as b', 'b.id', '=', 'trx_uji_komp.id_apl_01');
@@ -65,13 +73,21 @@ class UjiKompController extends BaseController
         $query->join('mst_skema_sertifikasi as d', 'd.id', '=', 'b.id_skema');
         $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk')
         ->select('trx_uji_komp.*', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
-        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal');
+        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'b.id_jadwal');
 
-        if (!empty($keyword)) {
-            $query->where('b.id_jadwal', 'LIKE', '%' . $jadwal . '%');
+        if ($role === 'user') {
+            $query->where('b.email', $foundUser->email);
+        }
+        if (!empty($jadwal)) {
+            $query->where('b.id_jadwal', $jadwal);
         }
 
-        return MasterResource::collection($query->paginate($limit));
+        if (!empty($keyword)) {
+            $query->where('b.email', 'LIKE', '%' . $keyword . '%');
+            $query->orWhere('e.nama', 'LIKE', '%' . $keyword . '%');
+        }
+
+        return UjiKompResource::collection($query->paginate($limit));
     }
 
     /**
@@ -93,6 +109,32 @@ class UjiKompController extends BaseController
             DB::beginTransaction();
             try {
                 $params = $request->all();
+                // upload identitas
+                $file = $request->file('identitas');
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $nama_fileId = $now . '-' . $params['nik'] . '-' . $file->getClientOriginalName();
+                $file->move('uploads/users/identitas/', $nama_fileId);
+                // upload foto
+                $file = $request->file('foto');
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $nama_fileFoto = $now . '-' . $params['nik'] . '-' . $file->getClientOriginalName();
+                $file->move('uploads/users/foto/', $nama_fileFoto);
+                // upload rapot
+                $file = $request->file('raport');
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $nama_fileRaport = $now . '-' . $params['nik'] . '-' . $file->getClientOriginalName();
+                $file->move('uploads/users/raport/', $nama_fileRaport);
+                // upload sertifikat
+                $file = $request->file('sertifikat');
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $nama_fileSertifikat = $now . '-' . $params['nik'] . '-' . $file->getClientOriginalName();
+                $file->move('uploads/users/sertifikat/', $nama_fileSertifikat);
+
+                // upload ke folder file_siswa di dalam folder public
                 $apl01 = UjiKompApl1::create([
                     'id_skema' => $params['id_skema'],
                     'id_tuk' => $params['id_tuk'],
@@ -108,10 +150,10 @@ class UjiKompController extends BaseController
                     'no_hp' => $params['no_hp'],
                     'email' => $params['email'],
                     'tingkatan' => $params['tingkatan'],
-                    // 'foto' => $params['foto'],
-                    // 'identitas' => $params['identitas'],
-                    // 'raport' => $params['raport'],
-                    // 'sertifikat' => $params['sertifikat'],
+                    'foto' => $nama_fileFoto,
+                    'identitas' => $nama_fileId,
+                    'raport' => $nama_fileRaport,
+                    'sertifikat' => $nama_fileSertifikat,
                     'status' => 0,
                 ]);
 
@@ -130,7 +172,8 @@ class UjiKompController extends BaseController
                     'persentase' => 6,
                 ]);
 
-                $elemen = $params['detail_apl_02'];
+                $elemen = json_decode($params['detail_apl_02'], true);
+                // return response()->json(['message' => $elemen], 200);
                 for ($i = 0; $i < count($elemen); $i++) {
                     if($elemen[$i]['type'] == 'kuk') {
                         $apl02Detail = UjiKompApl2Detail::create([
@@ -143,6 +186,8 @@ class UjiKompController extends BaseController
                     }
                 }
 
+                
+
                 DB::commit();
                 return response()->json(['message' => "Sukses membuat Uji Kompetensi"], 200);
             } catch (\Exception $e) {
@@ -150,6 +195,95 @@ class UjiKompController extends BaseController
                 return response()->json(['message' => $e->getMessage()], 400);
                 //return $e->getMessage();
             }
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function checkUser(Request $request)
+    {
+        $params = $request->all();
+        $foundUser = User::where('email',$params['email'])->first();
+
+        if ($foundUser) {
+            return response()->json(['msg' => 'User sudah terdaftar'], 200);
+        } else {
+            return response()->json(['msg' => 'User belum terdaftar'], 200);
+        }
+        // $file = base64_decode($request['signature']);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function newUser(Request $request)
+    {
+        $params = $request->all();
+        
+        
+
+        $validator = Validator::make(
+            $request->all(),
+            array_merge(
+                $this->getValidationRulesUser(),
+                [
+                    'password' => ['required', 'min:6'],
+                    'confirmPassword' => 'same:password',
+                ]
+            )
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $params = $request->all();
+                //upload sign
+                $file = $request['signature'];
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                // membuat nama file unik
+                $nama_file = $now . '-' . $params['nik'] . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+
+                $user = User::create([
+                    'name' => $params['nama_lengkap'],
+                    'email' => $params['email'],
+                    'nik' => $params['nik'],
+                    'nama_lengkap' => $params['nama_lengkap'],
+                    'nama_sekolah' => $params['nama_sekolah'],
+                    'tempat_lahir' => $params['tempat_lahir'],
+                    'tanggal_lahir' => $params['tanggal_lahir'],
+                    'jenis_kelamin' => $params['jenis_kelamin'],
+                    'alamat' => $params['alamat'],
+                    'kode_pos' => $params['kode_pos'],
+                    'no_hp' => $params['no_hp'],
+                    'tingkatan' => $params['tingkatan'], 
+                    'signature' => $nama_file,   
+                    'password' => Hash::make($params['password']),
+                ]);
+
+                $role = Role::findByName('user');
+                $user->syncRoles($role);
+
+                DB::commit();
+                return response()->json(['message' => "Success Create User"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+            
         }
     }
 
@@ -231,6 +365,26 @@ class UjiKompController extends BaseController
             return response()->json(['error' => $ex->getMessage()], 403);
         }
 
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  UjiKomp $UjiKomp
+     * @return MasterResource|\Illuminate\Http\JsonResponse
+     */
+    public function showApl01($id)
+    {
+       
+        $query = UjiKompApl1::where('trx_uji_komp_apl_01.id',$id)
+        ->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_uji_komp_apl_01.id_skema')
+        ->join('mst_tuk as c', 'c.id', '=', 'trx_uji_komp_apl_01.id_tuk')
+        ->join('trx_jadwal_asesmen as d', 'd.id', '=', 'trx_uji_komp_apl_01.id_jadwal')
+        ->join('users as e', 'e.email', '=', 'trx_uji_komp_apl_01.email')
+        ->select('trx_uji_komp_apl_01.*', 'b.skema_sertifikasi', 'b.kode_skema', 'c.nama as nama_tuk', 'd.jadwal', 'e.signature')
+        ->first();
+       
+        return $query;
     }
 
     public function indexIa03(Request $request)
@@ -482,6 +636,13 @@ class UjiKompController extends BaseController
         ];
     }
 
+    public function upload($fileupload, $itemuser, $folder) {
+        $path = $fileupload->store('files');
+        $inputangambar['url'] = $path;
+        $inputangambar['user_id'] = $itemuser;
+        return Image::create($inputangambar);
+    }
+
     private function getValidationRulesIa01($isNew = true)
     {
         return [
@@ -503,4 +664,19 @@ class UjiKompController extends BaseController
         ];
     }
     
+    /**
+     * @param bool $isNew
+     * @return array
+     */
+    private function getValidationRulesUser($isNew = true)
+    {
+        return [
+            'nama_lengkap' => 'required',
+            'email' => $isNew ? 'required|email|unique:users' : 'required|email',
+            // 'roles' => [
+            //     'required',
+            //     'array'
+            // ],
+        ];
+    }
 }

@@ -21,19 +21,30 @@
           </el-table-column>
           <el-table-column align="left">
             <template slot-scope="scope">
-              <el-checkbox-group v-if="scope.row.content === '-'" v-model="checkList">
-                <el-checkbox label="TL : Verifikasi Portofolio" />
-                <el-checkbox label="L : Observasi Langsung" />
-                <el-checkbox label="T : Hasil Tes Tulis" />
-                <el-checkbox label="T : Hasil Tes Lisan" />
-                <el-checkbox label="T : Hasil Tes Wawancara" />
-              </el-checkbox-group>
-              <span v-else>{{ scope.row.content }}</span>
+              <template v-if="scope.row.content !== '.'">
+                <el-checkbox-group v-if="scope.row.content === '-'" v-model="checkList">
+                  <el-checkbox label="TL : Verifikasi Portofolio" />
+                  <el-checkbox label="L : Observasi Langsung" />
+                  <el-checkbox label="T : Hasil Tes Tulis" />
+                  <el-checkbox label="T : Hasil Tes Lisan" />
+                  <el-checkbox label="T : Hasil Tes Wawancara" />
+                </el-checkbox-group>
+                <span v-else>{{ scope.row.content }}</span>
+              </template>
+              <template v-else>
+                Tanggal : {{ dataTrx.hari }} / {{ dataTrx.tanggal }} - {{ dataTrx.bulan }} - {{ dataTrx.tahun }}
+                <br>
+                Waktu : {{ dataTrx.jam }}:{{ dataTrx.menit }}
+                <br>
+                TUK : {{ headerTable[2].content }}
+              </template>
             </template>
           </el-table-column>
         </el-table>
 
         <br>
+
+        <el-button @click="onSubmit">Submit</el-button>
 
         <br>
         <br>
@@ -57,6 +68,7 @@ export default {
     return {
       umpanBalikAsesi: '',
       checkList: [],
+      now: null,
       kompeten: null,
       loading: false,
       listSoal: null,
@@ -88,6 +100,10 @@ export default {
           content: 'SKEMA SKNNI KLASIFIKASI II BISNIS DARING PEMASARAN',
         },
         {
+          title: 'Kode Skema',
+          content: '0000',
+        },
+        {
           title: 'TUK',
           content: 'TUK BDP',
         },
@@ -104,8 +120,8 @@ export default {
           content: '-',
         },
         {
-          title: 'Tanggal',
-          content: '20 - 12 -2022',
+          title: 'Pelaksanaan Asesmen disepakati pada',
+          content: '.',
         },
         {
           title: 'Asesor',
@@ -152,6 +168,7 @@ export default {
       this.getUjiKompDetail();
     });
     this.getListPertanyaan();
+    this.getDate();
   },
   methods: {
     allKompeten() {
@@ -192,12 +209,14 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
+      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = ujiDetail.nama_asesor;
-      this.headerTable[3].content = ujiDetail.nama_peserta;
-      this.headerTable[5].content = ujiDetail.mulai;
+      this.headerTable[1].content = ujiDetail.kode_skema;
+      this.headerTable[2].content = ujiDetail.nama_tuk;
+      this.headerTable[3].content = asesor.map(itm => itm.nama_asesor).join(', ');
+      this.headerTable[4].content = ujiDetail.nama_peserta;
+      this.dataTrx.tuk = ujiDetail.nama_tuk;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -253,6 +272,26 @@ export default {
       } else {
         this.labelPosition = 'top';
       }
+    },
+    getDate() {
+      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      var date = new Date();
+      // var millisecond = date.getMilliseconds();
+      // var detik = date.getSeconds();
+      var menit = date.getMinutes();
+      var jam = date.getHours();
+      var hari = date.getDay();
+      var tanggal = date.getDate();
+      var bulan = date.getMonth();
+      var tahun = date.getFullYear();
+      this.dataTrx.jam = jam;
+      this.dataTrx.menit = menit;
+      this.dataTrx.tanggal = tanggal;
+      this.dataTrx.bulan = arrbulan[bulan];
+      this.dataTrx.tahun = tahun;
+      this.dataTrx.hari = arrHari[hari];
+      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
     },
     handleFotoSuccess(res, file) {
       this.dataTrx.foto = URL.createObjectURL(file.raw);

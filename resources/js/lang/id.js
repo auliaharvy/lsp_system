@@ -212,6 +212,10 @@ export default {
       start: 'Mulai',
       end: 'Berakhir',
       jadwal: 'Jadwal',
+      foto: 'Foto',
+      identitas: 'KTP',
+      raport: 'Raport',
+      sertifikat: 'Sertifikat',
     },
     dialog: {
       addNew: 'Add New',
@@ -222,14 +226,16 @@ export default {
   uji: {
     table: {
       no: 'No',
-      code: 'Scheme Code',
-      skema: 'Certification Scheme',
-      pesyaratan: 'Requirement',
+      code: 'Kode Skema',
+      skema: 'Skema Sertifikasi',
+      pesyaratan: 'Persyaratan',
       tuk: 'TUK',
       perangkat: 'Perangkat',
       asesor: 'Assesor',
-      jadwal: 'schedule',
+      jadwal: 'Nama Jadwal',
       asesi: 'Asesi',
+      schedule: 'Nama Jadwal',
+      mulai: 'Tanggal Mulai',
     },
     dialog: {
       addNew: 'Add New',

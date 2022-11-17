@@ -212,6 +212,10 @@ export default {
       start: 'Start Date',
       end: 'End Date',
       jadwal: 'schedule',
+      foto: 'Photo',
+      identitas: 'KTP',
+      raport: 'Raport',
+      sertifikat: 'Certificate',
     },
     dialog: {
       addNew: 'Add New',
@@ -246,6 +250,8 @@ export default {
       asesor: 'Assesor',
       jadwal: 'schedule',
       asesi: 'Asesi',
+      schedule: 'Schedule',
+      mulai: 'Start Date',
     },
     dialog: {
       addNew: 'Add New',
