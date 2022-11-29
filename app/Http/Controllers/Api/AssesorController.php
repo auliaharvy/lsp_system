@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Validator;
+use File;
+use App\Image;
+use Carbon\Carbon;
 
 /**
  * Class AssesorController
@@ -68,25 +71,37 @@ class AssesorController extends BaseController
         );
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
+            return response()->json(['message' => $validator->errors()], 403);
         } else {
             DB::beginTransaction();
             try {
                 $params = $request->all();
+                //upload sign
+                $file = $request['signature'];
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                // membuat nama file unik
+                $nama_file = $now . '-' . $params['nama'] . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+
+                $user = User::create([
+                    'name' => $params['nama'],
+                    'email' => $params['email'],
+                    'password' => Hash::make('lspsmk'),
+                    'signature' => $nama_file,
+                ]);
+                $role = Role::findByName('assesor');
+                $user->syncRoles($role);
                 $assesor = Assesor::create([
                     'no_reg' => $params['no_reg'],
+                    'id_user' => $user->id,
                     'nama' => $params['nama'],
                     'email' => $params['email'],
                     'hp' => $params['hp'],
                     'status_asesor' => $params['status_asesor'],
                 ]);
-                $user = User::create([
-                    'name' => $params['nama'],
-                    'email' => $params['email'],
-                    'password' => Hash::make('lspsmk'),
-                ]);
-                $role = Role::findByName('assesor');
-                $user->syncRoles($role);
                 //$role = Role::findByName($params['role']);
 
                 DB::commit();
@@ -136,7 +151,7 @@ class AssesorController extends BaseController
                 $foundAsesor = Assesor::where('email', $email)->first();
                 $foundUser = User::where('email', $email)->first();
                 if ($foundAsesor && $foundAsesor->id !== $assesor->id) {
-                    return response()->json(['error' => 'Email has been taken'], 403);
+                    return response()->json(['message' => 'Email has been taken'], 403);
                 } 
 
                 $assesor->no_reg = $request->get('no_reg');

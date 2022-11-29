@@ -267,7 +267,7 @@ export default {
       email: 'Email',
     },
     dialog: {
-      addNew: 'Add New',
+      addNew: 'Tambah Baru',
       edit: 'Edit',
     },
   },

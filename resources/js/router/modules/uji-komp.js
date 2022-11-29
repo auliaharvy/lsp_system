@@ -27,6 +27,13 @@ const ujiRoutes = {
       hidden: true,
     },
     {
+      path: 'form-apl-02',
+      component: () => import('@/views/back-office/uji/fr_apl/02/index'),
+      name: 'form-apl-02',
+      meta: { title: 'Form APL 02', icon: 'date', permissions: ['manage user'] },
+      hidden: true,
+    },
+    {
       path: 'form-ia-01',
       component: () => import('@/views/back-office/uji/fr_ia/01/index'),
       name: 'form-ia-01',

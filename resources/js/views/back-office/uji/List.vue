@@ -54,7 +54,11 @@
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    APL 02  <i v-if="scope.row.id_apl_02 !== null" type="success" class="el-icon-check" />
+                    <el-tooltip class="item" effect="dark" content="View FR-APL-02" placement="top-start">
+                      <router-link :to="{ name: 'form-apl-02', params: { asesor: scope.row.asesor ,id_apl_01: scope.row.id_apl_01, id_apl_02: scope.row.id_apl_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                        <span class="link">APL 02  <i v-if="scope.row.id_apl_02 !== null" type="success" class="el-icon-check" /></span>
+                      </router-link>
+                    </el-tooltip>
                   </li>
                   <li class="list-progress">
                     MAPA 01  <i v-if="scope.row.id_mapa_01 !== null" type="success" class="el-icon-check" />

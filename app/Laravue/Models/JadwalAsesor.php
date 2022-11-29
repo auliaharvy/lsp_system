@@ -35,12 +35,14 @@ class JadwalAsesor extends Model
     {
         $asesor = JadwalAsesor::where('id_jadwal', $id_jadwal)
         ->join('mst_asesor as b', 'b.id', '=', 'rel_jadwal_has_asesor.id_asesor')
-        ->select('rel_jadwal_has_asesor.*', 'b.nama as nama_asesor')
+        ->join('users as c', 'c.email', '=', 'b.email')
+        ->select('rel_jadwal_has_asesor.*', 'b.nama as nama_asesor', 'c.signature as ttd_asesor')
         ->get();
         
         $plunckData = array();
         foreach($asesor as $row):
             $data['nama_asesor'] = $row->nama_asesor;
+            $data['ttd_asesor'] = $row->ttd_asesor;
             $plunckData[] = $data;
 		endforeach;
 		return $plunckData;

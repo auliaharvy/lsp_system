@@ -36,10 +36,12 @@ Route::namespace('Api')->group(function() {
 
     //detail FR
     Route::get('detail/apl-01/{id}', 'UjiKompController@showApl01');
-
+    Route::get('detail/apl-02/{id}', 'UjiKompController@showApl02');
+    Route::get('detail/ia-01/{id}', 'UjiKompController@showIa01');
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
+        //mst FR
         Route::post('uji-komp-ia-01', 'UjiKompController@storeIa01');
         Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
         Route::post('uji-komp-ia-03', 'UjiKompController@storeIa03');

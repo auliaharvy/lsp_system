@@ -387,6 +387,33 @@ class UjiKompController extends BaseController
         return $query;
     }
 
+    public function showApl02($id)
+    {
+       
+        $queryApl02 = UjiKompApl2::where('trx_uji_komp_apl_02.id',$id)->first();
+        $queryDetailApl02 = UjiKompApl2Detail::where('trx_uji_komp_apl_02_detail.id_apl_02',$id)->get();
+       
+        $data = [
+            'status' => $queryApl02->status,
+            'detail' => $queryDetailApl02,
+        ];
+        return $data;
+    }
+
+    public function showIa01($id)
+    {
+       
+        $queryIa01 = UjiKompIa01::where('trx_uji_komp_ia_01.id',$id)->first();
+        $queryDetailIa01 = UjiKompIa01Detail::where('trx_uji_komp_ia_01_detail.id_ia_01',$id)->get();
+       
+        $data = [
+            'ia_01' => $queryIa01,
+            // 'note' => $queryIa01->note,
+            'detail' => $queryDetailIa01,
+        ];
+        return $data;
+    }
+
     public function indexIa03(Request $request)
     {
         $searchParams = $request->all();
@@ -467,6 +494,7 @@ class UjiKompController extends BaseController
                 $elemen = $params['detail_ia_01'];
                 for ($i = 0; $i < count($elemen); $i++) {
                     if($elemen[$i]['type'] == 'kuk') {
+                        // echo $elemen[$i]['type'],
                         $ia01Detail = UjiKompIa01Detail::create([
                             'id_uji_komp' => $foundUjiKomp->id,
                             'id_ia_01' => $ia01->id,

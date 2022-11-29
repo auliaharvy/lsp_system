@@ -87,6 +87,19 @@
           <!-- <el-form-item :label="$t('tuk.table.email')" prop="email">
             <el-input v-model="newAssesor.email" />
           </el-form-item> -->
+          <el-form-item
+            label="Tanda Tangan"
+          >
+            <vueSignature
+              ref="signature"
+              :sig-option="option"
+              :w="'300px'"
+              :h="'150px'"
+              :disabled="false"
+              style="border-style: outset"
+            />
+            <el-button size="small" @click="clear">Clear</el-button>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
@@ -135,6 +148,7 @@
 </template>
 
 <script>
+import vueSignature from 'vue-signature';
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
@@ -146,7 +160,7 @@ const assesorResource = new Resource('assesor');
 
 export default {
   name: 'UserList',
-  components: { Pagination },
+  components: { Pagination, vueSignature },
   directives: { waves, permission },
   data() {
     return {
@@ -241,8 +255,16 @@ export default {
       this.$refs['assesorForm'].validate((valid) => {
         if (valid) {
           this.asesorCreating = true;
+          this.newAssesor.signature = this.$refs.signature.save();
+          const formData = new FormData();
+          formData.append('no_reg', this.newAssesor.no_reg);
+          formData.append('nama', this.newAssesor.nama);
+          formData.append('email', this.newAssesor.email);
+          formData.append('hp', this.newAssesor.hp);
+          formData.append('status_asesor', this.newAssesor.status_asesor);
+          formData.append('signature', this.newAssesor.signature);
           assesorResource
-            .store(this.newAssesor)
+            .store(formData)
             .then(response => {
               this.$message({
                 message: 'New Assesor ' + this.newAssesor.nama + ' has been created successfully.',

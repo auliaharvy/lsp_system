@@ -191,7 +191,7 @@
         <br>
       </div>
 
-      <div v-if="active === 2" class="form">
+      <div v-if="active === 2" v-loading="loading" class="form">
         <h3>FR-APL 02 ASESMEN MANDIRI</h3>
         <p>
           Pastikan anda kompeten sesuai dengan elemen dan kuk yang ada pada
@@ -425,7 +425,7 @@ export default {
   mounted() {
     window.addEventListener('resize', this.onResize);
     this.onResize();
-    this.allKompeten();
+    // this.allKompeten();
   },
   created() {
     this.loading = true;
@@ -446,18 +446,14 @@ export default {
       console.log(svg);
     },
     allKompeten() {
-      this.loading = true;
-      this.listKuk.forEach((element, index) => {
-        element['is_kompeten'] = this.kompeten;
-      });
-      // for (var i = 0; i < this.listKuk.length; i++) {
-      //   if (this.listKuk[i].type === 'kuk'){
-      //     this.listKuk[i].is_kompeten = data;
-      //     console.log(this.listKuk[i].is_kompeten);
-      //     console.log(data);
-      //   }
-      // }
-      this.loading = false;
+      for (var i = 0; i < this.listKuk.length; i++) {
+        this.loading = true;
+        if (this.listKuk[i].type === 'kuk'){
+          this.listKuk[i].is_kompeten = this.kompeten;
+          console.log(this.listKuk[i]);
+        }
+        this.loading = false;
+      }
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -476,6 +472,7 @@ export default {
       this.listJadwal = data;
     },
     onJadwalSelect() {
+      this.loading = true;
       var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var skemaId = this.listSkema.find((x) => x.id === jadwal.id_skema);
       this.selectedSkema = skemaId;
@@ -483,8 +480,10 @@ export default {
       this.dataTrx.id_skema = skemaId.id;
       this.dataTrx.id_tuk = tukId.id;
       this.getKuk();
+      this.loading = false;
     },
     getKuk() {
+      this.loading = true;
       var number = 1;
       var unitKomp = this.selectedSkema.children;
       var kuk = [];
@@ -507,6 +506,7 @@ export default {
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
       console.log(this.listKuk);
+      this.loading = false;
     },
     onSubmit() {
       if (this.active++ > 2) {
