@@ -55,6 +55,13 @@ const ujiRoutes = {
       hidden: true,
     },
     {
+      path: 'form-ia-06',
+      component: () => import('@/views/back-office/uji/fr_ia/06/index'),
+      name: 'form-ia-06',
+      meta: { title: 'Form IA 06', icon: 'date', permissions: ['manage user'] },
+      hidden: true,
+    },
+    {
       path: 'form-ia-11',
       component: () => import('@/views/back-office/uji/fr_ia/11/index'),
       name: 'form-ia-11',

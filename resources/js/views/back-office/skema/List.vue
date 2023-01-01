@@ -13,7 +13,7 @@
       </el-button>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }">
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }">
       <el-table-column label="Skema Sertifikasi">
         <el-table-column align="center" label="No" width="80">
           <template slot-scope="scope">
@@ -147,6 +147,11 @@
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
                 <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdate(scope.row)" />
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="List Perangkat" placement="top-end">
+                <router-link :to="{ name: 'PerangkatSkemaList', params: { id_skema: scope.row.id, skema: scope.row.skema_sertifikasi }}">
+                  <el-button v-permission="['manage user']" type="warning" size="small" icon="el-icon-view" />
+                </router-link>
               </el-tooltip>
             </el-button-group>
           </template>

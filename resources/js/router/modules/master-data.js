@@ -21,6 +21,13 @@ const masterRoutes = {
       name: 'SkemaList',
       meta: { title: 'Skema', icon: 'user', permissions: ['manage user'] },
     },
+    {
+      path: 'perangkat-skema',
+      component: () => import('@/views/back-office/skema/perangkat/Index'),
+      name: 'PerangkatSkemaList',
+      meta: { title: 'Perangkat Skema', icon: 'user', permissions: ['manage user'] },
+      hidden: true,
+    },
     /** TUK managements */
     {
       path: 'tuk',

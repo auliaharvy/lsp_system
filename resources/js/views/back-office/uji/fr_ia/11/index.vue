@@ -37,7 +37,7 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="left" label="PANDUAN BAGI ASESOR">
+          <el-table-column align="left" label="PANDUAN BAGI PENINJAU / ASESOR">
             <ul>
               <li v-for="item in panduan" :key="item">
                 {{ item }}
@@ -124,8 +124,14 @@
           label-width="250px"
           label-position="left"
         >
+          <el-form-item label="Nama Peninjau" prop="feedback">
+            <el-input v-model="dataTrx.nama_peninjau" placeholder="Isi nama peninjau" label="Nama Peninjau" />
+          </el-form-item>
+          <el-form-item label="Tanggal" prop="feedback">
+            <el-input v-model="dataTrx.tanggal" placeholder="Isi Tanggal" label="Tanggal" />
+          </el-form-item>
           <el-form-item label="Komentar" prop="feedback">
-            <el-input v-model="form.komentar" type="textarea" :rows="3" placeholder="Isi Komentar" label="Komentar" />
+            <el-input v-model="dataTrx.komentar" type="textarea" :rows="3" placeholder="Isi Komentar" label="Komentar" />
           </el-form-item>
         </el-form>
       </div>
@@ -142,7 +148,7 @@ const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstIa11Resource = new Resource('mst-ia11-get');
+const mstIa11Resource = new Resource('mst-ia-11-get');
 const ia11Resource = new Resource('uji-komp-ia-11');
 
 export default {

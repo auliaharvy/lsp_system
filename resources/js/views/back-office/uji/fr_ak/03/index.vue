@@ -69,6 +69,11 @@
         </el-form>
         <br>
 
+        <el-button @click="onSubmit">Submit</el-button>
+
+        <br>
+        <br>
+
       </div>
     </el-main>
   </el-container>
@@ -81,6 +86,7 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstAk03Resource = new Resource('mst-ak-03-get');
+const ak03Resource = new Resource('uji-komp-ak-03');
 
 export default {
   components: {},
@@ -128,16 +134,8 @@ export default {
           content: '',
         },
         {
-          title: 'Unit Kompetensi',
+          title: 'Hari / Tanggal',
           content: '',
-        },
-        {
-          title: 'Tanggal Mulai Asesmen',
-          content: '-',
-        },
-        {
-          title: 'Tanggal Selesai Asesmen',
-          content: '-',
         },
       ],
       panduan: [
@@ -176,6 +174,7 @@ export default {
       this.getUjiKompDetail();
     });
     this.getListPertanyaan();
+    this.getDate();
   },
   methods: {
     allKompeten() {
@@ -195,6 +194,41 @@ export default {
       });
       this.loading = false;
     },
+    getDate() {
+      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      var date = new Date();
+      // var millisecond = date.getMilliseconds();
+      // var detik = date.getSeconds();
+      var menit = date.getMinutes();
+      var jam = date.getHours();
+      var hari = date.getDay();
+      var tanggal = date.getDate();
+      var bulan = date.getMonth();
+      var tahun = date.getFullYear();
+      this.dataTrx.jam = jam;
+      this.dataTrx.menit = menit;
+      this.dataTrx.tanggal = tanggal;
+      this.dataTrx.bulan = arrbulan[bulan];
+      this.dataTrx.tahun = tahun;
+      this.dataTrx.hari = arrHari[hari];
+      this.headerTable[3].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
+      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
+    },
+    getUjiKompDetail() {
+      var id_uji = this.$route.params.id_uji;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      this.selectedUji = ujiDetail;
+      var asesor = ujiDetail.asesor;
+      console.log(ujiDetail);
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      this.headerTable[0].content = ujiDetail.nama_peserta;
+      this.headerTable[1].content = asesor.map(itm => itm.nama_asesor).join(', ');
+      this.headerTable[2].content = ujiDetail.skema_sertifikasi;
+      this.dataTrx.nama_asesor = asesor[0].nama_asesor;
+      this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
+    },
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
@@ -210,16 +244,6 @@ export default {
     async getListJadwal() {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
-    },
-    getUjiKompDetail() {
-      var id_uji = this.$route.params.id_uji;
-      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
-      this.selectedUji = ujiDetail;
-      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      this.headerTable[2].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.nama_asesor;
-      this.headerTable[0].content = ujiDetail.nama_peserta;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -260,9 +284,30 @@ export default {
       this.listKuk = kuk;
     },
     onSubmit() {
-      if (this.active++ > 2) {
-        this.active = 0;
-      }
+      this.loading = true;
+      this.dataTrx.id_uji_komp = this.$route.params.id_uji;
+      this.dataTrx.komentar = this.dataSend.komentar;
+      this.dataTrx.nama_asesi = this.headerTable[0].content;
+      this.dataTrx.nama_asesor = this.headerTable[1].content;
+      this.dataTrx.detail = this.listSoal;
+      console.log(this.dataTrx);
+      ak03Resource
+        .store(this.dataTrx)
+        .then(response => {
+          this.$message({
+            message: 'FR AK 03 has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     back() {
       if (this.active-- < 0) {

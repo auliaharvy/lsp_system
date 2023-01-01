@@ -112,7 +112,11 @@
                     IA 05  <i v-if="scope.row.id_ia_05 !== null" type="success" class="el-icon-check" />
                   </li>
                   <li class="list-progress">
-                    IA 06  <i v-if="scope.row.id_ia_06 !== null" type="success" class="el-icon-check" />
+                    <el-tooltip class="item" effect="dark" content="View FR-IA-06" placement="top-start">
+                      <router-link :to="{ name: 'form-ia-06', params: { id_ia_06: scope.row.id_ia_06, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                        <span class="link">IA 06  <i v-if="scope.row.id_ia_11!== null" type="success" class="el-icon-check" /></span>
+                      </router-link>
+                    </el-tooltip>
                   </li>
                   <li class="list-progress">
                     IA 07  <i v-if="scope.row.id_ia_07!== null" type="success" class="el-icon-check" />

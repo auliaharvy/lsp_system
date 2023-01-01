@@ -22,13 +22,13 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <template v-if="scope.row.content !== '.'">
-                <el-checkbox-group v-if="scope.row.content === '-'" v-model="checkList">
-                  <el-checkbox label="TL : Verifikasi Portofolio" />
-                  <el-checkbox label="L : Observasi Langsung" />
-                  <el-checkbox label="T : Hasil Tes Tulis" />
-                  <el-checkbox label="T : Hasil Tes Lisan" />
-                  <el-checkbox label="T : Hasil Tes Wawancara" />
-                </el-checkbox-group>
+                <template v-if="scope.row.content === '-'">
+                  <el-checkbox v-model="dataTrx.verifikasi_portofolio">TL : Verifikasi Portofolio</el-checkbox>
+                  <el-checkbox v-model="dataTrx.observasi_langsung">L : Observasi Langsung</el-checkbox>
+                  <el-checkbox v-model="dataTrx.hasil_tes_tulis">T : Hasil Tes Tulis</el-checkbox>
+                  <el-checkbox v-model="dataTrx.hasil_tes_lisan">T : Hasil Tes Lisan</el-checkbox>
+                  <el-checkbox v-model="dataTrx.hasil_tes_wawancara">T : Hasil Tes Wawancara</el-checkbox>
+                </template>
                 <span v-else>{{ scope.row.content }}</span>
               </template>
               <template v-else>
@@ -61,6 +61,7 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstIa03Resource = new Resource('mst-ia03-get');
+const ak01Resource = new Resource('uji-komp-ak-01');
 
 export default {
   components: {},
@@ -138,16 +139,7 @@ export default {
         'Beri tanda centang pada kolom K jika Anda yakin asesi dapat melakukan/mendemonstrasikan tugas seuai KUK, atau centang pada kolom BK bila sebaliknya.',
         'Penilaian lanjut diisi bila hasil belum dapat disimpulkan, untuk itu gunakan metode lain sehingga keputusan dapat dibuat',
       ],
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
-      },
+      form: {},
       active: 0,
       isWide: true,
       labelPosition: 'left',
@@ -210,6 +202,7 @@ export default {
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
       var asesor = ujiDetail.asesor;
+      console.log(ujiDetail);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.kode_skema;
@@ -217,6 +210,10 @@ export default {
       this.headerTable[3].content = asesor.map(itm => itm.nama_asesor).join(', ');
       this.headerTable[4].content = ujiDetail.nama_peserta;
       this.dataTrx.tuk = ujiDetail.nama_tuk;
+      this.dataTrx.nama_asesor = asesor[0].nama_asesor;
+      this.dataTrx.tanda_tangan_asesor = asesor[0].ttd_asesor;
+      this.dataTrx.email_asesi = ujiDetail.email_peserta;
+      this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -255,9 +252,28 @@ export default {
       this.listKuk = kuk;
     },
     onSubmit() {
-      if (this.active++ > 2) {
-        this.active = 0;
-      }
+      this.loading = true;
+      this.dataTrx.id_uji_komp = this.$route.params.id_uji;
+      this.dataTrx.pernyataan_asesor = this.headerTable[7].content;
+      this.dataTrx.pernyataan_asesi = this.headerTable[8].content;
+      console.log(this.dataTrx);
+      ak01Resource
+        .store(this.dataTrx)
+        .then(response => {
+          this.$message({
+            message: 'FR AK 01 has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     back() {
       if (this.active-- < 0) {
