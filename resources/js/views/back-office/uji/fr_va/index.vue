@@ -179,8 +179,6 @@
                   <template slot-scope="scope">
                     <template v-if="scope.row.no === 2">
                       Tanda Tangan Asesi :
-                      <br>
-                      <img v-if="dataAsesi.sign" :src="dataAsesi.sign" class="sidebar-logo">
                     </template>
                     <span>{{ scope.row.title }}</span>
                   </template>
@@ -192,8 +190,6 @@
                   <template slot-scope="scope">
                     <template v-if="scope.row.no === 2">
                       Tanda Tangan Admin LSP :
-                      <br>
-                      <img v-if="dataAsesi.ttd_admin" :src="dataAsesi.ttd_admin" class="sidebar-logo">
                     </template>
                   </template>
                 </el-table-column>
@@ -205,9 +201,9 @@
     </vue-html2pdf>
 
     <el-header>
-      <el-page-header content="FR.APL.01 PERMOHONAN SERTIFIKASI KOMPETENSI" @back="$router.back()" />
+      <el-page-header content="FR.VA MEMBERIKAN KONTRIBUSI DALAM VALIDASI ASESMEN" @back="$router.back()" />
     </el-header>
-    <el-main v-loading="loading">
+    <el-main>
       <div>
         <h4>Bagian 1 : Rincian Data Pemohon Sertifikasi</h4>
         <span>Pada bagian ini, cantumlah data pribadi, data pendidikan formal serta data pekerjaan anda pada saat ini.</span>
@@ -355,10 +351,8 @@
         >
           <el-table-column align="left">
             <template slot-scope="scope">
-              <template v-if="scope.row.no === 2 && dataAsesi.sign">
+              <template v-if="scope.row.no === 2">
                 Tanda Tangan Asesi :
-                <br>
-                <img v-if="dataAsesi.sign" :src="dataAsesi.sign" class="sidebar-logo">
               </template>
               <span>{{ scope.row.title }}</span>
             </template>
@@ -368,17 +362,8 @@
           </el-table-column>
           <el-table-column align="left">
             <template slot-scope="scope">
-              <template v-if="scope.row.no === 1">
-                <el-select v-model="dataTrx.status" class="filter-item" placeholder="T/TT">
-                  <el-option :key="0" label="Terima / Tidak Terima" :value="0" />
-                  <el-option :key="1" label="Terima" :value="1" />
-                  <el-option :key="2" label="Tidak Terima" :value="2" />
-                </el-select>
-              </template>
-
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Admin LSP :
-                <img v-if="dataAsesi.ttd_admin" :src="dataAsesi.ttd_admin" class="sidebar-logo">
               </template>
             </template>
           </el-table-column>
@@ -386,8 +371,7 @@
 
       </div>
     </el-main>
-    <el-button v-if="dataAsesi.status === 0" @click="onSubmit">Submit</el-button>
-    <el-button v-else @click="generateReport">Print</el-button>
+    <el-button @click="generateReport">Print</el-button>
   </el-container>
 </template>
 
@@ -397,7 +381,6 @@ import Resource from '@/api/resource';
 import VueHtml2pdf from 'vue-html2pdf';
 import moment from 'moment';
 const apl01Resource = new Resource('detail/apl-01');
-const apl01UpdateResource = new Resource('uji-komp-apl-01');
 const skemaResource = new Resource('skema-get');
 
 export default {
@@ -578,8 +561,6 @@ export default {
       }).save();
     },
     async getApl01() {
-      this.loading = true;
-      this.dataTrx.id_apl_01 = this.$route.params.id_apl_01;
       const data = await apl01Resource.get(this.$route.params.id_apl_01);
       const ttl = data.tempat_lahir + ' / ' + moment(data.tanggal_lahir).format('DD-MM-YYYY');
       const pendidikan = data.nama_sekolah + ' (' + data.tingkatan + ')';
@@ -593,19 +574,9 @@ export default {
       this.headerTable[6].content = data.email;
       this.headerTable[7].content = pendidikan;
 
-      if (data.status === 0) {
-        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima / Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai';
-      } if (data.status === 1) {
-        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima sebagai peserta  sertifikasi coret yang tidak sesuai';
-      } if (data.status === 2) {
-        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi coret yang tidak sesuai';
-      }
       this.dataAsesi.sign = '/uploads/users/signature/' + data.signature;
-      this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;
       this.dataAsesi.nama = data.nama_lengkap;
-      this.dataAsesi.status = data.status;
-      this.dataTrx.status = data.status;
-      console.log(data);
+
       if (data.foto !== ''){
         this.buktiKelengkapanTable[0].content = '/uploads/users/foto/' + data.foto;
       }
@@ -618,7 +589,6 @@ export default {
       if (data.raport !== ''){
         this.buktiKelengkapanTable[3].content = '/uploads/users/raport/' + data.raport;
       }
-      this.loading = false;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -665,27 +635,30 @@ export default {
         }
       }
     },
-    onSubmit() {
-      this.loading = true;
-      this.dataTrx.userId = this.userId;
-      apl01UpdateResource
-        .store(this.dataTrx)
-        .then(response => {
-          this.$message({
-            message: 'FR APL 01 has been Submited successfully.',
-            type: 'success',
-            duration: 5 * 1000,
-          });
-          this.$router.push({ name: 'uji-komp-list' });
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
+    // onSubmit() {
+    //   this.loading = true;
+    //   this.form.detail_ia_01 = this.listKuk;
+    //   this.form.user_id = this.userId;
+    //   this.form.id_uji_komp = this.$route.params.id_uji;
+    //   this.form.id_skema = this.$route.params.id_skema;
+    //   ia01Resource
+    //     .store(this.form)
+    //     .then(response => {
+    //       this.$message({
+    //         message: 'FR IA 01 has been created successfully.',
+    //         type: 'success',
+    //         duration: 5 * 1000,
+    //       });
+    //       this.$router.push({ name: 'uji-komp-list' });
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //       this.loading = false;
+    //     })
+    //     .finally(() => {
+    //       this.loading = false;
+    //     });
+    // },
     onResize() {
       const width = document.body.clientWidth;
       this.isWide = width > 800;
@@ -737,12 +710,6 @@ export default {
   padding-top: 0;
   margin-left: 150px;
 }
-.sidebar-logo {
-        width: 200px;
-        height: 120px;
-        vertical-align: middle;
-        margin-right: 12px;
-      }
 .app-container {
   flex: 1;
   justify-content: space-between;

@@ -17,8 +17,11 @@ use App\Laravue\Models\UjiKompApl2;
 use App\Laravue\Models\UjiKompApl2Detail;
 use App\Laravue\Models\UjiKompAk01;
 use App\Laravue\Models\UjiKompAk03;
-use App\Laravue\Models\UjiKompAk05;
 use App\Laravue\Models\UjiKompAk03Detail;
+use App\Laravue\Models\UjiKompAk02;
+use App\Laravue\Models\UjiKompAk02Detail;
+use App\Laravue\Models\UjiKompAk04;
+use App\Laravue\Models\UjiKompAk05;
 use App\Laravue\Models\UjiKompIa01;
 use App\Laravue\Models\UjiKompIa01Detail;
 use App\Laravue\Models\UjiKompIa02;
@@ -404,6 +407,22 @@ class UjiKompController extends BaseController
         return $data;
     }
 
+    public function showAk01($id)
+    {
+       
+        $query = UjiKompAk01::where('trx_uji_komp_ak_01.id',$id)->first();
+       
+        return $query;
+    }
+
+    public function showAk05($id)
+    {
+       
+        $query = UjiKompAk05::where('trx_uji_komp_ak_05.id',$id)->first();
+       
+        return $query;
+    }
+
     public function showIa01($id)
     {
        
@@ -416,6 +435,59 @@ class UjiKompController extends BaseController
             'detail' => $queryDetailIa01,
         ];
         return $data;
+    }
+
+    public function showIa02($id)
+    {
+       
+        $query = UjiKompIa02::where('trx_uji_komp_ia_02.id',$id)->first();
+       
+        return $query;
+    }
+
+    public function showIa03($id)
+    {
+       
+        $queryIa03 = UjiKompIa03::where('trx_uji_komp_ia_03.id',$id)->first();
+        $queryDetailIa03 = UjiKompIa03Detail::where('trx_uji_komp_ia_03_detail.id_ia_03',$id)->get();
+       
+        $data = [
+            'ia_03' => $queryIa03,
+            // 'note' => $queryIa01->note,
+            'detail' => $queryDetailIa03,
+        ];
+        return $data;
+       
+    }
+
+    public function showIa11($id)
+    {
+       
+        $queryIa11 = UjiKompIa11::where('trx_uji_komp_ia_11.id',$id)->first();
+        $queryDetailIa11 = UjiKompIa11Detail::where('trx_uji_komp_ia_11_detail.id_ia_11',$id)->get();
+       
+        $data = [
+            'ia_11' => $queryIa11,
+            // 'note' => $queryIa01->note,
+            'detail' => $queryDetailIa11,
+        ];
+        return $data;
+       
+    }
+    
+    public function indexIa02(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        // $keyword = Arr::get($searchParams, 'keyword', '');
+        // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
+
+        $query = MstFrIa02::query();
+        $query->where('mst_perangkat_ia_02.id_skema', $id_skema)
+        ->select('mst_perangkat_ia_02.*');
+
+        return MasterResource::collection($query->paginate($limit));
     }
 
     public function indexIa03(Request $request)
@@ -454,6 +526,42 @@ class UjiKompController extends BaseController
         ->select('mst_perangkat_ak_03.*');
 
         return MasterResource::collection($query->paginate($limit));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function submitApl01(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesSubmitApl01(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_apl_01 = $request->get('id_apl_01');
+            $foundApl01 = UjiKompApl1::where('id', $id_apl_01)->first();
+            try {
+                $params = $request->all();
+                $foundUser = User::where('id', $params['userId'])->first();
+                $foundApl01->status = $params['status'];
+                $foundApl01->ttd_admin = $foundUser->signature;
+                $foundApl01->save();
+
+                DB::commit();
+                return response()->json(['message' => "Sukses Submit FR APL 01"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
     }
 
     /**
@@ -528,8 +636,17 @@ class UjiKompController extends BaseController
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
             try {
                 $params = $request->all();
+                // upload file
+                $file = $request->file('file');
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $nama_file = $now . '-' . $file->getClientOriginalName();
+                $file->move('uploads/ia-02/jawaban/', $nama_file);
+                $file = 'uploads/ia-02/jawaban/'.$nama_file;
+
                 $ia02 = UjiKompIa02::create([
                     'rekomendasi_asesor' => $params['rekomendasi_asesor'],
+                    'file' =>  $file,
                     'submit_by' => $params['user_id'],
                 ]);
 
@@ -660,6 +777,37 @@ class UjiKompController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function storeAk01Asesi(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesAk01(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            try {
+                $params = $request->all();
+                $foundUser = User::where('email', $params['email_asesi'])->first();
+                $foundAk01 = UjiKompAk01::where('id', $params['id_ak_01'])->first();
+
+                $foundAk01->tanda_tangan_asesi = $foundUser->signature;
+                $foundAk01->save();
+
+                DB::commit();
+                return response()->json(['message' => "Sukses Submit FR AK 01"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
     public function storeAk01(Request $request)
     {
         $validator = Validator::make(
@@ -694,7 +842,7 @@ class UjiKompController extends BaseController
                     'pernyataan_asesor' => $params['pernyataan_asesor'],
                     'pernyataan_asesi' => $params['pernyataan_asesi'],
                     'tanda_tangan_asesor' => $params['tanda_tangan_asesor'],
-                    'tanda_tangan_asesi' => $foundUser->signature,
+                    // 'tanda_tangan_asesi' => $foundUser->signature,
                 ]);
 
                 $progress = $foundUjiKomp->persentase;
@@ -704,6 +852,65 @@ class UjiKompController extends BaseController
 
                 DB::commit();
                 return response()->json(['message' => "Sukses membuat FR AK 01"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeAk02(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesAk02(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            try {
+                $params = $request->all();
+                $ak02 = UjiKompAk02::create([
+                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
+                    'tindak_lanjut' => $params['tindak_lanjut'],
+                    'komentar' => $params['komentar'],
+                    'updated_by' => $params['userId'],
+                ]);
+
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->id_ak_02 = $ak02->id;
+                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->save();
+
+                $elemen = $params['detail'];
+                for ($i = 0; $i < count($elemen); $i++) {
+                    $ia02Detail = UjiKompAk02Detail::create([
+                        'id_uji_komp' => $foundUjiKomp->id,
+                        'id_ak_02' => $ak02->id,
+                        'id_unit' => $elemen[$i]['id'],
+                        'observasi_demonstrasi' => $elemen[$i]['observasi_demonstrasi'],
+                        'portofolio' => $elemen[$i]['portofolio'],
+                        'pernyataan_pihak_3' => $elemen[$i]['pernyataan_pihak_3'],
+                        'pernyataan_lisan' => $elemen[$i]['pernyataan_lisan'],
+                        'pernyataan_tertulis' => $elemen[$i]['pernyataan_tertulis'],
+                        'proyek_kerja' => $elemen[$i]['proyek_kerja'],
+                        'lainnya' => $elemen[$i]['lainnya'],
+                    ]);
+                }
+
+                DB::commit();
+                return response()->json(['message' => "Sukses membuat FR AK 02"], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
@@ -768,6 +975,50 @@ class UjiKompController extends BaseController
         }
     }
 
+    public function storeAk04(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesAk03(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            $params = $request->all();
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            $foundUser = User::where('email', $params['email_asesi'])->first();
+            try {
+                $ak04 = UjiKompAk04::create([
+                    'nama_asesi' => $params['nama_asesi'],
+                    'nama_asesor' => $params['nama_asesor'],
+                    'tanggal_asesmen' => $params['tanggal_asesmen'],
+                    'penjelasan' => $params['penjelasan'],
+                    'diskusi' => $params['diskusi'],
+                    'melibatkan' => $params['melibatkan'],
+                    'skema' => $params['skema'],
+                    'no_skema' => $params['no_skema'],
+                    'alasan_banding' => $params['alasan_banding'],
+                    'ttd_asesi' => $foundUser->signature,
+                ]);
+
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->id_ak_04 = $ak04->id;
+                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->save();
+
+                DB::commit();
+                return response()->json(['message' => "Sukses membuat FR AK 04"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
     public function storeAk05(Request $request)
     {
         $validator = Validator::make(
@@ -822,6 +1073,13 @@ class UjiKompController extends BaseController
         return Image::create($inputangambar);
     }
 
+    private function getValidationRulesSubmitApl01($isNew = true)
+    {
+        return [
+            'status' => 'required',
+        ];
+    }
+
     private function getValidationRulesIa01($isNew = true)
     {
         return [
@@ -847,6 +1105,13 @@ class UjiKompController extends BaseController
     {
         return [
             'nama_asesi' => 'required',
+        ];
+    }
+
+    private function getValidationRulesAk02()
+    {
+        return [
+            'id_uji_komp' => 'required',
         ];
     }
 

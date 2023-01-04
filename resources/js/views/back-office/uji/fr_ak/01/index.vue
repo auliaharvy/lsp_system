@@ -29,6 +29,12 @@
                   <el-checkbox v-model="dataTrx.hasil_tes_lisan">T : Hasil Tes Lisan</el-checkbox>
                   <el-checkbox v-model="dataTrx.hasil_tes_wawancara">T : Hasil Tes Wawancara</el-checkbox>
                 </template>
+                <template v-else-if="scope.row.no === 11">
+                  <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
+                </template>
+                <template v-else-if="scope.row.no === 12">
+                  <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
+                </template>
                 <span v-else>{{ scope.row.content }}</span>
               </template>
               <template v-else>
@@ -44,7 +50,8 @@
 
         <br>
 
-        <el-button @click="onSubmit">Submit</el-button>
+        <el-button @click="onSubmit">Submit Asesor</el-button>
+        <el-button @click="onSubmitAsesi">Submit Asesi</el-button>
 
         <br>
         <br>
@@ -62,6 +69,8 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstIa03Resource = new Resource('mst-ia03-get');
 const ak01Resource = new Resource('uji-komp-ak-01');
+const ak01AsesiResource = new Resource('uji-komp-ak-01-asesi');
+const ak01Detail = new Resource('detail/ak-01');
 
 export default {
   components: {},
@@ -97,40 +106,64 @@ export default {
       ],
       headerTable: [
         {
+          no: 1,
           title: 'Skema Sertifikasi',
           content: 'SKEMA SKNNI KLASIFIKASI II BISNIS DARING PEMASARAN',
         },
         {
+          no: 2,
           title: 'Kode Skema',
           content: '0000',
         },
         {
+          no: 3,
           title: 'TUK',
           content: 'TUK BDP',
         },
         {
+          no: 4,
           title: 'Nama Asesor',
           content: 'AULIA HARVY',
         },
         {
+          no: 5,
           title: 'Nama Asesi',
           content: 'INDAH',
         },
         {
+          no: 6,
           title: 'Bukti yang di kumpulkan',
           content: '-',
         },
         {
+          no: 7,
           title: 'Pelaksanaan Asesmen disepakati pada',
           content: '.',
         },
         {
+          no: 8,
           title: 'Asesor',
           content: 'Menyatakan tidak akan membuka hasil pekerjaan yang saya peroleh karena penugasan saya sebagai asesor dalam pekerjaan asesmen kepada siapapun atau organisasi apapun selain kepada pihak yang berwenang sehubungan dengan kewajiban saya sebagai asesor yang di tugaskan oleh LSP.',
         },
         {
+          no: 9,
+          title: 'Asesi',
+          content: 'Bahwa Saya Sudah Mendapatkan Penjelasan Hak dan Prosedur Banding Oleh Asesor.',
+        },
+        {
+          no: 10,
           title: 'Asesi',
           content: 'Saya setuju mengkuti asesmen dengan pemahaman bahwa informasi yang di kumpulkan hanya digunakan untuk pengembangan profesional dan hanya dapat diakses oleh orang tertentu saja.',
+        },
+        {
+          no: 11,
+          title: 'Tanda Tangan Asesor',
+          content: '',
+        },
+        {
+          no: 12,
+          title: 'Tanda Tangan Asesi',
+          content: '',
         },
       ],
       panduan: [
@@ -161,8 +194,43 @@ export default {
     });
     this.getListPertanyaan();
     this.getDate();
+    this.getAk01();
   },
   methods: {
+    async getAk01() {
+      if (this.$route.params.id_ak_01 !== null) {
+        this.loading = true;
+        const data = await ak01Detail.get(this.$route.params.id_ak_01);
+        if (data.verifikasi_portofolio === 0) {
+          this.dataTrx.verifikasi_portofolio = false;
+        } else {
+          this.dataTrx.verifikasi_portofolio = true;
+        }
+        if (data.observasi_langsung === 0) {
+          this.dataTrx.observasi_langsung = false;
+        } else {
+          this.dataTrx.observasi_langsung = true;
+        }
+        if (data.hasil_tes_tulis === 0) {
+          this.dataTrx.hasil_tes_tulis = false;
+        } else {
+          this.dataTrx.hasil_tes_tulis = true;
+        }
+        if (data.hasil_tes_lisan === 0) {
+          this.dataTrx.hasil_tes_lisan = false;
+        } else {
+          this.dataTrx.hasil_tes_lisan = true;
+        }
+        if (data.hasil_tes_wawancara === 0) {
+          this.dataTrx.hasil_tes_wawancara = false;
+        } else {
+          this.dataTrx.hasil_tes_wawancara = true;
+        }
+        this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
+        this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
+        this.loading = false;
+      }
+    },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -250,6 +318,31 @@ export default {
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
+    },
+    onSubmitAsesi() {
+      this.loading = true;
+      this.dataTrx.id_uji_komp = this.$route.params.id_uji;
+      this.dataTrx.id_ak_01 = this.$route.params.id_ak_01;
+      this.dataTrx.pernyataan_asesor = this.headerTable[7].content;
+      this.dataTrx.pernyataan_asesi = this.headerTable[8].content;
+      console.log(this.dataTrx);
+      ak01AsesiResource
+        .store(this.dataTrx)
+        .then(response => {
+          this.$message({
+            message: 'FR AK 01 has been submitted successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     onSubmit() {
       this.loading = true;
@@ -376,6 +469,12 @@ export default {
     float: left;
     min-width: 250px;
   }
+  .sidebar-logo {
+        width: 200px;
+        height: 120px;
+        vertical-align: middle;
+        margin-right: 12px;
+      }
   .clear-left {
     clear: left;
   }

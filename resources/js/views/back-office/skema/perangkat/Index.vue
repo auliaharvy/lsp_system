@@ -6,6 +6,7 @@
     <Ia02 :id-skema="idSkema" :user-id="userId" />
     <Ia03 :id-skema="idSkema" :user-id="userId" />
     <Ia06 :id-skema="idSkema" :user-id="userId" />
+    <Ia07 :id-skema="idSkema" :user-id="userId" />
   </div>
 </template>
 
@@ -14,10 +15,11 @@ import { mapGetters } from 'vuex';
 import Ia02 from './ia02.vue';
 import Ia03 from './ia03.vue';
 import Ia06 from './ia06.vue';
+import Ia07 from './ia07.vue';
 
 export default {
   name: 'SkemaList',
-  components: { Ia02, Ia03, Ia06 },
+  components: { Ia02, Ia03, Ia06, Ia07 },
   data() {
     return {
       idSkema: this.$route.params.id_skema,

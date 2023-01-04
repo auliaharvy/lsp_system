@@ -1,6 +1,6 @@
 <?php
 /**
- * File UjiKompApl1.php
+ * File UjiKompAk02.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System
@@ -12,14 +12,13 @@ use App\Laravue\Acl;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Laravue\Models\SkemaElemenUnit;
 
 /**
  * Class Skema
  *
  * @package App\Laravue\Models
  */
-class UjiKompApl1 extends Model
+class UjiKompAk02 extends Model
 {
     public $guard_name = 'api';
 
@@ -29,7 +28,6 @@ class UjiKompApl1 extends Model
      * @param $query
      * @return Builder
      */
-    protected $table = "trx_uji_komp_apl_01";
-    protected $fillable = ['id_skema','id_tuk', 'id_jadwal', 'nik', 'nama_lengkap', 'nama_sekolah', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin',
-                            'alamat', 'kode_pos', 'no_hp', 'email', 'tingkatan', 'foto', 'identitas', 'raport', 'sertifikat', 'status', 'ttd_admin'];
+    protected $table = "trx_uji_komp_ak_02";
+    protected $fillable = ['rekomendasi_asesor', 'tindak_lanjut', 'komentar', 'updated_by'];
 }

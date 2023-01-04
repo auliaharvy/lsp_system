@@ -150,6 +150,7 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstIa11Resource = new Resource('mst-ia-11-get');
 const ia11Resource = new Resource('uji-komp-ia-11');
+const ia11Detail = new Resource('detail/ia-11');
 
 export default {
   components: {},
@@ -169,6 +170,8 @@ export default {
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
+      ia11: null,
+      listDetailIa11: null,
       unitKompetensiTable: [
         {
           col1: 'Unit Kompetensi',
@@ -233,10 +236,27 @@ export default {
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
+      this.getIa11();
     });
     this.getListPertanyaan();
   },
   methods: {
+    async getIa11() {
+      if (this.$route.params.id_ia_11 !== null) {
+        this.loading = true;
+        const data = await ia11Detail.get(this.$route.params.id_ia_11);
+        this.listDetailIa11 = data.detail;
+        this.ia11 = data.ia_11;
+        this.dataTrx.komentar = this.ia11.komentar;
+        this.listSoal.forEach((element, index) => {
+          var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_11 === element['id']);
+          console.log(foundIndex);
+          element['jawaban'] = data.detail[foundIndex].tanggapan;
+          element['komentar'] = data.detail[foundIndex].komentar;
+        });
+        this.loading = false;
+      }
+    },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -275,12 +295,16 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
+      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = ujiDetail.nama_asesor;
+      this.headerTable[2].content = asesor[0].nama_asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
+
+      this.dataTrx.nama_peninjau = asesor[0].nama_asesor;
+      this.dataTrx.tanggal = ujiDetail.mulai;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -320,12 +344,12 @@ export default {
     },
     onSubmit() {
       this.loading = true;
-      this.form.detail_ia_11 = this.listSoal;
-      this.form.user_id = this.userId;
-      this.form.id_uji_komp = this.$route.params.id_uji;
-      this.form.id_skema = this.$route.params.id_skema;
+      this.dataTrx.detail_ia_11 = this.listSoal;
+      this.dataTrx.user_id = this.userId;
+      this.dataTrx.id_uji_komp = this.$route.params.id_uji;
+      this.dataTrx.id_skema = this.$route.params.id_skema;
       ia11Resource
-        .store(this.form)
+        .store(this.dataTrx)
         .then(response => {
           this.$message({
             message: 'FR IA 11 has been created successfully.',

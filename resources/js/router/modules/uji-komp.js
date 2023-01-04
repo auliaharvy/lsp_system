@@ -20,6 +20,13 @@ const ujiRoutes = {
       meta: { title: 'List', icon: 'list', permissions: ['manage user'] },
     },
     {
+      path: 'form-mapa-02',
+      component: () => import('@/views/back-office/uji/fr_mapa/02/index'),
+      name: 'form-mapa-02',
+      meta: { title: 'Form MAPA 02', icon: 'date', permissions: ['manage user'] },
+      hidden: true,
+    },
+    {
       path: 'form-apl-01',
       component: () => import('@/views/back-office/uji/fr_apl/01/index'),
       name: 'form-apl-01',
@@ -55,10 +62,24 @@ const ujiRoutes = {
       hidden: true,
     },
     {
+      path: 'form-ia-05',
+      component: () => import('@/views/back-office/uji/fr_ia/05/index'),
+      name: 'form-ia-05',
+      meta: { title: 'Form IA 05', icon: 'date', permissions: ['manage user'] },
+      hidden: true,
+    },
+    {
       path: 'form-ia-06',
       component: () => import('@/views/back-office/uji/fr_ia/06/index'),
       name: 'form-ia-06',
       meta: { title: 'Form IA 06', icon: 'date', permissions: ['manage user'] },
+      hidden: true,
+    },
+    {
+      path: 'form-ia-07',
+      component: () => import('@/views/back-office/uji/fr_ia/07/index'),
+      name: 'form-ia-07',
+      meta: { title: 'Form IA 07', icon: 'date', permissions: ['manage user'] },
       hidden: true,
     },
     {
@@ -108,6 +129,13 @@ const ujiRoutes = {
       component: () => import('@/views/back-office/uji/fr_ak/06/index'),
       name: 'form-ak-06',
       meta: { title: 'Form AK 06', icon: 'date', permissions: ['manage user'] },
+      hidden: true,
+    },
+    {
+      path: 'form-va',
+      component: () => import('@/views/back-office/uji/fr_va/index'),
+      name: 'form-va',
+      meta: { title: 'Form VA', icon: 'date', permissions: ['manage user'] },
       hidden: true,
     },
   ],

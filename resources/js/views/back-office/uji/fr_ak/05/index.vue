@@ -105,6 +105,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
@@ -112,6 +113,7 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstAk03Resource = new Resource('mst-ak-03-get');
 const ak05Resource = new Resource('uji-komp-ak-05');
+const ak05Detail = new Resource('detail/ak-05');
 
 export default {
   components: {},
@@ -175,6 +177,11 @@ export default {
       labelPosition: 'left',
     };
   },
+  computed: {
+    ...mapGetters([
+      'userId',
+    ]),
+  },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
   },
@@ -188,11 +195,27 @@ export default {
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
+      this.getAk05();
     });
     this.getListPertanyaan();
     this.getDate();
   },
   methods: {
+    async getAk05() {
+      if (this.$route.params.id_ak_05 !== null) {
+        this.loading = true;
+        const data = await ak05Detail.get(this.$route.params.id_ak_05);
+        console.log(data);
+        this.dataTrx.namaAsesi = data.nama_asesi;
+        this.dataTrx.rekomendasi = data.rekomendasi;
+        this.dataTrx.keterangan = data.keterangan;
+        this.dataTrx.aspek = data.aspek;
+        this.dataTrx.catatanPenolakan = data.pencatatan_penolakan;
+        this.dataTrx.saranPerbaikan = data.saran_perbaikan;
+        console.log(this.dataTrx);
+        this.loading = false;
+      }
+    },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];

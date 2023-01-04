@@ -35,6 +35,7 @@ use App\Laravue\Models\Role;
 use App\Laravue\Models\MstFrIa02;
 use App\Laravue\Models\MstFrIa03;
 use App\Laravue\Models\MstFrIa06;
+use App\Laravue\Models\MstFrIa07;
 use App\Laravue\Models\MstFrAk03;
 use App\Laravue\Models\MstFrIa11;
 use Illuminate\Http\Request;
@@ -98,6 +99,21 @@ class PerangkatController extends BaseController
         $query = MstFrIa06::query();
         $query->where('mst_perangkat_ia_06.id_skema', $id_skema)
         ->select('mst_perangkat_ia_06.*');
+
+        return MasterResource::collection($query->paginate($limit));
+    }
+
+    public function indexIa07(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        // $keyword = Arr::get($searchParams, 'keyword', '');
+        // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
+
+        $query = MstFrIa07::query();
+        $query->where('mst_perangkat_ia_07.id_skema', $id_skema)
+        ->select('mst_perangkat_ia_07.*');
 
         return MasterResource::collection($query->paginate($limit));
     }
@@ -214,6 +230,36 @@ class PerangkatController extends BaseController
 
                 DB::commit();
                 return response()->json(['message' => "Sukses Buat Perangkat FR IA 06"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
+    public function storeIa07(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesIa03(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $params = $request->all();
+                $ia07 = MstFrIa07::create([
+                    'id_skema' => $params['id_skema'],
+                    'pertanyaan' => $params['pertanyaan'],
+                    'kunci_jawaban' => $params['kunci_jawaban'],
+                    'updated_by' => $params['updated_by'],
+                ]);
+
+                DB::commit();
+                return response()->json(['message' => "Sukses Buat Perangkat FR IA 07"], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);

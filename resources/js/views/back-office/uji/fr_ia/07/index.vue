@@ -1,7 +1,8 @@
 <template>
   <el-container class="app-container">
     <el-header>
-      <el-page-header content="FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI" @back="$router.back()" />
+      <!-- TODO buat penyesuaian halaman dengan form -->
+      <el-page-header content="FR.IA.07 PERTANYAAN LISAN" @back="$router.back()" />
     </el-header>
     <el-main>
       <div>
@@ -22,59 +23,6 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <span>{{ scope.row.content }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <br>
-
-        <el-table
-          v-loading="loading"
-          :data="['-']"
-          fit
-          border
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="left" label="PANDUAN BAGI ASESOR">
-            <ul>
-              <li v-for="item in panduan" :key="item">
-                {{ item }}
-              </li>
-            </ul>
-          </el-table-column>
-        </el-table>
-
-        <br>
-
-        <el-table
-          v-loading="loading"
-          :data="unitKompetensiTable"
-          border
-          fit
-          highlight-current-row
-          :span-method="objectSpanMethod"
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="left" width="150px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.col1 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left" width="120px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.col2 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left">
-            <template slot-scope="scope">
-              <ul>
-                <li v-for="item in scope.row.col3" :key="item">
-                  {{ item }}
-                </li>
-              </ul>
             </template>
           </el-table-column>
         </el-table>
@@ -147,9 +95,8 @@ const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstIa03Resource = new Resource('mst-ia03-get');
-const ia03Resource = new Resource('uji-komp-ia-03');
-const ia03Detail = new Resource('detail/ia-03');
+const mstResource = new Resource('mst-ia06-get');
+const postResource = new Resource('uji-komp-ia-06');
 
 export default {
   components: {},
@@ -233,25 +180,31 @@ export default {
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
-      this.getIa03();
     });
     this.getListPertanyaan();
+    this.getDate();
   },
   methods: {
-    async getIa03() {
-      if (this.$route.params.id_ia_03 !== null) {
-        this.loading = true;
-        const data = await ia03Detail.get(this.$route.params.id_ia_03);
-        this.ia03 = data.ia_03;
-        this.form.umpanBalikAsesi = this.ia03.umpan_balik;
-        this.form.rekomendasi_asesor = this.ia03.rekomendasi_asesor;
-        this.listSoal.forEach((element, index) => {
-          var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_03 === element['id']);
-          element['is_kompeten'] = data.detail[foundIndex].rekomendasi;
-          element['tanggapan'] = data.detail[foundIndex].tanggapan;
-        });
-        this.loading = false;
-      }
+    getDate() {
+      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      var date = new Date();
+      // var millisecond = date.getMilliseconds();
+      // var detik = date.getSeconds();
+      var menit = date.getMinutes();
+      var jam = date.getHours();
+      var hari = date.getDay();
+      var tanggal = date.getDate();
+      var bulan = date.getMonth();
+      var tahun = date.getFullYear();
+      this.dataTrx.jam = jam;
+      this.dataTrx.menit = menit;
+      this.dataTrx.tanggal = tanggal;
+      this.dataTrx.bulan = arrbulan[bulan];
+      this.dataTrx.tahun = tahun;
+      this.dataTrx.hari = arrHari[hari];
+      this.headerTable[4].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
+      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
     },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
@@ -263,7 +216,7 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      const { data } = await mstIa03Resource.list({ id_skema: this.$route.params.id_skema });
+      const { data } = await mstResource.list({ id_skema: this.$route.params.id_skema });
       this.listSoal = data;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
@@ -291,14 +244,15 @@ export default {
       var id_uji = this.$route.params.id_uji;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
-      this.selectedUji = ujiDetail;
       var asesor = ujiDetail.asesor;
+      console.log(ujiDetail);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = asesor[0].nama_asesor;
+      this.headerTable[2].content = asesor.map(itm => itm.nama_asesor).join(', ');
       this.headerTable[3].content = ujiDetail.nama_peserta;
-      this.headerTable[4].content = ujiDetail.mulai;
+      this.dataTrx.nama_asesor = asesor[0].nama_asesor;
+      this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -342,7 +296,7 @@ export default {
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
-      ia03Resource
+      postResource
         .store(this.form)
         .then(response => {
           this.$message({

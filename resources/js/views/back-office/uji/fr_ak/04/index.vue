@@ -8,36 +8,36 @@
         <br>
         <el-form
           ref="form"
-          :model="form"
+          :model="dataSend"
           label-width="250px"
           label-position="left"
         >
           <el-form-item label="Nama Asesi" prop="namaAsesi">
-            <el-input v-model="dataSend.namaAsesi" placeholder="nama asesi" />
+            <el-input v-model="dataSend.nama_asesi" placeholder="nama asesi" />
           </el-form-item>
 
           <el-form-item label="Nama Asesor" prop="namaAsesor">
-            <el-input v-model="dataSend.namaAsesor" placeholder="nama asesor" />
+            <el-input v-model="dataSend.nama_asesor" placeholder="nama asesor" />
           </el-form-item>
 
           <el-form-item label="Apakah proses banding telah dijelaskan kepada anda?" prop="proses">
-            <el-select v-model="dataSend.prosesBanding" class="filter-item" placeholder="ya/tidak">
-              <el-option label="Ya" value="ya" />
-              <el-option label="Tidak" value="tidak" />
+            <el-select v-model="dataSend.penjelasan" class="filter-item" placeholder="ya/tidak">
+              <el-option label="Ya" :value="0" />
+              <el-option label="Tidak" :value="1" />
             </el-select>
           </el-form-item>
 
           <el-form-item label="Apakah anda telah mendiskusikan banding dengan asesor?" prop="diskusi">
-            <el-select v-model="dataSend.diskusiBanding" class="filter-item" placeholder="ya/tidak">
-              <el-option label="Ya" value="ya" />
-              <el-option label="Tidak" value="tidak" />
+            <el-select v-model="dataSend.diskusi" class="filter-item" placeholder="ya/tidak">
+              <el-option label="Ya" :value="0" />
+              <el-option label="Tidak" :value="1" />
             </el-select>
           </el-form-item>
 
           <el-form-item label="Apakah anda mau melibatkan 'Orang Lain' membantu anda dalam proses banding?" prop="bantuBanding">
-            <el-select v-model="dataSend.membantuBanding" class="filter-item" placeholder="ya/tidak">
-              <el-option label="Ya" value="ya" />
-              <el-option label="Tidak" value="tidak" />
+            <el-select v-model="dataSend.melibatkan" class="filter-item" placeholder="ya/tidak">
+              <el-option label="Ya" :value="0" />
+              <el-option label="Tidak" :value="1" />
             </el-select>
           </el-form-item>
 
@@ -46,15 +46,16 @@
           </el-form-item>
 
           <el-form-item label="No Skema" prop="noSkema">
-            <el-input v-model="dataSend.noSkema" placeholder="nomor skema sertifikasi" />
+            <el-input v-model="dataSend.no_skema" placeholder="nomor skema sertifikasi" />
           </el-form-item>
 
           <el-form-item label="Alasan banding" prop="alasanBanding">
-            <el-input v-model="dataSend.alasanBanding" type="textarea" :rows="3" placeholder="Isi Komentar" />
+            <el-input v-model="dataSend.alasan_banding" type="textarea" :rows="3" placeholder="Isi Komentar" />
           </el-form-item>
         </el-form>
         <br>
 
+        <el-button @click="onSubmit">Submit Asesor</el-button>
       </div>
     </el-main>
   </el-container>
@@ -67,6 +68,7 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstAk03Resource = new Resource('mst-ak-03-get');
+const ak04Resource = new Resource('uji-komp-ak-04');
 
 export default {
   components: {},
@@ -170,12 +172,18 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
+      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       console.log(ujiDetail);
       this.dataSend.skema = ujiDetail.skema_sertifikasi;
-      this.dataSend.namaAsesor = ujiDetail.nama_asesor;
-      this.dataSend.namaAsesi = ujiDetail.nama_peserta;
-      this.dataSend.noSkema = ujiDetail.kode_skema;
+      this.dataSend.nama_asesor = asesor[0].nama_asesor;
+      this.dataSend.email_asesi = ujiDetail.email_peserta;
+      this.dataSend.nama_asesi = ujiDetail.nama_peserta;
+      this.dataSend.no_skema = ujiDetail.kode_skema;
+      this.dataSend.tanggal_asesmen = ujiDetail.mulai;
+      this.dataSend.penjelasan = 0;
+      this.dataSend.diskusi = 0;
+      this.dataSend.melibatkan = 0;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -216,9 +224,26 @@ export default {
       this.listKuk = kuk;
     },
     onSubmit() {
-      if (this.active++ > 2) {
-        this.active = 0;
-      }
+      this.loading = true;
+      this.dataSend.id_uji_komp = this.$route.params.id_uji;
+      console.log(this.dataSend);
+      ak04Resource
+        .store(this.dataSend)
+        .then(response => {
+          this.$message({
+            message: 'FR AK 04 has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     back() {
       if (this.active-- < 0) {

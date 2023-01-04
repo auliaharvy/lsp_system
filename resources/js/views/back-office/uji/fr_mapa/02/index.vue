@@ -1,7 +1,7 @@
 <template>
   <el-container class="app-container">
     <el-header>
-      <el-page-header content="FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI" @back="$router.back()" />
+      <el-page-header content="FR.MAPA.02 PETA INSTRUMEN ASESSMEN HASIL PENDEKATAN ASESMEN DAN PERENCANAAN ASESMEN" @back="$router.back()" />
     </el-header>
     <el-main>
       <div>
@@ -23,26 +23,6 @@
             <template slot-scope="scope">
               <span>{{ scope.row.content }}</span>
             </template>
-          </el-table-column>
-        </el-table>
-
-        <br>
-
-        <el-table
-          v-loading="loading"
-          :data="['-']"
-          fit
-          border
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="left" label="PANDUAN BAGI ASESOR">
-            <ul>
-              <li v-for="item in panduan" :key="item">
-                {{ item }}
-              </li>
-            </ul>
           </el-table-column>
         </el-table>
 
@@ -80,47 +60,16 @@
         </el-table>
 
         <br>
-
-        <el-table
-          v-loading="loading"
-          :data="listSoal"
-          border
-          fit
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="center" min-width="20px" label="No">
-            <template slot-scope="scope">
-              <span>{{ scope.row.index }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left" min-width="150px" label="Pertanyaan">
-            <template slot-scope="scope">
-              <span>{{ scope.row.pertanyaan }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left" min-width="200px" label="Tangagpan">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.tanggapan" type="textarea" :rows="3" placeholder="Isi Tanggapan" label="Tanggapan" />
-            </template>
-          </el-table-column>
-          <el-table-column align="center" min-width="80px" label="Rekomendasi">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
-                <el-option key="kompeten" label="Kompeten" value="kompeten" />
-                <el-option key="belum kompeten" label="Belum Kompeten" value="belum kompeten" />
-              </el-select>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <br>
+        <a target="_blank" :href="'/file/fr-02/' + selectedSkema.kode_skema + '.pdf'">
+          <el-button type="primary">
+            Klik untuk melihat soal
+          </el-button>
+        </a>
         <br>
 
         <el-form
           ref="form"
-          :model="form"
+          :model="radio1"
           label-width="250px"
           label-position="left"
         >
@@ -128,14 +77,10 @@
             <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
-          <el-form-item label="Umpan balik untuk asesi" prop="feedback">
-            <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
-          </el-form-item>
         </el-form>
-        <br>
-
-        <el-button @click="onSubmit">Submit</el-button>
       </div>
+      <br>
+      <el-button @click="onSubmit">Submit</el-button>
     </el-main>
   </el-container>
 </template>
@@ -147,18 +92,15 @@ const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstIa03Resource = new Resource('mst-ia03-get');
-const ia03Resource = new Resource('uji-komp-ia-03');
-const ia03Detail = new Resource('detail/ia-03');
+const ia02Resource = new Resource('uji-komp-ia-02');
 
 export default {
   components: {},
   data() {
     return {
-      umpanBalikAsesi: '',
+      radio1: 'Kompeten',
       kompeten: null,
       loading: false,
-      listSoal: null,
       listSkema: null,
       listTuk: null,
       listJadwal: null,
@@ -233,26 +175,9 @@ export default {
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
-      this.getIa03();
     });
-    this.getListPertanyaan();
   },
   methods: {
-    async getIa03() {
-      if (this.$route.params.id_ia_03 !== null) {
-        this.loading = true;
-        const data = await ia03Detail.get(this.$route.params.id_ia_03);
-        this.ia03 = data.ia_03;
-        this.form.umpanBalikAsesi = this.ia03.umpan_balik;
-        this.form.rekomendasi_asesor = this.ia03.rekomendasi_asesor;
-        this.listSoal.forEach((element, index) => {
-          var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_03 === element['id']);
-          element['is_kompeten'] = data.detail[foundIndex].rekomendasi;
-          element['tanggapan'] = data.detail[foundIndex].tanggapan;
-        });
-        this.loading = false;
-      }
-    },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -260,16 +185,6 @@ export default {
           // kuk.is_kompeten = this.kompeten;
         }
       }
-    },
-    async getListPertanyaan() {
-      this.loading = true;
-      const { data } = await mstIa03Resource.list({ id_skema: this.$route.params.id_skema });
-      this.listSoal = data;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
-      console.log(this.listSoal);
-      this.loading = false;
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -292,11 +207,10 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
-      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = asesor[0].nama_asesor;
+      this.headerTable[2].content = ujiDetail.nama_asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
     },
@@ -338,15 +252,14 @@ export default {
     },
     onSubmit() {
       this.loading = true;
-      this.form.detail_ia_03 = this.listSoal;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
-      ia03Resource
+      ia02Resource
         .store(this.form)
         .then(response => {
           this.$message({
-            message: 'FR IA 03 has been created successfully.',
+            message: 'FR IA 02 has been created successfully.',
             type: 'success',
             duration: 5 * 1000,
           });

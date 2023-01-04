@@ -1,4 +1,4 @@
-<template>
+<template v-loading="loading">
   <el-container class="app-container">
     <vue-html2pdf
       ref="html2Pdf"
@@ -175,7 +175,7 @@
     <el-header>
       <el-page-header content="FR.IA.01 CEKLIS OBSERVASI AKTIVITAS DI TEMPAT KERJA ATAU TEMPAT KERJA SIMULASI" @back="$router.back()" />
     </el-header>
-    <el-main>
+    <el-main v-loading="loading">
       <div>
         <el-table
           v-loading="loading"
@@ -484,17 +484,21 @@ export default {
       this.listJadwal = data;
     },
     getUjiKompDetail() {
+      this.loading = true;
       var id_uji = this.$route.params.id_uji;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
+      this.selectedUji = ujiDetail;
+      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.fileName = 'APL.02 - ' + ujiDetail.nama_peserta + ' - ' + ujiDetail.kode_skema;
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = ujiDetail.nama_asesor;
+      this.headerTable[2].content = asesor[0].nama_asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
+      this.loading = false;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;

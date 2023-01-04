@@ -89,9 +89,6 @@
             <el-radio v-model="dataSend.status" label="Kompeten">Kompeten</el-radio>
             <el-radio v-model="dataSend.status" label="Belum Kompeten">Belum Kompeten</el-radio>
           </el-form-item>
-          <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <el-input v-model="dataSend.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" />
-          </el-form-item>
           <el-form-item label="Tindak Lanjut Yang di butuhkan" prop="rekomendasi_asesor">
             <el-input v-model="dataSend.tindakLanjut" type="textarea" :rows="3" placeholder="Isi Tindak lanjut" />
           </el-form-item>
@@ -101,18 +98,22 @@
         </el-form>
         <br>
 
+        <el-button @click="onSubmit">Submit</el-button>
+
       </div>
     </el-main>
   </el-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstIa03Resource = new Resource('mst-ia03-get');
+const ak02Resource = new Resource('uji-komp-ak-02');
 
 export default {
   components: {},
@@ -160,10 +161,6 @@ export default {
           content: '',
         },
         {
-          title: 'Unit Kompetensi',
-          content: '',
-        },
-        {
           title: 'Tanggal Mulai Asesmen',
           content: '-',
         },
@@ -192,6 +189,11 @@ export default {
       isWide: true,
       labelPosition: 'left',
     };
+  },
+  computed: {
+    ...mapGetters([
+      'userId',
+    ]),
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
@@ -224,6 +226,13 @@ export default {
       this.listSoal = data;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
+        element['observasi_demonstrasi'] = true;
+        element['portofolio'] = false;
+        element['pernyataan_pihak_3'] = true;
+        element['pernyataan_lisan'] = false;
+        element['pernyataan_tertulis'] = false;
+        element['proyek_kerja'] = false;
+        element['lainnya'] = false;
       });
       this.loading = false;
     },
@@ -248,10 +257,12 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
+      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[2].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.nama_asesor;
+      this.headerTable[1].content = asesor[0].nama_asesor;
       this.headerTable[0].content = ujiDetail.nama_peserta;
+      this.headerTable[4].content = ujiDetail.mulai;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -292,9 +303,33 @@ export default {
       this.listKuk = kuk;
     },
     onSubmit() {
-      if (this.active++ > 2) {
-        this.active = 0;
-      }
+      this.loading = true;
+      this.dataTrx.id_uji_komp = this.$route.params.id_uji;
+      this.dataTrx.komentar = this.dataSend.komentar;
+      this.dataTrx.tindak_lanjut = this.dataSend.tindakLanjut;
+      this.dataTrx.rekomendasi_asesor = this.dataSend.status;
+      this.dataTrx.nama_asesi = this.headerTable[0].content;
+      this.dataTrx.nama_asesor = this.headerTable[1].content;
+      this.dataTrx.detail = this.listSoal;
+      console.log(this.dataTrx.detail);
+      this.dataTrx.userId = this.userId;
+      ak02Resource
+        .store(this.dataTrx)
+        .then(response => {
+          this.$message({
+            message: 'FR AK 02 has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     back() {
       if (this.active-- < 0) {

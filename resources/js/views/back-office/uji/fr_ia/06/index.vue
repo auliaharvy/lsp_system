@@ -94,8 +94,8 @@ const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstIa03Resource = new Resource('mst-ia03-get');
-const ia03Resource = new Resource('uji-komp-ia-03');
+const mstResource = new Resource('mst-ia06-get');
+const postResource = new Resource('uji-komp-ia-06');
 
 export default {
   components: {},
@@ -215,7 +215,7 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      const { data } = await mstIa03Resource.list({ id_skema: this.$route.params.id_skema });
+      const { data } = await mstResource.list({ id_skema: this.$route.params.id_skema });
       this.listSoal = data;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
@@ -295,7 +295,7 @@ export default {
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
-      ia03Resource
+      postResource
         .store(this.form)
         .then(response => {
           this.$message({

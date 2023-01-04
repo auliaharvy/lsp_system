@@ -60,22 +60,33 @@
         </el-table>
 
         <br>
-        <a target="_blank" :href="'/file/fr-02/' + selectedSkema.kode_skema + '.pdf'">
+        <br>
+        <a target="_blank" :href="'/' + selectedSkema">
           <el-button type="primary">
             Klik untuk melihat soal
           </el-button>
         </a>
         <br>
-
+        <br>
+        <a v-if="detail" target="_blank" :href="'/' + detail.file">
+          <el-button type="primary">
+            Klik untuk melihat jawaban
+          </el-button>
+        </a>
+        <br>
+        <br>
         <el-form
           ref="form"
-          :model="radio1"
+          :model="dataTrx"
           label-width="250px"
           label-position="left"
         >
+          <el-form-item v-if="!detail" label="Upload File Jawaban" prop="file">
+            <input type="file" @change="handleUploadSuccess">
+          </el-form-item>
           <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
-            <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
+            <el-radio v-model="dataTrx.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
+            <el-radio v-model="dataTrx.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
         </el-form>
       </div>
@@ -93,6 +104,8 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const ia02Resource = new Resource('uji-komp-ia-02');
+const mstIa02Resource = new Resource('mst-ia02-get');
+const ia02Detail = new Resource('detail/ia-02');
 
 export default {
   components: {},
@@ -108,6 +121,7 @@ export default {
       listJudulUnit: [],
       listKuk: [],
       listUji: [],
+      detail: {},
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -175,9 +189,20 @@ export default {
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
+      this.getListPertanyaan();
+      this.getIa02();
     });
   },
   methods: {
+    async getIa02() {
+      if (this.$route.params.id_ia_02 !== null) {
+        this.loading = true;
+        const data = await ia02Detail.get(this.$route.params.id_ia_02);
+        this.detail = data;
+        this.dataTrx.rekomendasi_asesor = data.rekomendasi_asesor;
+        this.loading = false;
+      }
+    },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -186,9 +211,25 @@ export default {
         }
       }
     },
+    async getListPertanyaan() {
+      this.loading = true;
+      const { data } = await mstIa02Resource.list({ id_skema: this.$route.params.id_skema });
+      this.listSoal = data;
+      this.selectedSkema = data[0].file;
+      this.listSoal.forEach((element, index) => {
+        element['index'] = index + 1;
+      });
+      console.log(this.listSoal);
+      this.loading = false;
+    },
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
+    },
+    handleUploadSuccess(e) {
+      const files = e.target.files;
+      const rawFile = files[0]; // only use files[0]
+      this.dataTrx.file = rawFile;
     },
     async getListUji() {
       const { data } = await ujiKomResource.list();
@@ -207,10 +248,11 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
+      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = ujiDetail.nama_asesor;
+      this.headerTable[2].content = asesor[0].nama_asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
     },
@@ -252,11 +294,15 @@ export default {
     },
     onSubmit() {
       this.loading = true;
-      this.form.user_id = this.userId;
-      this.form.id_uji_komp = this.$route.params.id_uji;
-      this.form.id_skema = this.$route.params.id_skema;
+      const uploadData = new FormData();
+      uploadData.append('id_skema', this.$route.params.id_skema);
+      uploadData.append('id_uji_komp', this.$route.params.id_uji);
+      uploadData.append('user_id', this.userId);
+      uploadData.append('file', this.dataTrx.file);
+      uploadData.append('rekomendasi_asesor', this.dataTrx.rekomendasi_asesor);
+
       ia02Resource
-        .store(this.form)
+        .store(uploadData)
         .then(response => {
           this.$message({
             message: 'FR IA 02 has been created successfully.',

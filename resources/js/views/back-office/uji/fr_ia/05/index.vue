@@ -1,7 +1,8 @@
 <template>
   <el-container class="app-container">
     <el-header>
-      <el-page-header content="FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI" @back="$router.back()" />
+      <!-- TODO Penyesuain dengan form -->
+      <el-page-header content="FR.IA.05 PERTANYAAN TERTULIS PILIHAN GANDA" @back="$router.back()" />
     </el-header>
     <el-main>
       <div>
