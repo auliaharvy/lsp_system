@@ -38,8 +38,7 @@
           <el-form-item :label="$t('skema.table.skema')" prop="skema_id">
             <el-select
               v-model="dataTrx.id_skema"
-              filterable
-              clearable
+              disabled
               class="filter-item full"
               :placeholder="$t('skema.table.skema')"
             >
@@ -56,8 +55,7 @@
           <el-form-item label="Tempat Uji Kompetensi" prop="id_tuk">
             <el-select
               v-model="dataTrx.id_tuk"
-              filterable
-              clearable
+              disabled
               class="filter-item full"
               placeholder="Pilih TUK"
             >
@@ -89,6 +87,8 @@
               <el-date-picker
                 v-model="dataTrx.tanggal_lahir"
                 type="date"
+                format="yyyy/MM/dd"
+                value-format="yyyy-MM-dd"
                 placeholder="Pick a date"
                 style="width: 100%"
               />

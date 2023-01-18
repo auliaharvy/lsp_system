@@ -31,59 +31,6 @@
 
         <el-table
           v-loading="loading"
-          :data="['-']"
-          fit
-          border
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="left" label="PANDUAN BAGI ASESOR">
-            <ul>
-              <li v-for="item in panduan" :key="item">
-                {{ item }}
-              </li>
-            </ul>
-          </el-table-column>
-        </el-table>
-
-        <br>
-
-        <el-table
-          v-loading="loading"
-          :data="unitKompetensiTable"
-          border
-          fit
-          highlight-current-row
-          :span-method="objectSpanMethod"
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="left" width="150px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.col1 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left" width="120px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.col2 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left">
-            <template slot-scope="scope">
-              <ul>
-                <li v-for="item in scope.row.col3" :key="item">
-                  {{ item }}
-                </li>
-              </ul>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <br>
-
-        <el-table
-          v-loading="loading"
           :data="listSoal"
           border
           fit
@@ -96,17 +43,26 @@
               <span>{{ scope.row.index }}</span>
             </template>
           </el-table-column>
+          <el-table-column align="left" min-width="150px" label="Unit Kompetensi">
+            <template slot-scope="scope">
+              <span>{{ scope.row.kode_unit }}</span>
+              <br>
+              <span>{{ scope.row.unit_kompetensi }}</span>
+            </template>
+          </el-table-column>
           <el-table-column align="left" min-width="150px" label="Pertanyaan">
             <template slot-scope="scope">
               <span>{{ scope.row.pertanyaan }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" min-width="200px" label="Tangagpan">
+          <el-table-column align="center" min-width="100px" label="Jawaban">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.tanggapan" type="textarea" :rows="3" placeholder="Isi Tanggapan" label="Tanggapan" />
+              <el-select v-model="scope.row.jawaban" class="filter-item" placeholder="Silakan pilih jawaban">
+                <el-option v-for="item in scope.row.list_jawaban" :key="item.id" :label="item.jawaban" :value="item.id" />
+              </el-select>
             </template>
           </el-table-column>
-          <el-table-column align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['asesor'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
@@ -120,6 +76,7 @@
         <br>
 
         <el-form
+          v-if="checkRole(['asesor'])"
           ref="form"
           :model="form"
           label-width="250px"
@@ -129,13 +86,13 @@
             <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
-          <el-form-item label="Umpan balik untuk asesi" prop="feedback">
-            <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
-          </el-form-item>
         </el-form>
         <br>
 
-        <el-button @click="onSubmit">Submit</el-button>
+        <!-- peserta -->
+        <el-button @click="onSubmit(0)">Submit</el-button>
+        <!-- asesor -->
+        <el-button v-if="checkRole(['asesor'])" @click="onSubmit(1)">Submit Asesor</el-button>
       </div>
     </el-main>
   </el-container>
@@ -144,15 +101,19 @@
 <script>
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
+import role from '@/directive/role';
+import checkRole from '@/utils/role';
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstIa03Resource = new Resource('mst-ia03-get');
-const ia03Resource = new Resource('uji-komp-ia-03');
+const mstIa05Resource = new Resource('mst-ia05-get');
+const ia05Resource = new Resource('uji-komp-ia-05');
+const nilaiIa05Resource = new Resource('uji-komp-ia-05');
 
 export default {
   components: {},
+  directives: { role },
   data() {
     return {
       umpanBalikAsesi: '',
@@ -218,6 +179,7 @@ export default {
   computed: {
     ...mapGetters([
       'userId',
+      'roles',
     ]),
   },
   beforeDestroy() {
@@ -237,6 +199,7 @@ export default {
     this.getListPertanyaan();
   },
   methods: {
+    checkRole,
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -247,12 +210,12 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      const { data } = await mstIa03Resource.list({ id_skema: this.$route.params.id_skema });
+      const { data } = await mstIa05Resource.list({ id_skema: this.$route.params.id_skema });
       this.listSoal = data;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
+        element['jawaban'] = null;
       });
-      console.log(this.listSoal);
       this.loading = false;
     },
     async getListSkema() {
@@ -276,10 +239,11 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
+      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = ujiDetail.nama_asesor;
+      this.headerTable[2].content = asesor[0].nama_asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
     },
@@ -319,29 +283,49 @@ export default {
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
     },
-    onSubmit() {
+    onSubmit(jenis) {
       this.loading = true;
-      this.form.detail_ia_03 = this.listSoal;
+      this.form.detail_ia_05 = this.listSoal;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
-      ia03Resource
-        .store(this.form)
-        .then(response => {
-          this.$message({
-            message: 'FR IA 03 has been created successfully.',
-            type: 'success',
-            duration: 5 * 1000,
+      if (jenis === 0) {
+        ia05Resource
+          .store(this.form)
+          .then(response => {
+            this.$message({
+              message: 'FR IA 05 has been created successfully.',
+              type: 'success',
+              duration: 5 * 1000,
+            });
+            this.$router.push({ name: 'uji-komp-list' });
+          })
+          .catch(error => {
+            console.log(error);
+            this.loading = false;
+          })
+          .finally(() => {
+            this.loading = false;
           });
-          this.$router.push({ name: 'uji-komp-list' });
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      } else {
+        nilaiIa05Resource
+          .store(this.form)
+          .then(response => {
+            this.$message({
+              message: 'FR IA 05 has been created successfully.',
+              type: 'success',
+              duration: 5 * 1000,
+            });
+            this.$router.push({ name: 'uji-komp-list' });
+          })
+          .catch(error => {
+            console.log(error);
+            this.loading = false;
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
     },
     back() {
       if (this.active-- < 0) {

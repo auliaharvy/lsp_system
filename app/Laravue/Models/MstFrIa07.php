@@ -29,5 +29,5 @@ class MstFrIa07 extends Model
      * @return Builder
      */
     protected $table = "mst_perangkat_ia_07";
-    protected $fillable = ['id_skema','pertanyaan', 'kunci_jawaban', 'updated_by'];
+    protected $fillable = ['id_skema', 'id_unit_komp', 'pertanyaan', 'kunci_jawaban', 'updated_by'];
 }

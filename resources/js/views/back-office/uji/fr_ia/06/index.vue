@@ -42,17 +42,24 @@
               <span>{{ scope.row.index }}</span>
             </template>
           </el-table-column>
+          <el-table-column align="left" min-width="150px" label="Unit Kompetensi">
+            <template slot-scope="scope">
+              <span>{{ scope.row.kode_unit }}</span>
+              <br>
+              <span>{{ scope.row.unit_kompetensi }}</span>
+            </template>
+          </el-table-column>
           <el-table-column align="left" min-width="150px" label="Pertanyaan">
             <template slot-scope="scope">
               <span>{{ scope.row.pertanyaan }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" min-width="200px" label="Tangagpan">
+          <el-table-column align="center" min-width="100px" label="Jawaban">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.tanggapan" type="textarea" :rows="3" placeholder="Isi Tanggapan" label="Tanggapan" />
+              <el-input v-model="scope.row.jawaban" type="textarea" />
             </template>
           </el-table-column>
-          <el-table-column align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['asesor'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
@@ -66,6 +73,7 @@
         <br>
 
         <el-form
+          v-if="checkRole(['asesor'])"
           ref="form"
           :model="form"
           label-width="250px"
@@ -82,6 +90,7 @@
         <br>
 
         <el-button @click="onSubmit">Submit</el-button>
+        <el-button v-if="checkRole(['asesor'])" @click="onSubmit">Submit</el-button>
       </div>
     </el-main>
   </el-container>
@@ -90,6 +99,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
+import role from '@/directive/role';
+import checkRole from '@/utils/role';
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
@@ -99,6 +110,7 @@ const postResource = new Resource('uji-komp-ia-06');
 
 export default {
   components: {},
+  directives: { role },
   data() {
     return {
       umpanBalikAsesi: '',
@@ -184,6 +196,7 @@ export default {
     this.getDate();
   },
   methods: {
+    checkRole,
     getDate() {
       var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
       var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];

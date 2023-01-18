@@ -53,11 +53,10 @@ class JadwalController extends BaseController
         $query = Jadwal::query();
         $query->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema');
         $query->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk');
-        $query->join('mst_perangkat_asesmen as d', 'd.id', '=', 'trx_jadwal_asesmen.id_perangkat');
         $query->join('rel_jadwal_has_asesor as e', 'e.id_jadwal', '=', 'trx_jadwal_asesmen.id');
         $query->join('mst_asesor as f', 'f.id', '=', 'e.id_asesor')
         ->groupBy('trx_jadwal_asesmen.id')
-        ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'd.nama_perangkat', 'f.nama as nama_asesor');
+        ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor');
 
         if (!empty($keyword)) {
             $query->where('b.skema_sertifikasi', 'LIKE', '%' . $keyword . '%');
@@ -89,7 +88,7 @@ class JadwalController extends BaseController
                 $jadwal = Jadwal::create([
                     'id_skema' => $params['id_skema'],
                     'id_tuk' => $params['id_tuk'],
-                    'id_perangkat' => $params['id_perangkat'],
+                    // 'id_perangkat' => $params['id_perangkat'],
                     'persyaratan' => $params['persyaratan'],
                     'jadwal' => $params['jadwal'],
                     'start_date' => $params['start_date'],

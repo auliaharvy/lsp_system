@@ -27,7 +27,7 @@ use Validator;
  */
 class TukController extends BaseController
 {
-    const ITEM_PER_PAGE = 15;
+    const ITEM_PER_PAGE = 100;
 
     /**
      * Display a listing of the user resource.

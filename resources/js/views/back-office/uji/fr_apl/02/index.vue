@@ -92,13 +92,82 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  align="center"
-                  label="Bukti Pendukung"
-                  min-width="80px"
-                >
+              </el-table>
+
+              <br>
+              <el-table
+                v-loading="loading"
+                :data="ttdTable1"
+                fit
+                border
+                style="width: 750px"
+                :header-cell-style="{ 'text-align': 'center' }"
+              >
+                <el-table-column align="center" label="Nama Asesi">
                   <template slot-scope="scope">
-                    <span><b>{{ scope.row.bukti_pendukung }}</b></span>
+                    <span>{{ scope.row.nama }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Tanggal">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.tanggal }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Tanda Tangan Asesi">
+                  <template slot-scope="scope">
+                    <el-image
+                      style="width: 200px; height: 100px"
+                      :src="scope.row.ttd"
+                      fit="contain"
+                    />
+                  </template>
+                </el-table-column>
+              </el-table>
+              <br>
+              <el-table
+                v-if="ttdTable2"
+                v-loading="loading"
+                :data="ttdTable2"
+                fit
+                border
+                style="width: 750px"
+                :header-cell-style="{ 'text-align': 'center' }"
+              >
+                <el-table-column align="center" label="Nama Asesor">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.nama }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="Rekomendasi Asesor">
+                  <template v-if="initStatus === 0">
+                    <el-select v-model="status" class="filter-item" placeholder="T/TT" value-key="status">
+                      <el-option :key="0" label="Belum di cek" :value="0" />
+                      <el-option :key="1" label="Asesmen dapat dilanjutkan" :value="1" />
+                      <el-option :key="2" label="Asesmen tidak dapat dilanjutkan" :value="2" />
+                    </el-select>
+                  </template>
+                  <span v-else-if="initStatus === 1"> Asesmen dapat dilanjutkan</span>
+                  <span v-else-if="initStatus === 2"> Asesmen tidak dapat dilanjutkan</span>
+                </el-table-column>
+                <el-table-column align="center" label="Tanda Tangan Asesor">
+                  <template v-if="initStatus">
+                    <div v-if="initStatus === 0">
+                      <vueSignature
+                        ref="signature"
+                        :sig-option="option"
+                        :w="'300px'"
+                        :h="'150px'"
+                        :disabled="false"
+                        style="border-style: outset"
+                      />
+                      <el-button size="small" @click="clear">Clear</el-button>
+                    </div>
+                    <el-image
+                      v-else
+                      style="width: 200px; height: 100px"
+                      :src="ttdAsesor"
+                      fit="contain"
+                    />
                   </template>
                 </el-table-column>
               </el-table>
@@ -184,15 +253,6 @@
             </template>
           </el-table-column>
 
-          <el-table-column
-            align="center"
-            label="Bukti Pendukung"
-            min-width="80px"
-          >
-            <template slot-scope="scope">
-              <span><b>{{ scope.row.bukti_pendukung }}</b></span>
-            </template>
-          </el-table-column>
         </el-table>
         <br>
         <el-table
@@ -235,14 +295,37 @@
         >
           <el-table-column align="center" label="Nama Asesor">
             <template slot-scope="scope">
-              <span>{{ scope.row.nama_asesor }}</span>
+              <span>{{ scope.row.nama }}</span>
             </template>
           </el-table-column>
+          <el-table-column align="center" label="Rekomendasi Asesor">
+            <template v-if="initStatus === 0">
+              <el-select v-model="status" class="filter-item" placeholder="T/TT" value-key="status">
+                <el-option :key="0" label="Belum di cek" :value="0" />
+                <el-option :key="1" label="Asesmen dapat dilanjutkan" :value="1" />
+                <el-option :key="2" label="Asesmen tidak dapat dilanjutkan" :value="2" />
+              </el-select>
+            </template>
+            <span v-else-if="initStatus === 1"> Asesmen dapat dilanjutkan</span>
+            <span v-else-if="initStatus === 2"> Asesmen tidak dapat dilanjutkan</span>
+          </el-table-column>
           <el-table-column align="center" label="Tanda Tangan Asesor">
-            <template slot-scope="scope">
+            <template v-if="initStatus">
+              <div v-if="initStatus === 0">
+                <vueSignature
+                  ref="signature"
+                  :sig-option="option"
+                  :w="'300px'"
+                  :h="'150px'"
+                  :disabled="false"
+                  style="border-style: outset"
+                />
+                <el-button size="small" @click="clear">Clear</el-button>
+              </div>
               <el-image
+                v-else
                 style="width: 200px; height: 100px"
-                :src="scope.row.ttd_asesor"
+                :src="ttdAsesor"
                 fit="contain"
               />
             </template>
@@ -250,25 +333,33 @@
         </el-table>
       </div>
     </el-main>
-    <el-button @click="generateReport">Print</el-button>
+    <el-button v-if="initStatus === 0" @click="onSubmit">Submit</el-button>
+    <el-button v-else @click="generateReport">Print</el-button>
   </el-container>
 </template>
 
 <script>
+import vueSignature from 'vue-signature';
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 import VueHtml2pdf from 'vue-html2pdf';
 import moment from 'moment';
 const apl01Resource = new Resource('detail/apl-01');
 const apl02Resource = new Resource('detail/apl-02');
+const apl02UpdateResource = new Resource('uji-komp-apl-02');
 const skemaResource = new Resource('skema-get');
 
 export default {
   components: {
     VueHtml2pdf,
+    vueSignature,
   },
   data() {
     return {
+      option: {
+        penColor: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(255,255,255)',
+      },
       dataAsesi: {},
       dataAdmin: {},
       kompeten: null,
@@ -283,6 +374,10 @@ export default {
       listKodeUnit: [],
       selectedSkema: {},
       selectedUji: {},
+      namaAsesor: '',
+      initStatus: null,
+      status: 0,
+      ttdAsesor: '',
       dataTrx: {},
       headerTable: [
         {
@@ -384,7 +479,14 @@ export default {
           ttd: '',
         },
       ],
-      ttdTable2: [],
+      ttdTable2: [
+        {
+          no: 1,
+          nama: 'Nama Asesor',
+          tanggal: 'Catatan',
+          ttd: '',
+        },
+      ],
       unitKompetensiTable: [],
       buktiTable: [],
       panduan: [
@@ -421,6 +523,13 @@ export default {
     });
   },
   methods: {
+    clear() {
+      this.$refs.signature.clear();
+    },
+    saveSign() {
+      var _this = this;
+      this.testPng = _this.$refs.signature.save();
+    },
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
@@ -451,14 +560,16 @@ export default {
       this.ttdTable1[0].tanggal = moment(data.created_at).format('DD-MM-YYYY');
       this.ttdTable1[0].ttd = '/uploads/users/signature/' + data.signature;
 
-      this.ttdTable2.push(this.$route.params.asesor);
-      console.log(this.$route.params.asesor);
-      console.log(this.ttdTable2);
+      // this.ttdTable2.push(this.$route.params.asesor);
+      this.ttdTable2[0].nama = this.$route.params.asesor[0].nama_asesor;
     },
     async getApl02() {
       this.loading = true;
       const data = await apl02Resource.get(this.$route.params.id_apl_02);
       this.listDetailApl02 = data;
+      this.initStatus = this.listDetailApl02.status;
+      this.status = this.listDetailApl02.status;
+      this.ttdAsesor = '/uploads/users/signature/' + this.listDetailApl02.ttd_asesor;
       this.listKuk.forEach((element, index) => {
         if (element['type'] === 'kuk') {
           var foundIndex = data.detail.findIndex(x => x.id_kuk_elemen === element['id']);
@@ -470,7 +581,6 @@ export default {
     async insertDetailAPl02() {
       this.loading = true;
       const dataApl02 = this.listDetailApl02.detail;
-      console.log(dataApl02);
       this.listKuk.forEach((element, index) => {
         if (element['type'] === 'kuk') {
           var foundIndex = dataApl02.findIndex(x => x.id_kuk_elemen === element['id']);
@@ -478,7 +588,6 @@ export default {
         }
       });
       this.loading = false;
-      console.log(this.listKuk);
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -495,7 +604,6 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -525,30 +633,36 @@ export default {
         }
       }
     },
-    // onSubmit() {
-    //   this.loading = true;
-    //   this.form.detail_ia_01 = this.listKuk;
-    //   this.form.user_id = this.userId;
-    //   this.form.id_uji_komp = this.$route.params.id_uji;
-    //   this.form.id_skema = this.$route.params.id_skema;
-    //   ia01Resource
-    //     .store(this.form)
-    //     .then(response => {
-    //       this.$message({
-    //         message: 'FR IA 01 has been created successfully.',
-    //         type: 'success',
-    //         duration: 5 * 1000,
-    //       });
-    //       this.$router.push({ name: 'uji-komp-list' });
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //       this.loading = false;
-    //     })
-    //     .finally(() => {
-    //       this.loading = false;
-    //     });
-    // },
+    onSubmit() {
+      this.loading = true;
+      this.dataTrx.userId = this.userId;
+      this.dataTrx.status = this.pilihanTerima;
+      this.dataTrx.signature = this.$refs.signature.save();
+      this.dataTrx.nama_asesor = this.ttdTable2[0].nama;
+      const formData = new FormData();
+      formData.append('id_apl_02', this.$route.params.id_apl_02);
+      formData.append('signature', this.dataTrx.signature);
+      formData.append('nama_asesor', this.dataTrx.nama_asesor);
+      formData.append('user_id', this.dataTrx.userId);
+      formData.append('status', this.status);
+      apl02UpdateResource
+        .store(formData)
+        .then(response => {
+          this.$message({
+            message: 'FR APL 02 has been Submited successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     onResize() {
       const width = document.body.clientWidth;
       this.isWide = width > 800;

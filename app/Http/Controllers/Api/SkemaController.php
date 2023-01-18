@@ -62,6 +62,21 @@ class SkemaController extends BaseController
         return SkemaResource::collection($skemaQuery->paginate($limit));
     }
 
+    public function indexUnit(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        // $keyword = Arr::get($searchParams, 'keyword', '');
+        // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
+
+        $query = SkemaUnit::query();
+        $query->where('mst_skema_sertifikasi_unit_kompetensi.id_skema', $id_skema)
+        ->select('mst_skema_sertifikasi_unit_kompetensi.*');
+
+        return MasterResource::collection($query->paginate(100));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -331,7 +346,6 @@ class SkemaController extends BaseController
             'kode_skema' => 'required',
             'skema_sertifikasi' => 'required',
             'kategori_id' => 'required',
-            'jumlah_unit' => 'required',
         ];
     }
 

@@ -27,6 +27,10 @@ use App\Laravue\Models\UjiKompIa01Detail;
 use App\Laravue\Models\UjiKompIa02;
 use App\Laravue\Models\UjiKompIa03;
 use App\Laravue\Models\UjiKompIa03Detail;
+use App\Laravue\Models\UjiKompIa05;
+use App\Laravue\Models\UjiKompIa05Detail;
+use App\Laravue\Models\UjiKompIa06;
+use App\Laravue\Models\UjiKompIa06Detail;
 use App\Laravue\Models\UjiKompIa11;
 use App\Laravue\Models\UjiKompIa11Detail;
 use App\Laravue\Models\Tuk;
@@ -83,6 +87,9 @@ class UjiKompController extends BaseController
         'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'b.id_jadwal');
 
         if ($role === 'user') {
+            $query->where('b.email', $foundUser->email);
+        }
+        if ($role === 'assesor') {
             $query->where('b.email', $foundUser->email);
         }
         if (!empty($jadwal)) {
@@ -165,7 +172,7 @@ class UjiKompController extends BaseController
                 ]);
 
                 $apl02 = UjiKompApl2::create([
-                    'status' => 'kompeten',
+                    'status' => 'belum di cek',
                     'updated_by' => 1,
                 ]);
 
@@ -401,6 +408,7 @@ class UjiKompController extends BaseController
         $queryDetailApl02 = UjiKompApl2Detail::where('trx_uji_komp_apl_02_detail.id_apl_02',$id)->get();
        
         $data = [
+            'ttd_asesor' => $queryApl02->ttd_asesor,
             'status' => $queryApl02->status,
             'detail' => $queryDetailApl02,
         ];
@@ -549,13 +557,62 @@ class UjiKompController extends BaseController
             $foundApl01 = UjiKompApl1::where('id', $id_apl_01)->first();
             try {
                 $params = $request->all();
-                $foundUser = User::where('id', $params['userId'])->first();
+                //upload sign
+                $file = $request['signature'];
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                // membuat nama file unik
+                $nama_file = $now . 'admin-' . 'apl01' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+
                 $foundApl01->status = $params['status'];
-                $foundApl01->ttd_admin = $foundUser->signature;
+                $foundApl01->ttd_admin = $nama_file;
                 $foundApl01->save();
 
                 DB::commit();
                 return response()->json(['message' => "Sukses Submit FR APL 01"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
+    public function submitApl02(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesSubmitApl01(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_apl_02 = $request->get('id_apl_02');
+            $foundApl02 = UjiKompApl2::where('id', $id_apl_02)->first();
+            try {
+                $params = $request->all();
+                //upload sign
+                $file = $request['signature'];
+                $nama_asesor = $request['nama_asesor'];
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                // membuat nama file unik
+                $nama_file = $now  . '-asesor-' . 'apl02' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+
+                $foundApl02->status = $params['status'];
+                $foundApl02->ttd_asesor = $nama_file;
+                $foundApl02->save();
+
+                DB::commit();
+                return response()->json(['message' => "Sukses Submit FR APL 02"], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
@@ -585,10 +642,30 @@ class UjiKompController extends BaseController
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
             try {
                 $params = $request->all();
+                //upload sign
+                $file = $request['ttd_asesor'];
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                // membuat nama file unik
+                $nama_file = $now . '-asesor-' . 'ia01' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+
+                //upload sign
+                $file1 = $request['ttd_asesi'];
+                $image1 = str_replace('data:image/png;base64,', '', $file1);
+                $image1 = str_replace(' ', '+', $image1);
+                // membuat nama file unik
+                $nama_file1 = $now . '-asesi-' . 'ia01' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file1, base64_decode($image1));
+
                 $ia01 = UjiKompIa01::create([
                     'status' => $params['status'],
                     'note' => $params['note'],
                     'updated_by' => $params['user_id'],
+                    'ttd_asesor' => $nama_file,
+                    'ttd_asesi' => $nama_file1,
                 ]);
 
                 $progress = $foundUjiKomp->persentase;
@@ -596,7 +673,8 @@ class UjiKompController extends BaseController
                 $foundUjiKomp->persentase = $progress + 3;
                 $foundUjiKomp->save();
 
-                $elemen = $params['detail_ia_01'];
+                $elemen = json_decode($params['detail_ia_01'], true);
+                // $elemen = $params['detail_ia_01'];
                 for ($i = 0; $i < count($elemen); $i++) {
                     if($elemen[$i]['type'] == 'kuk') {
                         // echo $elemen[$i]['type'],
@@ -725,6 +803,100 @@ class UjiKompController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function storeIa05(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesIa02(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            try {
+                $params = $request->all();
+                $ia05 = UjiKompIa05::create([
+                    'rekomendasi_asesor' => 'belum penilaian',
+                    'updated_by' => $params['user_id'],
+                ]);
+
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->id_ia_05 = $ia05->id;
+                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->save();
+
+                $elemen = $params['detail_ia_05'];
+                for ($i = 0; $i < count($elemen); $i++) {
+                    $ia05Detail = UjiKompIa03Detail::create([
+                        'id_uji_komp' => $foundUjiKomp->id,
+                        'id_ia_05' => $ia05->id,
+                        'id_perangkat_ia_05' => $elemen[$i]['id_perangkat'],
+                        'jawaban' => $elemen[$i]['jawaban'],
+                        'rekomendasi' => 'belum penilaian',
+                        // 'rekomendasi' => $elemen[$i]['is_kompeten'],
+                    ]);
+                }
+
+                DB::commit();
+                return response()->json(['message' => "Sukses membuat FR IA 05"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
+    public function penilaianIa05(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesIa02(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $id_ia_05 = $request->get('id_ia_05');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            $foundIa05 = UjiKomp::where('id', $id_ia_05)->first();
+            try {
+                $params = $request->all();
+                
+
+                $foundIa05->rekomendasi_asesor = $params['rekomendasi_asesor'];
+                $foundIa05->updated_by = $params['user_id'];
+                $foundIa05->save();
+
+                $elemen = $params['detail_ia_05'];
+                for ($i = 0; $i < count($elemen); $i++) {
+                    $foundIa05Detail = UjiKompIa05Detail::where('id', $id_ia_05)->first();
+                    $foundIa05Detail->rekomendasi_asesor = $elemen[$i]['is_kompeten'];
+                    $foundIa05Detail->save();
+                }
+
+                DB::commit();
+                return response()->json(['message' => "Sukses menilai FR IA 05"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+    
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function storeIa11(Request $request)
     {
         $validator = Validator::make(
@@ -823,6 +995,23 @@ class UjiKompController extends BaseController
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
             try {
                 $params = $request->all();
+                //upload sign
+                $file = $request['signature_asesor'];
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                // membuat nama file unik
+                $nama_file = $now . '-asesor-' . 'ak01' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+
+                //upload sign
+                $file1 = $request['signature_asesi'];
+                $image1 = str_replace('data:image/png;base64,', '', $file1);
+                $image1 = str_replace(' ', '+', $image1);
+                // membuat nama file unik
+                $nama_file1 = $now . '-asesi-' . 'ak01' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file1, base64_decode($image1));
 
                 $foundUser = User::where('email', $params['email_asesi'])->first();
                 $ak01 = UjiKompAk01::create([
@@ -841,8 +1030,8 @@ class UjiKompController extends BaseController
                     'tuk' => $params['tuk'],
                     'pernyataan_asesor' => $params['pernyataan_asesor'],
                     'pernyataan_asesi' => $params['pernyataan_asesi'],
-                    'tanda_tangan_asesor' => $params['tanda_tangan_asesor'],
-                    // 'tanda_tangan_asesi' => $foundUser->signature,
+                    'tanda_tangan_asesor' => $nama_file,
+                    'tanda_tangan_asesi' => $nama_file1,
                 ]);
 
                 $progress = $foundUjiKomp->persentase;

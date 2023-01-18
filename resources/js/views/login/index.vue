@@ -3,8 +3,8 @@
     <div class="login-container">
       <div class="login-image" :style="{ 'background-image': 'url(' + loginBackground + ')' }">
         <div class="photo-credit">
-          <h4>Danang - Vietnam</h4>
-          <span>Photo by Kiril Dobrev on Unsplash</span>
+          <h4>LSP DUA CIKBAR</h4>
+          <span>SMKN 2 Cikarang Barat</span>
         </div>
       </div>
       <div class="login-content">

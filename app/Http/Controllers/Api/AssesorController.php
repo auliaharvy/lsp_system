@@ -33,7 +33,7 @@ use Carbon\Carbon;
  */
 class AssesorController extends BaseController
 {
-    const ITEM_PER_PAGE = 15;
+    const ITEM_PER_PAGE = 100;
 
     /**
      * Display a listing of the user resource.
@@ -77,20 +77,20 @@ class AssesorController extends BaseController
             try {
                 $params = $request->all();
                 //upload sign
-                $file = $request['signature'];
-                $image = str_replace('data:image/png;base64,', '', $file);
-                $image = str_replace(' ', '+', $image);
-                $mytime = Carbon::now();
-                $now = $mytime->toDateString();
+                // $file = $request['signature'];
+                // $image = str_replace('data:image/png;base64,', '', $file);
+                // $image = str_replace(' ', '+', $image);
+                // $mytime = Carbon::now();
+                // $now = $mytime->toDateString();
                 // membuat nama file unik
-                $nama_file = $now . '-' . $params['nama'] . '-' . '.png';
-                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+                // $nama_file = $now . '-' . $params['nama'] . '-' . '.png';
+                // \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
 
                 $user = User::create([
                     'name' => $params['nama'],
                     'email' => $params['email'],
                     'password' => Hash::make('lspsmk'),
-                    'signature' => $nama_file,
+                    // 'signature' => $nama_file,
                 ]);
                 $role = Role::findByName('assesor');
                 $user->syncRoles($role);

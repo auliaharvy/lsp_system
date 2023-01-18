@@ -23,6 +23,7 @@ Route::namespace('Api')->group(function() {
     // APL 02 / Pendaftaran Routes
     Route::post('uji-kompetensi-daftar', 'UjiKompController@store');
     Route::get('skema-get', 'SkemaController@index');
+    Route::get('unit-kompetensi-get', 'SkemaController@indexUnit');
     Route::get('tuk-get', 'TukController@index');
     Route::get('jadwal-get', 'JadwalController@index');
     Route::post('uji-komp-post', 'UjiKompController@store');
@@ -33,6 +34,7 @@ Route::namespace('Api')->group(function() {
     Route::get('mst-ia02-get', 'PerangkatController@indexIa02');
     Route::get('mst-ia03-get', 'PerangkatController@indexIa03');
     Route::get('mst-ia06-get', 'PerangkatController@indexIa06');
+    Route::get('mst-ia05-get', 'PerangkatController@indexIa05');
     Route::get('mst-ia07-get', 'PerangkatController@indexIa07');
     Route::get('mst-ia-11-get', 'PerangkatController@indexIa11');
     Route::get('mst-ak-03-get', 'PerangkatController@indexAk03');
@@ -52,14 +54,19 @@ Route::namespace('Api')->group(function() {
         //Post MST FR
         Route::post('new-mst-ia-02', 'PerangkatController@storeIa02');
         Route::post('new-mst-ia-03', 'PerangkatController@storeIa03');
+        Route::post('new-mst-ia-05', 'PerangkatController@storeIa05');
+        Route::post('detail-mst-ia-05', 'PerangkatController@storeIa05Detail');
         Route::post('new-mst-ia-06', 'PerangkatController@storeIa06');
         Route::post('new-mst-ia-07', 'PerangkatController@storeIa07');
         
         //Post FR
         Route::post('uji-komp-apl-01', 'UjiKompController@submitApl01');
+        Route::post('uji-komp-apl-02', 'UjiKompController@submitApl02');
         Route::post('uji-komp-ia-01', 'UjiKompController@storeIa01');
         Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
         Route::post('uji-komp-ia-03', 'UjiKompController@storeIa03');
+        Route::post('uji-komp-ia-05', 'UjiKompController@storeIa05');
+        Route::post('uji-komp-ia-05-nilai', 'UjiKompController@penilaianIa05');
         Route::post('uji-komp-ia-11', 'UjiKompController@storeIa11');
         Route::post('uji-komp-ak-01', 'UjiKompController@storeAk01');
         Route::post('uji-komp-ak-01-asesi', 'UjiKompController@storeAk01Asesi');
@@ -94,6 +101,7 @@ Route::namespace('Api')->group(function() {
         Route::post('skema/add/unit', 'SkemaController@storeUnit');
         Route::post('skema/upload/elemen', 'SkemaController@uploadElemenUnit');
         Route::post('skema/upload/kuk', 'SkemaController@uploadKuk');
+
 
         // Auth routes
         Route::get('auth/user', 'AuthController@user');

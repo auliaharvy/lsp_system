@@ -20,12 +20,6 @@ const perangkatRoutes = {
       name: 'PerangkatList',
       meta: { title: 'Perangkat', icon: 'user', permissions: ['manage user'] },
     },
-    {
-      path: 'perangkat-detail',
-      component: () => import('@/views/back-office/perangkat/detail/List'),
-      name: 'DetailPerangkatList',
-      meta: { title: 'Perangkat Detail', icon: 'user', permissions: ['manage user'] },
-    },
   ],
 };
 

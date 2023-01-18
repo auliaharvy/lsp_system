@@ -9,6 +9,7 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Resources\MasterResource;
+use App\Http\Resources\MstIa05Resource;
 use App\Http\Resources\UjiKompResource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\UjiKomp;
@@ -34,6 +35,8 @@ use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\MstFrIa02;
 use App\Laravue\Models\MstFrIa03;
+use App\Laravue\Models\MstFrIa05;
+use App\Laravue\Models\MstFrIa05Detail;
 use App\Laravue\Models\MstFrIa06;
 use App\Laravue\Models\MstFrIa07;
 use App\Laravue\Models\MstFrAk03;
@@ -88,6 +91,23 @@ class PerangkatController extends BaseController
         return MasterResource::collection($query->paginate($limit));
     }
 
+    public function indexIa05(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        // $keyword = Arr::get($searchParams, 'keyword', '');
+        // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
+
+        $query = MstFrIa05::query();
+        $query->where('mst_perangkat_ia_05.id_skema', $id_skema)
+        ->join('mst_skema_sertifikasi_unit_kompetensi as a', 'a.id', '=', 'mst_perangkat_ia_05.id_unit_komp')
+        ->leftJoin('mst_perangkat_ia_05_a as b', 'b.id', '=', 'mst_perangkat_ia_05.kunci_jawaban')
+        ->select('mst_perangkat_ia_05.*', 'a.kode_unit', 'a.unit_kompetensi', 'b.no_jawaban as no_kunci_jawaban', 'b.jawaban as isi_kunci_jawaban');
+
+        return MstIa05Resource::collection($query->paginate($limit));
+    }
+
     public function indexIa06(Request $request)
     {
         $searchParams = $request->all();
@@ -98,7 +118,8 @@ class PerangkatController extends BaseController
 
         $query = MstFrIa06::query();
         $query->where('mst_perangkat_ia_06.id_skema', $id_skema)
-        ->select('mst_perangkat_ia_06.*');
+        ->join('mst_skema_sertifikasi_unit_kompetensi as a', 'a.id', '=', 'mst_perangkat_ia_06.id_unit_komp')
+        ->select('mst_perangkat_ia_06.*', 'a.kode_unit', 'a.unit_kompetensi');
 
         return MasterResource::collection($query->paginate($limit));
     }
@@ -113,7 +134,8 @@ class PerangkatController extends BaseController
 
         $query = MstFrIa07::query();
         $query->where('mst_perangkat_ia_07.id_skema', $id_skema)
-        ->select('mst_perangkat_ia_07.*');
+        ->join('mst_skema_sertifikasi_unit_kompetensi as a', 'a.id', '=', 'mst_perangkat_ia_07.id_unit_komp')
+        ->select('mst_perangkat_ia_07.*', 'a.kode_unit');
 
         return MasterResource::collection($query->paginate($limit));
     }
@@ -208,6 +230,73 @@ class PerangkatController extends BaseController
         }
     }
 
+    public function storeIa05(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesIa03(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $params = $request->all();
+                $ia05 = MstFrIa05::create([
+                    'id_skema' => $params['id_skema'],
+                    'id_unit_komp' => $params['id_unit_komp'],
+                    'pertanyaan' => $params['pertanyaan'],
+                    // 'kunci_jawaban' => $params['kunci_jawaban'],
+                    'updated_by' => $params['updated_by'],
+                ]);
+
+                DB::commit();
+                return response()->json(['message' => "Sukses Buat Soal Perangkat FR IA 05"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
+    public function storeIa05Detail(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesIa05(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $params = $request->all();
+                $ia05 = MstFrIa05Detail::create([
+                    'id_mst_ia_05' => $params['id_mst_ia_05'],
+                    'no_jawaban' => $params['no_jawaban'],
+                    'jawaban' => $params['jawaban'],
+                    'updated_by' => $params['updated_by'],
+                ]);
+
+                if ($params['kunci_jawaban'] === 1) {
+                    $foundMst05 = MstFrIa05::where('id', $params['id_mst_ia_05'])->first();
+                    $foundMst05->kunci_jawaban = $ia05->id;
+                    $foundMst05->save();
+                }
+
+                DB::commit();
+                return response()->json(['message' => "Sukses Buat Pilihan Jawaban Perangkat FR IA 05"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
     public function storeIa06(Request $request)
     {
         $validator = Validator::make(
@@ -223,6 +312,7 @@ class PerangkatController extends BaseController
                 $params = $request->all();
                 $ia02 = MstFrIa06::create([
                     'id_skema' => $params['id_skema'],
+                    'id_unit_komp' => $params['id_unit_komp'],
                     'pertanyaan' => $params['pertanyaan'],
                     'kunci_jawaban' => $params['kunci_jawaban'],
                     'updated_by' => $params['updated_by'],
@@ -253,6 +343,7 @@ class PerangkatController extends BaseController
                 $params = $request->all();
                 $ia07 = MstFrIa07::create([
                     'id_skema' => $params['id_skema'],
+                    'id_unit_komp' => $params['id_unit_komp'],
                     'pertanyaan' => $params['pertanyaan'],
                     'kunci_jawaban' => $params['kunci_jawaban'],
                     'updated_by' => $params['updated_by'],
@@ -282,6 +373,14 @@ class PerangkatController extends BaseController
         return [
             'pertanyaan' => 'required',
             'id_skema' => 'required',
+        ];
+    }
+
+    private function getValidationRulesIa05($isNew = true)
+    {
+        return [
+            'id_mst_ia_05' => 'required',
+            'jawaban' => 'required',
         ];
     }
 

@@ -115,7 +115,7 @@
               >
                 <template slot="header">
                   <span>K / BK</span>
-                  <el-select v-model="kompeten" class="filter-item" placeholder="B/BK" @change="allKompeten">
+                  <el-select v-model="kompeten" class="filter-item" placeholder="B/BK" :key-value="kompeten" @change="allKompeten">
                     <el-option :key="0" label="Kompeten" :value="0" />
                     <el-option :key="1" label="Belum Kompeten" :value="1" />
                   </el-select>
@@ -314,15 +314,57 @@
           label-position="left"
         >
           <el-form-item label="Apakah Asesi Kompeten?" prop="kompeten">
-            <el-select v-model="form.status" class="filter-item" placeholder="B/BK">
+            <el-select v-if="$route.params.id_ia_01 === null" v-model="form.status" class="filter-item" placeholder="B/BK">
               <el-option :key="0" label="Kompeten" :value="0" />
               <el-option :key="1" label="Belum Kompeten" :value="1" />
             </el-select>
+            <div v-else>
+              <span v-if="ia01.status === 0">Kompeten</span>
+              <span v-if="ia01.status === 1">Belum Kompeten</span>
+            </div>
           </el-form-item>
           <el-form-item label="Umpan Balik untuk Asesi" prop="umpanBalik">
-            <el-input v-model="form.note" placeholder="Isi umpan balik untuk asesi" />
+            <el-input v-if="$route.params.id_ia_01 === null" v-model="form.note" placeholder="Isi umpan balik untuk asesi" />
+            <span v-else>{{ ia01.note }}</span>
           </el-form-item>
-
+          <el-form-item label="Tanda Tangan Asesor">
+            <div v-if="$route.params.id_ia_01 === null">
+              <vueSignature
+                ref="signature"
+                :sig-option="option"
+                :w="'300px'"
+                :h="'150px'"
+                :disabled="false"
+                style="border-style: outset"
+              />
+              <el-button size="small" @click="clear">Clear</el-button>
+            </div>
+            <el-image
+              v-else
+              style="width: 200px; height: 100px"
+              :src="ttdAsesor"
+              fit="contain"
+            />
+          </el-form-item>
+          <el-form-item label="Tanda Tangan Asesi">
+            <div v-if="$route.params.id_ia_01 === null">
+              <vueSignature
+                ref="signature1"
+                :sig-option="option"
+                :w="'300px'"
+                :h="'150px'"
+                :disabled="false"
+                style="border-style: outset"
+              />
+              <el-button size="small" @click="clear1">Clear</el-button>
+            </div>
+            <el-image
+              v-else
+              style="width: 200px; height: 100px"
+              :src="ttdAsesi"
+              fit="contain"
+            />
+          </el-form-item>
         </el-form>
 
         <br>
@@ -335,6 +377,7 @@
 </template>
 
 <script>
+import vueSignature from 'vue-signature';
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 import VueHtml2pdf from 'vue-html2pdf';
@@ -349,9 +392,14 @@ const ia01Detail = new Resource('detail/ia-01');
 export default {
   components: {
     VueHtml2pdf,
+    vueSignature,
   },
   data() {
     return {
+      option: {
+        penColor: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(255,255,255)',
+      },
       kompeten: null,
       loading: false,
       listSkema: null,
@@ -360,6 +408,8 @@ export default {
       listKuk: [],
       listUji: [],
       fileName: null,
+      ttdAsesor: '',
+      ttdAsesi: '',
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -404,6 +454,17 @@ export default {
       'userId',
     ]),
   },
+  watch: {
+    kompeten: async function() {
+      this.loading = true;
+      for (var i = 0; i < this.listKuk.length; i++) {
+        if (this.listKuk[i].type === 'kuk'){
+          this.listKuk[i].is_kompeten = this.kompeten;
+        }
+      }
+      this.loading = false;
+    },
+  },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
   },
@@ -421,18 +482,23 @@ export default {
     this.getIa01();
   },
   methods: {
+    clear() {
+      this.$refs.signature.clear();
+    },
+    clear1() {
+      this.$refs.signature1.clear();
+    },
     async getIa01() {
       if (this.$route.params.id_ia_01 !== null) {
         this.loading = true;
         const data = await ia01Detail.get(this.$route.params.id_ia_01);
         this.listDetailIa01 = data.detail;
         this.ia01 = data.ia_01;
+        this.ttdAsesor = '/uploads/users/signature/' + this.ia01.ttd_asesor;
+        this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi;
         this.listKuk.forEach((element, index) => {
           if (element['type'] === 'kuk') {
             var foundIndex = data.detail.findIndex(x => x.id_kuk_elemen === element['id']);
-            console.log(element);
-            console.log(foundIndex);
-            console.log(data.detail);
             element['is_kompeten'] = data.detail[foundIndex].is_kompeten;
             element['penilaian_lanjut'] = data.detail[foundIndex].penilaian_lanjut;
           }
@@ -543,13 +609,23 @@ export default {
     },
     onSubmit() {
       this.loading = true;
+      this.form.signature_asesor = this.$refs.signature.save();
+      this.form.signature_asesi = this.$refs.signature1.save();
       this.form.detail_ia_01 = this.listKuk;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
-      console.log(this.form.detail_ia_01);
+      const formData = new FormData();
+      formData.append('id_uji_komp', this.form.id_uji_komp);
+      var arrayDetail = JSON.stringify(this.form.detail_ia_01);
+      formData.append('detail_ia_01', arrayDetail);
+      formData.append('user_id', this.form.id_skema);
+      formData.append('status', this.form.status);
+      formData.append('note', this.form.note);
+      formData.append('ttd_asesor', this.form.signature_asesor);
+      formData.append('ttd_asesi', this.form.signature_asesi);
       ia01Resource
-        .store(this.form)
+        .store(formData)
         .then(response => {
           this.$message({
             message: 'FR IA 01 has been created successfully.',

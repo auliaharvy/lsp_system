@@ -205,7 +205,7 @@
           </el-form-item>
 
           <el-form-item :label="$t('jadwal.table.asesor')" prop="asesor">
-            <el-select v-model="newData.asesor" multiple placeholder="Select">
+            <el-select v-model="newData.asesor" filterable placeholder="Select">
               <el-option
                 v-for="item in listAsesor"
                 :key="item.id"

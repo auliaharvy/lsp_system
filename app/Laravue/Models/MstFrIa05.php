@@ -1,6 +1,6 @@
 <?php
 /**
- * File MstFrIa06.php
+ * File MstFrIa05.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Laravue\Models
  */
-class MstFrIa06 extends Model
+class MstFrIa05 extends Model
 {
     public $guard_name = 'api';
 
@@ -28,6 +28,6 @@ class MstFrIa06 extends Model
      * @param $query
      * @return Builder
      */
-    protected $table = "mst_perangkat_ia_06";
+    protected $table = "mst_perangkat_ia_05";
     protected $fillable = ['id_skema', 'id_unit_komp', 'pertanyaan', 'kunci_jawaban', 'updated_by'];
 }

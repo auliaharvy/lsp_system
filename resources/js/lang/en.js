@@ -294,6 +294,14 @@ export default {
     kategori: {
       name: 'Category Name',
     },
+    perangkat: {
+      filename: 'File Name',
+      version: 'Version',
+      pertanyaan: 'Question',
+      unit: 'Unit Kompetensi',
+      jawaban: 'Answer',
+      kunci_jawaban: 'Correct Answer',
+    },
   },
 
   // perangkat

@@ -23,17 +23,39 @@
             <template slot-scope="scope">
               <template v-if="scope.row.content !== '.'">
                 <template v-if="scope.row.content === '-'">
-                  <el-checkbox v-model="dataTrx.verifikasi_portofolio">TL : Verifikasi Portofolio</el-checkbox>
-                  <el-checkbox v-model="dataTrx.observasi_langsung">L : Observasi Langsung</el-checkbox>
-                  <el-checkbox v-model="dataTrx.hasil_tes_tulis">T : Hasil Tes Tulis</el-checkbox>
-                  <el-checkbox v-model="dataTrx.hasil_tes_lisan">T : Hasil Tes Lisan</el-checkbox>
-                  <el-checkbox v-model="dataTrx.hasil_tes_wawancara">T : Hasil Tes Wawancara</el-checkbox>
+                  <el-checkbox v-model="verifikasi_portofolio">TL : Verifikasi Portofolio</el-checkbox>
+                  <el-checkbox v-model="observasi_langsung">L : Observasi Langsung</el-checkbox>
+                  <el-checkbox v-model="hasil_tes_tulis">T : Hasil Tes Tulis</el-checkbox>
+                  <el-checkbox v-model="hasil_tes_lisan">T : Hasil Tes Lisan</el-checkbox>
+                  <el-checkbox v-model="hasil_tes_wawancara">T : Hasil Tes Wawancara</el-checkbox>
                 </template>
                 <template v-else-if="scope.row.no === 11">
                   <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
+                  <div v-else>
+                    <vueSignature
+                      ref="signature"
+                      :sig-option="option"
+                      :w="'300px'"
+                      :h="'150px'"
+                      :disabled="false"
+                      style="border-style: outset"
+                    />
+                    <el-button size="small" @click="clear">Clear</el-button>
+                  </div>
                 </template>
                 <template v-else-if="scope.row.no === 12">
                   <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
+                  <div v-else>
+                    <vueSignature
+                      ref="signature1"
+                      :sig-option="option"
+                      :w="'300px'"
+                      :h="'150px'"
+                      :disabled="false"
+                      style="border-style: outset"
+                    />
+                    <el-button size="small" @click="clear1">Clear</el-button>
+                  </div>
                 </template>
                 <span v-else>{{ scope.row.content }}</span>
               </template>
@@ -51,7 +73,7 @@
         <br>
 
         <el-button @click="onSubmit">Submit Asesor</el-button>
-        <el-button @click="onSubmitAsesi">Submit Asesi</el-button>
+        <!-- <el-button @click="onSubmitAsesi">Submit Asesi</el-button> -->
 
         <br>
         <br>
@@ -62,20 +84,26 @@
 </template>
 
 <script>
+import vueSignature from 'vue-signature';
 import Resource from '@/api/resource';
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstIa03Resource = new Resource('mst-ia03-get');
 const ak01Resource = new Resource('uji-komp-ak-01');
 const ak01AsesiResource = new Resource('uji-komp-ak-01-asesi');
 const ak01Detail = new Resource('detail/ak-01');
 
 export default {
-  components: {},
+  components: {
+    vueSignature,
+  },
   data() {
     return {
+      option: {
+        penColor: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(255,255,255)',
+      },
       umpanBalikAsesi: '',
       checkList: [],
       now: null,
@@ -89,6 +117,11 @@ export default {
       listJudulUnit: [],
       listKuk: [],
       listUji: [],
+      verifikasi_portofolio: false,
+      observasi_langsung: false,
+      hasil_tes_tulis: false,
+      hasil_tes_lisan: false,
+      hasil_tes_wawancara: false,
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -192,61 +225,57 @@ export default {
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getListPertanyaan();
     this.getDate();
     this.getAk01();
   },
   methods: {
+    clear() {
+      this.$refs.signature.clear();
+    },
+    clear1() {
+      this.$refs.signature1.clear();
+    },
     async getAk01() {
       if (this.$route.params.id_ak_01 !== null) {
         this.loading = true;
         const data = await ak01Detail.get(this.$route.params.id_ak_01);
         if (data.verifikasi_portofolio === 0) {
-          this.dataTrx.verifikasi_portofolio = false;
+          this.verifikasi_portofolio = false;
         } else {
-          this.dataTrx.verifikasi_portofolio = true;
+          this.verifikasi_portofolio = true;
         }
         if (data.observasi_langsung === 0) {
-          this.dataTrx.observasi_langsung = false;
+          this.observasi_langsung = false;
         } else {
-          this.dataTrx.observasi_langsung = true;
+          this.observasi_langsung = true;
         }
         if (data.hasil_tes_tulis === 0) {
-          this.dataTrx.hasil_tes_tulis = false;
+          this.hasil_tes_tulis = false;
         } else {
-          this.dataTrx.hasil_tes_tulis = true;
+          this.hasil_tes_tulis = true;
         }
         if (data.hasil_tes_lisan === 0) {
-          this.dataTrx.hasil_tes_lisan = false;
+          this.hasil_tes_lisan = false;
         } else {
-          this.dataTrx.hasil_tes_lisan = true;
+          this.hasil_tes_lisan = true;
         }
         if (data.hasil_tes_wawancara === 0) {
-          this.dataTrx.hasil_tes_wawancara = false;
+          this.hasil_tes_wawancara = false;
         } else {
-          this.dataTrx.hasil_tes_wawancara = true;
+          this.hasil_tes_wawancara = true;
         }
         this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
         this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
         this.loading = false;
+      } else {
+        this.loading = true;
+        this.verifikasi_portofolio = false;
+        this.observasi_langsung = false;
+        this.hasil_tes_tulis = false;
+        this.hasil_tes_lisan = false;
+        this.hasil_tes_wawancara = false;
+        this.loading = false;
       }
-    },
-    allKompeten() {
-      for (var i = 0; i < this.listKuk.length; i++) {
-        var kuk = this.kukList[i];
-        if (kuk.type === 'kuk'){
-          // kuk.is_kompeten = this.kompeten;
-        }
-      }
-    },
-    async getListPertanyaan() {
-      this.loading = true;
-      const { data } = await mstIa03Resource.list({ id_skema: this.$route.params.id_skema });
-      this.listSoal = data;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
-      this.loading = false;
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -347,11 +376,58 @@ export default {
     onSubmit() {
       this.loading = true;
       this.dataTrx.id_uji_komp = this.$route.params.id_uji;
+      this.dataTrx.signature_asesor = this.$refs.signature.save();
+      this.dataTrx.signature_asesi = this.$refs.signature1.save();
       this.dataTrx.pernyataan_asesor = this.headerTable[7].content;
       this.dataTrx.pernyataan_asesi = this.headerTable[8].content;
-      console.log(this.dataTrx);
+      this.dataTrx.signature_asesor = this.$refs.signature.save();
+      if (this.verifikasi_portofolio === false) {
+        this.dataTrx.verifikasi_portofolio = 0;
+      } else {
+        this.dataTrx.verifikasi_portofolio = 1;
+      }
+      if (this.observasi_langsung === false) {
+        this.dataTrx.observasi_langsung = 0;
+      } else {
+        this.dataTrx.observasi_langsung = 1;
+      }
+      if (this.hasil_tes_tulis === false) {
+        this.dataTrx.hasil_tes_tulis = 0;
+      } else {
+        this.dataTrx.hasil_tes_tulis = 1;
+      }
+      if (this.hasil_tes_lisan === false) {
+        this.dataTrx.hasil_tes_lisan = 0;
+      } else {
+        this.dataTrx.hasil_tes_lisan = 1;
+      }
+      if (this.hasil_tes_wawancara === false) {
+        this.dataTrx.hasil_tes_wawancara = 0;
+      } else {
+        this.dataTrx.hasil_tes_wawancara = 1;
+      }
+      const formData = new FormData();
+      formData.append('id_uji_komp', this.dataTrx.id_uji_komp);
+      formData.append('nama_asesi', this.dataTrx.nama_asesi);
+      formData.append('email_asesi', this.dataTrx.email_asesi);
+      formData.append('nama_asesor', this.dataTrx.nama_asesor);
+      formData.append('verifikasi_portofolio', this.dataTrx.verifikasi_portofolio);
+      formData.append('observasi_langsung', this.dataTrx.observasi_langsung);
+      formData.append('hasil_tes_tulis', this.dataTrx.hasil_tes_tulis);
+      formData.append('hasil_tes_lisan', this.dataTrx.hasil_tes_lisan);
+      formData.append('hasil_tes_wawancara', this.dataTrx.hasil_tes_wawancara);
+      formData.append('hari', this.dataTrx.hari);
+      formData.append('tanggal', this.dataTrx.tanggal);
+      formData.append('bulan', this.dataTrx.bulan);
+      formData.append('tahun', this.dataTrx.tahun);
+      formData.append('jam', this.dataTrx.jam);
+      formData.append('tuk', this.dataTrx.tuk);
+      formData.append('pernyataan_asesor', this.dataTrx.pernyataan_asesor);
+      formData.append('pernyataan_asesi', this.dataTrx.pernyataan_asesi);
+      formData.append('signature_asesor', this.dataTrx.signature_asesor);
+      formData.append('signature_asesi', this.dataTrx.signature_asesi);
       ak01Resource
-        .store(this.dataTrx)
+        .store(formData)
         .then(response => {
           this.$message({
             message: 'FR AK 01 has been created successfully.',

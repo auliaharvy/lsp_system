@@ -180,7 +180,7 @@
                     <template v-if="scope.row.no === 2">
                       Tanda Tangan Asesi :
                       <br>
-                      <img v-if="dataAsesi.sign" :src="dataAsesi.sign" class="sidebar-logo">
+                      <img v-if="ttdAsesi" :src="'/uploads/users/signature/' + ttdAsesi" class="sidebar-logo">
                     </template>
                     <span>{{ scope.row.title }}</span>
                   </template>
@@ -193,7 +193,7 @@
                     <template v-if="scope.row.no === 2">
                       Tanda Tangan Admin LSP :
                       <br>
-                      <img v-if="dataAsesi.ttd_admin" :src="dataAsesi.ttd_admin" class="sidebar-logo">
+                      <img v-if="ttdAdmin" :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
                     </template>
                   </template>
                 </el-table-column>
@@ -355,10 +355,10 @@
         >
           <el-table-column align="left">
             <template slot-scope="scope">
-              <template v-if="scope.row.no === 2 && dataAsesi.sign">
+              <template v-if="scope.row.no === 2">
                 Tanda Tangan Asesi :
                 <br>
-                <img v-if="dataAsesi.sign" :src="dataAsesi.sign" class="sidebar-logo">
+                <img v-if="ttdAsesi" :src="'/uploads/users/signature/' + ttdAsesi" class="sidebar-logo">
               </template>
               <span>{{ scope.row.title }}</span>
             </template>
@@ -369,7 +369,7 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <template v-if="scope.row.no === 1">
-                <el-select v-model="dataTrx.status" class="filter-item" placeholder="T/TT">
+                <el-select v-model="pilihanTerima" class="filter-item" placeholder="T/TT" value-key="status">
                   <el-option :key="0" label="Terima / Tidak Terima" :value="0" />
                   <el-option :key="1" label="Terima" :value="1" />
                   <el-option :key="2" label="Tidak Terima" :value="2" />
@@ -378,7 +378,21 @@
 
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Admin LSP :
-                <img v-if="dataAsesi.ttd_admin" :src="dataAsesi.ttd_admin" class="sidebar-logo">
+                <br>
+                <div v-if="!ttdAdmin">
+                  <vueSignature
+                    ref="signature"
+                    :sig-option="option"
+                    :w="'300px'"
+                    :h="'150px'"
+                    :disabled="false"
+                    style="border-style: outset"
+                  />
+                  <el-button size="small" @click="clear">Clear</el-button>
+                </div>
+                <div v-else>
+                  <img :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
+                </div>
               </template>
             </template>
           </el-table-column>
@@ -392,6 +406,7 @@
 </template>
 
 <script>
+import vueSignature from 'vue-signature';
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 import VueHtml2pdf from 'vue-html2pdf';
@@ -403,9 +418,14 @@ const skemaResource = new Resource('skema-get');
 export default {
   components: {
     VueHtml2pdf,
+    vueSignature,
   },
   data() {
     return {
+      option: {
+        penColor: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(255,255,255)',
+      },
       dataAsesi: {},
       dataAdmin: {},
       kompeten: null,
@@ -419,7 +439,11 @@ export default {
       listKodeUnit: [],
       selectedSkema: {},
       selectedUji: {},
+      ttdAsesi: null,
+      ttdAdmin: null,
+      pilihanTerima: 0,
       dataTrx: {},
+      testPng: null,
       headerTable: [
         {
           title: 'Nama Lengkap',
@@ -557,6 +581,13 @@ export default {
     this.getApl01();
   },
   methods: {
+    clear() {
+      this.$refs.signature.clear();
+    },
+    saveSign() {
+      var _this = this;
+      this.testPng = _this.$refs.signature.save();
+    },
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
@@ -596,15 +627,17 @@ export default {
       if (data.status === 0) {
         this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima / Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai';
       } if (data.status === 1) {
-        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima sebagai peserta  sertifikasi coret yang tidak sesuai';
+        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima sebagai peserta  sertifikasi';
       } if (data.status === 2) {
-        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi coret yang tidak sesuai';
+        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi';
       }
       this.dataAsesi.sign = '/uploads/users/signature/' + data.signature;
+      this.ttdAsesi = data.signature;
+      this.ttdAdmin = data.ttd_admin;
       this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;
       this.dataAsesi.nama = data.nama_lengkap;
       this.dataAsesi.status = data.status;
-      this.dataTrx.status = data.status;
+      this.pilihanTerima = data.status;
       console.log(data);
       if (data.foto !== ''){
         this.buktiKelengkapanTable[0].content = '/uploads/users/foto/' + data.foto;
@@ -668,8 +701,15 @@ export default {
     onSubmit() {
       this.loading = true;
       this.dataTrx.userId = this.userId;
+      this.dataTrx.status = this.pilihanTerima;
+      this.dataTrx.signature = this.$refs.signature.save();
+      const formData = new FormData();
+      formData.append('id_apl_01', this.dataTrx.id_apl_01);
+      formData.append('signature', this.dataTrx.signature);
+      formData.append('user_id', this.dataTrx.userId);
+      formData.append('status', this.dataTrx.status);
       apl01UpdateResource
-        .store(this.dataTrx)
+        .store(formData)
         .then(response => {
           this.$message({
             message: 'FR APL 01 has been Submited successfully.',

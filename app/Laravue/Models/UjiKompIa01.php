@@ -30,5 +30,5 @@ class UjiKompIa01 extends Model
      * @return Builder
      */
     protected $table = "trx_uji_komp_ia_01";
-    protected $fillable = ['status','note', 'updated_by'];
+    protected $fillable = ['status','note', 'ttd_asesor', 'ttd_asesi','updated_by'];
 }

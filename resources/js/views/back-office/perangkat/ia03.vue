@@ -1,57 +1,89 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-select
-        v-model="idSkema"
-        filterable
-        clearable
-        class="filter-item full"
-        style="width:50%"
-        :placeholder="$t('jadwal.table.jadwal')"
-        @change="getList"
-      >
-        <el-option
-          v-for="item in listSkema"
-          :key="item.id"
-          :label="item.skema_sertifikasi"
-          :value="item.id"
-        />
-      </el-select>
+      <h3>Perangkat IA 03</h3>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+        {{ $t('table.add') }}
+      </el-button>
     </div>
-    <div v-if="idSkema">
-      <Ia02 :id-skema="idSkema" :user-id="userId" />
-      <Ia03 :id-skema="idSkema" :user-id="userId" />
-      <Ia05 :id-skema="idSkema" :user-id="userId" />
-      <Ia06 :id-skema="idSkema" :user-id="userId" />
-      <Ia07 :id-skema="idSkema" :user-id="userId" />
-    </div>
+
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }">
+      <el-table-column align="center" label="No" width="80">
+        <template slot-scope="scope">
+          <span>{{ scope.row.index }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="$t('skema.perangkat.pertanyaan')" prop="pertanyaan">
+        <template slot-scope="scope">
+          <span>{{ scope.row.pertanyaan }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Actions" width="120">
+        <template slot-scope="scope">
+          <el-button-group>
+            <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
+              <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row)" />
+            </el-tooltip>
+          </el-button-group>
+        </template>
+      </el-table-column>
+
+    </el-table>
+
+    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
+
+    <el-dialog :title="$t('skema.dialog.addNew')" :visible.sync="dialogFormVisible">
+      <div v-loading="creating" class="form-container">
+        <el-form ref="newForm" :rules="rules" :model="dataTrx" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('skema.perangkat.pertanyaan')" prop="filename">
+            <el-input v-model="dataTrx.pertanyaan" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="submit()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
-import Ia02 from './ia02.vue';
-import Ia03 from './ia03.vue';
-import Ia05 from './ia05.vue';
-import Ia06 from './ia06.vue';
-import Ia07 from './ia07.vue';
 
 const userResource = new UserResource();
-const perangkatAsesmenResource = new Resource('perangkat-asesmen');
+const listResource = new Resource('mst-ia03-get');
+const postResource = new Resource('new-mst-ia-03');
 const skemaResource = new Resource('skema');
 
 export default {
-  name: 'PerangkatAsemenList',
-  components: { Ia02, Ia03, Ia05, Ia06, Ia07 },
+  name: 'MstIa03',
+  components: { Pagination },
   directives: { waves, permission },
+  props: {
+    idSkema: {
+      type: Number,
+      default: 1,
+    },
+    userId: {
+      type: Number,
+      default: 1,
+    },
+  },
   data() {
     return {
       list: null,
-      idSkema: 36,
       listSkema: null,
       total: 0,
       loading: true,
@@ -59,46 +91,43 @@ export default {
       creating: false,
       dialogFormVisible: false,
       dialogFormUpdateVisible: false,
-      newData: {},
-      editedData: {
+      kategori: [],
+      dataTrx: {},
+      editedSkema: {
         id: 0,
-        kode_tuk: '',
-        nama: '',
-        alamat: '',
-        no_telp: '',
-        email: '',
+        id_skema: '',
+        file: '',
+        filename: '',
+        versi: '',
       },
       query: {
         page: 1,
         limit: 15,
         keyword: '',
-        role: '',
       },
       rules: {
-        kode_perangkat: [{ required: true, message: 'Kode Perangkat is required', trigger: 'change' }],
-        nama_perangkat: [{ required: true, message: 'Nama Perangkat is required', trigger: 'blur' }],
-        id_skema: [{ required: true, message: 'Skema Sertifikasi is required', trigger: 'blur' }],
+        pertanyaan: [{ required: true, message: 'Pertanyaan is required', trigger: 'blur' }],
       },
     };
   },
-  computed: {
-    ...mapGetters([
-      'username',
-      'userId',
-    ]),
+  watch: {
+    idSkema: {
+      deep: true,
+      handler() {
+        this.getList();
+      },
+    },
   },
   created() {
     this.getList();
+    this.getListKategori();
   },
   methods: {
     async getList() {
       const { limit, page } = this.query;
+      this.query.id_skema = this.idSkema;
       this.loading = true;
-      // get data skema
-      const dataSkema = await skemaResource.list();
-      this.listSkema = dataSkema.data;
-      // get data perangkat / list table
-      const { data, meta } = await perangkatAsesmenResource.list(this.query);
+      const { data, meta } = await listResource.list(this.query);
       this.list = data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
@@ -106,24 +135,29 @@ export default {
       this.total = meta.total;
       this.loading = false;
     },
-    async changeSkema() {
+    async getListSkema() {
       this.loading = true;
-      // get data skema
-      // get data perangkat / list table
+      const { data } = await skemaResource.list();
+      this.listSkema = data;
       this.loading = false;
+    },
+    handleUploadSuccess(e) {
+      const files = e.target.files;
+      const rawFile = files[0]; // only use files[0]
+      this.dataTrx.file = rawFile;
     },
     handleFilter() {
       this.query.page = 1;
       this.getList();
     },
-    resetnewData() {
-      this.newData = {};
+    resetdataTrx() {
+      this.dataTrx = {};
     },
     handleCreate() {
-      this.resetnewData();
+      this.resetdataTrx();
       this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate();
+        this.$refs['newForm'].clearValidate();
       });
     },
     handleDelete(id, name) {
@@ -148,21 +182,21 @@ export default {
         });
       });
     },
-    create() {
+    submit() {
       this.loading = true;
-      this.newData.author = this.userId;
-      this.$refs['dataForm'].validate((valid) => {
+      this.dataTrx.id_skema = this.idSkema;
+      this.$refs['newForm'].validate((valid) => {
         if (valid) {
           this.creating = true;
-          perangkatAsesmenResource
-            .store(this.newData)
+          postResource
+            .store(this.dataTrx)
             .then(response => {
               this.$message({
-                message: 'New TUK ' + this.newData.nama + ' has been created successfully.',
+                message: 'New File ' + this.dataTrx.pertanyaan + ' has been created successfully.',
                 type: 'success',
                 duration: 5 * 1000,
               });
-              this.resetnewData();
+              this.resetdataTrx();
               this.dialogFormVisible = false;
               this.handleFilter();
             })
@@ -179,14 +213,14 @@ export default {
         }
       });
     },
-    handleUpdate(tuk) {
-      this.editedData = tuk;
+    handleUpdate(skema) {
+      this.editedSkema = skema;
       this.dialogFormUpdateVisible = true;
-      console.log(this.editedData);
+      console.log(this.editedSkema);
     },
     updateData() {
       this.loading = true;
-      perangkatAsesmenResource.update(this.editedData.id, this.editedData).then(() => {
+      skemaResource.update(this.editedSkema.id, this.editedSkema).then(() => {
         this.getList();
         this.dialogFormUpdateVisible = false;
         this.$notify({
