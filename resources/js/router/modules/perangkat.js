@@ -10,7 +10,7 @@ const perangkatRoutes = {
   meta: {
     title: 'Perangkat',
     icon: 'admin',
-    permissions: ['view menu administrator'],
+    permissions: ['manage user'],
   },
   children: [
     /** Skema Sertifikasi */

@@ -49,6 +49,8 @@ Route::namespace('Api')->group(function() {
     Route::get('detail/ak-01/{id}', 'UjiKompController@showAk01');
     Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
 
+    Route::apiResource('dashboard', 'DashboardController');
+
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
         //Post MST FR

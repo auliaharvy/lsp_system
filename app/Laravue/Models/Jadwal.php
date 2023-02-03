@@ -29,5 +29,5 @@ class Jadwal extends Model
      * @return Builder
      */
     protected $table = "trx_jadwal_asesmen";
-    protected $fillable = ['id_skema','persyaratan', 'id_tuk', 'id_perangkat', 'jadwal', 'start_date', 'end_date'];
+    protected $fillable = ['id_skema','persyaratan', 'id_tuk', 'id_asesor', 'jadwal', 'start_date', 'end_date'];
 }

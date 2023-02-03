@@ -196,12 +196,7 @@
 
       <el-table-column align="left" :label="$t('jadwal.table.asesor')">
         <template slot-scope="scope">
-          <div
-            v-for="(asesor, i) in scope.row.asesor"
-            :key="asesor.nama_asesor"
-          >
-            {{ i + 1 + '. ' + asesor.nama_asesor }}
-          </div>
+          {{ scope.row.asesor }}
         </template>
       </el-table-column>
 

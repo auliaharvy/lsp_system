@@ -69,7 +69,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="NIK">
+          <el-form-item label="NIK" prop="nik">
             <el-input v-model="dataTrx.nik" />
           </el-form-item>
           <el-form-item label="Nama Lengkap" prop="nama_lengkap">
@@ -106,7 +106,7 @@
           <el-form-item label="Kode Pos">
             <el-input v-model="dataTrx.kode_pos" />
           </el-form-item>
-          <el-form-item label="No HP">
+          <el-form-item label="No HP" prop="no_hp">
             <el-input v-model="dataTrx.no_hp" />
           </el-form-item>
           <el-form-item label="Email" prop="email">
@@ -329,7 +329,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="newUser()">
+          <el-button v-loading="loading" type="primary" @click="newUser()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -367,7 +367,7 @@ export default {
       },
       dataUrl: 'https://avatars2.githubusercontent.com/u/17644818?s=460&v=4',
       kompeten: 0,
-      loading: true,
+      loading: false,
       listSkema: null,
       listTuk: null,
       listJadwal: null,
@@ -394,6 +394,12 @@ export default {
       rules: {
         id_jadwal: [
           { required: true, message: 'Jadwal is required', trigger: 'change' },
+        ],
+        nik: [
+          { required: true, message: 'Nik is required', trigger: 'change' },
+        ],
+        no_hp: [
+          { required: true, message: 'No HP is required', trigger: 'change' },
         ],
         nama_lengkap: [
           {
@@ -559,6 +565,7 @@ export default {
       this.dataTrx = {};
     },
     newUser() {
+      this.loading = true;
       this.dataTrx.signature = this.$refs.signature.save();
       const formData = new FormData();
       formData.append('id_skema', this.dataTrx.id_skema);

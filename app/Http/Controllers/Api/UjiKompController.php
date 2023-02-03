@@ -82,15 +82,17 @@ class UjiKompController extends BaseController
         $query->join('trx_uji_komp_apl_01 as b', 'b.id', '=', 'trx_uji_komp.id_apl_01');
         $query->join('trx_jadwal_asesmen as c', 'c.id', '=', 'b.id_jadwal');
         $query->join('mst_skema_sertifikasi as d', 'd.id', '=', 'b.id_skema');
-        $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk')
+        $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk');
+        $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
         ->select('trx_uji_komp.*', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
-        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'b.id_jadwal');
+        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor');
 
         if ($role === 'user') {
             $query->where('b.email', $foundUser->email);
         }
         if ($role === 'assesor') {
-            $query->where('b.email', $foundUser->email);
+            // $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk')
+            $query->where('f.email', $foundUser->email);
         }
         if (!empty($jadwal)) {
             $query->where('b.id_jadwal', $jadwal);

@@ -88,22 +88,22 @@ class JadwalController extends BaseController
                 $jadwal = Jadwal::create([
                     'id_skema' => $params['id_skema'],
                     'id_tuk' => $params['id_tuk'],
-                    // 'id_perangkat' => $params['id_perangkat'],
+                    'id_asesor' => $params['id_asesor'],
                     'persyaratan' => $params['persyaratan'],
                     'jadwal' => $params['jadwal'],
                     'start_date' => $params['start_date'],
                     'end_date' => $params['end_date'],
                 ]);
 
-                // create relation asesor
-                $asesor = $params['asesor'];
-                $asesorCount = count($asesor);
-                for($i=0; $i < $asesorCount ; $i++) {
-                    $jadwalAsesor = JadwalAsesor::create([
-                        'id_asesor' => $asesor[$i],
-                        'id_jadwal' => $jadwal->id,
-                    ]);
-                }
+                // // create relation asesor
+                // $asesor = $params['asesor'];
+                // $asesorCount = count($asesor);
+                // for($i=0; $i < $asesorCount ; $i++) {
+                //     $jadwalAsesor = JadwalAsesor::create([
+                //         'id_asesor' => $asesor[$i],
+                //         'id_jadwal' => $jadwal->id,
+                //     ]);
+                // }
 
                 DB::commit();
                 return response()->json(['message' => "Success Create Jadwal"], 200);

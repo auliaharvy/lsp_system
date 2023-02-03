@@ -15,9 +15,6 @@ class UjiKompResource extends JsonResource
      */
     public function toArray($request)
     {
-        $asesor = New JadwalAsesor();
-        $dataAsesor = $asesor->getAsesor($this->id_jadwal);
-
         return [
             'id' => $this->id,
             'id_ak_01' => $this->id_ak_01,
@@ -41,7 +38,8 @@ class UjiKompResource extends JsonResource
             'id_skema' => $this->id_skema,
             'id_va' => $this->id_va,
             'jadwal' => $this->jadwal,
-            'asesor' => $dataAsesor,
+            'asesor' => $this->nama_asesor,
+            'email_asesor' => $this->email_asesor,
             'kode_skema' => $this->kode_skema,
             'skema_sertifikasi' => $this->skema_sertifikasi,
             'mulai' => $this->mulai,

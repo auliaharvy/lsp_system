@@ -11,7 +11,7 @@ const persiapanRoutes = {
     title: 'Persiapan',
     icon: 'tickets',
     // TODO add view master data permission
-    permissions: ['view menu administrator'],
+    permissions: ['manage user'],
   },
   children: [
     /** Skema Sertifikasi */

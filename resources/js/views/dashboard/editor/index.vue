@@ -1,74 +1,77 @@
 <template>
   <div class="dashboard-editor-container">
-    <div class=" clearfix">
-      <pan-thumb :image="avatar" style="float: left">
-        Your roles:
-        <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>
-      </pan-thumb>
-      <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
-      <div class="info-container">
-        <span class="display_name">{{ name }}</span>
-        <span style="font-size:20px;padding-top:20px;display:inline-block;">{{ roles.join('|') }}'s Dashboard</span>
-      </div>
-    </div>
-    <div>
-      <img :src="emptyGif" class="emptyGif">
-    </div>
+    <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
+
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="16">
+        <div class="chart-wrapper">
+          <transaction-table />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <detail-table />
+        </div>
+      </el-col>
+    </el-row>
+
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import PanThumb from '@/components/PanThumb';
-import GithubCorner from '@/components/GithubCorner';
+import PanelGroup from './components/PanelGroup';
+import TransactionTable from './components/TransactionTable';
+import DetailTable from './components/DetailTable';
+
+const lineChartData = {
+  newVisitis: {
+    expectedData: [100, 120, 161, 134, 105, 160, 165],
+    actualData: [120, 82, 91, 154, 162, 140, 145],
+  },
+  messages: {
+    expectedData: [200, 192, 120, 144, 160, 130, 140],
+    actualData: [180, 160, 151, 106, 145, 150, 130],
+  },
+  purchases: {
+    expectedData: [80, 100, 121, 104, 105, 90, 100],
+    actualData: [120, 90, 100, 138, 142, 130, 130],
+  },
+  shoppings: {
+    expectedData: [130, 140, 141, 142, 145, 150, 160],
+    actualData: [120, 82, 91, 154, 162, 140, 130],
+  },
+};
 
 export default {
-  name: 'DashboardEditor',
-  components: { PanThumb, GithubCorner },
+  name: 'DashboardAdmin',
+  components: {
+    PanelGroup,
+    DetailTable,
+    TransactionTable,
+  },
   data() {
     return {
-      emptyGif: 'https://media.giphy.com/media/Ai8iZqHx2i0fK/giphy.gif',
+      lineChartData: lineChartData.newVisitis,
     };
   },
-  computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles',
-    ]),
+  methods: {
+    handleSetLineChartData(type) {
+      this.lineChartData = lineChartData[type];
+    },
   },
 };
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .emptyGif {
-    display: block;
-    width: 45%;
-    margin: 0 auto;
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
   }
-
-  .dashboard-editor-container {
-    background-color: #e3e3e3;
-    min-height: 100vh;
-    padding: 50px 60px 0px;
-    .pan-info-roles {
-      font-size: 12px;
-      font-weight: 700;
-      color: #333;
-      display: block;
-    }
-    .info-container {
-      position: relative;
-      margin-left: 190px;
-      height: 150px;
-      line-height: 200px;
-      .display_name {
-        font-size: 48px;
-        line-height: 48px;
-        color: #212121;
-        position: absolute;
-        top: 25px;
-      }
-    }
-  }
+}
 </style>

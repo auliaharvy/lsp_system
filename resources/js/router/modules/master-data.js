@@ -11,7 +11,7 @@ const masterRoutes = {
     title: 'Master Data',
     icon: 'admin',
     // TODO add view master data permission
-    permissions: ['view menu administrator'],
+    permissions: ['manage user'],
   },
   children: [
     /** Skema Sertifikasi */

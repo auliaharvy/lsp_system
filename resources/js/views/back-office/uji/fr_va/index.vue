@@ -15,360 +15,417 @@
       pdf-content-width="100%"
       @hasStartedGeneration="hasStartedGeneration()"
       @hasGenerated="hasGenerated($event)"
-    >
-      <section slot="pdf-content">
-        <el-main>
-          <div>
-            <section slot="pdf-item">
-              <h3>FR.APL.01 PERMOHONAN SERTIFIKASI KOMPETENSI</h3>
-              <h4>Bagian 1 : Rincian Data Pemohon Sertifikasi</h4>
-              <span>Pada bagian ini, cantumlah data pribadi, data pendidikan formal serta data pekerjaan anda pada saat ini.</span>
-              <br>
-              <h5>a. Data Pribadi</h5>
-              <el-table
-                v-loading="loading"
-                :data="headerTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 100%"
-                :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-              >
-                <el-table-column align="left" width="200px">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.title }}</span>
-
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.content }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <br>
-              <h5>b. Data Pekerjaan</h5>
-              <el-table
-                v-loading="loading"
-                :data="dataPekerjaanTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 100%"
-                :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-              >
-                <el-table-column align="left" width="200px">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.title }}</span>
-
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.content }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </section>
-
-            <div class="html2pdf__page-break" />
-
-            <section slot="pdf-item">
-              <h4>Bagian 2 : Data Sertifikasi</h4>
-              <span>Tuliskan Judul dan Nomor Skema Sertifikasi yang anda ajukan berikut Daftar Unit Kompetensi sesuai kemasan pada skema sertifikasi untuk mendapatkan pengakuan sesuai dengan latar belakang pendidikan, pelatihan serta pengalaman kerja yang anda miliki.</span>
-              <br>
-              <el-table
-                v-loading="loading"
-                :data="judulSertifikasiTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 100%"
-                :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-              >
-                <el-table-column align="left" width="200px">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.title }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.content }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <br>
-              <el-table
-                v-loading="loading"
-                :data="listKodeUnit"
-                fit
-                border
-                highlight-current-row
-                style="width: 750px"
-                :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-              >
-                <el-table-column align="center" min-width="10px" label="No">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.index }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="left" width="200px" label="Kode Unit">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.kode_unit }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="left" label="Unit Kompetensi">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.unit_kompetensi }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-
-            </section>
-
-            <div class="html2pdf__page-break" />
-
-            <section slot="pdf-item">
-              <h4>Bagian 3 : Bukti Kelengkapan Pemohon</h4>
-              <el-table
-                v-loading="loading"
-                :data="buktiKelengkapanTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 750px"
-                :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-              >
-                <el-table-column align="left" width="200px" label="Bukti persyaratan Dasar">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.title }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left" label="Ada / Tidak">
-                  <template slot-scope="scope">
-                    <a v-if="scope.row.content !== ''" target="_blank" :href="scope.row.content">
-                      <i class="el-icon-check" style="color: green;" />
-                    </a>
-                    <i v-else class="el-icon-close" style="color: red;" />
-                  </template>
-                </el-table-column>
-              </el-table>
-              <br>
-              <el-table
-                v-loading="loading"
-                :data="ttdTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 750px"
-                :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-              >
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <template v-if="scope.row.no === 2">
-                      Tanda Tangan Asesi :
-                    </template>
-                    <span>{{ scope.row.title }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <template v-if="scope.row.no === 2">
-                      Tanda Tangan Admin LSP :
-                    </template>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </section>
-          </div>
-        </el-main>
-      </section>
-    </vue-html2pdf>
+    />
 
     <el-header>
       <el-page-header content="FR.VA MEMBERIKAN KONTRIBUSI DALAM VALIDASI ASESMEN" @back="$router.back()" />
     </el-header>
     <el-main>
       <div>
-        <h4>Bagian 1 : Rincian Data Pemohon Sertifikasi</h4>
-        <span>Pada bagian ini, cantumlah data pribadi, data pendidikan formal serta data pekerjaan anda pada saat ini.</span>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="12">
+            <el-form ref="form" :model="dataTrx" label-width="120px">
+              <el-form-item label="Tim Validas 1">
+                <el-input v-model="dataTrx.timValidasi1" />
+              </el-form-item>
+              <el-form-item label="Tim Validasi 2">
+                <el-input v-model="dataTrx.timValidasi2" />
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <el-col :sm="24" :md="24" :lg="12">
+            <el-form ref="form" :model="dataTrx" label-width="120px">
+              <el-form-item label="Hari / Tanggal">
+                <span>{{ dataTrx.hari }} / {{ dataTrx.tanggal }} - {{ dataTrx.bulan }} - {{ dataTrx.tahun }}</span>
+                <!-- <el-date-picker v-model="dataTrx.date" type="date" placeholder="Pilih hari dan tanggal" style="width: 100%;" /> -->
+              </el-form-item>
+              <el-form-item label="Tempat">
+                <span>{{ dataTrx.tempat }}</span>
+                <!-- <el-date-picker v-model="dataTrx.date" type="date" placeholder="Pilih hari dan tanggal" style="width: 100%;" /> -->
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form ref="form" :model="dataTrx" label-width="120px">
+              <el-form-item label="Nama Skema">
+                <span>{{ dataTrx.namaSkema }}</span>
+              </el-form-item>
+              <el-form-item label="No Skema">
+                <span>{{ dataTrx.noSkema }}</span>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+        <h4>Bagian 1 : Menyiapkan proses validasi</h4>
         <br>
-        <h5>a. Data Pribadi</h5>
-        <el-table
-          v-loading="loading"
-          :data="headerTable"
-          fit
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-        >
-          <el-table-column align="left" width="200px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" width="20px">
-            <span> : </span>
-          </el-table-column>
-          <el-table-column align="left">
-            <template slot-scope="scope">
-              <span>{{ scope.row.content }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form ref="form" :model="dataTrx" label-width="200px">
+              <el-form-item label="Tujuan dan fokus validasi">
+                <el-select
+                  v-model="dataTrx.tujuanValidasi"
+                  filterable
+                  clearable
+                  class="filter-item full"
+                  placeholder="pilih tujuan validasi"
+                  style="width: 100%;"
+                >
+                  <el-option
+                    v-for="item in masterData.tujuan"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Konteks validasi">
+                <el-select
+                  v-model="dataTrx.konteksValidasi"
+                  filterable
+                  clearable
+                  class="filter-item full"
+                  placeholder="pilih konteks validasi"
+                  style="width: 100%;"
+                >
+                  <el-option
+                    v-for="item in masterData.konteks"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Pendekatan validasi">
+                <el-select
+                  v-model="dataTrx.pendekatanValidasi"
+                  filterable
+                  clearable
+                  class="filter-item full"
+                  placeholder="pilih Pendekatan validasi"
+                  style="width: 100%;"
+                >
+                  <el-option
+                    v-for="item in masterData.pendekatan"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-table
+              v-loading="loading"
+              :data="tableOrangRelevan"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white'}"
+            >
+              <el-table-column align="left" min-width="80px" label="Orang yang relevan">
+                <template slot-scope="scope">
+                  <template v-if="scope.row.no === 1">
+                    <span>Asesor Kompetensi</span>
+                  </template>
+                  <template v-if="scope.row.no === 2">
+                    <span>Lead Asesor</span>
+                  </template>
+                  <template v-if="scope.row.no === 3">
+                    <span>Manager, Supervisor</span>
+                  </template>
+                  <template v-if="scope.row.no === 4">
+                    <span>Tenaga Ahli di bidangnya</span>
+                  </template>
+                  <template v-if="scope.row.no === 5">
+                    <span>Koordinator Pelatihan</span>
+                  </template>
+                  <template v-if="scope.row.no === 6">
+                    <span>Anggota Asosiasi industri/profesi</span>
+                  </template>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" min-width="200px" label="Nama">
+                <template slot-scope="scope">
+                  <template v-if="scope.row.no === 1">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item label="1">
+                        <el-input v-model="dataTrx.prosesAsesor1" />
+                      </el-form-item>
+                      <el-form-item label="2">
+                        <el-input v-model="dataTrx.prosesAsesor2" />
+                      </el-form-item>
+                      <el-form-item label="3">
+                        <el-input v-model="dataTrx.prosesAsesor3" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 2">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesLeadAsesor" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 3">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesManager" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 4">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesTenagaAhli" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 5">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesKoordinator" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 6">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesAsosiasi" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                </template>
+              </el-table-column>
+              <el-table-column align="left" min-width="200px" label="Hasil Konfirmasi/diskusi tujuan, fokus & konteks">
+                <template slot-scope="scope">
+                  <template v-if="scope.row.no === 1">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item label="1">
+                        <el-input v-model="dataTrx.prosesHasilAsesor1" />
+                      </el-form-item>
+                      <el-form-item label="2">
+                        <el-input v-model="dataTrx.prosesHasilAsesor2" />
+                      </el-form-item>
+                      <el-form-item label="3">
+                        <el-input v-model="dataTrx.prosesHasilAsesor3" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 2">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesHasilLeadAsesor" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 3">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesHasilManager" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 4">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesHasilTenagaAhli" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 5">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesHasilKoordinator" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                  <template v-if="scope.row.no === 6">
+                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                      <el-form-item>
+                        <el-input v-model="dataTrx.prosesHasilAsosiasi" />
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
+        <h4>Bagian 2 : Memberikan kontribusi dalam proses validasi</h4>
         <br>
-        <h5>b. Data Pekerjaan</h5>
-        <el-table
-          v-loading="loading"
-          :data="dataPekerjaanTable"
-          fit
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-        >
-          <el-table-column align="left" width="200px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" width="20px">
-            <span> : </span>
-          </el-table-column>
-          <el-table-column align="left">
-            <template slot-scope="scope">
-              <span>{{ scope.row.content }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form ref="form" :model="dataTrx" label-width="200px">
+              <el-form-item label="Tujuan dan fokus validasi">
+                <el-select
+                  v-model="dataTrx.keterampilanKomunikasi"
+                  filterable
+                  clearable
+                  class="filter-item full"
+                  placeholder="pilih tujuan validasi"
+                  style="width: 100%;"
+                >
+                  <el-option
+                    v-for="item in masterData.keterampilanKomunikasi"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-table
+              v-loading="loading"
+              :data="masterData.aspekAspekKegiatan"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
+            >
+              <el-table-column align="left" min-width="80px" label="Aspek-Aspek Dalam Kegiatan Validasi (Meninjau, Membandingkan, Mengevaluasi)">
+                <template slot-scope="{row}">
+                  <span>{{ row.item }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="Pemenuhan terhadap:">
+                <el-table-column label="Aturan Bukti">
+                  <el-table-column align="center" min-width="10px" label="V">
+                    <template slot-scope="{row}">
+                      <el-checkbox v-model="row.aturanV" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="center" min-width="10px" label="A">
+                    <template slot-scope="{row}">
+                      <el-checkbox v-model="row.aturanA" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="center" min-width="10px" label="T">
+                    <template slot-scope="{row}">
+                      <el-checkbox v-model="row.aturanT" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="center" min-width="10px" label="M">
+                    <template slot-scope="{row}">
+                      <el-checkbox v-model="row.aturanM" />
+                    </template>
+                  </el-table-column>
+                </el-table-column>
+                <el-table-column label="Prinsip Asesmen">
+                  <el-table-column align="center" min-width="10px" label="V">
+                    <template slot-scope="{row}">
+                      <el-checkbox v-model="row.prinsipV" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="center" min-width="10px" label="R">
+                    <template slot-scope="{row}">
+                      <el-checkbox v-model="row.prinsipR" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="center" min-width="10px" label="F">
+                    <template slot-scope="{row}">
+                      <el-checkbox v-model="row.prinsipF" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="center" min-width="10px" label="F">
+                    <template slot-scope="{row}">
+                      <el-checkbox v-model="row.prinsipF2" />
+                    </template>
+                  </el-table-column>
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
+        <h4>Bagian 3 : Memberikan kontribusi untuk hasil asesmen</h4>
         <br>
-
-        <h4>Bagian 2 : Data Sertifikasi</h4>
-        <span>Tuliskan Judul dan Nomor Skema Sertifikasi yang anda ajukan berikut Daftar Unit Kompetensi sesuai kemasan pada skema sertifikasi untuk mendapatkan pengakuan sesuai dengan latar belakang pendidikan, pelatihan serta pengalaman kerja yang anda miliki.</span>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="addTemuan">
+          {{ $t('table.add') }}
+        </el-button>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-table
+              v-loading="loading"
+              :data="listTemuanValidasi"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
+            >
+              <el-table-column align="left" min-width="80px" label="Temuan-temuan validasi :">
+                <template slot-scope="{row}">
+                  <el-input v-model="row.temuan" type="textarea" />
+                </template>
+              </el-table-column>
+              <el-table-column align="left" min-width="80px" label="Rekomendasi-rekomendasi untuk meningkatkan praktek asesmen">
+                <template slot-scope="{row}">
+                  <el-input v-model="row.rekomendasi" type="textarea" />
+                </template>
+              </el-table-column>
+              <el-table-column align="left" width="80px" label="-">
+                <template slot-scope="{row}">
+                  <el-tooltip class="item" effect="dark" content="Delete" placement="top-end">
+                    <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteTemuan(row)" />
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
+        <h4>Rencana Implementasi  perubahan/perbaikan pelaksanaan asesmen :</h4>
         <br>
-        <el-table
-          v-loading="loading"
-          :data="judulSertifikasiTable"
-          fit
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-        >
-          <el-table-column align="left" width="200px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" width="20px">
-            <span> : </span>
-          </el-table-column>
-          <el-table-column align="left">
-            <template slot-scope="scope">
-              <span>{{ scope.row.content }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <br>
-
-        <el-table
-          v-loading="loading"
-          :data="listKodeUnit"
-          fit
-          border
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="left" min-width="10px" label="No">
-            <template slot-scope="scope">
-              <span>{{ scope.row.index }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left" width="200px" label="Kode Unit">
-            <template slot-scope="scope">
-              <span>{{ scope.row.kode_unit }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left" label="Unit Kompetensi">
-            <template slot-scope="scope">
-              <span>{{ scope.row.unit_kompetensi }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <br>
-
-        <h4>Bagian 3 : Bukti Kelengkapan Pemohon</h4>
-        <br>
-        <el-table
-          v-loading="loading"
-          :data="buktiKelengkapanTable"
-          fit
-          highlight-current-row
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="left" width="200px" label="Bukti persyaratan Dasar">
-            <template slot-scope="scope">
-              <span>{{ scope.row.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" width="20px">
-            <span> : </span>
-          </el-table-column>
-          <el-table-column align="left" label="Ada / Tidak">
-            <template slot-scope="scope">
-              <a v-if="scope.row.content !== ''" target="_blank" :href="scope.row.content">
-                <i class="el-icon-check" style="color: green;" />
-              </a>
-              <i v-else class="el-icon-close" style="color: red;" />
-            </template>
-          </el-table-column>
-        </el-table>
-        <br>
-        <br>
-        <el-table
-          v-loading="loading"
-          :data="ttdTable"
-          fit
-          border
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-        >
-          <el-table-column align="left">
-            <template slot-scope="scope">
-              <template v-if="scope.row.no === 2">
-                Tanda Tangan Asesi :
-              </template>
-              <span>{{ scope.row.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" width="20px">
-            <span> : </span>
-          </el-table-column>
-          <el-table-column align="left">
-            <template slot-scope="scope">
-              <template v-if="scope.row.no === 2">
-                Tanda Tangan Admin LSP :
-              </template>
-            </template>
-          </el-table-column>
-        </el-table>
-
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="addRencanaImplementasi">
+          {{ $t('table.add') }}
+        </el-button>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-table
+              v-loading="loading"
+              :data="listRencanaImplementasi"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
+            >
+              <el-table-column label="Rencana Implementasi  perubahan/perbaikan pelaksanaan asesmen :">
+                <el-table-column align="left" min-width="80px" label="Kegiatan Perbaikan sesuai Rekomendasi">
+                  <template slot-scope="{row}">
+                    <el-input v-model="row.kegiatan" type="textarea" />
+                  </template>
+                </el-table-column>
+                <el-table-column align="left" min-width="80px" label="Waktu Penyelesaian">
+                  <template slot-scope="{row}">
+                    <el-input v-model="row.waktu" type="textarea" />
+                  </template>
+                </el-table-column>
+                <el-table-column align="left" min-width="80px" label="Penanggungjawab">
+                  <template slot-scope="{row}">
+                    <el-input v-model="row.penanggungJawab" type="textarea" />
+                  </template>
+                </el-table-column>
+                <el-table-column align="left" width="80px" label="-">
+                  <template slot-scope="{row}">
+                    <el-tooltip class="item" effect="dark" content="Delete" placement="top-end">
+                      <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteRencanaImplementasi(row)" />
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
       </div>
     </el-main>
     <el-button @click="generateReport">Print</el-button>
@@ -379,9 +436,12 @@
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 import VueHtml2pdf from 'vue-html2pdf';
-import moment from 'moment';
-const apl01Resource = new Resource('detail/apl-01');
+import masterDataVa from './masterDataVa.json';
+const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
+const tukResource = new Resource('tuk-get');
+const ujiKomResource = new Resource('uji-komp-get');
+const apl01Resource = new Resource('detail/apl-01');
 
 export default {
   components: {
@@ -389,6 +449,7 @@ export default {
   },
   data() {
     return {
+      masterData: masterDataVa,
       dataAsesi: {},
       dataAdmin: {},
       kompeten: null,
@@ -397,118 +458,44 @@ export default {
       listSkema: null,
       listTuk: null,
       listJadwal: null,
+      listKodeUnit: [],
+      listJudulUnit: [],
       listKuk: [],
       listUji: [],
-      listKodeUnit: [],
+      listTemuanValidasi: [],
+      listRencanaImplementasi: [],
+      detail: {},
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
-      headerTable: [
-        {
-          title: 'Nama Lengkap',
-          content: '',
-        },
-        {
-          title: 'No KTP/NIK/Passpor',
-          content: '',
-        },
-        {
-          title: 'Tempat / Tanggal Lahir',
-          content: '',
-        },
-        {
-          title: 'Jenis Kelamin',
-          content: '',
-        },
-        {
-          title: 'Alamat Rumah',
-          content: '',
-        },
-        {
-          title: 'No HP',
-          content: '',
-        },
-        {
-          title: 'Email',
-          content: '',
-        },
-        {
-          title: 'Kualifikasi Pendidikan',
-          content: '',
-        },
-      ],
-      dataPekerjaanTable: [
-        {
-          title: 'Nama Institusi / Perusahaan',
-          content: '',
-        },
-        {
-          title: 'Jabatan',
-          content: '',
-        },
-        {
-          title: 'Alamat Kantor',
-          content: '',
-        },
-        {
-          title: 'No Telp',
-          content: '',
-        },
-        {
-          title: 'Email',
-          content: '',
-        },
-        {
-          title: 'Fax',
-          content: '',
-        },
-      ],
-      judulSertifikasiTable: [
-        {
-          title: 'Judul Skema Sertifikasi',
-          content: '',
-        },
-        {
-          title: 'Nomor Skema Sertifikasi',
-          content: '',
-        },
-        {
-          title: 'Tujuan Asesmen',
-          content: 'Sertifikasi',
-        },
-      ],
-      buktiKelengkapanTable: [
-        {
-          title: 'Pas Foto 3x4',
-          content: '',
-        },
-        {
-          title: 'Sertifikat PKL',
-          content: '',
-        },
-        {
-          title: 'KK/KTP/Kartu Pelajar',
-          content: '',
-        },
-        {
-          title: 'Raport Semester 1 - 4',
-          content: '',
-        },
-      ],
-      ttdTable: [
+      unitKompetensiTable: [],
+      buktiTable: [],
+      tableOrangRelevan: [
         {
           no: 1,
-          title: 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima/ Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai',
-          content: 'Catatan',
+          asesorKompetensi: '',
         },
         {
           no: 2,
-          title: '',
-          content: '',
+          leadAsesor: '',
+        },
+        {
+          no: 3,
+          managerSupervisor: '',
+        },
+        {
+          no: 4,
+          tenagaAhli: '',
+        },
+        {
+          no: 5,
+          koordinator: '',
+        },
+        {
+          no: 6,
+          anggotaAsosiasi: '',
         },
       ],
-      unitKompetensiTable: [],
-      buktiTable: [],
       panduan: [
         'Lengkapi nama unit kompetensi, elemen, kriteria unjuk kerja sesuai kolom dalam tabel.',
         'Istilah Acuan Pembanding dengan SOP / spesifikasi produk dari industri / orginasi dari tempat kerja atau simulasi tempat kerja',
@@ -537,12 +524,60 @@ export default {
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
+    this.getListUji().then((value) => {
+      this.getUjiKompDetail();
+      this.getListTuk();
+      this.getListJadwal();
+      this.getDate();
+    });
     this.getApl01();
   },
   methods: {
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
+    },
+    async getListUji() {
+      const { data } = await ujiKomResource.list();
+      this.listUji = data;
+    },
+    async getListTuk() {
+      const { data } = await tukResource.list();
+      this.listTuk = data;
+    },
+    async getListJadwal() {
+      const { data } = await jadwalResource.list();
+      this.listJadwal = data;
+    },
+    getUjiKompDetail() {
+      var id_uji = this.$route.params.id_uji;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      this.selectedUji = ujiDetail;
+      this.dataTrx.tempat = this.selectedUji.nama_tuk;
+      this.dataTrx.namaSkema = this.selectedUji.skema_sertifikasi;
+      this.dataTrx.noSkema = this.selectedUji.kode_skema;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+    },
+    getDate() {
+      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      var date = new Date();
+      // var millisecond = date.getMilliseconds();
+      // var detik = date.getSeconds();
+      var menit = date.getMinutes();
+      var jam = date.getHours();
+      var hari = date.getDay();
+      var tanggal = date.getDate();
+      var bulan = date.getMonth();
+      var tahun = date.getFullYear();
+      this.dataTrx.jam = jam;
+      this.dataTrx.menit = menit;
+      this.dataTrx.tanggal = tanggal;
+      this.dataTrx.bulan = arrbulan[bulan];
+      this.dataTrx.tahun = tahun;
+      this.dataTrx.hari = arrHari[hari];
+      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
     },
     generateReport() {
       this.loading = true;
@@ -562,33 +597,7 @@ export default {
     },
     async getApl01() {
       const data = await apl01Resource.get(this.$route.params.id_apl_01);
-      const ttl = data.tempat_lahir + ' / ' + moment(data.tanggal_lahir).format('DD-MM-YYYY');
-      const pendidikan = data.nama_sekolah + ' (' + data.tingkatan + ')';
       this.fileName = 'APL.01 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
-      this.headerTable[0].content = data.nama_lengkap;
-      this.headerTable[1].content = data.nik;
-      this.headerTable[2].content = ttl;
-      this.headerTable[3].content = data.jenis_kelamin;
-      this.headerTable[4].content = data.alamat;
-      this.headerTable[5].content = data.no_hp;
-      this.headerTable[6].content = data.email;
-      this.headerTable[7].content = pendidikan;
-
-      this.dataAsesi.sign = '/uploads/users/signature/' + data.signature;
-      this.dataAsesi.nama = data.nama_lengkap;
-
-      if (data.foto !== ''){
-        this.buktiKelengkapanTable[0].content = '/uploads/users/foto/' + data.foto;
-      }
-      if (data.sertifikat !== ''){
-        this.buktiKelengkapanTable[1].content = '/uploads/users/sertifikat/' + data.sertifikat;
-      }
-      if (data.identitas !== ''){
-        this.buktiKelengkapanTable[2].content = '/uploads/users/identitas/' + data.identitas;
-      }
-      if (data.raport !== ''){
-        this.buktiKelengkapanTable[3].content = '/uploads/users/raport/' + data.raport;
-      }
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -597,15 +606,12 @@ export default {
       this.selectedSkema = skemaId;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
-      this.judulSertifikasiTable[0].content = skemaId.skema_sertifikasi;
-      this.judulSertifikasiTable[1].content = skemaId.kode_skema;
       // this.dataTrx.id_tuk = tukId.id;
       this.getKuk();
     },
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -623,7 +629,6 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -666,6 +671,24 @@ export default {
         this.labelPosition = 'left';
       } else {
         this.labelPosition = 'top';
+      }
+    },
+    addTemuan(){
+      this.listTemuanValidasi.push({ temuan: '', rekomendasi: '' });
+    },
+    addRencanaImplementasi(){
+      this.listRencanaImplementasi.push({ kegiatan: '', waktu: '', penanggungJawab: '' });
+    },
+    deleteTemuan(row){
+      const deleteIndex = this.listTemuanValidasi.findIndex(item => item.temuan === row.temuan && item.rekomendasi === row.rekomendasi);
+      if (deleteIndex > -1) {
+        this.listTemuanValidasi.splice(deleteIndex, 1);
+      }
+    },
+    deleteRencanaImplementasi(row){
+      const deleteIndex = this.listRencanaImplementasi.findIndex(item => item.kegiatan === row.kegiatan && item.waktu === row.waktu && item.penanggungJawab === row.penanggungJawab);
+      if (deleteIndex > -1) {
+        this.listRencanaImplementasi.splice(deleteIndex, 1);
       }
     },
     handleFotoSuccess(res, file) {

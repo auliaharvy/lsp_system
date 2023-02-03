@@ -68,7 +68,7 @@
         </a>
         <br>
         <br>
-        <a v-if="detail" target="_blank" :href="'/' + detail.file">
+        <a v-if="$route.params.id_ia_02" target="_blank" :href="'/' + detail.file">
           <el-button type="primary">
             Klik untuk melihat jawaban
           </el-button>
@@ -81,7 +81,7 @@
           label-width="250px"
           label-position="left"
         >
-          <el-form-item v-if="!detail" label="Upload File Jawaban" prop="file">
+          <el-form-item v-if="!$route.params.id_ia_02" label="Upload File Jawaban" prop="file">
             <input type="file" @change="handleUploadSuccess">
           </el-form-item>
           <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
