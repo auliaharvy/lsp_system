@@ -57,6 +57,19 @@ class UserController extends BaseController
         return UserResource::collection($userQuery->paginate($limit));
     }
 
+    public function findNik(Request $request)
+    {
+        $searchParams = $request->all();
+        $nik = Arr::get($searchParams, 'nik', '');
+        $userQuery = User::where('nik', $nik)->first();
+        if ($userQuery) {
+            return $userQuery;
+        } else {
+            return response()->json(['error' => 'NIK Tidak Di temukan'], 403);
+        }
+        
+    }
+
     /**
      * Store a newly created resource in storage.
      *

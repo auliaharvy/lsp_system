@@ -45,6 +45,7 @@
       fit
       highlight-current-row
       style="width: 100%"
+      :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
     >
       <el-table-column align="center" label="No" width="80">
         <template slot-scope="scope">
@@ -52,30 +53,25 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('jadwal.table.nama')">
+      <el-table-column align="center" :label="$t('jadwal.table.nama')" min-width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.jadwal }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('jadwal.table.skema')">
+      <el-table-column align="center" :label="$t('jadwal.table.skema')" min-width="200px">
         <template slot-scope="scope">
           <span>{{ scope.row.nama_skema }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="left" :label="$t('jadwal.table.asesor')">
+      <el-table-column align="center" :label="$t('jadwal.table.asesor')" min-width="150px">
         <template slot-scope="scope">
-          <div
-            v-for="(asesor, i) in scope.row.asesor"
-            :key="asesor.nama_asesor"
-          >
-            {{ i + 1 + '. ' + asesor.nama_asesor }}
-          </div>
+          <span>{{ scope.row.nama_asesor }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('jadwal.table.tuk')">
+      <el-table-column align="center" :label="$t('jadwal.table.tuk')" min-width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.nama_tuk }}</span>
         </template>
@@ -84,14 +80,14 @@
       <el-table-column
         align="center"
         :label="$t('jadwal.table.start')"
-        min-width="150px"
+        width="100px"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.start_date }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('jadwal.table.end')">
+      <el-table-column align="center" :label="$t('jadwal.table.end')" width="100px">
         <template slot-scope="scope">
           <span>{{ scope.row.end_date }}</span>
         </template>
@@ -112,6 +108,20 @@
                 size="small"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
+              />
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Update"
+              placement="top-end"
+            >
+              <el-button
+                v-permission="['manage user']"
+                type="danger"
+                size="small"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
               />
             </el-tooltip>
           </el-button-group>
@@ -205,7 +215,7 @@
           </el-form-item>
 
           <el-form-item :label="$t('jadwal.table.asesor')" prop="asesor">
-            <el-select v-model="newData.asesor" filterable placeholder="Select">
+            <el-select v-model="newData.id_asesor" filterable placeholder="Select">
               <el-option
                 v-for="item in listAsesor"
                 :key="item.id"
@@ -215,25 +225,6 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item
-            :label="$t('jadwal.table.perangkat')"
-            prop="id_perangkat"
-          >
-            <el-select
-              v-model="newData.id_perangkat"
-              filterable
-              clearable
-              class="filter-item full"
-              :placeholder="$t('jadwal.table.perangkat')"
-            >
-              <el-option
-                v-for="item in listPerangkat"
-                :key="item.id"
-                :label="item.nama"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
@@ -247,7 +238,7 @@
     </el-dialog>
 
     <el-dialog
-      :title="$t('tuk.dialog.addNew') + ' ' + editedData.nama"
+      :title="'Edit' + ' ' + editedData.jadwal"
       :visible.sync="dialogFormUpdateVisible"
     >
       <div v-loading="creating" class="form-container">
@@ -259,24 +250,84 @@
           label-width="150px"
           style="max-width: 500px"
         >
-          <el-form-item :label="$t('tuk.table.code')" prop="kode_tuk">
-            <el-input v-model="editedData.kode_tuk" />
+          <el-form-item :label="$t('jadwal.table.skema')" prop="id_skema">
+            <el-select
+              v-model="editedData.id_skema"
+              filterable
+              clearable
+              class="filter-item full"
+              :placeholder="$t('jadwal.table.skema')"
+            >
+              <el-option
+                v-for="item in listSkema"
+                :key="item.id"
+                :label="item.skema_sertifikasi"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
-          <el-form-item :label="$t('table.name')" prop="nama">
-            <el-input v-model="editedData.nama" />
+
+          <el-form-item :label="$t('jadwal.table.nama')" prop="jadwal">
+            <el-input
+              v-model="editedData.jadwal"
+              placeholder="Masukan nama jadwal"
+            />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.address')" prop="alamat">
-            <el-input v-model="editedData.alamat" />
+
+          <el-form-item :label="$t('jadwal.table.tuk')" prop="id_tuk">
+            <el-select
+              v-model="editedData.id_tuk"
+              filterable
+              clearable
+              class="filter-item full"
+              :placeholder="$t('jadwal.table.tuk')"
+            >
+              <el-option
+                v-for="item in listTuk"
+                :key="item.id"
+                :label="item.nama"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.telp')" prop="no_telp">
-            <el-input v-model="editedData.no_telp" />
+
+          <el-form-item :label="$t('jadwal.table.start')" prop="start_date">
+            <el-date-picker
+              v-model="editedData.start_date"
+              type="date"
+              placeholder="Pick a day"
+            />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.email')" prop="email">
-            <el-input v-model="editedData.email" />
+
+          <el-form-item
+            :label="$t('jadwal.table.persyaratan')"
+            prop="persyaratan"
+          >
+            <el-input v-model="editedData.persyaratan" type="textarea" />
           </el-form-item>
+
+          <el-form-item :label="$t('jadwal.table.end')" prop="end_date">
+            <el-date-picker
+              v-model="editedData.end_date"
+              type="date"
+              placeholder="Pick a day"
+            />
+          </el-form-item>
+
+          <el-form-item :label="$t('jadwal.table.asesor')" prop="asesor">
+            <el-select v-model="editedData.id_asesor" filterable placeholder="Select">
+              <el-option
+                v-for="item in listAsesor"
+                :key="item.id"
+                :label="item.nama"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="dialogFormUpdateVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
           <el-button type="primary" @click="updateData()">
@@ -403,9 +454,9 @@ export default {
         this.$refs['dataForm'].clearValidate();
       });
     },
-    handleDelete(id, name) {
+    handleDelete(row) {
       this.$confirm(
-        'This will permanently delete user ' + name + '. Continue?',
+        'Ini akan menghapus jadwal ' + row.jadwal + ' dan semua uji komptensi pada jadwal ini. Lanjutkan?',
         'Warning',
         {
           confirmButtonText: 'OK',
@@ -415,7 +466,7 @@ export default {
       )
         .then(() => {
           jadwalResource
-            .destroy(id)
+            .destroy(row.id)
             .then((response) => {
               this.$message({
                 type: 'success',
@@ -446,7 +497,7 @@ export default {
               this.$message({
                 message:
                   'New Jadwal ' +
-                  this.newData.nama +
+                  this.newData.jadwal +
                   ' has been created successfully.',
                 type: 'success',
                 duration: 5 * 1000,
@@ -468,8 +519,8 @@ export default {
         }
       });
     },
-    handleUpdate(tuk) {
-      this.editedData = tuk;
+    handleUpdate(jadwal) {
+      this.editedData = jadwal;
       this.dialogFormUpdateVisible = true;
       console.log(this.editedData);
     },

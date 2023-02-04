@@ -5,12 +5,14 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="16">
+      <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
           <transaction-table />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
+    </el-row>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
           <detail-table />
         </div>

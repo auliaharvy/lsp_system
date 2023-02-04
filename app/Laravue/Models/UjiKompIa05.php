@@ -1,6 +1,6 @@
 <?php
 /**
- * File UjiKompIa03.php
+ * File UjiKompIa05.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System
@@ -19,7 +19,7 @@ use App\Laravue\Models\SkemaElemenUnit;
  *
  * @package App\Laravue\Models
  */
-class UjiKompIa03 extends Model
+class UjiKompIa05 extends Model
 {
     public $guard_name = 'api';
 

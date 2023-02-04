@@ -23,7 +23,7 @@ import adminRoutes from './modules/admin';
 // import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
 import masterRoutes from './modules/master-data';
-import perangkatRoutes from './modules/perangkat';
+// import perangkatRoutes from './modules/perangkat';
 import persiapanRoutes from './modules/persiapan';
 import ujiRoutes from './modules/uji-komp';
 
@@ -161,7 +161,7 @@ export const asyncRoutes = [
   // chartsRoutes,
   // nestedRoutes,
   // tableRoutes,
-  perangkatRoutes,
+  // perangkatRoutes,
   masterRoutes,
   adminRoutes,
   // {

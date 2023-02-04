@@ -9,7 +9,7 @@ const persiapanRoutes = {
   alwaysShow: true,
   meta: {
     title: 'Persiapan',
-    icon: 'tickets',
+    icon: 'skill',
     // TODO add view master data permission
     permissions: ['manage user'],
   },
@@ -19,7 +19,7 @@ const persiapanRoutes = {
       path: 'jadwal',
       component: () => import('@/views/back-office/jadwal/List'),
       name: 'jadwal',
-      meta: { title: 'Jadwal', icon: 'date', permissions: ['manage user'] },
+      meta: { title: 'Jadwal', icon: 'el-icon-date', permissions: ['manage user'] },
     },
   ],
 };

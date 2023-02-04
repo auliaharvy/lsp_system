@@ -5,7 +5,7 @@
       :data="list"
       border
       fit
-      style="width: 100%;padding-top: 15px;"
+      style="width: 100%;"
       :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
     >
       <el-table-column label="No" width="50" align="center">
@@ -256,6 +256,9 @@ export default {
       'roles',
       'user',
     ]),
+  },
+  mounted() {
+    this.getList();
   },
   created() {
     this.fetchData();

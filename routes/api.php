@@ -19,6 +19,9 @@ use \App\Laravue\Acl;
 */
 
 Route::namespace('Api')->group(function() {
+    // Jadwal Routes
+    Route::apiResource('jadwaltest', 'JadwalController');
+    Route::get('find-nik', 'UserController@findNik');
     Route::post('auth/login', 'AuthController@login');
     // APL 02 / Pendaftaran Routes
     Route::post('uji-kompetensi-daftar', 'UjiKompController@store');

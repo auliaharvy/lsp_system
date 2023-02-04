@@ -205,6 +205,8 @@ export default {
   jadwal: {
     table: {
       skema: 'Certification Scheme',
+      nama: 'Name',
+      persyaratan: 'Condition',
       pesyaratan: 'Requirement',
       tuk: 'TUK',
       perangkat: 'Perangkat',

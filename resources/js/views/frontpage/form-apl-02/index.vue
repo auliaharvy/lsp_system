@@ -71,6 +71,8 @@
 
           <el-form-item label="NIK" prop="nik">
             <el-input v-model="dataTrx.nik" />
+            <br>
+            <el-button icon="el-icon-search" type="primary" @click="findNik(dataTrx.nik)" />
           </el-form-item>
           <el-form-item label="Nama Lengkap" prop="nama_lengkap">
             <el-input v-model="dataTrx.nama_lengkap" />
@@ -87,7 +89,7 @@
               <el-date-picker
                 v-model="dataTrx.tanggal_lahir"
                 type="date"
-                format="yyyy/MM/dd"
+                format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
                 placeholder="Pick a date"
                 style="width: 100%"
@@ -342,6 +344,7 @@
 import vueSignature from 'vue-signature';
 import Resource from '@/api/resource';
 const ujiKompResource = new Resource('uji-komp-post');
+const nikResource = new Resource('find-nik');
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
@@ -441,6 +444,39 @@ export default {
     this.loading = false;
   },
   methods: {
+    async findNik(nik) {
+      this.loading = true;
+      await nikResource.list({ nik: nik })
+        .then((response) => {
+          this.dataTrx.nama_lengkap = response.nama_lengkap;
+          this.dataTrx.nama_sekolah = response.nama_sekolah;
+          this.dataTrx.tempat_lahir = response.tempat_lahir;
+          this.dataTrx.tanggal_lahir = response.tanggal_lahir;
+          this.dataTrx.jenis_kelamin = response.jenis_kelamin;
+          this.dataTrx.alamat = response.alamat;
+          this.dataTrx.no_hp = response.no_hp;
+          this.dataTrx.email = response.email;
+          this.dataTrx.kode_pos = response.kode_pos;
+          this.dataTrx.tingkatan_kelas = response.tingkatan_kelas;
+          // this.dialogNewUser = false;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.dataTrx.nama_lengkap = '';
+          this.dataTrx.nama_sekolah = '';
+          this.dataTrx.tempat_lahir = '';
+          this.dataTrx.tanggal_lahir = '';
+          this.dataTrx.jenis_kelamin = '';
+          this.dataTrx.alamat = '';
+          this.dataTrx.kode_pos = '';
+          this.dataTrx.no_hp = '';
+          this.dataTrx.email = '';
+          this.dataTrx.tingkatan_kelas = '';
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     saveSign() {
       var _this = this;
       var png = _this.$refs.signature.save();

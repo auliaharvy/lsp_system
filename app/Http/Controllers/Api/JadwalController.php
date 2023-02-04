@@ -13,6 +13,28 @@ use App\Http\Resources\MasterResource;
 use App\Http\Resources\JadwalResource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\Jadwal;
+use App\Laravue\Models\UjiKomp;
+use App\Laravue\Models\UjiKompApl1;
+use App\Laravue\Models\UjiKompApl2;
+use App\Laravue\Models\UjiKompApl2Detail;
+use App\Laravue\Models\UjiKompAk01;
+use App\Laravue\Models\UjiKompAk03;
+use App\Laravue\Models\UjiKompAk03Detail;
+use App\Laravue\Models\UjiKompAk02;
+use App\Laravue\Models\UjiKompAk02Detail;
+use App\Laravue\Models\UjiKompAk04;
+use App\Laravue\Models\UjiKompAk05;
+use App\Laravue\Models\UjiKompIa01;
+use App\Laravue\Models\UjiKompIa01Detail;
+use App\Laravue\Models\UjiKompIa02;
+use App\Laravue\Models\UjiKompIa03;
+use App\Laravue\Models\UjiKompIa03Detail;
+use App\Laravue\Models\UjiKompIa05;
+use App\Laravue\Models\UjiKompIa05Detail;
+use App\Laravue\Models\UjiKompIa06;
+use App\Laravue\Models\UjiKompIa06Detail;
+use App\Laravue\Models\UjiKompIa11;
+use App\Laravue\Models\UjiKompIa11Detail;
 use App\Laravue\Models\JadwalAsesor;
 use App\Laravue\Models\Tuk;
 use App\Laravue\Models\Skema;
@@ -54,7 +76,7 @@ class JadwalController extends BaseController
         $query->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema');
         $query->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk');
         $query->join('rel_jadwal_has_asesor as e', 'e.id_jadwal', '=', 'trx_jadwal_asesmen.id');
-        $query->join('mst_asesor as f', 'f.id', '=', 'e.id_asesor')
+        $query->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
         ->groupBy('trx_jadwal_asesmen.id')
         ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor');
 
@@ -118,13 +140,13 @@ class JadwalController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  UjiKomp $UjiKomp
+     * @param  Jadwal $UjiKomp
      * @return MasterResource|\Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
        
-        $query = UjiKomp::where('id',$id)->first();
+        $query = Jadwal::where('id',$id)->first();
        
         return $query;
     }
@@ -133,13 +155,13 @@ class JadwalController extends BaseController
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param UjiKomp $ujikom
+     * @param Jadwal $ujikom
      * @return MasterResource|\Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, UjiKomp $ujikom)
+    public function update(Request $request, Jadwal $jadwal)
     {
-        if ($ujikom === null) {
-            return response()->json(['error' => 'Form APL 02 not found'], 404);
+        if ($jadwal === null) {
+            return response()->json(['error' => 'Jadwal not found'], 404);
         }
 
         $validator = Validator::make($request->all(), $this->getValidationRules(false));
@@ -149,28 +171,17 @@ class JadwalController extends BaseController
             DB::beginTransaction();
             try {
 
-                $ujikom->id_skema = $request->get('id_skema');
-                $ujikom->id_tuk = $request->get('id_tuk');
-                $ujikom->nik = $request->get('nik');
-                $ujikom->nama_lengkap = $request->get('nama_lengkap');
-                $ujikom->nama_sekolah = $request->get('nama_sekolah');
-                $ujikom->tempat_lahir = $request->get('tempat_lahir');
-                $ujikom->tanggal_lahir = $request->get('tanggal_lahir');
-                $ujikom->jenis_kelamin = $request->get('jenis_kelamin');
-                $ujikom->alamat = $request->get('alamat');
-                $ujikom->kode_pos = $request->get('kode_pos');
-                $ujikom->no_hp = $request->get('no_hp');
-                $ujikom->email = $request->get('email');
-                $ujikom->tingkatan = $request->get('tingkatan');
-                $ujikom->foto = $request->get('foto');
-                $ujikom->identitas = $request->get('identitas');
-                $ujikom->raport = $request->get('raport');
-                $ujikom->sertifikat = $request->get('sertifikat');
-                $ujikom->status = $request->get('status');
-                $ujikom->save();
+                $jadwal->id_skema = $request->get('id_skema');
+                $jadwal->id_tuk = $request->get('id_tuk');
+                $jadwal->id_asesor = $request->get('id_asesor');
+                $jadwal->persyaratan = $request->get('persyaratan');
+                $jadwal->jadwal = $request->get('jadwal');
+                $jadwal->start_date = $request->get('start_date');
+                $jadwal->end_date = $request->get('end_date');
+                $jadwal->save();
 
                 DB::commit();
-                return new MasterResource($ujikom);
+                return new MasterResource($jadwal);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
@@ -187,8 +198,34 @@ class JadwalController extends BaseController
     public function destroy($id)
     {
         try {
-            UjiKomp::where('id',$id)->delete();
-            return response()->json(['message' => "Success Delete APL 02"], 201);
+            Jadwal::where('id',$id)->delete();
+            $apl01 = UjiKompApl1::where('id_jadwal', $id)->get();
+            for ($i = 0; $i < count($apl01); $i++) {
+                $foundUji = UjiKomp::where('id_apl_01',$apl01[$i]['id'])->first();
+                UjiKomp::where('id_apl_01', $apl01[$i]['id'])->delete();
+                UjiKompApl1::where('id', $foundUji->id_apl_01)->delete();
+                UjiKompApl2::where('id', $foundUji->id_apl_02)->delete();
+                UjiKompApl2Detail::where('id_apl_02', $foundUji->id_apl_02)->delete();
+                UjiKompAk01::where('id', $foundUji->id_ak_01)->delete();
+                UjiKompAk02::where('id', $foundUji->id_ak_02)->delete();
+                UjiKompAk02Detail::where('id_ak_02', $foundUji->id_ak_02)->delete();
+                UjiKompAk03::where('id', $foundUji->id_ak_03)->delete();
+                UjiKompAk03Detail::where('id_ak_03', $foundUji->id_ak_03)->delete();
+                UjiKompAk04::where('id', $foundUji->id_ak_04)->delete();
+                UjiKompAk05::where('id', $foundUji->id_ak_05)->delete();
+                UjiKompIa01::where('id', $foundUji->id_ia_01)->delete();
+                UjiKompIa01Detail::where('id_ia_01', $foundUji->id_ia_01)->delete();
+                UjiKompIa02::where('id', $foundUji->id_ia_02)->delete();
+                UjiKompIa03::where('id', $foundUji->id_ia_03)->delete();
+                UjiKompIa03Detail::where('id_ia_03', $foundUji->id_ia_03)->delete();
+                UjiKompIa05::where('id', $foundUji->id_ia_05)->delete();
+                UjiKompIa05Detail::where('id_ia_05', $foundUji->id_ia_05)->delete();
+                UjiKompIa06::where('id', $foundUji->id_ia_06)->delete();
+                UjiKompIa06Detail::where('id_ia_06', $foundUji->id_ia_06)->delete();
+                UjiKompIa11::where('id', $foundUji->id_ia_11)->delete();
+                UjiKompIa11Detail::where('id_ia_11', $foundUji->id_ia_11)->delete();
+            }
+            return response()->json(['message' => "Success Delete Jadwal"], 201);
         } catch (\Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], 403);
         }

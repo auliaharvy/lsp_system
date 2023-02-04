@@ -9,7 +9,7 @@ const masterRoutes = {
   alwaysShow: true,
   meta: {
     title: 'Master Data',
-    icon: 'admin',
+    icon: 'education',
     // TODO add view master data permission
     permissions: ['manage user'],
   },
@@ -19,35 +19,34 @@ const masterRoutes = {
       path: 'skema',
       component: () => import('@/views/back-office/skema/List'),
       name: 'SkemaList',
-      meta: { title: 'Skema', icon: 'user', permissions: ['manage user'] },
+      meta: { title: 'Skema', icon: 'el-icon-files', permissions: ['manage user'] },
     },
     {
-      path: 'perangkat-skema',
-      component: () => import('@/views/back-office/skema/perangkat/Index'),
-      name: 'PerangkatSkemaList',
-      meta: { title: 'Perangkat Skema', icon: 'user', permissions: ['manage user'] },
-      hidden: true,
+      path: 'perangkat',
+      component: () => import('@/views/back-office/perangkat/List'),
+      name: 'PerangkatList',
+      meta: { title: 'Perangkat', icon: 'clipboard', permissions: ['manage user'] },
     },
     /** TUK managements */
     {
       path: 'tuk',
       component: () => import('@/views/back-office/tuk/List'),
       name: 'TukList',
-      meta: { title: 'TUK', icon: 'user', permissions: ['manage user'] },
+      meta: { title: 'TUK', icon: 'el-icon-office-building', permissions: ['manage user'] },
     },
     /** Assesor managements */
     {
       path: 'assesor',
       component: () => import('@/views/back-office/asesor/List'),
       name: 'AssesorList',
-      meta: { title: 'Assesor', icon: 'user', permissions: ['manage user'] },
+      meta: { title: 'Assesor', icon: 'peoples', permissions: ['manage user'] },
     },
     /** Skema managements */
     {
       path: 'skema/kategori',
       component: () => import('@/views/back-office/skema/kategori/List'),
       name: 'Kategori Skema',
-      meta: { title: 'Kategori', icon: 'user', permissions: ['manage user'] },
+      meta: { title: 'Kategori', icon: 'tree', permissions: ['manage user'] },
     },
   ],
 };
