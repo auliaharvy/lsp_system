@@ -77,6 +77,12 @@ export const constantRoutes = [
   },
 
   {
+    path: '/penelusuran-tamatan',
+    component: () => import('@/views/frontpage/penelusuran/index'),
+    hidden: true,
+  },
+
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login/index'),

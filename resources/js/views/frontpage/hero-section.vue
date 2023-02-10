@@ -1,12 +1,17 @@
 <template>
-  <el-carousel indicator-position="outside" height="500px">
-    <el-carousel-item v-for="item in image" :key="item">
-      <img
-        alt="Image"
-        :src="item"
-      >
-    </el-carousel-item>
-  </el-carousel>
+  <el-row type="flex" class="content" justify="center">
+    <el-col :span="24">
+      <el-carousel indicator-position="outside" height="600px">
+        <el-carousel-item v-for="item in image" :key="item">
+          <img
+            alt="Image"
+            :src="item"
+            style="height: 100%; width: 100%;"
+          >
+        </el-carousel-item>
+      </el-carousel>
+    </el-col>
+  </el-row>
 </template>
 
 <script>

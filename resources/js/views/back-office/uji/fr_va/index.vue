@@ -153,7 +153,7 @@
               <el-table-column align="center" min-width="200px" label="Nama">
                 <template slot-scope="scope">
                   <template v-if="scope.row.no === 1">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item label="1">
                         <el-input v-model="dataTrx.prosesAsesor1" />
                       </el-form-item>
@@ -166,35 +166,35 @@
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 2">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesLeadAsesor" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 3">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesManager" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 4">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesTenagaAhli" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 5">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesKoordinator" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 6">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesAsosiasi" />
                       </el-form-item>
@@ -205,7 +205,7 @@
               <el-table-column align="left" min-width="200px" label="Hasil Konfirmasi/diskusi tujuan, fokus & konteks">
                 <template slot-scope="scope">
                   <template v-if="scope.row.no === 1">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item label="1">
                         <el-input v-model="dataTrx.prosesHasilAsesor1" />
                       </el-form-item>
@@ -218,35 +218,35 @@
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 2">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesHasilLeadAsesor" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 3">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesHasilManager" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 4">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesHasilTenagaAhli" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 5">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesHasilKoordinator" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 6">
-                    <el-form ref="form" :model="dataTrx" label-width="120px">
+                    <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
                         <el-input v-model="dataTrx.prosesHasilAsosiasi" />
                       </el-form-item>
@@ -257,18 +257,65 @@
             </el-table>
           </el-col>
         </el-row>
+        <br>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form ref="form" :model="dataTrx" label-width="200px">
+              <el-form-item label="Acuan Pembanding">
+                <el-select
+                  v-model="dataTrx.acuanPembanding"
+                  filterable
+                  clearable
+                  class="filter-item full"
+                  placeholder="pilih tujuan validasi"
+                  style="width: 100%;"
+                >
+                  <el-option
+                    v-for="item in masterData.acuanPembanding"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form ref="form" :model="dataTrx" label-width="200px">
+              <el-form-item label="Dokumen Terkait dan Bahan - Bahan">
+                <el-select
+                  v-model="dataTrx.dokumenTerkait"
+                  filterable
+                  clearable
+                  class="filter-item full"
+                  placeholder="pilih tujuan validasi"
+                  style="width: 100%;"
+                >
+                  <el-option
+                    v-for="item in masterData.dokumenTerkait"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
         <h4>Bagian 2 : Memberikan kontribusi dalam proses validasi</h4>
         <br>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
             <el-form ref="form" :model="dataTrx" label-width="200px">
-              <el-form-item label="Tujuan dan fokus validasi">
+              <el-form-item label="Keterampilan Komunikasi">
                 <el-select
                   v-model="dataTrx.keterampilanKomunikasi"
                   filterable
                   clearable
                   class="filter-item full"
-                  placeholder="pilih tujuan validasi"
+                  placeholder="pilih Keterampilan Komunikasi"
                   style="width: 100%;"
                 >
                   <el-option
@@ -428,7 +475,7 @@
         </el-row>
       </div>
     </el-main>
-    <el-button @click="generateReport">Print</el-button>
+    <el-button @click="generateReport">Submit</el-button>
   </el-container>
 </template>
 
@@ -442,6 +489,7 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const apl01Resource = new Resource('detail/apl-01');
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export default {
   components: {
@@ -579,10 +627,12 @@ export default {
       this.dataTrx.hari = arrHari[hari];
       // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
     },
-    generateReport() {
+    async generateReport() {
       this.loading = true;
-      this.$refs.html2Pdf.generatePdf();
+      await delay(3000);
+      this.$router.push({ name: 'uji-komp-list' });
       this.loading = false;
+      // this.$refs.html2Pdf.generatePdf();
     },
     async beforeDownload({ html2pdf, options, pdfContent }) {
       await html2pdf().set(options).from(pdfContent).toPdf().get('pdf').then((pdf) => {

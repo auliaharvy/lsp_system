@@ -29,39 +29,6 @@
 
         <el-table
           v-loading="loading"
-          :data="unitKompetensiTable"
-          border
-          fit
-          highlight-current-row
-          :span-method="objectSpanMethod"
-          style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-        >
-          <el-table-column align="left" width="150px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.col1 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left" width="120px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.col2 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="left">
-            <template slot-scope="scope">
-              <ul>
-                <li v-for="item in scope.row.col3" :key="item">
-                  {{ item }}
-                </li>
-              </ul>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <br>
-
-        <el-table
-          v-loading="loading"
           :data="['-']"
           fit
           border
@@ -80,39 +47,59 @@
 
         <br>
 
-        <el-form
-          ref="form"
-          :model="form"
-          label-width="250px"
-          label-position="left"
+        <el-table
+          v-loading="loading"
+          :data="aspek"
+          fit
+          border
+          highlight-current-row
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
-          <el-form-item label="Nama Asesi" prop="namaAsesi">
-            <el-input v-model="form.namaAsesi" placeholder="nama asesi" />
-          </el-form-item>
+          <el-table-column align="left" label="Aspek Yang Ditinjau">
+            <template slot-scope="scope">
+              <span>{{ scope.row.item }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Kesesuaian dengan prinsip asesmen">
+            <el-table-column align="center" label="Validitas">
+              <template slot-scope="scope">
+                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.validitas" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="Reliabel">
+              <template slot-scope="scope">
+                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.reliabel" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="Fleksibel">
+              <template slot-scope="scope">
+                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.fleksibel" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="Adil">
+              <template slot-scope="scope">
+                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.adil" />
+              </template>
+            </el-table-column>
+          </el-table-column>
+        </el-table>
 
-          <el-form-item label="Rekomendasi" prop="rekomendasi">
-            <el-select v-model="form.rekomendasi" class="filter-item" placeholder="K / BK">
-              <el-option label="Kompeten" value="kompeten" />
-              <el-option label="Belum Kompeten" value="belum kompeten" />
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="Keterangan" prop="keterangan">
-            <el-input v-model="form.keterangan" type="textarea" :rows="3" placeholder="Isi Keterangan" />
-          </el-form-item>
-
-          <el-form-item label="Aspek Negatif dan Positif Dalam Asesmen" prop="aspek">
-            <el-input v-model="form.aspek" type="textarea" :rows="3" placeholder="Isi Aspek Negatif dan Positif Dalam Asesmen" />
-          </el-form-item>
-
-          <el-form-item label="Pencatatan Penolakan Hasil Asesmen" prop="aspek">
-            <el-input v-model="form.catatanPenolakan" type="textarea" :rows="3" placeholder="Isi Pencatatan Penolakan Hasil Asesmen" />
-          </el-form-item>
-
-          <el-form-item label="Saran Perbaikan (Asesor / personil terkait)" prop="saran">
-            <el-input v-model="form.saranPerbaikan" type="textarea" :rows="3" placeholder="Isi Saran Perbaikan (Asesor / personil terkait)" />
-          </el-form-item>
-        </el-form>
+        <el-table
+          v-loading="loading"
+          :data="aspekPemenuhan"
+          fit
+          border
+          highlight-current-row
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
+        >
+          <el-table-column align="left" label="Aspek Yang Ditinjau">
+            <template slot-scope="scope">
+              <span>{{ scope.row.item }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
 
       </div>
     </el-main>
@@ -168,19 +155,15 @@ export default {
           content: '',
         },
         {
+          title: 'TUK',
+          content: '',
+        },
+        {
           title: 'Skema Sertifikasi',
           content: '',
         },
         {
-          title: 'Unit Kompetensi',
-          content: '',
-        },
-        {
-          title: 'Tanggal Mulai Asesmen',
-          content: '-',
-        },
-        {
-          title: 'Tanggal Selesai Asesmen',
+          title: 'Tanggal',
           content: '-',
         },
       ],
@@ -188,6 +171,60 @@ export default {
         'Peninjauan seharusnya dilakukan oleh asesor yang mensupervisi implementasi asesmen.',
         'Jika tinjauan di lakukan oleh asesor lain, tinjauan akan di lakukan setelah seluruh proses implementasi asesmen telah selesai',
         'Peninjauan dapat dilakukan secara terpadu dalam skema sertifikasi dan / atau peserta kelompok yang homogen.',
+      ],
+      aspek: [
+        {
+          item: 'Prosedur asesmen :',
+          validitas: ' ',
+          reliabel: ' ',
+          fleksibel: ' ',
+          adil: ' ',
+        },
+        {
+          item: '- Rencana Asesmen',
+          validitas: false,
+          reliabel: false,
+          fleksibel: false,
+          adil: false,
+        },
+        {
+          item: '- Persiapan Asesmen',
+          validitas: false,
+          reliabel: false,
+          fleksibel: false,
+          adil: false,
+        },
+        {
+          item: '- Implementasi Asesmen',
+          validitas: false,
+          reliabel: false,
+          fleksibel: false,
+          adil: false,
+        },
+        {
+          item: '- Keputusan Asesmen',
+          validitas: false,
+          reliabel: false,
+          fleksibel: false,
+          adil: false,
+        },
+        {
+          item: '- Umpan Balik Asesmen',
+          validitas: false,
+          reliabel: false,
+          fleksibel: false,
+          adil: false,
+        },
+      ],
+      aspekPemenuhan: [
+        {
+          item: 'Konsistensi keputusan asesmen Bukti dari berbagai asesmen diperiksa untuk konsistensi dimensi kompetensi',
+          taskSkill: false,
+          taskManagement: false,
+          contigency: false,
+          jobRole: false,
+          transferSkill: false,
+        },
       ],
       form: {
         namaAsesi: '',

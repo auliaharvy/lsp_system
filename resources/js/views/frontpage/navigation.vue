@@ -9,11 +9,7 @@
     </el-submenu>
     <el-menu-item index="form-apl-02">Uji Kompetensi</el-menu-item>
     <el-menu-item index="3">Kontak</el-menu-item>
-    <el-submenu index="2">
-      <template slot="title">Penelusuran Tamatan</template>
-      <el-menu-item index="2-1">Data Tamatan</el-menu-item>
-      <el-menu-item index="2-2">Input Tamatan</el-menu-item>
-    </el-submenu>
+    <el-menu-item index="penelusuran-tamatan">Penelusuran Tamatan</el-menu-item>
 
     <template v-if="!isLogged">
       <el-menu-item style="float: right" index="/login"><el-button>Login</el-button></el-menu-item>

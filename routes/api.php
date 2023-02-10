@@ -21,6 +21,7 @@ use \App\Laravue\Acl;
 Route::namespace('Api')->group(function() {
     // Jadwal Routes
     Route::apiResource('jadwaltest', 'JadwalController');
+    Route::apiResource('tamatan', 'TamatanController');
     Route::get('find-nik', 'UserController@findNik');
     Route::post('auth/login', 'AuthController@login');
     // APL 02 / Pendaftaran Routes
@@ -33,6 +34,7 @@ Route::namespace('Api')->group(function() {
     Route::post('new-user-uji', 'UjiKompController@newUser');
     Route::post('check-user-uji', 'UjiKompController@checkUser');
     Route::get('uji-komp-get', 'UjiKompController@index');
+    Route::get('skema-kategori-get', 'AsesmenKategoriController@index');
 
     Route::get('mst-ia02-get', 'PerangkatController@indexIa02');
     Route::get('mst-ia03-get', 'PerangkatController@indexIa03');
