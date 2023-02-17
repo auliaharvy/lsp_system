@@ -5,16 +5,16 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="16">
+      <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
           <transaction-table />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
+      <!-- <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <detail-table />
         </div>
-      </el-col>
+      </el-col> -->
     </el-row>
 
   </div>
@@ -23,7 +23,6 @@
 <script>
 import PanelGroup from './components/PanelGroup';
 import TransactionTable from './components/TransactionTable';
-import DetailTable from './components/DetailTable';
 
 const lineChartData = {
   newVisitis: {
@@ -48,7 +47,6 @@ export default {
   name: 'DashboardAdmin',
   components: {
     PanelGroup,
-    DetailTable,
     TransactionTable,
   },
   data() {

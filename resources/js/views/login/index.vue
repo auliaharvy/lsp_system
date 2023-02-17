@@ -50,8 +50,9 @@
             </el-button>
           </el-form-item>
           <div class="tips">
-            <span style="margin-right:20px;">Email: admin@laravue.dev</span>
-            <span>Password: laravue</span>
+            <span>Jika ada pertanyaan hubungi admin : </span>
+            <br>
+            <span><a href="https://wa.me/6289652847221?text=Halo,%20Saya%20ingin%20bertanya%20mengenai%20sistem%20LSP" target="_blank">Klik untuk WA</a></span>
           </div>
         </el-form>
       </div>
@@ -86,8 +87,8 @@ export default {
     };
     return {
       loginForm: {
-        email: 'admin@laravue.dev',
-        password: 'laravue',
+        email: '',
+        password: '',
       },
       loginRules: {
         email: [{ required: true, trigger: 'blur', validator: validateEmail }],

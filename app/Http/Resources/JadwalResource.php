@@ -32,6 +32,7 @@ class JadwalResource extends JsonResource
             'persyaratan' => $this->persyaratan,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
+            'password_asesi' => $this->password_asesi,
         ];
     }
 }

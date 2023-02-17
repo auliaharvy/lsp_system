@@ -19,9 +19,9 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
-      </el-button>
+      </el-button> -->
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
@@ -46,14 +46,14 @@
             <el-col class="table-expand" :span="4">
               <div class="grid-content">
                 <ul>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-APL-01" placement="top-start">
                       <router-link :to="{ name: 'form-apl-01', params: { id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">APL 01  <i v-if="scope.row.id_apl_01 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-APL-02" placement="top-start">
                       <router-link :to="{ name: 'form-apl-02', params: { asesor: scope.row.asesor ,id_apl_01: scope.row.id_apl_01, id_apl_02: scope.row.id_apl_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">APL 02  <i v-if="scope.row.id_apl_02 !== null" type="success" class="el-icon-check" /></span>
@@ -73,7 +73,7 @@
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
                       <router-link :to="{ name: 'form-ak-01', params: { id_ak_01: scope.row.id_ak_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 01  <i v-if="scope.row.id_ak_01 !== null" type="success" class="el-icon-check" /></span>
@@ -85,7 +85,7 @@
                       <span class="link">AK 04  <i v-if="scope.row.id_ak_04!== null" type="success" class="el-icon-check" /></span>
                     </router-link>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
                       <router-link :to="{ name: 'form-ia-01', params: { id_ia_01: scope.row.id_ia_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 01  <i v-if="scope.row.id_ia_01 !== null" type="success" class="el-icon-check" /></span>
@@ -94,7 +94,14 @@
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-02" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-02', params: { id_ia_02: scope.row.id_ia_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <el-button
+                        v-if="query.role === 'user'"
+                        type="text"
+                        @click="handleAkses('ia02', scope.row)"
+                      >
+                        IA 02 <i v-if="scope.row.id_ia_02 !== null" type="success" class="el-icon-check" />
+                      </el-button>
+                      <router-link v-else :to="{ name: 'form-ia-02', params: { id_ia_02: scope.row.id_ia_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 02  <i v-if="scope.row.id_ia_02 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
@@ -107,68 +114,96 @@
                 <ul>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-03', params: { id_ia_03: scope.row.id_ia_03, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <el-button
+                        v-if="query.role === 'user'"
+                        type="text"
+                        @click="handleAkses('ia03', scope.row)"
+                      >
+                        IA 03 <i v-if="scope.row.id_ia_03 !== null" type="success" class="el-icon-check" />
+                      </el-button>
+                      <router-link v-else :to="{ name: 'form-ia-03', params: { id_ia_03: scope.row.id_ia_03, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 03  <i v-if="scope.row.id_ia_03 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-05" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-05', params: { id_ia_05: scope.row.id_ia_05, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <el-button
+                        v-if="query.role === 'user'"
+                        type="text"
+                        @click="handleAkses('ia05', scope.row)"
+                      >
+                        IA 05 <i v-if="scope.row.id_ia_05 !== null" type="success" class="el-icon-check" />
+                      </el-button>
+                      <router-link v-else :to="{ name: 'form-ia-05', params: { id_ia_05: scope.row.id_ia_05, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 05  <i v-if="scope.row.id_ia_05!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-06" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-06', params: { id_ia_06: scope.row.id_ia_06, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <el-button
+                        v-if="query.role === 'user'"
+                        type="text"
+                        @click="handleAkses('ia06', scope.row)"
+                      >
+                        IA 06 <i v-if="scope.row.id_ia_06 !== null" type="success" class="el-icon-check" />
+                      </el-button>
+                      <router-link v-else :to="{ name: 'form-ia-06', params: { id_ia_06: scope.row.id_ia_06, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 06  <i v-if="scope.row.id_ia_06!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-07" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-07', params: { id_ia_07: scope.row.id_ia_07, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <el-button
+                        v-if="query.role === 'user'"
+                        type="text"
+                        @click="handleAkses('ia07', scope.row)"
+                      >
+                        IA 07 <i v-if="scope.row.id_ia_07 !== null" type="success" class="el-icon-check" />
+                      </el-button>
+                      <router-link v-else :to="{ name: 'form-ia-07', params: { id_ia_07: scope.row.id_ia_07, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 07  <i v-if="scope.row.id_ia_07!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-11" placement="top-start">
                       <router-link :to="{ name: 'form-ia-11', params: { id_ia_11: scope.row.id_ia_11, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 11  <i v-if="scope.row.id_ia_11!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-02" placement="top-start">
                       <router-link :to="{ name: 'form-ak-02', params: { id_ak_02: scope.row.id_ak_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 02  <i v-if="scope.row.id_ak_02!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-03" placement="top-start">
                       <router-link :to="{ name: 'form-ak-03', params: { id_ak_03: scope.row.id_ak_03, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 03  <i v-if="scope.row.id_ak_03!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-05" placement="top-start">
                       <router-link :to="{ name: 'form-ak-05', params: { id_ak_05: scope.row.id_ak_05, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 05  <i v-if="scope.row.id_ak_05 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-06" placement="top-start">
                       <router-link :to="{ name: 'form-ak-06', params: { id_ak_06: scope.row.id_ak_06, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 06  <i v-if="scope.row.id_ak_06 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-VA" placement="top-start">
                       <router-link :to="{ name: 'form-va', params: { id_va: scope.row.id_va, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">VA  <i v-if="scope.row.id_va !== null" type="success" class="el-icon-check" /></span>
@@ -233,35 +268,25 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
 
-    <el-dialog :title="$t('perangkat  .dialog.addNew')" :visible.sync="dialogFormVisible">
+    <el-dialog title="Silakan masukan password untuk akses form" :visible.sync="dialogFormVisible">
       <div v-loading="creating" class="form-container">
-        <el-form ref="dataForm" :rules="rules" :model="newData" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('perangkat.table.skema')" prop="id_skema">
-            <el-select v-model="newData.id_skema" filterable clearable class="filter-item full" :placeholder="$t('perangkat.table.skema')">
-              <el-option v-for="item in listSkema" :key="item.id" :label="item.skema_sertifikasi" :value="item.id" />
-            </el-select>
+        <el-form ref="dataForm" :rules="rules" :model="aksesForm" label-position="top" label-width="150px" style="max-width: 100%;">
+          <el-form-item>
+            <el-input
+              v-model="aksesForm.password"
+              placeholder="password"
+              :type="pwdType"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon icon-class="eye" />
+            </span>
           </el-form-item>
-          <el-form-item :label="$t('perangkat.table.name')" prop="nama_perangkat">
-            <el-input v-model="newData.nama_perangkat" />
-          </el-form-item>
-          <el-form-item :label="$t('perangkat.table.code')" prop="kode_perangkat">
-            <el-input v-model="newData.kode_perangkat" />
-          </el-form-item>
-          <el-form-item :label="$t('perangkat.table.versi')" prop="versi">
-            <el-input v-model="newData.versi" />
-          </el-form-item>
-          <el-form-item :label="$t('perangkat.table.desc')" prop="description">
-            <el-input v-model="newData.description" type="textarea" />
-          </el-form-item>
-          <!-- <el-form-item :label="$t('perangkat.table.browse')" prop="browse">
-            <el-input v-model="newData.browse" />
-          </el-form-item> -->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="create()">
+          <el-button type="primary" @click="toForm()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -323,6 +348,7 @@ export default {
       list: null,
       listSkema: null,
       listJadwal: null,
+      aksesForm: {},
       total: 0,
       loading: true,
       downloading: false,
@@ -330,6 +356,7 @@ export default {
       dialogFormVisible: false,
       dialogFormUpdateVisible: false,
       newData: {},
+      pwdType: 'password',
       editedData: {
         id: 0,
         kode_tuk: '',
@@ -392,6 +419,35 @@ export default {
     async getListJadwal() {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
+    },
+    handleAkses(form, data) {
+      this.aksesForm = data;
+      this.aksesForm.fr = form;
+      console.log(this.aksesForm);
+      this.dialogFormVisible = true;
+    },
+    toForm() {
+      if (this.aksesForm.password !== this.aksesForm.password_asesi) {
+        this.$message({
+          type: 'error',
+          message: 'Password Salah',
+        });
+      } else {
+        if (this.aksesForm.fr === 'ia02') {
+          this.$router.push({ name: 'form-ia-02', params: { id_ia_02: this.aksesForm.id_ia_02, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
+        } if (this.aksesForm.fr === 'ia03') {
+          this.$router.push({ name: 'form-ia-03', params: { id_ia_03: this.aksesForm.id_ia_03, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
+        } if (this.aksesForm.fr === 'ia05') {
+          this.$router.push({ name: 'form-ia-05', params: { id_ia_05: this.aksesForm.id_ia_05, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
+        } if (this.aksesForm.fr === 'ia06') {
+          this.$router.push({ name: 'form-ia-06', params: { id_ia_06: this.aksesForm.id_ia_06, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
+        } if (this.aksesForm.fr === 'ia07') {
+          this.$router.push({ name: 'form-ia-07', params: { id_ia_07: this.aksesForm.id_ia_06, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
+        }
+      }
+      // this.aksesForm.fr = form;
+      // console.log(this.aksesForm);
+      // this.dialogFormVisible = true;
     },
     handleFilter() {
       this.query.page = 1;
@@ -460,6 +516,13 @@ export default {
         }
       });
     },
+    showPwd() {
+      if (this.pwdType === 'password') {
+        this.pwdType = '';
+      } else {
+        this.pwdType = 'password';
+      }
+    },
     handleUpdate(tuk) {
       this.editedData = tuk;
       this.dialogFormUpdateVisible = true;
@@ -507,6 +570,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.show-pwd {
+      position: absolute;
+      right: 10px;
+      top: 7px;
+      font-size: 16px;
+      color: darkgray;
+      cursor: pointer;
+      user-select: none;
+    }
 .table-expand {
   text-align: center;
   margin-left: 20px;
@@ -530,7 +603,7 @@ export default {
 .dialog-footer {
   text-align: left;
   padding-top: 0;
-  margin-left: 150px;
+  margin-left: 0;
 }
 .app-container {
   flex: 1;

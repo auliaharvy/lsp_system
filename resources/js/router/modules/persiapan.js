@@ -11,7 +11,7 @@ const persiapanRoutes = {
     title: 'Persiapan',
     icon: 'skill',
     // TODO add view master data permission
-    permissions: ['manage user'],
+    roles: ['admin', 'assesor'],
   },
   children: [
     /** Skema Sertifikasi */
@@ -19,7 +19,7 @@ const persiapanRoutes = {
       path: 'jadwal',
       component: () => import('@/views/back-office/jadwal/List'),
       name: 'jadwal',
-      meta: { title: 'Jadwal', icon: 'el-icon-date', permissions: ['manage user'] },
+      meta: { title: 'Jadwal', icon: 'el-icon-date', roles: ['admin', 'assesor'] },
     },
   ],
 };

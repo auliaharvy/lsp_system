@@ -206,6 +206,7 @@ export default {
     table: {
       skema: 'Certification Scheme',
       nama: 'Name',
+      password: 'Password',
       persyaratan: 'Condition',
       pesyaratan: 'Requirement',
       tuk: 'TUK',

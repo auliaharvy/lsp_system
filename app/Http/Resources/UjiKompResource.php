@@ -38,6 +38,7 @@ class UjiKompResource extends JsonResource
             'id_skema' => $this->id_skema,
             'id_va' => $this->id_va,
             'jadwal' => $this->jadwal,
+            'password_asesi' => $this->password_asesi,
             'asesor' => $this->nama_asesor,
             'email_asesor' => $this->email_asesor,
             'kode_skema' => $this->kode_skema,

@@ -5,9 +5,9 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
-      </el-button>
+      </el-button> -->
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
@@ -81,6 +81,9 @@
 
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
+    <router-link :to="{ name: 'homepage' }">
+      <el-button style="margin-top: 12px">back to home</el-button>
+    </router-link>
 
     <!-- <el-dialog title="Tambah Rekam Catatan" :visible.sync="dialogFormVisible">
       <div v-loading="asesorCreating" class="form-container">

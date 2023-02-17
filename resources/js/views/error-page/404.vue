@@ -13,7 +13,7 @@
         </div>
         <div class="bullshit__info">
           Copyright by
-          <a class="link-type" href="https://github.com/tuandm/laravue" target="_blank">Laravue</a>
+          <a class="link-type" href="https://lspp1.smkn2cikbar.sch.id" target="_blank">LSP SMKN 2 Cikarang Barat</a>
         </div>
         <div class="bullshit__headline">
           {{ message }}

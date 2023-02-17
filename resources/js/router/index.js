@@ -19,9 +19,9 @@ import Layout from '@/layout';
 // import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 // import nestedRoutes from './modules/nested';
-// import errorRoutes from './modules/error';
+import errorRoutes from './modules/error';
 // import excelRoutes from './modules/excel';
-import permissionRoutes from './modules/permission';
+// import permissionRoutes from './modules/permission';
 import masterRoutes from './modules/master-data';
 // import perangkatRoutes from './modules/perangkat';
 import persiapanRoutes from './modules/persiapan';
@@ -162,7 +162,7 @@ export const constantRoutes = [
 
 export const asyncRoutes = [
   persiapanRoutes,
-  permissionRoutes,
+  // permissionRoutes,
   // componentRoutes,
   // chartsRoutes,
   // nestedRoutes,
@@ -197,7 +197,7 @@ export const asyncRoutes = [
   //     },
   //   ],
   // },
-  // errorRoutes,
+  errorRoutes,
   // excelRoutes,
   // {
   //   path: '/zip',

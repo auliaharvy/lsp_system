@@ -29,7 +29,7 @@
               <el-option
                 v-for="item in listJadwal"
                 :key="item.id"
-                :label="item.jadwal + ' / ' + item.start_date + ' - ' + item.nama_skema"
+                :label="item.jadwal + ' / ' + item.nama_asesor + ' / ' + item.start_date + ' - ' + item.nama_skema"
                 :value="item.id"
               />
             </el-select>
@@ -502,15 +502,15 @@ export default {
       this.dialogImageVisible = true;
     },
     async getListSkema() {
-      const { data } = await skemaResource.list();
+      const { data } = await skemaResource.list({ limit: 1000 });
       this.listSkema = data;
     },
     async getListTuk() {
-      const { data } = await tukResource.list();
+      const { data } = await tukResource.list({ limit: 1000 });
       this.listTuk = data;
     },
     async getListJadwal() {
-      const { data } = await jadwalResource.list();
+      const { data } = await jadwalResource.list({ limit: 1000 });
       this.listJadwal = data;
     },
     onJadwalSelect() {

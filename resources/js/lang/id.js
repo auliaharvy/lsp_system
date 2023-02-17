@@ -205,6 +205,7 @@ export default {
   jadwal: {
     table: {
       skema: 'Skema Sertifikasi',
+      password: 'Password',
       nama: 'Nama',
       persyaratan: 'Persyaratan',
       pesyaratan: 'Persyaratan',

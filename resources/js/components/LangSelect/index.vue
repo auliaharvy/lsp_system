@@ -4,11 +4,11 @@
       <svg-icon class-name="international-icon" icon-class="language" />
     </div>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item :disabled="language==='en'" command="en">
-        English
-      </el-dropdown-item>
       <el-dropdown-item :disabled="language==='id'" command="id">
         Bahasa
+      </el-dropdown-item>
+      <el-dropdown-item :disabled="language==='en'" command="en">
+        English
       </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>

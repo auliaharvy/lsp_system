@@ -33,6 +33,10 @@ use App\Laravue\Models\UjiKompIa06;
 use App\Laravue\Models\UjiKompIa06Detail;
 use App\Laravue\Models\UjiKompIa11;
 use App\Laravue\Models\UjiKompIa11Detail;
+use App\Laravue\Models\UjiKompVa;
+use App\Laravue\Models\UjiKompVaAspek;
+use App\Laravue\Models\UjiKompVaRencana;
+use App\Laravue\Models\UjiKompVaTemuan;
 use App\Laravue\Models\Tuk;
 use App\Laravue\Models\JadwalAsesor;
 use App\Laravue\Models\Skema;
@@ -77,6 +81,7 @@ class UjiKompController extends BaseController
         $user_id = Arr::get($searchParams, 'user_id', '');
         $role = Arr::get($searchParams, 'role', '');
         $foundUser = User::where('id',$user_id)->first();
+        $visibility = Arr::get($searchParams, 'visibility', 0);
 
         $query = UjiKomp::query();
         $query->join('trx_uji_komp_apl_01 as b', 'b.id', '=', 'trx_uji_komp.id_apl_01');
@@ -84,8 +89,13 @@ class UjiKompController extends BaseController
         $query->join('mst_skema_sertifikasi as d', 'd.id', '=', 'b.id_skema');
         $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk');
         $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
+        ->orderBy('c.created_at', 'desc')
         ->select('trx_uji_komp.*', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
-        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor');
+        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor');
+
+        if ($visibility === 0) {
+            $query->where('c.visibility', 0);
+        }
 
         if ($role === 'user') {
             $query->where('b.email', $foundUser->email);
@@ -672,7 +682,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_01 = $ia01->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
                 $elemen = json_decode($params['detail_ia_01'], true);
@@ -732,7 +742,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_02 = $ia02->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
 
@@ -775,7 +785,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_03 = $ia03->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
                 $elemen = $params['detail_ia_03'];
@@ -827,7 +837,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_05 = $ia05->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
                 $elemen = $params['detail_ia_05'];
@@ -921,7 +931,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_11 = $ia11->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
                 $elemen = $params['detail_ia_11'];
@@ -1038,7 +1048,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ak_01 = $ak01->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
                 DB::commit();
@@ -1081,7 +1091,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ak_02 = $ak02->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
                 $elemen = $params['detail'];
@@ -1142,7 +1152,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ak_03 = $ak03->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
                 $elemen = $params['detail'];
@@ -1197,7 +1207,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ak_04 = $ak04->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
                 DB::commit();
@@ -1236,7 +1246,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ak_05 = $ak05->id;
-                $foundUjiKomp->persentase = $progress + 3;
+                $foundUjiKomp->persentase = $progress + 6.6;
                 $foundUjiKomp->save();
 
 
@@ -1248,6 +1258,108 @@ class UjiKompController extends BaseController
                 //return $e->getMessage();
             }
         }
+    }
+
+    public function storeVa(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesVa(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            try {
+                $params = $request->all();
+                $va = UjiKompVa::create([
+                    'tim_validasi_1' => $params['tim_validasi_1'],
+                    'tim_validasi_2' => $params['tim_validasi_2'],
+                    'tujuan_dan_fokus_validasi' => $params['tujuan_dan_fokus_validasi'],
+                    'konteks_validasi' => $params['konteks_validasi'],
+                    'pendekatan_validasi' => $params['pendekatan_validasi'],
+                    'asesor_1' => $params['asesor_1'],
+                    'asesor_2' => $params['asesor_2'],
+                    'asesor_3' => $params['asesor_3'],
+                    'hasil_konfirmasi_asesor_1' => $params['hasil_konfirmasi_asesor_1'],
+                    'hasil_konfirmasi_asesor_2' => $params['hasil_konfirmasi_asesor_2'],
+                    'hasil_konfirmasi_asesor_3' => $params['hasil_konfirmasi_asesor_3'],
+                    'lead_asesor' => $params['lead_asesor'],
+                    'hasil_konfirmasi_lead_asesor' => $params['hasil_konfirmasi_lead_asesor'],
+                    'manager' => $params['manager'],
+                    'hasil_konfirmasi_manager' => $params['hasil_konfirmasi_manager'],
+                    'tenaga_ahli' => $params['tenaga_ahli'],
+                    'hasil_konfirmasi_tenaga_ahli' => $params['hasil_konfirmasi_tenaga_ahli'],
+                    'koordinator_pelatihan' => $params['koordinator_pelatihan'],
+                    'hasil_konfirmasi_koordinator_pelatihan' => $params['hasil_konfirmasi_koordinator_pelatihan'],
+                    'anggota_asosiasi' => $params['anggota_asosiasi'],
+                    'hasil_konfirmasi_anggota_asosiasi' => $params['hasil_konfirmasi_anggota_asosiasi'],
+                    'acuan_pembanding' => $params['acuan_pembanding'],
+                    'dokumen_terkait' => $params['dokumen_terkait'],
+                    'keterampilan_komunikasi' => $params['keterampilan_komunikasi'],
+                ]);
+
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->id_va = $va->id;
+                $foundUjiKomp->persentase = $progress + 6.6;
+                $foundUjiKomp->save();
+
+                $aspek = $params['aspek'];
+                for ($i = 0; $i < count($aspek); $i++) {
+                    $vaAspek = UjiKompVaAspek::create([
+                        'id_uji_komp' => $foundUjiKomp->id,
+                        'id_trx_va' => $va->id,
+                        'item' => $aspek[$i]['item'],
+                        'aturan_v' => $aspek[$i]['aturanV'],
+                        'aturan_a' => $aspek[$i]['aturanA'],
+                        'aturan_t' => $aspek[$i]['aturanT'],
+                        'aturan_m' => $aspek[$i]['aturanM'],
+                        'prinsip_v' => $aspek[$i]['prinsipV'],
+                        'prinsip_r' => $aspek[$i]['prinsipR'],
+                        'prinsip_f' => $aspek[$i]['prinsipF'],
+                        'prinsip_f_2' => $aspek[$i]['prinsipF2'],
+                    ]);
+                }
+
+                $temuan = $params['temuan'];
+                for ($x = 0; $x < count($temuan); $x++) {
+                    $vaTemuan = UjiKompVaTemuan::create([
+                        'id_uji_komp' => $foundUjiKomp->id,
+                        'id_trx_va' => $va->id,
+                        'temuan' => $temuan[$x]['temuan'],
+                        'rekomendasi' => $temuan[$x]['rekomendasi'],
+                    ]);
+                }
+
+                $rencana = $params['rencana'];
+                for ($y = 0; $y < count($rencana); $y++) {
+                    $vaRencana = UjiKompVaRencana::create([
+                        'id_uji_komp' => $foundUjiKomp->id,
+                        'id_trx_va' => $va->id,
+                        'kegiatan' => $rencana[$y]['kegiatan'],
+                        'waktu' => $rencana[$y]['waktu'],
+                        'penanggung_jawab' => $rencana[$y]['penanggungJawab'],
+                    ]);
+                }
+
+                DB::commit();
+                return response()->json(['message' => "Sukses membuat FR VA"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
+    private function getValidationRulesVa($isNew = true)
+    {
+        return [
+            'id_uji_komp' => 'required',
+        ];
     }
 
     private function getValidationRules($isNew = true)

@@ -14,12 +14,12 @@ import idLocale from './id';
 Vue.use(VueI18n);
 
 const messages = {
+  id: {
+    ...idLocale,
+  },
   en: {
     ...enLocale,
     ...elementEnLocale,
-  },
-  id: {
-    ...idLocale,
   },
   ru: {
     ...ruLocale,

@@ -71,14 +71,29 @@ class JadwalController extends BaseController
         $searchParams = $request->all();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
+        $visibility = Arr::get($searchParams, 'visibility', 0);
+        $user_id = Arr::get($searchParams, 'user_id', '');
+        $role = Arr::get($searchParams, 'role', '');
+        $foundUser = User::where('id',$user_id)->first();
 
         $query = Jadwal::query();
         $query->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema');
         $query->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk');
-        $query->join('rel_jadwal_has_asesor as e', 'e.id_jadwal', '=', 'trx_jadwal_asesmen.id');
         $query->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
-        ->groupBy('trx_jadwal_asesmen.id')
+        ->orderBy('trx_jadwal_asesmen.created_at', 'desc')
         ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor');
+
+        if ($visibility === 0) {
+            $query->where('trx_jadwal_asesmen.visibility', 0);
+        }
+
+        if ($role === 'user') {
+            $query->where('f.email', $foundUser->email);
+        }
+        if ($role === 'assesor') {
+            // $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk')
+            $query->where('f.email', $foundUser->email);
+        }
 
         if (!empty($keyword)) {
             $query->where('b.skema_sertifikasi', 'LIKE', '%' . $keyword . '%');
@@ -106,6 +121,9 @@ class JadwalController extends BaseController
         } else {
             DB::beginTransaction();
             try {
+                $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $password = substr(str_shuffle(str_repeat($pool, 5)), 0, 6);
+
                 $params = $request->all();
                 $jadwal = Jadwal::create([
                     'id_skema' => $params['id_skema'],
@@ -115,6 +133,7 @@ class JadwalController extends BaseController
                     'jadwal' => $params['jadwal'],
                     'start_date' => $params['start_date'],
                     'end_date' => $params['end_date'],
+                    'password_asesi' => $password,
                 ]);
 
                 // // create relation asesor
@@ -178,6 +197,31 @@ class JadwalController extends BaseController
                 $jadwal->jadwal = $request->get('jadwal');
                 $jadwal->start_date = $request->get('start_date');
                 $jadwal->end_date = $request->get('end_date');
+                $jadwal->save();
+
+                DB::commit();
+                return new MasterResource($jadwal);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+            }
+        }
+    }
+
+    public function hideShow(Request $request, Jadwal $jadwal)
+    {
+        if ($jadwal === null) {
+            return response()->json(['error' => 'Jadwal not found'], 404);
+        }
+
+        $validator = Validator::make($request->all(), $this->getValidationRules(false));
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+
+                $jadwal->visibility = $request->get('visibility');
                 $jadwal->save();
 
                 DB::commit();

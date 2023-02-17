@@ -83,17 +83,23 @@
         width="100px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.start_date }}</span>
+          <span>{{ scope.row.start_date | formatDate }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" :label="$t('jadwal.table.end')" width="100px">
         <template slot-scope="scope">
-          <span>{{ scope.row.end_date }}</span>
+          <span>{{ scope.row.end_date | formatDate }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="120">
+      <el-table-column align="center" :label="$t('jadwal.table.password')" width="100px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.password_asesi }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-permission="['manage user']" align="center" label="Actions" width="120">
         <template slot-scope="scope">
           <el-button-group>
             <el-tooltip
@@ -194,6 +200,8 @@
           <el-form-item :label="$t('jadwal.table.start')" prop="start_date">
             <el-date-picker
               v-model="newData.start_date"
+              format="dd/MM/yyyy"
+              value-format="yyyy-MM-dd"
               type="date"
               placeholder="Pick a day"
             />
@@ -209,6 +217,8 @@
           <el-form-item :label="$t('jadwal.table.end')" prop="end_date">
             <el-date-picker
               v-model="newData.end_date"
+              format="dd/MM/yyyy"
+              value-format="yyyy-MM-dd"
               type="date"
               placeholder="Pick a day"
             />
@@ -294,6 +304,8 @@
           <el-form-item :label="$t('jadwal.table.start')" prop="start_date">
             <el-date-picker
               v-model="editedData.start_date"
+              format="dd/MM/yyyy"
+              value-format="yyyy-MM-dd"
               type="date"
               placeholder="Pick a day"
             />
@@ -309,6 +321,8 @@
           <el-form-item :label="$t('jadwal.table.end')" prop="end_date">
             <el-date-picker
               v-model="editedData.end_date"
+              format="dd/MM/yyyy"
+              value-format="yyyy-MM-dd"
               type="date"
               placeholder="Pick a day"
             />
@@ -383,6 +397,7 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
+        user_id: null,
       },
       rules: {
         kode_perangkat: [
@@ -410,13 +425,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['username', 'userId']),
+    ...mapGetters([
+      'username',
+      'userId',
+      'roles',
+      'user',
+    ]),
   },
   created() {
     this.getList();
   },
   methods: {
     async getList() {
+      this.query.role = this.roles[0];
+      this.query.user_id = this.userId;
       const { limit, page } = this.query;
       this.loading = true;
       // get data skema

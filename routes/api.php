@@ -81,6 +81,7 @@ Route::namespace('Api')->group(function() {
         Route::post('uji-komp-ak-02', 'UjiKompController@storeAk02');
         Route::post('uji-komp-ak-04', 'UjiKompController@storeAk04');
         Route::post('uji-komp-ak-05', 'UjiKompController@storeAk05');
+        Route::post('uji-komp-va', 'UjiKompController@storeVa');
         // Jadwal Routes
         Route::apiResource('jadwal', 'JadwalController');
 

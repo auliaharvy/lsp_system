@@ -1,5 +1,6 @@
 // set function parseTime,formatTime to filter
 export { parseTime, formatTime } from '@/utils';
+import moment from 'moment';
 
 export function pluralize(time, label) {
   if (time === 1) {
@@ -43,4 +44,12 @@ export function toThousandFilter(num) {
 
 export function uppercaseFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function formatDate(value) {
+  var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+  var d = new Date(value);
+  var namaHari = arrHari[d.getDay() - 1];
+  var date = moment(value).format('DD-MM-YYYY');
+  return namaHari + ', ' + date;
 }

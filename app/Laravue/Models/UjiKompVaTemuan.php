@@ -1,6 +1,6 @@
 <?php
 /**
- * File Jadwal.php
+ * File UjiKompVaTemuan.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System
@@ -12,13 +12,14 @@ use App\Laravue\Acl;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Laravue\Models\SkemaElemenUnit;
 
 /**
  * Class Skema
  *
  * @package App\Laravue\Models
  */
-class Jadwal extends Model
+class UjiKompVaTemuan extends Model
 {
     public $guard_name = 'api';
 
@@ -28,6 +29,6 @@ class Jadwal extends Model
      * @param $query
      * @return Builder
      */
-    protected $table = "trx_jadwal_asesmen";
-    protected $fillable = ['id_skema','persyaratan', 'visibility', 'password_asesi', 'id_tuk', 'id_asesor', 'jadwal', 'start_date', 'end_date'];
+    protected $table = "trx_uji_komp_va_temuan";
+    protected $fillable = ['id_uji_komp', 'id_trx_va', 'temuan', 'rekomendasi'];
 }

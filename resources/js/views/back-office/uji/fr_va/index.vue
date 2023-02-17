@@ -26,10 +26,10 @@
           <el-col :sm="24" :md="24" :lg="12">
             <el-form ref="form" :model="dataTrx" label-width="120px">
               <el-form-item label="Tim Validas 1">
-                <el-input v-model="dataTrx.timValidasi1" />
+                <el-input v-model="dataTrx.tim_validasi_1" />
               </el-form-item>
               <el-form-item label="Tim Validasi 2">
-                <el-input v-model="dataTrx.timValidasi2" />
+                <el-input v-model="dataTrx.tim_validasi_2" />
               </el-form-item>
             </el-form>
           </el-col>
@@ -65,7 +65,7 @@
             <el-form ref="form" :model="dataTrx" label-width="200px">
               <el-form-item label="Tujuan dan fokus validasi">
                 <el-select
-                  v-model="dataTrx.tujuanValidasi"
+                  v-model="dataTrx.tujuan_dan_fokus_validasi"
                   filterable
                   clearable
                   class="filter-item full"
@@ -82,7 +82,7 @@
               </el-form-item>
               <el-form-item label="Konteks validasi">
                 <el-select
-                  v-model="dataTrx.konteksValidasi"
+                  v-model="dataTrx.konteks_validasi"
                   filterable
                   clearable
                   class="filter-item full"
@@ -99,7 +99,7 @@
               </el-form-item>
               <el-form-item label="Pendekatan validasi">
                 <el-select
-                  v-model="dataTrx.pendekatanValidasi"
+                  v-model="dataTrx.pendekatan_validasi"
                   filterable
                   clearable
                   class="filter-item full"
@@ -155,48 +155,76 @@
                   <template v-if="scope.row.no === 1">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item label="1">
-                        <el-input v-model="dataTrx.prosesAsesor1" />
+                        <el-select v-model="dataTrx.asesor_1" filterable placeholder="Select" style="width: 100%">
+                          <el-option
+                            v-for="item in listAsesor"
+                            :key="item.id"
+                            :label="item.nama"
+                            :value="item.id"
+                          />
+                        </el-select>
                       </el-form-item>
                       <el-form-item label="2">
-                        <el-input v-model="dataTrx.prosesAsesor2" />
+                        <el-select v-model="dataTrx.asesor_2" filterable placeholder="Select" style="width: 100%">
+                          <el-option
+                            v-for="item in listAsesor"
+                            :key="item.id"
+                            :label="item.nama"
+                            :value="item.id"
+                          />
+                        </el-select>
                       </el-form-item>
                       <el-form-item label="3">
-                        <el-input v-model="dataTrx.prosesAsesor3" />
+                        <el-select v-model="dataTrx.asesor_3" filterable placeholder="Select" style="width: 100%">
+                          <el-option
+                            v-for="item in listAsesor"
+                            :key="item.id"
+                            :label="item.nama"
+                            :value="item.id"
+                          />
+                        </el-select>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 2">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesLeadAsesor" />
+                        <el-select v-model="dataTrx.lead_asesor" filterable placeholder="Select" style="width: 100%">
+                          <el-option
+                            v-for="item in listAsesor"
+                            :key="item.id"
+                            :label="item.nama"
+                            :value="item.id"
+                          />
+                        </el-select>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 3">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesManager" />
+                        <el-input v-model="dataTrx.manager" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 4">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesTenagaAhli" />
+                        <el-input v-model="dataTrx.tenaga_ahli" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 5">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesKoordinator" />
+                        <el-input v-model="dataTrx.koordinator_pelatihan" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 6">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesAsosiasi" />
+                        <el-input v-model="dataTrx.anggota_asosiasi" />
                       </el-form-item>
                     </el-form>
                   </template>
@@ -207,48 +235,48 @@
                   <template v-if="scope.row.no === 1">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item label="1">
-                        <el-input v-model="dataTrx.prosesHasilAsesor1" />
+                        <el-input v-model="dataTrx.hasil_konfirmasi_asesor_1" />
                       </el-form-item>
                       <el-form-item label="2">
-                        <el-input v-model="dataTrx.prosesHasilAsesor2" />
+                        <el-input v-model="dataTrx.hasil_konfirmasi_asesor_2" />
                       </el-form-item>
                       <el-form-item label="3">
-                        <el-input v-model="dataTrx.prosesHasilAsesor3" />
+                        <el-input v-model="dataTrx.hasil_konfirmasi_asesor_3" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 2">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesHasilLeadAsesor" />
+                        <el-input v-model="dataTrx.hasil_konfirmasi_lead_asesor" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 3">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesHasilManager" />
+                        <el-input v-model="dataTrx.hasil_konfirmasi_manager" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 4">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesHasilTenagaAhli" />
+                        <el-input v-model="dataTrx.hasil_konfirmasi_tenaga_ahli" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 5">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesHasilKoordinator" />
+                        <el-input v-model="dataTrx.hasil_konfirmasi_koordinator_pelatihan" />
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 6">
                     <el-form ref="form" :model="dataTrx" label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.prosesHasilAsosiasi" />
+                        <el-input v-model="dataTrx.hasil_konfirmasi_anggota_asosiasi" />
                       </el-form-item>
                     </el-form>
                   </template>
@@ -263,7 +291,7 @@
             <el-form ref="form" :model="dataTrx" label-width="200px">
               <el-form-item label="Acuan Pembanding">
                 <el-select
-                  v-model="dataTrx.acuanPembanding"
+                  v-model="dataTrx.acuan_pembanding"
                   filterable
                   clearable
                   class="filter-item full"
@@ -286,7 +314,7 @@
             <el-form ref="form" :model="dataTrx" label-width="200px">
               <el-form-item label="Dokumen Terkait dan Bahan - Bahan">
                 <el-select
-                  v-model="dataTrx.dokumenTerkait"
+                  v-model="dataTrx.dokumen_terkait"
                   filterable
                   clearable
                   class="filter-item full"
@@ -311,7 +339,7 @@
             <el-form ref="form" :model="dataTrx" label-width="200px">
               <el-form-item label="Keterampilan Komunikasi">
                 <el-select
-                  v-model="dataTrx.keterampilanKomunikasi"
+                  v-model="dataTrx.keterampilan_komunikasi"
                   filterable
                   clearable
                   class="filter-item full"
@@ -475,7 +503,7 @@
         </el-row>
       </div>
     </el-main>
-    <el-button @click="generateReport">Submit</el-button>
+    <el-button @click="onSubmit">Submit</el-button>
   </el-container>
 </template>
 
@@ -489,6 +517,8 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const apl01Resource = new Resource('detail/apl-01');
+const vaResource = new Resource('uji-komp-va');
+const asesorResource = new Resource('assesor');
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export default {
@@ -505,6 +535,7 @@ export default {
       loading: false,
       listSkema: null,
       listTuk: null,
+      listAsesor: null,
       listJadwal: null,
       listKodeUnit: [],
       listJudulUnit: [],
@@ -574,6 +605,7 @@ export default {
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
+      this.getListAsesor();
       this.getListTuk();
       this.getListJadwal();
       this.getDate();
@@ -581,6 +613,10 @@ export default {
     this.getApl01();
   },
   methods: {
+    async getListAsesor() {
+      const { data } = await asesorResource.list();
+      this.listAsesor = data;
+    },
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
@@ -690,30 +726,32 @@ export default {
         }
       }
     },
-    // onSubmit() {
-    //   this.loading = true;
-    //   this.form.detail_ia_01 = this.listKuk;
-    //   this.form.user_id = this.userId;
-    //   this.form.id_uji_komp = this.$route.params.id_uji;
-    //   this.form.id_skema = this.$route.params.id_skema;
-    //   ia01Resource
-    //     .store(this.form)
-    //     .then(response => {
-    //       this.$message({
-    //         message: 'FR IA 01 has been created successfully.',
-    //         type: 'success',
-    //         duration: 5 * 1000,
-    //       });
-    //       this.$router.push({ name: 'uji-komp-list' });
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //       this.loading = false;
-    //     })
-    //     .finally(() => {
-    //       this.loading = false;
-    //     });
-    // },
+    onSubmit() {
+      this.loading = true;
+      this.dataTrx.aspek = this.masterData.aspekAspekKegiatan;
+      this.dataTrx.temuan = this.listTemuanValidasi;
+      this.dataTrx.rencana = this.listRencanaImplementasi;
+      this.dataTrx.user_id = this.userId;
+      this.dataTrx.id_uji_komp = this.$route.params.id_uji;
+      this.dataTrx.id_skema = this.$route.params.id_skema;
+      vaResource
+        .store(this.dataTrx)
+        .then(response => {
+          this.$message({
+            message: 'FR VA has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     onResize() {
       const width = document.body.clientWidth;
       this.isWide = width > 800;
