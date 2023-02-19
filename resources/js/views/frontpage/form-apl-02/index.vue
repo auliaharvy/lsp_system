@@ -24,12 +24,13 @@
               clearable
               class="filter-item full"
               :placeholder="$t('jadwal.table.jadwal')"
+              style="width: 100%"
               @change="onJadwalSelect()"
             >
               <el-option
                 v-for="item in listJadwal"
                 :key="item.id"
-                :label="item.jadwal + ' / ' + item.nama_asesor + ' / ' + item.start_date + ' - ' + item.nama_skema"
+                :label="item.jadwal + ' / ' + item.nama_asesor + ' / ' + item.start_date"
                 :value="item.id"
               />
             </el-select>
@@ -41,6 +42,7 @@
               disabled
               class="filter-item full"
               :placeholder="$t('skema.table.skema')"
+              style="width: 100%"
             >
               <el-option
                 v-for="item in listSkema"
@@ -58,6 +60,7 @@
               disabled
               class="filter-item full"
               placeholder="Pilih TUK"
+              style="width: 100%"
             >
               <el-option
                 v-for="item in listTuk"

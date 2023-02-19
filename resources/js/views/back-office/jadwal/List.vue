@@ -105,6 +105,20 @@
             <el-tooltip
               class="item"
               effect="dark"
+              content="Download Surat Tugas"
+              placement="top-end"
+            >
+              <el-button
+                v-permission="['manage user']"
+                type="primary"
+                size="small"
+                icon="el-icon-printer"
+                @click="handlePrint(scope.row.id, scope.row)"
+              />
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
               content="Update"
               placement="top-end"
             >
@@ -365,6 +379,7 @@ const skemaResource = new Resource('skema');
 const tukResource = new Resource('tuk');
 const perangkatResource = new Resource('perangkat-asesmen');
 const asesorResource = new Resource('assesor');
+const printResource = new Resource('print-surat-tugas');
 
 export default {
   name: 'JadwalList',
@@ -461,6 +476,34 @@ export default {
       });
       this.total = meta.total;
       this.loading = false;
+    },
+    async handlePrint(id, row) {
+      this.query.idJadwal = id;
+      this.loading = true;
+      // get data skema
+      await printResource.download(this.query)
+        .then((response) => {
+          console.log(response);
+          const url = window.URL.createObjectURL(new Blob([response]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', row.nama_asesor + '-' + row.jadwal + '.pdf');
+          document.body.appendChild(link);
+          link.click();
+          // window.open(link);
+          // const objectUrl = window.URL.createObjectURL(new Blob(response, { type: 'application/pdf' }));
+          // window.open(objectUrl);
+          // return response.blob();
+        })
+        .catch((ex) => {
+          this.$message({
+            type: 'error',
+            message: 'Terjadi Error, Silakan ulang beberapa saat lagi',
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     handleFilter() {
       this.query.page = 1;

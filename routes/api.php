@@ -19,6 +19,8 @@ use \App\Laravue\Acl;
 */
 
 Route::namespace('Api')->group(function() {
+    // print
+    Route::get('print-surat-tugas', 'PrintController@index');
     // Jadwal Routes
     Route::apiResource('jadwaltest', 'JadwalController');
     Route::apiResource('tamatan', 'TamatanController');

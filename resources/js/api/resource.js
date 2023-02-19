@@ -40,6 +40,15 @@ class Resource {
       method: 'delete',
     });
   }
+  download(query) {
+    return request({
+      url: '/' + this.uri,
+      method: 'get',
+      params: query,
+      responseType: 'blob',
+      Accept: 'application/pdf',
+    });
+  }
 }
 
 export { Resource as default };
