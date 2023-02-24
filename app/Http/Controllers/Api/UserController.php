@@ -123,20 +123,39 @@ class UserController extends BaseController
      * @param User    $user
      * @return UserResource|\Illuminate\Http\JsonResponse
      */
+    public function changePassword(Request $request, User $user)
+    {
+        if ($user === null) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        $params = $request->all();
+        $newPassword = Hash::make($params['newPassword']);
+
+        $validator = Validator::make($request->all(), $this->getValidationRulesPassword());
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            $id = $request->get('userId');
+            $found = User::where('id', $id)->first();
+
+            $user->password = $newPassword;
+            $user->save();
+            return new UserResource($user);
+        }
+    }
+
     public function update(Request $request, User $user)
     {
         if ($user === null) {
             return response()->json(['error' => 'User not found'], 404);
         }
-        if ($user->isAdmin()) {
-            return response()->json(['error' => 'Admin can not be modified'], 403);
-        }
 
         $currentUser = Auth::user();
-        if (!$currentUser->isAdmin()
-            && $currentUser->id !== $user->id
-            && !$currentUser->hasPermission(\App\Laravue\Acl::PERMISSION_USER_MANAGE)
-        ) {
+        if ($currentUser->id !== $user->id) {
+            return response()->json(['error' => 'Permission denied'], 403);
+        }
+
+        if ($currentUser->id !== $user->id) {
             return response()->json(['error' => 'Permission denied'], 403);
         }
 
@@ -241,6 +260,13 @@ class UserController extends BaseController
                 'required',
                 'array'
             ],
+        ];
+    }
+
+    private function getValidationRulesPassword()
+    {
+        return [
+            'newPassword' => 'required',
         ];
     }
 }

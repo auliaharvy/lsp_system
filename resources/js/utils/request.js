@@ -40,6 +40,8 @@ service.interceptors.response.use(
       message = error.response.data.errors;
     } else if (error.response.data && error.response.data.error) {
       message = error.response.data.error;
+    } else if (error.errors) {
+      message = error.errors;
     }
 
     MessageBox.confirm(error.response.data.message,

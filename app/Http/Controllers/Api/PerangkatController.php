@@ -359,6 +359,64 @@ class PerangkatController extends BaseController
         }
     }
 
+    public function deleteIa02(Request $request)
+    {
+        try {
+            $params = $request->all();
+            $file = $params['file'];
+            File::delete($file);
+            MstFrIa02::where('id', $params['id'])->delete();
+            return response()->json(['message' => "Success Delete IA 02"], 201);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 403);
+        }
+    }
+
+    public function deleteIa03(Request $request)
+    {
+        try {
+            $params = $request->all();
+            MstFrIa03::where('id', $params['id'])->delete();
+            return response()->json(['message' => "Success Delete IA 03"], 201);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 403);
+        }
+    }
+
+    public function deleteIa05(Request $request)
+    {
+        try {
+            $params = $request->all();
+            MstFrIa05::where('id', $params['id_perangkat'])->delete();
+            MstFrIa05Detail::where('id_mst_ia_05', $params['id_perangkat'])->delete();
+            return response()->json(['message' => "Success Delete IA 05"], 201);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 403);
+        }
+    }
+
+    public function deleteIa06(Request $request)
+    {
+        try {
+            $params = $request->all();
+            MstFrIa06::where('id', $params['id'])->delete();
+            return response()->json(['message' => "Success Delete IA 06"], 201);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 403);
+        }
+    }
+
+    public function deleteIa07(Request $request)
+    {
+        try {
+            $params = $request->all();
+            MstFrIa07::where('id', $params['id'])->delete();
+            return response()->json(['message' => "Success Delete IA 07"], 201);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 403);
+        }
+    }
+
     private function getValidationRulesIa02($isNew = true)
     {
         return [

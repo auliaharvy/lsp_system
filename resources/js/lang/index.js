@@ -10,12 +10,14 @@ import ruLocale from './ru';
 import zhLocale from './zh';
 import viLocale from './vi';
 import idLocale from './id';
+import elementIdLocale from './id';
 
 Vue.use(VueI18n);
 
 const messages = {
   id: {
     ...idLocale,
+    ...elementIdLocale,
   },
   en: {
     ...enLocale,
@@ -46,7 +48,7 @@ export function getLanguage() {
   const locales = Object.keys(messages);
   for (const locale of locales) {
     if (language.indexOf(locale) > -1) {
-      return locale;
+      return 'id';
     }
   }
   return 'id';

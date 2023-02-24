@@ -84,14 +84,15 @@
           <el-form-item v-if="!$route.params.id_ia_02" label="Upload File Jawaban" prop="file">
             <input type="file" @change="handleUploadSuccess">
           </el-form-item>
-          <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
+          <el-form-item v-if="role !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor">
             <el-radio v-model="dataTrx.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="dataTrx.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
         </el-form>
       </div>
       <br>
-      <el-button @click="onSubmit">Submit</el-button>
+      <el-button v-if="!$route.params.id_ia_02" @click="onSubmit">Submit</el-button>
+      <el-button v-if="$route.params.id_ia_02 && role !== 'user'" @click="onSubmitAsesor">Submit Asesor</el-button>
     </el-main>
   </el-container>
 </template>
@@ -104,6 +105,7 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const ia02Resource = new Resource('uji-komp-ia-02');
+const ia02NilaiResource = new Resource('uji-komp-ia-02-nilai');
 const mstIa02Resource = new Resource('mst-ia02-get');
 const ia02Detail = new Resource('detail/ia-02');
 
@@ -112,6 +114,7 @@ export default {
   data() {
     return {
       radio1: 'Kompeten',
+      role: null,
       kompeten: null,
       loading: false,
       listSkema: null,
@@ -174,6 +177,7 @@ export default {
   computed: {
     ...mapGetters([
       'userId',
+      'roles',
     ]),
   },
   beforeDestroy() {
@@ -195,6 +199,7 @@ export default {
   },
   methods: {
     async getIa02() {
+      this.role = this.roles[0];
       if (this.$route.params.id_ia_02 !== null) {
         this.loading = true;
         const data = await ia02Detail.get(this.$route.params.id_ia_02);
@@ -248,11 +253,10 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
-      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = asesor[0].nama_asesor;
+      this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
     },
@@ -295,6 +299,7 @@ export default {
     onSubmit() {
       this.loading = true;
       const uploadData = new FormData();
+      uploadData.append('role', this.roles[0]);
       uploadData.append('id_skema', this.$route.params.id_skema);
       uploadData.append('id_uji_komp', this.$route.params.id_uji);
       uploadData.append('user_id', this.userId);
@@ -302,6 +307,33 @@ export default {
       uploadData.append('rekomendasi_asesor', this.dataTrx.rekomendasi_asesor);
 
       ia02Resource
+        .store(uploadData)
+        .then(response => {
+          this.$message({
+            message: 'FR IA 02 has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    onSubmitAsesor() {
+      this.loading = true;
+      const uploadData = new FormData();
+      uploadData.append('role', this.roles[0]);
+      uploadData.append('id_ia_02', this.$route.params.id_ia_02);
+      uploadData.append('id_uji_komp', this.$route.params.id_uji);
+      uploadData.append('user_id', this.userId);
+      uploadData.append('rekomendasi_asesor', this.dataTrx.rekomendasi_asesor);
+
+      ia02NilaiResource
         .store(uploadData)
         .then(response => {
           this.$message({

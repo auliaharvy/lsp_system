@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <h3>Perangkat IA 02</h3>
+      <h3>Perangkat IA 02 TUGAS PRAKTIK DEMONSTRASI</h3>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>
@@ -29,8 +29,11 @@
       <el-table-column align="center" label="Actions" width="120">
         <template slot-scope="scope">
           <el-button-group>
-            <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
+            <!-- <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
               <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row)" />
+            </el-tooltip> -->
+            <el-tooltip class="item" effect="dark" content="Delete" placement="top-end">
+              <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="Liat File" placement="top-end">
               <a :href="'/' + scope.row.file" target="_blank">
@@ -74,13 +77,12 @@
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
 
-const userResource = new UserResource();
 const listResource = new Resource('mst-ia02-get');
+const deleteResource = new Resource('del-mst-ia-02');
 const postResource = new Resource('new-mst-ia-02');
 const skemaResource = new Resource('skema');
 
@@ -139,7 +141,6 @@ export default {
   },
   created() {
     this.getList();
-    this.getListKategori();
   },
   methods: {
     async getList() {
@@ -179,13 +180,14 @@ export default {
         this.$refs['newForm'].clearValidate();
       });
     },
-    handleDelete(id, name) {
-      this.$confirm('This will permanently delete user ' + name + '. Continue?', 'Warning', {
+    handleDelete(data) {
+      var deleteData = data;
+      this.$confirm('This will permanently delete IA 02, Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning',
       }).then(() => {
-        userResource.destroy(id).then(response => {
+        deleteResource.store(deleteData).then(response => {
           this.$message({
             type: 'success',
             message: 'Delete completed',

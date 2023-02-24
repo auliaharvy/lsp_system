@@ -735,7 +735,7 @@ class UjiKompController extends BaseController
                 $file = 'uploads/ia-02/jawaban/'.$nama_file;
 
                 $ia02 = UjiKompIa02::create([
-                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
+                    'rekomendasi_asesor' => 'belum penilaian',
                     'file' =>  $file,
                     'submit_by' => $params['user_id'],
                 ]);
@@ -747,7 +747,37 @@ class UjiKompController extends BaseController
 
 
                 DB::commit();
-                return response()->json(['message' => "Sukses membuat FR IA 01"], 200);
+                return response()->json(['message' => "Sukses membuat FR IA 02"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+
+    public function penilaianIa02(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesIa02(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $id_ia_02 = $request->get('id_ia_02');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            $foundIa02 = UjiKompIa02::where('id', $id_ia_02)->first();
+            try {
+                $params = $request->all();
+                $foundIa02->rekomendasi_asesor = $params['rekomendasi_asesor'];
+                $foundIa02->save();
+
+                DB::commit();
+                return response()->json(['message' => "Sukses menilai FR IA 02"], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
@@ -778,7 +808,7 @@ class UjiKompController extends BaseController
             try {
                 $params = $request->all();
                 $ia03 = UjiKompIa03::create([
-                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
+                    'rekomendasi_asesor' => 'belum penilaian',
                     'umpan_balik' => $params['umpanBalikAsesi'],
                     'submit_by' => $params['user_id'],
                 ]);
@@ -795,7 +825,7 @@ class UjiKompController extends BaseController
                         'id_ia_03' => $ia03->id,
                         'id_perangkat_ia_03' => $elemen[$i]['id'],
                         'tanggapan' => $elemen[$i]['tanggapan'],
-                        'rekomendasi' => $elemen[$i]['is_kompeten'],
+                        'rekomendasi' => 'belum penilaian',
                     ]);
                 }
 

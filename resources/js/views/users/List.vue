@@ -94,7 +94,10 @@
       <div v-loading="userCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
           <el-form-item :label="$t('user.role')" prop="role">
-            <el-select v-model="newUser.role" class="filter-item" placeholder="Please select role">
+            <el-select v-if="userId !== 1" v-model="newUser.role" class="filter-item" placeholder="Please select role">
+              <el-option v-for="item in nonAdminRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
+            </el-select>
+            <el-select v-else v-model="newUser.role" class="filter-item" placeholder="Please select role">
               <el-option v-for="item in nonAdminRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
             </el-select>
           </el-form-item>
@@ -125,6 +128,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
@@ -159,8 +163,8 @@ export default {
         keyword: '',
         role: '',
       },
-      roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
-      nonAdminRoles: ['editor', 'user', 'visitor'],
+      roles: ['admin', 'assesor', 'user'],
+      nonAdminRoles: ['assesor', 'user'],
       newUser: {},
       dialogFormVisible: false,
       dialogPermissionVisible: false,
@@ -192,6 +196,10 @@ export default {
     };
   },
   computed: {
+    ...mapGetters([
+      'userId',
+      'roles',
+    ]),
     normalizedMenuPermissions() {
       let tmp = [];
       this.currentUser.permissions.role.forEach(permission => {

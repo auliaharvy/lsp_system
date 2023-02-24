@@ -105,7 +105,7 @@
               <el-input v-model="scope.row.tanggapan" type="textarea" :rows="3" placeholder="Isi Tanggapan" label="Tanggapan" />
             </template>
           </el-table-column>
-          <el-table-column align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="roles[0] !== 'user'" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
@@ -124,11 +124,11 @@
           label-width="250px"
           label-position="left"
         >
-          <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
+          <el-form-item v-if="roles[0] !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor">
             <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
-          <el-form-item label="Umpan balik untuk asesi" prop="feedback">
+          <el-form-item v-if="roles[0] !== 'user'" label="Umpan balik untuk asesi" prop="feedback">
             <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
           </el-form-item>
         </el-form>
@@ -218,6 +218,7 @@ export default {
   computed: {
     ...mapGetters([
       'userId',
+      'roles',
     ]),
   },
   beforeDestroy() {

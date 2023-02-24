@@ -16,11 +16,9 @@
     </template>
     <template v-if="isLogged">
       <el-menu-item style="float: right">
-        <el-dropdown
-          class="avatar-container right-menu-item hover-effect"
-          trigger="click"
-        >
+        <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
           <div class="avatar-wrapper">
+            <img src="@/assets/login/logo.png" style="width: 40px; height: 40px;">
             <i class="el-icon-caret-bottom" />
           </div>
           <el-dropdown-menu slot="dropdown">
@@ -29,10 +27,13 @@
                 {{ $t('navbar.dashboard') }}
               </el-dropdown-item>
             </router-link>
+            <router-link v-show="userId !== null" :to="`/profile/edit`">
+              <el-dropdown-item>
+                {{ $t('navbar.profile') }}
+              </el-dropdown-item>
+            </router-link>
             <el-dropdown-item divided>
-              <span style="display: block" @click="logout">{{
-                $t('navbar.logOut')
-              }}</span>
+              <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

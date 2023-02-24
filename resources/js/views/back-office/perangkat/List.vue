@@ -1,22 +1,26 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-select
-        v-model="idSkema"
-        filterable
-        clearable
-        class="filter-item full"
-        style="width:50%"
-        :placeholder="$t('jadwal.table.jadwal')"
-        @change="getList"
-      >
-        <el-option
-          v-for="item in listSkema"
-          :key="item.id"
-          :label="item.skema_sertifikasi"
-          :value="item.id"
-        />
-      </el-select>
+      <el-form ref="newForm" :rules="rules" :model="idSkema" label-position="top" label-width="150px" style="max-width: 100%;">
+        <el-form-item label="Pilih Skema" prop="unit">
+          <el-select
+            v-model="idSkema"
+            filterable
+            clearable
+            class="filter-item full"
+            style="width:100%"
+            :placeholder="$t('skema.table.skema')"
+            @change="getList"
+          >
+            <el-option
+              v-for="item in listSkema"
+              :key="item.id"
+              :label="item.skema_sertifikasi"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
     </div>
     <div v-if="idSkema">
       <Ia02 :id-skema="idSkema" :user-id="userId" />
@@ -51,7 +55,7 @@ export default {
   data() {
     return {
       list: null,
-      idSkema: 36,
+      idSkema: null,
       listSkema: null,
       total: 0,
       loading: true,
@@ -70,7 +74,7 @@ export default {
       },
       query: {
         page: 1,
-        limit: 15,
+        limit: 1000,
         keyword: '',
         role: '',
       },
@@ -97,6 +101,7 @@ export default {
       // get data skema
       const dataSkema = await skemaResource.list();
       this.listSkema = dataSkema.data;
+      this.idSkema = this.listSkema[0].id;
       // get data perangkat / list table
       const { data, meta } = await perangkatAsesmenResource.list(this.query);
       this.list = data;

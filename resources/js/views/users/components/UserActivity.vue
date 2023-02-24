@@ -1,153 +1,6 @@
 <template>
   <el-card v-if="user.name">
     <el-tabs v-model="activeActivity" @tab-click="handleClick">
-      <el-tab-pane label="Activity" name="first">
-        <div class="user-activity">
-          <div class="post">
-            <div class="user-block">
-              <img
-                class="img-circle"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDkaQO69Fro8SZLTVZQ75JH2R0T-sn5yIA_lKGwvvgQ0R0BoQtUQ"
-                alt="user image"
-              >
-              <span class="username text-muted">
-                <a href="#">Iron Man</a>
-                <a href="#" class="pull-right btn-box-tool">
-                  <i class="fa fa-times" />
-                </a>
-              </span>
-              <span class="description">Shared publicly - 7:30 PM today</span>
-            </div>
-            <p>
-              Lorem ipsum represents a long-held tradition for designers,
-              typographers and the like. Some people hate it and argue for
-              its demise, but others ignore the hate as they create awesome
-              tools to help create filler text for everyone from bacon lovers
-              to Charlie Sheen fans.
-            </p>
-            <ul class="list-inline">
-              <li>
-                <a href="#" class="link-black text-sm">
-                  <i class="el-icon-share" /> Share
-                </a>
-              </li>
-              <li>
-                <a href="#" class="link-black text-sm">
-                  <svg-icon icon-class="like" />Like
-                </a>
-              </li>
-              <li class="pull-right">
-                <a href="#" class="link-black text-sm">
-                  <svg-icon icon-class="comment" />Comments
-                  (5)
-                </a>
-              </li>
-            </ul>
-            <el-input placeholder="Type a comment" />
-          </div>
-          <div class="post">
-            <div class="user-block">
-              <img
-                class="img-circle"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMMN-8f9CQQ3MKJpboBJIqaiJ2Wus2Tf4w_vx9STtalxrY3qGJ"
-                alt="user image"
-              >
-              <span class="username text-muted">
-                <a href="#">Captain American</a>
-                <a href="#" class="pull-right btn-box-tool">
-                  <i class="fa fa-times" />
-                </a>
-              </span>
-              <span class="description">Sent you a message - yesterday</span>
-            </div>
-            <p>
-              Lorem ipsum represents a long-held tradition for designers,
-              typographers and the like. Some people hate it and argue for
-              its demise, but others ignore the hate as they create awesome
-              tools to help create filler text for everyone from bacon lovers
-              to Charlie Sheen fans.
-            </p>
-            <el-input placeholder="Response">
-              <el-button slot="append">
-                Send
-              </el-button>
-            </el-input>
-          </div>
-          <div class="post">
-            <div class="user-block">
-              <img
-                class="img-circle img-bordered-sm"
-                src="https://cdn3.iconfinder.com/data/icons/movies-3/32/daredevil-superhero-marvel-comics-mutant-avatar-512.png"
-                alt="User Image"
-              >
-              <span class="username">
-                <a href="#">Daredevil</a>
-                <a href="#" class="pull-right btn-box-tool">
-                  <i class="fa fa-times" />
-                </a>
-              </span>
-              <span class="description">Posted 4 photos - 2 days ago</span>
-            </div>
-            <div class="user-images">
-              <el-carousel :interval="6000" type="card" height="200px">
-                <el-carousel-item v-for="item in carouselImages" :key="item">
-                  <img :src="item" class="image">
-                </el-carousel-item>
-              </el-carousel>
-            </div>
-            <ul class="list-inline">
-              <li>
-                <a href="#" class="link-black text-sm">
-                  <i class="el-icon-share" /> Share
-                </a>
-              </li>
-              <li>
-                <a href="#" class="link-black text-sm">
-                  <svg-icon icon-class="like" />Like
-                </a>
-              </li>
-              <li class="pull-right">
-                <a href="#" class="link-black text-sm">
-                  <svg-icon icon-class="comment" />Comments
-                  (5)
-                </a>
-              </li>
-            </ul>
-            <el-input placeholder="Type a comment" />
-          </div>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="Timeline" name="second">
-        <div class="block">
-          <el-timeline>
-            <el-timeline-item timestamp="2019/4/17" placement="top">
-              <el-card>
-                <h4>Update Github template</h4>
-                <p>tuandm committed 2019/4/17 20:46</p>
-              </el-card>
-            </el-timeline-item>
-            <el-timeline-item timestamp="2019/4/18" placement="top">
-              <el-card>
-                <h4>Update Github template</h4>
-                <p>tonynguyen committed 2019/4/18 20:46</p>
-              </el-card>
-              <el-card>
-                <h4>Update Github template</h4>
-                <p>tuandm committed 2019/4/19 21:16</p>
-              </el-card>
-            </el-timeline-item>
-            <el-timeline-item timestamp="2019/4/19" placement="top">
-              <el-card>
-                <h4>
-                  Deploy
-                  <a href="https://laravue.dev" target="_blank">laravue.dev</a>
-                </h4>
-                <p>tuandm deployed 2019/4/19 10:23</p>
-              </el-card>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-      </el-tab-pane>
       <el-tab-pane v-loading="updating" label="Account" name="third">
         <el-form-item label="Name">
           <el-input v-model="user.name" :disabled="user.role === 'admin'" />
@@ -161,6 +14,35 @@
           </el-button>
         </el-form-item>
       </el-tab-pane>
+
+      <el-tab-pane v-loading="updating" label="Password" name="second">
+        <el-form ref="passwordForm" :rules="rules" :model="password" label-position="top" label-width="150px" style="max-width: 100%;">
+          <el-form-item label="Email">
+            <el-input v-model="user.email" :disabled="true" />
+          </el-form-item>
+
+          <!-- <el-form-item label="Password" prop="oldPassword">
+            <el-input v-model="password.oldPassword" :type="pwdType" />
+          </el-form-item> -->
+
+          <el-form-item label="Password Baru" prop="newPassword">
+            <el-input v-model="password.newPassword" :type="pwdType" />
+          </el-form-item>
+
+          <el-form-item label="Ulangi Password Baru" prop="confirmPassword">
+            <el-input v-model="password.confirmPassword" :type="pwdType" />
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="onSubmitPassword">
+              Update Password
+            </el-button>
+            <el-button type="primary" @click="showPwd">
+              Lihat Password
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </el-card>
 </template>
@@ -168,6 +50,7 @@
 <script>
 import Resource from '@/api/resource';
 const userResource = new Resource('users');
+const updatePasswordResource = new Resource('update-password');
 
 export default {
   props: {
@@ -184,18 +67,39 @@ export default {
     },
   },
   data() {
+    var validateConfirmPassword = (rule, value, callback) => {
+      if (value !== this.password.newPassword) {
+        callback(new Error('Password tidak sama!'));
+      } else {
+        callback();
+      }
+    };
     return {
-      activeActivity: 'first',
+      activeActivity: 'third',
       carouselImages: [
         'https://cdn.laravue.dev/photo1.png',
         'https://cdn.laravue.dev/photo2.png',
         'https://cdn.laravue.dev/photo3.jpg',
         'https://cdn.laravue.dev/photo4.jpg',
       ],
+      rules: {
+        oldPassword: [{ required: true, message: 'Password is required', trigger: 'blur' }],
+        newPassword: [{ required: true, message: 'password harus dimasukan', trigger: 'blur' }],
+        confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
+      },
       updating: false,
+      password: {},
+      pwdType: 'password',
     };
   },
   methods: {
+    showPwd() {
+      if (this.pwdType === 'password') {
+        this.pwdType = '';
+      } else {
+        this.pwdType = 'password';
+      }
+    },
     handleClick(tab, event) {
       console.log('Switching tab ', tab, event);
     },
@@ -206,7 +110,7 @@ export default {
         .then(response => {
           this.updating = false;
           this.$message({
-            message: 'User information has been updated successfully',
+            message: 'User information berhasil di update',
             type: 'success',
             duration: 5 * 1000,
           });
@@ -215,6 +119,38 @@ export default {
           console.log(error);
           this.updating = false;
         });
+    },
+
+    onSubmitPassword() {
+      this.$refs['passwordForm'].validate((valid) => {
+        if (valid) {
+          this.password.email = this.user.email;
+          this.updating = true;
+          updatePasswordResource
+            .update(this.user.id, this.password)
+            .then(response => {
+              this.updating = false;
+              this.$message({
+                message: 'User password berhasil di update',
+                type: 'success',
+                duration: 5 * 1000,
+              });
+            })
+            .catch(error => {
+              this.$message({
+                message: error,
+                type: 'error',
+                duration: 5 * 1000,
+              });
+            })
+            .finally(() => {
+              this.updating = false;
+            });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
   },
 };
@@ -282,6 +218,23 @@ export default {
     line-height: 200px;
     margin: 0;
   }
+
+  .show-pwd {
+      position: absolute;
+      right: 10px;
+      top: 7px;
+      font-size: 16px;
+      color: darkgray;
+      cursor: pointer;
+      user-select: none;
+    }
+  .svg-container {
+      padding: 6px 5px 6px 15px;
+      color: darkgrey;
+      vertical-align: middle;
+      width: 30px;
+      display: inline-block;
+    }
 
   .el-carousel__item:nth-child(2n) {
     background-color: #99a9bf;

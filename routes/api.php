@@ -67,12 +67,20 @@ Route::namespace('Api')->group(function() {
         Route::post('detail-mst-ia-05', 'PerangkatController@storeIa05Detail');
         Route::post('new-mst-ia-06', 'PerangkatController@storeIa06');
         Route::post('new-mst-ia-07', 'PerangkatController@storeIa07');
+
+        //Delete MST FR
+        Route::post('del-mst-ia-02', 'PerangkatController@deleteIa02');
+        Route::post('del-mst-ia-03', 'PerangkatController@deleteIa03');
+        Route::post('del-mst-ia-05', 'PerangkatController@deleteIa05');
+        Route::post('del-mst-ia-06', 'PerangkatController@deleteIa06');
+        Route::post('del-mst-ia-07', 'PerangkatController@deleteIa07');
         
         //Post FR
         Route::post('uji-komp-apl-01', 'UjiKompController@submitApl01');
         Route::post('uji-komp-apl-02', 'UjiKompController@submitApl02');
         Route::post('uji-komp-ia-01', 'UjiKompController@storeIa01');
         Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
+        Route::post('uji-komp-ia-02-nilai', 'UjiKompController@penilaianIa02');
         Route::post('uji-komp-ia-03', 'UjiKompController@storeIa03');
         Route::post('uji-komp-ia-05', 'UjiKompController@storeIa05');
         Route::post('uji-komp-ia-05-nilai', 'UjiKompController@penilaianIa05');
@@ -123,8 +131,10 @@ Route::namespace('Api')->group(function() {
 
         // Api resource routes
         Route::apiResource('roles', 'RoleController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
-        Route::apiResource('users', 'UserController')->middleware('permission:' . Acl::PERMISSION_USER_MANAGE);
+        Route::apiResource('users', 'UserController');
         Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
+
+        Route::put('update-password/{user}', 'UserController@changePassword');
 
         // Custom routes
         Route::put('users/{user}', 'UserController@update');

@@ -131,11 +131,6 @@
     <center>
         <img src="<?php echo storage_path('app/kop-surat.jpg'); ?>"  style="width: 100%; height" />
 	</center>
-    <center>
-        <h3>SURAT PERINTAH TUGAS</h3>
-        <h5>No : @php echo $jadwal->id @endphp/III/2023</h5>
-	</center>
-    YANG BERTANDA TANGAN DIBAWAH INI, KETUA LSP, MEMBERIKAN TUGAS KEPADA :
     <table class='table table-borderless table-sm'>
         <tbody>
             <tr>

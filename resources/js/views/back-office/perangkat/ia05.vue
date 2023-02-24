@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <h3>Perangkat IA 05</h3>
+      <h3>Perangkat IA 05 PERTANYAAN TERTULIS PILIHAN GANDA</h3>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>
@@ -44,11 +44,14 @@
         <template slot-scope="scope">
           <el-button-group>
             <el-tooltip class="item" effect="dark" content="Tambah Jawaban" placement="top-end">
-              <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-plus" @click="handleAddJawaban(scope.row.id)" />
+              <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-plus" @click="handleAddJawaban(scope.row.id_perangkat)" />
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
+            <el-tooltip class="item" effect="dark" content="Delete" placement="top-end">
+              <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row)" />
+            </el-tooltip>
+            <!-- <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
               <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row)" />
-            </el-tooltip>
+            </el-tooltip> -->
           </el-button-group>
         </template>
       </el-table-column>
@@ -71,9 +74,9 @@
             >
               <el-option
                 v-for="item in list"
-                :key="item.id"
+                :key="item.id_perangkat"
                 :label="item.pertanyaan"
-                :value="item.id"
+                :value="item.id_perangkat"
               />
             </el-select>
           </el-form-item>
@@ -116,7 +119,7 @@
               filterable
               clearable
               class="filter-item full"
-              placeholder="Unik Komptensi"
+              placeholder="Unit Kompetensi"
             >
               <el-option
                 v-for="item in listUnit"
@@ -146,13 +149,12 @@
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
 
-const userResource = new UserResource();
 const listResource = new Resource('mst-ia05-get');
+const deleteResource = new Resource('del-mst-ia-05');
 const postResource = new Resource('new-mst-ia-05');
 const postDetailResource = new Resource('detail-mst-ia-05');
 const skemaResource = new Resource('skema');
@@ -261,13 +263,13 @@ export default {
         this.$refs['newForm'].clearValidate();
       });
     },
-    handleDelete(id, name) {
-      this.$confirm('This will permanently delete user ' + name + '. Continue?', 'Warning', {
+    handleDelete(data) {
+      this.$confirm('This will permanently delete IA 05, Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning',
       }).then(() => {
-        userResource.destroy(id).then(response => {
+        deleteResource.store(data).then(response => {
           this.$message({
             type: 'success',
             message: 'Delete completed',
