@@ -95,6 +95,9 @@ Route::namespace('Api')->group(function() {
         // Jadwal Routes
         Route::apiResource('jadwal', 'JadwalController');
 
+        // Uji Routes
+        Route::apiResource('uji', 'UjiKompController');
+
         // Perangkat Routes
         Route::apiResource('perangkat-asesmen', 'PerangkatAsesmenController');
         Route::get('detail-perangkat-asesmen', 'PerangkatAsesmenController@indexDetail');

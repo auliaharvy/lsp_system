@@ -164,7 +164,7 @@ export default {
         role: '',
       },
       roles: ['admin', 'assesor', 'user'],
-      nonAdminRoles: ['assesor', 'user'],
+      nonAdminRoles: ['admin', 'assesor', 'user'],
       newUser: {},
       dialogFormVisible: false,
       dialogPermissionVisible: false,

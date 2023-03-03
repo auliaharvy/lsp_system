@@ -80,7 +80,7 @@
             <table class='table table-borderless table-sm' style="padding: 0; margin: 0">
                 <tbody style="padding: 0; margin: 0">
                     <tr class="no-padding">
-                        <td style="width: 17%">Hari / Tanggal</td>
+                        <td style="width: 17%">Tanggal</td>
                         <td>@php echo date('d-m-Y', strtotime($jadwal->start_date)); @endphp</td>
                     </tr>
                     <tr class="no-padding">

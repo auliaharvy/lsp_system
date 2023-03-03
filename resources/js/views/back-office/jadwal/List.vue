@@ -414,6 +414,13 @@ export default {
         role: '',
         user_id: null,
       },
+      queryDropdown: {
+        page: 1,
+        limit: 100,
+        keyword: '',
+        role: '',
+        user_id: null,
+      },
       rules: {
         kode_perangkat: [
           {
@@ -457,16 +464,16 @@ export default {
       const { limit, page } = this.query;
       this.loading = true;
       // get data skema
-      const dataSkema = await skemaResource.list();
+      const dataSkema = await skemaResource.list(this.queryDropdown);
       this.listSkema = dataSkema.data;
       // get data tuk
-      const dataTuk = await tukResource.list();
+      const dataTuk = await tukResource.list(this.queryDropdown);
       this.listTuk = dataTuk.data;
       // get data asesor
-      const dataAsesor = await asesorResource.list();
+      const dataAsesor = await asesorResource.list(this.queryDropdown);
       this.listAsesor = dataAsesor.data;
       // get data perangkat
-      const dataPerangkat = await perangkatResource.list();
+      const dataPerangkat = await perangkatResource.list(this.queryDropdown);
       this.listPerangkat = dataPerangkat.data;
       // get data jadwal / list table
       const { data, meta } = await jadwalResource.list(this.query);

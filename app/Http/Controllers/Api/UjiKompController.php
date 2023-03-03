@@ -82,6 +82,7 @@ class UjiKompController extends BaseController
         $role = Arr::get($searchParams, 'role', '');
         $foundUser = User::where('id',$user_id)->first();
         $visibility = Arr::get($searchParams, 'visibility', 0);
+        $skema = Arr::get($searchParams, 'id_skema', '');
 
         $query = UjiKomp::query();
         $query->join('trx_uji_komp_apl_01 as b', 'b.id', '=', 'trx_uji_komp.id_apl_01');
@@ -106,6 +107,9 @@ class UjiKompController extends BaseController
         }
         if (!empty($jadwal)) {
             $query->where('b.id_jadwal', $jadwal);
+        }
+        if (!empty($skema)) {
+            $query->where('b.id_skema', $skema);
         }
 
         if (!empty($keyword)) {
@@ -385,8 +389,30 @@ class UjiKompController extends BaseController
     public function destroy($id)
     {
         try {
+            $foundUji = UjiKomp::where('id',$id)->first();
             UjiKomp::where('id',$id)->delete();
-            return response()->json(['message' => "Success Delete APL 02"], 201);
+            UjiKompApl1::where('id', $foundUji->id_apl_01)->delete();
+            UjiKompApl2::where('id', $foundUji->id_apl_02)->delete();
+            UjiKompApl2Detail::where('id_apl_02', $foundUji->id_apl_02)->delete();
+            UjiKompAk01::where('id', $foundUji->id_ak_01)->delete();
+            UjiKompAk02::where('id', $foundUji->id_ak_02)->delete();
+            UjiKompAk02Detail::where('id_ak_02', $foundUji->id_ak_02)->delete();
+            UjiKompAk03::where('id', $foundUji->id_ak_03)->delete();
+            UjiKompAk03Detail::where('id_ak_03', $foundUji->id_ak_03)->delete();
+            UjiKompAk04::where('id', $foundUji->id_ak_04)->delete();
+            UjiKompAk05::where('id', $foundUji->id_ak_05)->delete();
+            UjiKompIa01::where('id', $foundUji->id_ia_01)->delete();
+            UjiKompIa01Detail::where('id_ia_01', $foundUji->id_ia_01)->delete();
+            UjiKompIa02::where('id', $foundUji->id_ia_02)->delete();
+            UjiKompIa03::where('id', $foundUji->id_ia_03)->delete();
+            UjiKompIa03Detail::where('id_ia_03', $foundUji->id_ia_03)->delete();
+            UjiKompIa05::where('id', $foundUji->id_ia_05)->delete();
+            UjiKompIa05Detail::where('id_ia_05', $foundUji->id_ia_05)->delete();
+            UjiKompIa06::where('id', $foundUji->id_ia_06)->delete();
+            UjiKompIa06Detail::where('id_ia_06', $foundUji->id_ia_06)->delete();
+            UjiKompIa11::where('id', $foundUji->id_ia_11)->delete();
+            UjiKompIa11Detail::where('id_ia_11', $foundUji->id_ia_11)->delete();            
+            return response()->json(['message' => "Berhasil Hapus Uji Kompetensi"], 201);
         } catch (\Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], 403);
         }

@@ -99,9 +99,9 @@ export default {
       const { limit, page } = this.query;
       this.loading = true;
       // get data skema
-      const dataSkema = await skemaResource.list();
+      const dataSkema = await skemaResource.list(this.query);
       this.listSkema = dataSkema.data;
-      this.idSkema = this.listSkema[0].id;
+      // this.idSkema = this.listSkema[0].id;
       // get data perangkat / list table
       const { data, meta } = await perangkatAsesmenResource.list(this.query);
       this.list = data;

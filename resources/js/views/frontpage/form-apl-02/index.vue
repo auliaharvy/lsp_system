@@ -334,7 +334,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button v-loading="loading" type="primary" @click="newUser()">
+          <el-button v-loading="loading" type="primary" :disbled="loading" @click="newUser()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -634,7 +634,6 @@ export default {
         .store(formData)
         .then((response) => {
           this.sendData();
-          this.loading = false;
           // this.dialogNewUser = false;
         })
         .catch((error) => {
@@ -646,14 +645,15 @@ export default {
         });
     },
     checkUser() {
+      this.loading = true;
       checkUserResource
         .store(this.dataTrx)
         .then((response) => {
           if (response.msg === 'User sudah terdaftar') {
             this.sendData();
           } else {
-            this.loading = false;
             this.dialogNewUser = true;
+            this.loading = false;
           }
         })
         .catch((error) => {
@@ -712,6 +712,11 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          this.$message({
+            message: error,
+            type: 'success',
+            duration: 5 * 1000,
+          });
           this.loading = false;
         })
         .finally(() => {

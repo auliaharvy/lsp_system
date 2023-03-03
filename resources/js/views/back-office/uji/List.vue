@@ -6,15 +6,30 @@
         filterable
         clearable
         class="filter-item full"
-        :placeholder="$t('jadwal.table.jadwal')"
+        placeholder="pilih jadwal"
       >
         <el-option
           v-for="item in listJadwal"
           :key="item.id"
-          :label="item.jadwal + ' / ' + item.start_date + ' - ' + item.nama_skema"
+          :label="item.jadwal + ' / ' + item.nama_asesor + ' / ' + item.start_date"
           :value="item.id"
         />
       </el-select>
+      <el-select
+        v-model="query.id_skema"
+        filterable
+        clearable
+        class="filter-item full"
+        placeholder="pilih skema"
+      >
+        <el-option
+          v-for="item in listSkema"
+          :key="item.id"
+          :label="item.skema_sertifikasi"
+          :value="item.id"
+        />
+      </el-select>
+      <!-- <span>{{ listJadwal }}</span> -->
       <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
@@ -237,7 +252,7 @@
 
       <el-table-column align="left" :label="$t('uji.table.asesi')">
         <template slot-scope="scope">
-          <span>{{ scope.row.nama_peserta }} ({{ scope.row.email_peserta }})</span>
+          <span>{{ scope.row.nama_peserta }}</span>
         </template>
       </el-table-column>
 
@@ -259,6 +274,20 @@
           <el-button-group>
             <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
               <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row)" />
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Update"
+              placement="top-end"
+            >
+              <el-button
+                v-permission="['manage user']"
+                type="danger"
+                size="small"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+              />
             </el-tooltip>
           </el-button-group>
         </template>
@@ -329,15 +358,14 @@
 <script>
 import { mapGetters } from 'vuex';
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
 
-const userResource = new UserResource();
 const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
 const jadwalResource = new Resource('jadwal-get');
+const ujiResource = new Resource('uji');
 
 export default {
   name: 'PerangkatAsemenList',
@@ -405,7 +433,7 @@ export default {
       const { limit, page } = this.query;
       this.loading = true;
       // get data skema
-      const dataSkema = await skemaResource.list();
+      const dataSkema = await skemaResource.list({ limit: 1000 });
       this.listSkema = dataSkema.data;
       // get data perangkat / list table
       const { data, meta } = await listResource.list(this.query);
@@ -417,7 +445,7 @@ export default {
       this.loading = false;
     },
     async getListJadwal() {
-      const { data } = await jadwalResource.list();
+      const { data } = await jadwalResource.list({ limit: 1000 });
       this.listJadwal = data;
     },
     handleAkses(form, data) {
@@ -463,27 +491,36 @@ export default {
         this.$refs['dataForm'].clearValidate();
       });
     },
-    handleDelete(id, name) {
-      this.$confirm('This will permanently delete user ' + name + '. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-      }).then(() => {
-        userResource.destroy(id).then(response => {
+    handleDelete(row) {
+      this.$confirm(
+        'Ini akan menghapus Ujian milik ' + row.nama_peserta + ', semua form pada ujian ini akan dihapus. Lanjutkan?',
+        'Warning',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          ujiResource
+            .destroy(row.id)
+            .then((response) => {
+              this.$message({
+                type: 'success',
+                message: 'Delete completed',
+              });
+              this.handleFilter();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch(() => {
           this.$message({
-            type: 'success',
-            message: 'Delete completed',
+            type: 'info',
+            message: 'Delete canceled',
           });
-          this.handleFilter();
-        }).catch(error => {
-          console.log(error);
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: 'Delete canceled',
-        });
-      });
     },
     create() {
       this.loading = true;

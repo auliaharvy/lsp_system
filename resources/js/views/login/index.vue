@@ -52,7 +52,7 @@
           <div class="tips">
             <span>Jika ada pertanyaan hubungi admin : </span>
             <br>
-            <span><a href="https://wa.me/6289652847221?text=Halo,%20Saya%20ingin%20bertanya%20mengenai%20sistem%20LSP" target="_blank">Klik untuk WA</a></span>
+            <span><a href="https://wa.me/6285319734499?text=Halo,%20Saya%20ingin%20bertanya%20mengenai%20sistem%20LSP" target="_blank">Klik untuk WA</a></span>
           </div>
         </el-form>
       </div>
