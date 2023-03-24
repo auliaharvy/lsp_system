@@ -275,10 +275,9 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
-      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[1].content = asesor.map(itm => itm.nama_asesor).join(', ');
+      this.headerTable[1].content = ujiDetail.asesor;
       this.headerTable[2].content = ujiDetail.nama_tuk;
       this.dataTrx.namaAsesi = ujiDetail.nama_peserta;
     },

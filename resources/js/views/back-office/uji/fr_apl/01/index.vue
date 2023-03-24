@@ -391,6 +391,8 @@
                   <el-button size="small" @click="clear">Clear</el-button>
                 </div>
                 <div v-else>
+                  {{ namaAdmin }}
+                  <br>
                   <img :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
                 </div>
               </template>
@@ -436,6 +438,7 @@ export default {
       listJadwal: null,
       listKuk: [],
       listUji: [],
+      namaAdmin: null,
       listKodeUnit: [],
       selectedSkema: {},
       selectedUji: {},
@@ -635,6 +638,7 @@ export default {
       this.ttdAsesi = data.signature;
       this.ttdAdmin = data.ttd_admin;
       this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;
+      this.namaAdmin = data.nama_admin;
       this.dataAsesi.nama = data.nama_lengkap;
       this.dataAsesi.status = data.status;
       this.pilihanTerima = data.status;
@@ -668,7 +672,6 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -686,7 +689,6 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -707,6 +709,7 @@ export default {
       formData.append('id_apl_01', this.dataTrx.id_apl_01);
       formData.append('signature', this.dataTrx.signature);
       formData.append('user_id', this.dataTrx.userId);
+      formData.append('email', this.headerTable[6].content);
       formData.append('status', this.dataTrx.status);
       apl01UpdateResource
         .store(formData)

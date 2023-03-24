@@ -30,5 +30,5 @@ class UjiKompIa11 extends Model
      * @return Builder
      */
     protected $table = "trx_uji_komp_ia_11";
-    protected $fillable = ['komentar', 'submit_by'];
+    protected $fillable = ['komentar', 'submit_by', 'updated_by'];
 }

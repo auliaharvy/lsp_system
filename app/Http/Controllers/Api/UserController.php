@@ -13,6 +13,7 @@ use App\Http\Resources\PermissionResource;
 use App\Http\Resources\UserResource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\Permission;
+use App\Laravue\Models\Assesor;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\User;
 use Illuminate\Http\Request;
@@ -20,6 +21,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Validator;
 
 /**
@@ -106,6 +109,42 @@ class UserController extends BaseController
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function setRole(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            array_merge(
+                $this->getValidationRulesRole(),
+                [
+                    'userId' => ['required'],
+                ]
+            )
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            $params = $request->all();
+            if ($params['submitRole'] !== 'admin') {
+                return response()->json(['message' => 'Selain admin tidak boleh merubah role user'], 403);    
+            } else {
+                $id = $request->get('userId');
+                $found = User::where('id', $id)->first();
+
+                $role = Role::findByName($params['role']);
+                $found->syncRoles($role);
+
+                return new UserResource($found);
+            }
+        }
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  User $user
@@ -133,7 +172,7 @@ class UserController extends BaseController
 
         $validator = Validator::make($request->all(), $this->getValidationRulesPassword());
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
+            return response()->json(['message' => $validator->errors()], 403);
         } else {
             $id = $request->get('userId');
             $found = User::where('id', $id)->first();
@@ -141,6 +180,31 @@ class UserController extends BaseController
             $user->password = $newPassword;
             $user->save();
             return new UserResource($user);
+        }
+    }
+
+    public function addSignature(Request $request)
+    {
+        $validator = Validator::make($request->all(), $this->getValidationRulesSignature());
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 403);
+        } else {
+            $params = $request->all();
+            $id = $request->get('user_id');
+            $found = User::where('id', $id)->first();
+            $file = $request['signature'];
+            $image = str_replace('data:image/png;base64,', '', $file);
+            $image = str_replace(' ', '+', $image);
+            $mytime = Carbon::now();
+            $now = $mytime->toDateString();
+            // membuat nama file unik
+            $nama_file = $now . '-' . $params['user_id'] . '-' . $found->email . '-' . '.png';
+            \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+
+            $found->signature = $nama_file;
+            $found->save();
+            return new UserResource($found);
         }
     }
 
@@ -163,16 +227,35 @@ class UserController extends BaseController
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 403);
         } else {
-            $email = $request->get('email');
-            $found = User::where('email', $email)->first();
-            if ($found && $found->id !== $user->id) {
-                return response()->json(['error' => 'Email has been taken'], 403);
-            }
+            DB::beginTransaction();
+            try {
+                $user_id = $request->get('id');
+                $roles = $request->get('roles');
+                $found = User::where('id', $user_id)->first();
+                $email = $found->email;
+                $foundAsesor = Assesor::where('email', $email)->first();
+                if ($found && $found->id !== $user->id) {
+                    return response()->json(['error' => 'Email has been taken'], 403);
+                }
 
-            $user->name = $request->get('name');
-            $user->email = $email;
-            $user->save();
-            return new UserResource($user);
+                $user->name = $request->get('name');
+                $user->email = $request->get('email');
+                $user->save();
+
+                if($roles[0] === 'assesor') {
+                    $foundAsesor->nama = $request->get('name');
+                    $foundAsesor->email = $request->get('email');
+                    $foundAsesor->save();
+                }
+
+                DB::commit();
+                return new UserResource($user);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage(), 'error' => $e->getMessage()], 400);
+            }
+            
+            
         }
     }
 
@@ -263,10 +346,24 @@ class UserController extends BaseController
         ];
     }
 
+    private function getValidationRulesRole()
+    {
+        return [
+            'role' => 'required',
+        ];
+    }
+
     private function getValidationRulesPassword()
     {
         return [
             'newPassword' => 'required',
+        ];
+    }
+
+    private function getValidationRulesSignature()
+    {
+        return [
+            'user_id' => 'required',
         ];
     }
 }

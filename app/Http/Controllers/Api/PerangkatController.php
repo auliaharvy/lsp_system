@@ -73,7 +73,7 @@ class PerangkatController extends BaseController
         $query->where('mst_perangkat_ia_02.id_skema', $id_skema)
         ->select('mst_perangkat_ia_02.*');
 
-        return MasterResource::collection($query->paginate($limit));
+        return MasterResource::collection($query->paginate(100));
     }
 
     public function indexIa03(Request $request)
@@ -88,7 +88,7 @@ class PerangkatController extends BaseController
         $query->where('mst_perangkat_ia_03.id_skema', $id_skema)
         ->select('mst_perangkat_ia_03.*');
 
-        return MasterResource::collection($query->paginate($limit));
+        return MasterResource::collection($query->paginate(100));
     }
 
     public function indexIa05(Request $request)
@@ -105,7 +105,7 @@ class PerangkatController extends BaseController
         ->leftJoin('mst_perangkat_ia_05_a as b', 'b.id', '=', 'mst_perangkat_ia_05.kunci_jawaban')
         ->select('mst_perangkat_ia_05.*', 'a.kode_unit', 'a.unit_kompetensi', 'b.no_jawaban as no_kunci_jawaban', 'b.jawaban as isi_kunci_jawaban');
 
-        return MstIa05Resource::collection($query->paginate($limit));
+        return MstIa05Resource::collection($query->paginate(100));
     }
 
     public function indexIa06(Request $request)
@@ -121,7 +121,7 @@ class PerangkatController extends BaseController
         ->join('mst_skema_sertifikasi_unit_kompetensi as a', 'a.id', '=', 'mst_perangkat_ia_06.id_unit_komp')
         ->select('mst_perangkat_ia_06.*', 'a.kode_unit', 'a.unit_kompetensi');
 
-        return MasterResource::collection($query->paginate($limit));
+        return MasterResource::collection($query->paginate(100));
     }
 
     public function indexIa07(Request $request)
@@ -137,7 +137,7 @@ class PerangkatController extends BaseController
         ->join('mst_skema_sertifikasi_unit_kompetensi as a', 'a.id', '=', 'mst_perangkat_ia_07.id_unit_komp')
         ->select('mst_perangkat_ia_07.*', 'a.kode_unit');
 
-        return MasterResource::collection($query->paginate($limit));
+        return MasterResource::collection($query->paginate(100));
     }
 
     public function indexIa11(Request $request)
@@ -148,7 +148,7 @@ class PerangkatController extends BaseController
         $query = MstFrIa11::query()
         ->select('mst_perangkat_ia_11.*');
 
-        return MasterResource::collection($query->paginate($limit));
+        return MasterResource::collection($query->paginate(100));
     }
 
     public function indexAk03(Request $request)
@@ -160,7 +160,7 @@ class PerangkatController extends BaseController
         $query = MstFrAk03::query()
         ->select('mst_perangkat_ak_03.*');
 
-        return MasterResource::collection($query->paginate($limit));
+        return MasterResource::collection($query->paginate(100));
     }
 
     public function storeIa02(Request $request)

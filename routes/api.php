@@ -52,6 +52,8 @@ Route::namespace('Api')->group(function() {
     Route::get('detail/ia-01/{id}', 'UjiKompController@showIa01');
     Route::get('detail/ia-02/{id}', 'UjiKompController@showIa02');
     Route::get('detail/ia-03/{id}', 'UjiKompController@showIa03');
+    Route::get('detail/ia-06/{id}', 'UjiKompController@showIa06');
+    Route::get('detail/ia-07/{id}', 'UjiKompController@showIa07');
     Route::get('detail/ia-11/{id}', 'UjiKompController@showIa11');
     Route::get('detail/ak-01/{id}', 'UjiKompController@showAk01');
     Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
@@ -82,8 +84,11 @@ Route::namespace('Api')->group(function() {
         Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
         Route::post('uji-komp-ia-02-nilai', 'UjiKompController@penilaianIa02');
         Route::post('uji-komp-ia-03', 'UjiKompController@storeIa03');
+        Route::post('uji-komp-ia-03-nilai', 'UjiKompController@penilaianIa03');
         Route::post('uji-komp-ia-05', 'UjiKompController@storeIa05');
         Route::post('uji-komp-ia-05-nilai', 'UjiKompController@penilaianIa05');
+        Route::post('uji-komp-ia-06', 'UjiKompController@storeIa06');
+        Route::post('uji-komp-ia-06-nilai', 'UjiKompController@penilaianIa06');
         Route::post('uji-komp-ia-11', 'UjiKompController@storeIa11');
         Route::post('uji-komp-ak-01', 'UjiKompController@storeAk01');
         Route::post('uji-komp-ak-01-asesi', 'UjiKompController@storeAk01Asesi');
@@ -138,6 +143,8 @@ Route::namespace('Api')->group(function() {
         Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
 
         Route::put('update-password/{user}', 'UserController@changePassword');
+        Route::post('update-role', 'UserController@setRole');
+        Route::post('user/save-signature', 'UserController@addSignature');
 
         // Custom routes
         Route::put('users/{user}', 'UserController@update');

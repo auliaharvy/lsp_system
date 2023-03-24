@@ -299,36 +299,36 @@
             </template>
           </el-table-column>
           <el-table-column align="center" label="Rekomendasi Asesor">
-            <template v-if="initStatus === 0">
-              <el-select v-model="status" class="filter-item" placeholder="T/TT" value-key="status">
-                <el-option :key="0" label="Belum di cek" :value="0" />
-                <el-option :key="1" label="Asesmen dapat dilanjutkan" :value="1" />
-                <el-option :key="2" label="Asesmen tidak dapat dilanjutkan" :value="2" />
-              </el-select>
+            <template slot-scope="scope">
+              <template v-if="initStatus === 0">
+                <el-select v-model="scope.row.status" class="filter-item" placeholder="T/TT" value-key="status">
+                  <el-option :key="0" label="Belum di cek" :value="0" />
+                  <el-option :key="1" label="Asesmen dapat dilanjutkan" :value="1" />
+                  <el-option :key="2" label="Asesmen tidak dapat dilanjutkan" :value="2" />
+                </el-select>
+              </template>
+              <span v-else-if="initStatus === 1"> Asesmen dapat dilanjutkan</span>
+              <span v-else-if="initStatus === 2"> Asesmen tidak dapat dilanjutkan</span>
             </template>
-            <span v-else-if="initStatus === 1"> Asesmen dapat dilanjutkan</span>
-            <span v-else-if="initStatus === 2"> Asesmen tidak dapat dilanjutkan</span>
           </el-table-column>
           <el-table-column align="center" label="Tanda Tangan Asesor">
-            <template v-if="initStatus">
-              <div v-if="initStatus === 0">
-                <vueSignature
-                  ref="signature"
-                  :sig-option="option"
-                  :w="'300px'"
-                  :h="'150px'"
-                  :disabled="false"
-                  style="border-style: outset"
-                />
-                <el-button size="small" @click="clear">Clear</el-button>
-              </div>
-              <el-image
-                v-else
-                style="width: 200px; height: 100px"
-                :src="ttdAsesor"
-                fit="contain"
+            <div v-if="initStatus === 0">
+              <vueSignature
+                ref="signature"
+                :sig-option="option"
+                :w="'300px'"
+                :h="'150px'"
+                :disabled="false"
+                style="border-style: outset"
               />
-            </template>
+              <el-button size="small" @click="clear">Clear</el-button>
+            </div>
+            <el-image
+              v-else
+              style="width: 200px; height: 100px"
+              :src="ttdAsesor"
+              fit="contain"
+            />
           </el-table-column>
         </el-table>
       </div>
@@ -483,6 +483,7 @@ export default {
         {
           no: 1,
           nama: 'Nama Asesor',
+          status: 0,
           tanggal: 'Catatan',
           ttd: '',
         },
@@ -561,15 +562,18 @@ export default {
       this.ttdTable1[0].ttd = '/uploads/users/signature/' + data.signature;
 
       // this.ttdTable2.push(this.$route.params.asesor);
-      this.ttdTable2[0].nama = this.$route.params.asesor[0].nama_asesor;
+      this.ttdTable2[0].nama = this.$route.params.asesor;
     },
     async getApl02() {
       this.loading = true;
       const data = await apl02Resource.get(this.$route.params.id_apl_02);
       this.listDetailApl02 = data;
       this.initStatus = this.listDetailApl02.status;
-      this.status = this.listDetailApl02.status;
+      this.ttdTable2[0].status = this.listDetailApl02.status;
+      this.initStatus = this.listDetailApl02.status;
+      console.log(this.listDetailApl02);
       this.ttdAsesor = '/uploads/users/signature/' + this.listDetailApl02.ttd_asesor;
+      console.log(this.ttdAsesor);
       this.listKuk.forEach((element, index) => {
         if (element['type'] === 'kuk') {
           var foundIndex = data.detail.findIndex(x => x.id_kuk_elemen === element['id']);
@@ -644,7 +648,7 @@ export default {
       formData.append('signature', this.dataTrx.signature);
       formData.append('nama_asesor', this.dataTrx.nama_asesor);
       formData.append('user_id', this.dataTrx.userId);
-      formData.append('status', this.status);
+      formData.append('status', this.ttdTable2[0].status);
       apl02UpdateResource
         .store(formData)
         .then(response => {

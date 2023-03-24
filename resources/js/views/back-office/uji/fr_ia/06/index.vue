@@ -59,11 +59,12 @@
               <el-input v-model="scope.row.jawaban" type="textarea" />
             </template>
           </el-table-column>
-          <el-table-column v-if="checkRole(['asesor'])" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
                 <el-option key="belum kompeten" label="Belum Kompeten" value="belum kompeten" />
+                <el-option key="belum penilaian" label="Belum Penilaian" value="belum penilaian" />
               </el-select>
             </template>
           </el-table-column>
@@ -73,15 +74,17 @@
         <br>
 
         <el-form
-          v-if="checkRole(['asesor'])"
+          v-if="checkRole(['assesor'])"
           ref="form"
           :model="form"
           label-width="250px"
           label-position="left"
         >
           <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
-            <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
+            <el-radio-group v-model="form.rekomendasi_asesor">
+              <el-radio label="Kompeten">Kompeten</el-radio>
+              <el-radio label="Belum Kompeten">Belum Kompeten</el-radio>
+            </el-radio-group>
           </el-form-item>
           <el-form-item label="Umpan balik untuk asesi" prop="feedback">
             <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
@@ -89,8 +92,8 @@
         </el-form>
         <br>
 
-        <el-button @click="onSubmit">Submit</el-button>
-        <el-button v-if="checkRole(['asesor'])" @click="onSubmit">Submit</el-button>
+        <el-button v-if="checkRole(['assesor'])" @click="nilai">Submit</el-button>
+        <el-button v-else @click="onSubmit">Submit</el-button>
       </div>
     </el-main>
   </el-container>
@@ -107,6 +110,8 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstResource = new Resource('mst-ia06-get');
 const postResource = new Resource('uji-komp-ia-06');
+const ia06Detail = new Resource('detail/ia-06');
+const ia06NilaiResource = new Resource('uji-komp-ia-06-nilai');
 
 export default {
   components: {},
@@ -116,7 +121,12 @@ export default {
       umpanBalikAsesi: '',
       kompeten: null,
       loading: false,
-      listSoal: null,
+      listSoal: [
+        {
+          jawaban: '',
+          is_kompeten: '',
+        },
+      ],
       listSkema: null,
       listTuk: null,
       listJadwal: null,
@@ -124,6 +134,7 @@ export default {
       listJudulUnit: [],
       listKuk: [],
       listUji: [],
+      ia06: null,
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -142,23 +153,23 @@ export default {
       headerTable: [
         {
           title: 'Skema Sertifikasi',
-          content: 'SKEMA SKNNI KLASIFIKASI II BISNIS DARING PEMASARAN',
+          content: '-',
         },
         {
           title: 'TUK',
-          content: 'TUK BDP',
+          content: '-',
         },
         {
           title: 'Nama Asesor',
-          content: 'AULIA HARVY',
+          content: '-',
         },
         {
           title: 'Nama Asesi',
-          content: 'INDAH',
+          content: '-',
         },
         {
           title: 'Tanggal',
-          content: '20 - 12 -2022',
+          content: '-',
         },
       ],
       panduan: [
@@ -192,8 +203,11 @@ export default {
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getListPertanyaan();
+    this.getListPertanyaan().then((value) => {
+      this.getIa06();
+    });
     this.getDate();
+    this.getIa06();
   },
   methods: {
     checkRole,
@@ -233,8 +247,19 @@ export default {
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
-      console.log(this.listSoal);
+      const dataia06 = await ia06Detail.get(this.$route.params.id_ia_06);
+      this.ia06 = dataia06;
       this.loading = false;
+    },
+    getIa06() {
+      if (this.$route.params.id_ia_06 !== null) {
+        this.loading = true;
+        this.listSoal.forEach((element, index) => {
+          var foundIndex = this.ia06.detail.findIndex(x => x.id_perangkat_ia_06 === element['id']);
+          element['jawaban'] = this.ia06.detail[foundIndex].jawaban;
+        });
+        this.loading = false;
+      }
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -254,26 +279,19 @@ export default {
     },
     getUjiKompDetail() {
       var id_uji = this.$route.params.id_uji;
-      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
-      var asesor = ujiDetail.asesor;
-      console.log(ujiDetail);
-      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = asesor.map(itm => itm.nama_asesor).join(', ');
+      this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
-      this.dataTrx.nama_asesor = asesor[0].nama_asesor;
+      this.dataTrx.nama_asesor = ujiDetail.asesor;
       this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
-      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var skemaId = this.listSkema.find((x) => x.id === id_skema);
       this.selectedSkema = skemaId;
-      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
-      // this.dataTrx.id_tuk = tukId.id;
       this.getKuk();
     },
     getKuk(){
@@ -297,14 +315,11 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
-      // var elemen = unitKomp.elemen;
-      // var kuk = elemen.kuk;
       this.listKuk = kuk;
     },
     onSubmit() {
       this.loading = true;
-      this.form.detail_ia_03 = this.listSoal;
+      this.form.detail_ia_06 = this.listSoal;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
@@ -312,7 +327,35 @@ export default {
         .store(this.form)
         .then(response => {
           this.$message({
-            message: 'FR IA 03 has been created successfully.',
+            message: 'FR IA 06 has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    delay(time) {
+      return new Promise(resolve => setTimeout(resolve, time));
+    },
+    nilai() {
+      this.loading = true;
+      this.form.detail_ia_06 = this.listSoal;
+      this.form.user_id = this.userId;
+      this.form.id_uji_komp = this.$route.params.id_uji;
+      this.form.id_ia_06 = this.$route.params.id_ia_06;
+      this.form.id_skema = this.$route.params.id_skema;
+      ia06NilaiResource
+        .store(this.form)
+        .then(response => {
+          this.$message({
+            message: 'FR IA 06 has been created successfully.',
             type: 'success',
             duration: 5 * 1000,
           });

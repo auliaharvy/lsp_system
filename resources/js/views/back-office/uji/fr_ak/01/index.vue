@@ -60,9 +60,28 @@
                 <span v-else>{{ scope.row.content }}</span>
               </template>
               <template v-else>
-                Tanggal : {{ dataTrx.hari }} / {{ dataTrx.tanggal }} - {{ dataTrx.bulan }} - {{ dataTrx.tahun }}
-                <br>
-                Waktu : {{ dataTrx.jam }}:{{ dataTrx.menit }}
+                Tanggal dan Waktu :
+                <template v-if="$route.params.id_ak_01 !== null">
+                  {{ hari + ', ' + tanggal + '-' + bulan + '-' + tahun }}
+                </template>
+                <template v-else>
+                  <el-form
+                    :model="dataTrx"
+                    label-width="0px"
+                    :label-position="labelPosition"
+                  >
+                    <el-form-item>
+                      <el-date-picker
+                        v-model="dataTrx.date"
+                        type="datetime"
+                        placeholder="Pick a date"
+                        style="width: 100%"
+                        format="dd/MM/yyyy HH:mm"
+                        @change="getDate"
+                      />
+                    </el-form-item>
+                  </el-form>
+                </template>
                 <br>
                 TUK : {{ headerTable[2].content }}
               </template>
@@ -72,8 +91,8 @@
 
         <br>
 
-        <el-button @click="onSubmit">Submit Asesor</el-button>
-        <!-- <el-button @click="onSubmitAsesi">Submit Asesi</el-button> -->
+        <el-button v-if="$route.params.id_ak_01 === null" @click="onSubmit">Submit Asesor</el-button>
+        <el-button v-else>Print</el-button>
 
         <br>
         <br>
@@ -122,6 +141,12 @@ export default {
       hasil_tes_tulis: false,
       hasil_tes_lisan: false,
       hasil_tes_wawancara: false,
+      hari: null,
+      tanggal: null,
+      bulan: null,
+      tahun: null,
+      jam: null,
+      menit: null,
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -225,7 +250,6 @@ export default {
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getDate();
     this.getAk01();
   },
   methods: {
@@ -264,6 +288,11 @@ export default {
         } else {
           this.hasil_tes_wawancara = true;
         }
+        this.hari = data.hari;
+        this.tanggal = data.tanggal;
+        this.bulan = data.bulan;
+        this.tahun = data.tahun;
+        this.jam = data.jam;
         this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
         this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
         this.loading = false;
@@ -298,17 +327,16 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
-      var asesor = ujiDetail.asesor;
       console.log(ujiDetail);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.kode_skema;
       this.headerTable[2].content = ujiDetail.nama_tuk;
-      this.headerTable[3].content = asesor.map(itm => itm.nama_asesor).join(', ');
+      this.headerTable[3].content = ujiDetail.asesor;
       this.headerTable[4].content = ujiDetail.nama_peserta;
       this.dataTrx.tuk = ujiDetail.nama_tuk;
-      this.dataTrx.nama_asesor = asesor[0].nama_asesor;
-      this.dataTrx.tanda_tangan_asesor = asesor[0].ttd_asesor;
+      this.dataTrx.nama_asesor = ujiDetail.asesor;
+      this.dataTrx.tanda_tangan_asesor = ujiDetail.ttd_asesor;
       this.dataTrx.email_asesi = ujiDetail.email_peserta;
       this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
     },
@@ -461,7 +489,7 @@ export default {
     getDate() {
       var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
       var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-      var date = new Date();
+      var date = this.dataTrx.date;
       // var millisecond = date.getMilliseconds();
       // var detik = date.getSeconds();
       var menit = date.getMinutes();

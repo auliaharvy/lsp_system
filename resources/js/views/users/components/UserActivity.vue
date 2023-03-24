@@ -1,7 +1,7 @@
 <template>
   <el-card v-if="user.name">
     <el-tabs v-model="activeActivity" @tab-click="handleClick">
-      <el-tab-pane v-loading="updating" label="Account" name="third">
+      <el-tab-pane v-loading="updating" label="Account" name="first">
         <el-form-item label="Name">
           <el-input v-model="user.name" :disabled="user.role === 'admin'" />
         </el-form-item>
@@ -43,14 +43,40 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+
+      <el-tab-pane v-if="roles[0] === 'admin'" v-loading="updating" label="Set Role" name="third">
+        <el-form ref="roleForm" :rules="ruleRole" :model="setRoleData" label-position="top" label-width="150px" style="max-width: 100%;">
+          <el-form-item label="Email">
+            <el-input v-model="user.email" :disabled="true" />
+          </el-form-item>
+
+          <!-- <el-form-item label="Password" prop="oldPassword">
+            <el-input v-model="password.oldPassword" :type="pwdType" />
+          </el-form-item> -->
+
+          <el-form-item :label="$t('user.role')" prop="role">
+            <el-select v-model="setRoleData.role" class="filter-item" placeholder="Please select role">
+              <el-option v-for="item in optionRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="onSubmitSetRole">
+              Set Role
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </el-card>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 const userResource = new Resource('users');
 const updatePasswordResource = new Resource('update-password');
+const updateRoleResource = new Resource('update-role');
 
 export default {
   props: {
@@ -75,7 +101,7 @@ export default {
       }
     };
     return {
-      activeActivity: 'third',
+      activeActivity: 'first',
       carouselImages: [
         'https://cdn.laravue.dev/photo1.png',
         'https://cdn.laravue.dev/photo2.png',
@@ -83,14 +109,25 @@ export default {
         'https://cdn.laravue.dev/photo4.jpg',
       ],
       rules: {
-        oldPassword: [{ required: true, message: 'Password is required', trigger: 'blur' }],
+        role: [{ required: true, message: 'Password is required', trigger: 'blur' }],
         newPassword: [{ required: true, message: 'password harus dimasukan', trigger: 'blur' }],
         confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
+      },
+      ruleRole: {
+        role: [{ required: true, message: 'Role is required', trigger: 'blur' }],
       },
       updating: false,
       password: {},
       pwdType: 'password',
+      optionRoles: ['admin', 'assesor', 'user'],
+      setRoleData: {},
     };
+  },
+  computed: {
+    ...mapGetters([
+      'userId',
+      'roles',
+    ]),
   },
   methods: {
     showPwd() {
@@ -132,6 +169,40 @@ export default {
               this.updating = false;
               this.$message({
                 message: 'User password berhasil di update',
+                type: 'success',
+                duration: 5 * 1000,
+              });
+            })
+            .catch(error => {
+              this.$message({
+                message: error,
+                type: 'error',
+                duration: 5 * 1000,
+              });
+            })
+            .finally(() => {
+              this.updating = false;
+            });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+
+    onSubmitSetRole() {
+      this.$refs['roleForm'].validate((valid) => {
+        if (valid) {
+          this.setRoleData.email = this.user.email;
+          this.setRoleData.userId = this.user.id;
+          this.setRoleData.submitRole = this.roles[0];
+          this.updating = true;
+          updateRoleResource
+            .store(this.setRoleData)
+            .then(response => {
+              this.updating = false;
+              this.$message({
+                message: 'User Role berhasil di update',
                 type: 'success',
                 duration: 5 * 1000,
               });

@@ -36,12 +36,35 @@
           <el-col :sm="24" :md="24" :lg="12">
             <el-form ref="form" :model="dataTrx" label-width="120px">
               <el-form-item label="Hari / Tanggal">
-                <span>{{ dataTrx.hari }} / {{ dataTrx.tanggal }} - {{ dataTrx.bulan }} - {{ dataTrx.tahun }}</span>
-                <!-- <el-date-picker v-model="dataTrx.date" type="date" placeholder="Pilih hari dan tanggal" style="width: 100%;" /> -->
+                <!-- <span>{{ dataTrx.hari }} / {{ dataTrx.tanggal }} - {{ dataTrx.bulan }} - {{ dataTrx.tahun }}</span> -->
+                <el-date-picker v-model="dataTrx.date" type="date" placeholder="Pilih hari dan tanggal" style="width: 100%;" />
               </el-form-item>
               <el-form-item label="Tempat">
                 <span>{{ dataTrx.tempat }}</span>
                 <!-- <el-date-picker v-model="dataTrx.date" type="date" placeholder="Pilih hari dan tanggal" style="width: 100%;" /> -->
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :sm="24" :md="24" :lg="24">
+            <el-form ref="form" :model="dataTrx" label-width="120px">
+              <el-form-item label="Periode">
+                <el-select
+                  v-model="dataTrx.periode"
+                  filterable
+                  clearable
+                  class="filter-item full"
+                  placeholder="pilih periode"
+                  style="width: 100%;"
+                >
+                  <el-option
+                    v-for="item in masterData.periode"
+                    :key="item.id"
+                    :label="item.nama"
+                    :value="item.id"
+                  />
+                </el-select>
               </el-form-item>
             </el-form>
           </el-col>
@@ -409,7 +432,8 @@
                   </el-table-column>
                   <el-table-column align="center" min-width="10px" label="F">
                     <template slot-scope="{row}">
-                      <el-checkbox v-model="row.prinsipF" />
+                      <el-checkbox v-if="row.item === 'Proses pengambilan keputusan'" v-model="row.prinsipF" :disabled="true" />
+                      <el-checkbox v-else v-model="row.prinsipF" />
                     </template>
                   </el-table-column>
                   <el-table-column align="center" min-width="10px" label="F">
@@ -546,7 +570,24 @@ export default {
       detail: {},
       selectedSkema: {},
       selectedUji: {},
-      dataTrx: {},
+      dataTrx: {
+        asesor_1: null,
+        asesor_2: null,
+        asesor_3: null,
+        hasil_konfirmasi_asesor_1: null,
+        hasil_konfirmasi_asesor_2: null,
+        hasil_konfirmasi_asesor_3: null,
+        lead_asesor: null,
+        hasil_konfirmasi_lead_asesor: null,
+        manager: null,
+        hasil_konfirmasi_manager: null,
+        tenaga_ahli: null,
+        hasil_konfirmasi_tenaga_ahli: null,
+        koordinator_pelatihan: null,
+        hasil_konfirmasi_koordinator_pelatihan: null,
+        anggota_asosiasi: null,
+        hasil_konfirmasi_anggota_asosiasi: null,
+      },
       unitKompetensiTable: [],
       buktiTable: [],
       tableOrangRelevan: [

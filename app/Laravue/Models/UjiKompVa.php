@@ -33,5 +33,5 @@ class UjiKompvA extends Model
     protected $fillable = ['tim_validasi_1', 'tim_validasi_2', 'tujuan_dan_fokus_validasi', 'konteks_validasi', 'pendekatan_validasi', 'asesor_1', 
     'asesor_2', 'asesor_3', 'hasil_konfirmasi_asesor_1', 'hasil_konfirmasi_asesor_2', 'hasil_konfirmasi_asesor_3', 'lead_asesor', 'hasil_konfirmasi_lead_asesor',
     'manager', 'hasil_konfirmasi_manager', 'tenaga_ahli', 'hasil_konfirmasi_tenaga_ahli', 'koordinator_pelatihan', 'hasil_konfirmasi_koordinator_pelatihan',
-    'anggota_asosiasi', 'hasil_konfirmasi_anggota_asosiasi', 'acuan_pembanding', 'dokumen_terkait', 'keterampilan_komunikasi'];
+    'anggota_asosiasi', 'hasil_konfirmasi_anggota_asosiasi', 'acuan_pembanding', 'dokumen_terkait', 'keterampilan_komunikasi', 'periode'];
 }

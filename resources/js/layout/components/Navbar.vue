@@ -39,17 +39,47 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <!-- dialog set user tanda tangan -->
+    <el-dialog v-loading="loading" title="Akun anda belum ada tanda tangan silakan buat" :visible.sync="dialogTtd" :close-on-click-modal="false">
+      <div class="form-container">
+        <el-form ref="setReferenceForm" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item label="Tanda Tangan">
+            <vueSignature
+              ref="signature"
+              :sig-option="option"
+              :w="'300px'"
+              :h="'150px'"
+              :disabled="false"
+              style="border-style: outset"
+            />
+            <el-button size="small" @click="clear">Clear</el-button>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <!-- <el-button @click="dialogTtd = false">
+            {{ $t('table.cancel') }}
+          </el-button> -->
+          <el-button type="primary" @click="saveSign">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import vueSignature from 'vue-signature';
 import { mapGetters } from 'vuex';
+import Resource from '@/api/resource';
 import Breadcrumb from '@/components/Breadcrumb';
 import Hamburger from '@/components/Hamburger';
 import Screenfull from '@/components/Screenfull';
 import SizeSelect from '@/components/SizeSelect';
 import LangSelect from '@/components/LangSelect';
 import Search from '@/components/HeaderSearch';
+
+const saveTtdResource = new Resource('user/save-signature');
 
 export default {
   components: {
@@ -59,6 +89,18 @@ export default {
     SizeSelect,
     LangSelect,
     Search,
+    vueSignature,
+  },
+  data() {
+    return {
+      option: {
+        penColor: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(255,255,255)',
+      },
+      loading: false,
+      dialogTtd: false,
+      dataTTd: null,
+    };
   },
   computed: {
     ...mapGetters([
@@ -67,11 +109,48 @@ export default {
       'avatar',
       'device',
       'userId',
+      'user',
     ]),
+  },
+  created() {
+    this.checkTtd();
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar');
+    },
+    clear() {
+      this.$refs.signature.clear();
+    },
+    saveSign() {
+      var _this = this;
+      this.dataTTd = _this.$refs.signature.save();
+      const formData = new FormData();
+      formData.append('user_id', this.userId);
+      formData.append('signature', this.dataTTd);
+      saveTtdResource
+        .store(formData)
+        .then(response => {
+          this.$message({
+            message: 'Tanda tangan user berhasil di simpan.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.dialogTtd = false;
+          this.loading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    async checkTtd(){
+      if (this.user.signature === null) {
+        this.dialogTtd = true;
+      }
     },
     async logout() {
       await this.$store.dispatch('user/logout');

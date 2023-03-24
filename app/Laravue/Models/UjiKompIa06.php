@@ -30,5 +30,5 @@ class UjiKompIa06 extends Model
      * @return Builder
      */
     protected $table = "trx_uji_komp_ia_06";
-    protected $fillable = ['rekomendasi_asesor','umpan_balik', 'submit_by'];
+    protected $fillable = ['rekomendasi_asesor','umpan_balik', 'submit_by', 'updated_by'];
 }

@@ -108,6 +108,8 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstResource = new Resource('mst-ia07-get');
 const postResource = new Resource('uji-komp-ia-07');
+const ia07Detail = new Resource('detail/ia-07');
+const ia07NilaiResource = new Resource('uji-komp-ia-07-nilai');
 
 export default {
   components: {},
@@ -125,6 +127,7 @@ export default {
       listJudulUnit: [],
       listKuk: [],
       listUji: [],
+      ia07: null,
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -143,23 +146,23 @@ export default {
       headerTable: [
         {
           title: 'Skema Sertifikasi',
-          content: 'SKEMA SKNNI KLASIFIKASI II BISNIS DARING PEMASARAN',
+          content: '-',
         },
         {
           title: 'TUK',
-          content: 'TUK BDP',
+          content: '-',
         },
         {
           title: 'Nama Asesor',
-          content: 'AULIA HARVY',
+          content: '-',
         },
         {
           title: 'Nama Asesi',
-          content: 'INDAH',
+          content: '-',
         },
         {
           title: 'Tanggal',
-          content: '20 - 12 -2022',
+          content: '-',
         },
       ],
       panduan: [
@@ -193,7 +196,9 @@ export default {
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getListPertanyaan();
+    this.getListPertanyaan().then((value) => {
+      this.getIa07();
+    });
     this.getDate();
   },
   methods: {
@@ -234,8 +239,19 @@ export default {
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
-      console.log(this.listSoal);
+      const dataia07 = await ia07Detail.get(this.$route.params.id_ia_07);
+      this.ia07 = dataia07;
       this.loading = false;
+    },
+    getIa07() {
+      if (this.$route.params.id_ia_07 !== null) {
+        this.loading = true;
+        this.listSoal.forEach((element, index) => {
+          var foundIndex = this.ia06.detail.findIndex(x => x.id_perangkat_ia_07 === element['id']);
+          element['jawaban'] = this.ia07.detail[foundIndex].jawaban;
+        });
+        this.loading = false;
+      }
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -257,14 +273,12 @@ export default {
       var id_uji = this.$route.params.id_uji;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
-      var asesor = ujiDetail.asesor;
-      console.log(ujiDetail);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = asesor.map(itm => itm.nama_asesor).join(', ');
+      this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
-      this.dataTrx.nama_asesor = asesor[0].nama_asesor;
+      this.dataTrx.nama_asesor = ujiDetail.asesor;
       this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
     },
     onJadwalSelect() {
@@ -313,7 +327,32 @@ export default {
         .store(this.form)
         .then(response => {
           this.$message({
-            message: 'FR IA 03 has been created successfully.',
+            message: 'FR IA 07 has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    nilai() {
+      this.loading = true;
+      this.form.detail_ia_07 = this.listSoal;
+      this.form.user_id = this.userId;
+      this.form.id_uji_komp = this.$route.params.id_uji;
+      this.form.id_ia_07 = this.$route.params.id_ia_07;
+      this.form.id_skema = this.$route.params.id_skema;
+      ia07NilaiResource
+        .store(this.form)
+        .then(response => {
+          this.$message({
+            message: 'FR IA 07 has been created successfully.',
             type: 'success',
             duration: 5 * 1000,
           });

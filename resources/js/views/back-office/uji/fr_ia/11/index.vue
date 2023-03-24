@@ -187,23 +187,23 @@ export default {
       headerTable: [
         {
           title: 'Skema Sertifikasi',
-          content: 'SKEMA SKNNI KLASIFIKASI II BISNIS DARING PEMASARAN',
+          content: '-',
         },
         {
           title: 'TUK',
-          content: 'TUK BDP',
+          content: '-',
         },
         {
           title: 'Nama Asesor',
-          content: 'AULIA HARVY',
+          content: '-',
         },
         {
           title: 'Nama Asesi',
-          content: 'INDAH',
+          content: '-',
         },
         {
           title: 'Tanggal',
-          content: '20 - 12 -2022',
+          content: '-',
         },
       ],
       panduan: [
@@ -295,15 +295,14 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
-      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = asesor[0].nama_asesor;
+      this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
 
-      this.dataTrx.nama_peninjau = asesor[0].nama_asesor;
+      this.dataTrx.nama_peninjau = ujiDetail.asesor;
       this.dataTrx.tanggal = ujiDetail.mulai;
     },
     onJadwalSelect() {

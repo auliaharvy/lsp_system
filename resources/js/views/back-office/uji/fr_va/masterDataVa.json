@@ -1,4 +1,18 @@
 {
+    "periode": [
+        {
+        "id": 1,
+        "nama": "Sebelum asesmen"
+        },
+        {
+        "id": 2,
+        "nama": "Pada saat asesmen"
+        },
+        {
+        "id": 3,
+        "nama": "Setelah Asesmen"
+        }
+    ],
     "tujuan": [
         "Bagian dari proses penjaminan mutu organisasi",
         "Mengantisipasi risiko",

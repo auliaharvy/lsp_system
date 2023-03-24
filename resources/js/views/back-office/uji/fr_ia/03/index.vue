@@ -124,17 +124,18 @@
           label-width="250px"
           label-position="left"
         >
-          <el-form-item v-if="roles[0] !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor">
+          <el-form-item v-if="roles[0] !== 'user'" label="Rekomendasi Assesor">
             <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
-          <el-form-item v-if="roles[0] !== 'user'" label="Umpan balik untuk asesi" prop="feedback">
+          <el-form-item v-if="roles[0] !== 'user'" label="Umpan balik untuk asesi">
             <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
           </el-form-item>
         </el-form>
         <br>
 
-        <el-button @click="onSubmit">Submit</el-button>
+        <el-button v-if="!$route.params.id_ia_03" @click="onSubmit">Submit</el-button>
+        <el-button v-if="$route.params.id_ia_03 && roles[0] !== 'user'" @click="nilai">Submit Asesor</el-button>
       </div>
     </el-main>
   </el-container>
@@ -149,6 +150,7 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstIa03Resource = new Resource('mst-ia03-get');
 const ia03Resource = new Resource('uji-komp-ia-03');
+const ia03NilaiResource = new Resource('uji-komp-ia-03-nilai');
 const ia03Detail = new Resource('detail/ia-03');
 
 export default {
@@ -162,6 +164,7 @@ export default {
       listSkema: null,
       listTuk: null,
       listJadwal: null,
+      ia03: null,
       listKodeUnit: [],
       listJudulUnit: [],
       listKuk: [],
@@ -184,19 +187,19 @@ export default {
       headerTable: [
         {
           title: 'Skema Sertifikasi',
-          content: 'SKEMA SKNNI KLASIFIKASI II BISNIS DARING PEMASARAN',
+          content: '-',
         },
         {
           title: 'TUK',
-          content: 'TUK BDP',
+          content: '-',
         },
         {
           title: 'Nama Asesor',
-          content: 'AULIA HARVY',
+          content: '-',
         },
         {
           title: 'Nama Asesi',
-          content: 'INDAH',
+          content: '-',
         },
         {
           title: 'Tanggal',
@@ -234,26 +237,12 @@ export default {
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
+    });
+    this.getListPertanyaan().then((value) => {
       this.getIa03();
     });
-    this.getListPertanyaan();
   },
   methods: {
-    async getIa03() {
-      if (this.$route.params.id_ia_03 !== null) {
-        this.loading = true;
-        const data = await ia03Detail.get(this.$route.params.id_ia_03);
-        this.ia03 = data.ia_03;
-        this.form.umpanBalikAsesi = this.ia03.umpan_balik;
-        this.form.rekomendasi_asesor = this.ia03.rekomendasi_asesor;
-        this.listSoal.forEach((element, index) => {
-          var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_03 === element['id']);
-          element['is_kompeten'] = data.detail[foundIndex].rekomendasi;
-          element['tanggapan'] = data.detail[foundIndex].tanggapan;
-        });
-        this.loading = false;
-      }
-    },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -269,8 +258,19 @@ export default {
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
-      console.log(this.listSoal);
+      const dataia03 = await ia03Detail.get(this.$route.params.id_ia_03);
+      this.ia03 = dataia03;
       this.loading = false;
+    },
+    getIa03() {
+      if (this.$route.params.id_ia_03 !== null) {
+        this.loading = true;
+        this.listSoal.forEach((element, index) => {
+          var foundIndex = this.ia03.detail.findIndex(x => x.id_perangkat_ia_03 === element['id']);
+          element['tanggapan'] = this.ia03.detail[foundIndex].tanggapan;
+        });
+        this.loading = false;
+      }
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -293,11 +293,10 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
-      var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = asesor[0].nama_asesor;
+      this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
     },
@@ -314,7 +313,6 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -332,7 +330,6 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -344,6 +341,31 @@ export default {
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
       ia03Resource
+        .store(this.form)
+        .then(response => {
+          this.$message({
+            message: 'FR IA 03 has been created successfully.',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+          this.$router.push({ name: 'uji-komp-list' });
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    nilai() {
+      this.loading = true;
+      this.form.detail_ia_03 = this.listSoal;
+      this.form.user_id = this.userId;
+      this.form.id_uji_komp = this.$route.params.id_uji;
+      this.form.id_skema = this.$route.params.id_skema;
+      this.form.id_ia_03 = this.$route.params.id_ia_03;
+      ia03NilaiResource
         .store(this.form)
         .then(response => {
           this.$message({

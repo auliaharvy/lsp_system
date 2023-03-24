@@ -61,7 +61,7 @@
 
         <br>
         <br>
-        <a target="_blank" :href="'/' + selectedSkema">
+        <a target="_blank" :href="'/' + dataSoal">
           <el-button type="primary">
             Klik untuk melihat soal
           </el-button>
@@ -125,6 +125,7 @@ export default {
       listKuk: [],
       listUji: [],
       detail: {},
+      dataSoal: null,
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -220,7 +221,7 @@ export default {
       this.loading = true;
       const { data } = await mstIa02Resource.list({ id_skema: this.$route.params.id_skema });
       this.listSoal = data;
-      this.selectedSkema = data[0].file;
+      this.dataSoal = data[0].file;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
