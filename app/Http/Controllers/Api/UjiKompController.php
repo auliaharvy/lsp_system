@@ -525,8 +525,8 @@ class UjiKompController extends BaseController
     public function showIa07($id)
     {
     
-        $queryIa07 = UjiKompIa06::where('trx_uji_komp_ia_07.id',$id)->first();
-        $queryDetailIa07 = UjiKompIa06Detail::where('trx_uji_komp_ia_07_detail.id_ia_07',$id)->get();
+        $queryIa07 = UjiKompIa07::where('trx_uji_komp_ia_07.id',$id)->first();
+        $queryDetailIa07 = UjiKompIa07Detail::where('trx_uji_komp_ia_07_detail.id_ia_07',$id)->get();
     
         $data = [
             'ia_07' => $queryIa07,
@@ -676,7 +676,7 @@ class UjiKompController extends BaseController
                 $mytime = Carbon::now();
                 $now = $mytime->toDateString();
                 // membuat nama file unik
-                $nama_file = $now  . '-asesor-' . 'apl02' . '-' . '.png';
+                $nama_file = $now  . $nama_asesor .'-asesor-' . 'apl02' . '-' . '.png';
                 \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
 
                 $foundApl02->status = $params['status'];
@@ -720,8 +720,9 @@ class UjiKompController extends BaseController
                 $image = str_replace(' ', '+', $image);
                 $mytime = Carbon::now();
                 $now = $mytime->toDateString();
+                $id_user = $params['user_id'];
                 // membuat nama file unik
-                $nama_file = $now . '-asesor-' . 'ia01' . '-' . '.png';
+                $nama_file = $now . $id_user . '-asesor-' . 'ia01' . '-' . '.png';
                 \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
 
                 //upload sign
@@ -729,7 +730,7 @@ class UjiKompController extends BaseController
                 $image1 = str_replace('data:image/png;base64,', '', $file1);
                 $image1 = str_replace(' ', '+', $image1);
                 // membuat nama file unik
-                $nama_file1 = $now . '-asesi-' . 'ia01' . '-' . '.png';
+                $nama_file1 = $now . $id_user .'-asesi-' . 'ia01' . '-' . '.png';
                 \File::put(public_path(). '/uploads/users/signature/' . $nama_file1, base64_decode($image1));
 
                 $ia01 = UjiKompIa01::create([
@@ -788,9 +789,10 @@ class UjiKompController extends BaseController
                 $params = $request->all();
                 // upload file
                 $file = $request->file('file');
+                $user_id = $params['user_id'];
                 $mytime = Carbon::now();
                 $now = $mytime->toDateString();
-                $nama_file = $now . '-' . $file->getClientOriginalName();
+                $nama_file = $now . $user_id . '-' . $file->getClientOriginalName();
                 $file->move('uploads/ia-02/jawaban/', $nama_file);
                 $file = 'uploads/ia-02/jawaban/'.$nama_file;
 
@@ -1098,8 +1100,8 @@ class UjiKompController extends BaseController
             DB::beginTransaction();
             $id_uji_komp = $request->get('id_uji_komp');
             $id_ia_06 = $request->get('id_ia_06');
-            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
-            $foundIa06 = UjiKompIa06::where('id', $id_ia_06)->first();
+            $foundUjiKomp = UjiKomp::where('id', $request->get('id_uji_komp'))->first();
+            $foundIa06 = UjiKompIa06::where('id', $request->get('id_ia_06'))->first();
             try {
                 $params = $request->all();
                 $foundIa06->rekomendasi_asesor = $params['rekomendasi_asesor'];
@@ -1109,7 +1111,9 @@ class UjiKompController extends BaseController
 
                 $elemen = $params['detail_ia_06'];
                 for ($i = 0; $i < count($elemen); $i++) {
+                    echo $elemen[$i]['id'];
                     $foundIa06Detail = UjiKompIa06Detail::where('id', $elemen[$i]['id'])->first();
+                    
                     $foundIa06Detail->rekomendasi = $elemen[$i]['is_kompeten'];
                     $foundIa06Detail->save();
                 }

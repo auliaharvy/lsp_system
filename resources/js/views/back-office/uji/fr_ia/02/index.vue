@@ -205,7 +205,7 @@ export default {
         this.loading = true;
         const data = await ia02Detail.get(this.$route.params.id_ia_02);
         this.detail = data;
-        this.dataTrx.rekomendasi_asesor = data.rekomendasi_asesor;
+        // this.dataTrx.rekomendasi_asesor = data.rekomendasi_asesor;
         this.loading = false;
       }
     },

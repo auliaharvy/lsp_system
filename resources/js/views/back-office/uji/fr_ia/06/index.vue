@@ -61,6 +61,11 @@
           </el-table-column>
           <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
+              <span>{{ scope.row.kunci_jawaban }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Rekomendasi">
+            <template slot-scope="scope">
               <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
                 <el-option key="belum kompeten" label="Belum Kompeten" value="belum kompeten" />

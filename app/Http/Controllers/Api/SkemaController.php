@@ -34,7 +34,7 @@ use Validator;
  */
 class SkemaController extends BaseController
 {
-    const ITEM_PER_PAGE = 15;
+    const ITEM_PER_PAGE = 1000;
 
     /**
      * Display a listing of the user resource.

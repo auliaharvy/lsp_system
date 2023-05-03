@@ -94,6 +94,33 @@ class PrintController extends BaseController
 	    return $pdf->output();
     }
 
+    public function printHasilUji(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $visibility = Arr::get($searchParams, 'visibility', 0);
+        $user_id = Arr::get($searchParams, 'user_id', '');
+        $role = Arr::get($searchParams, 'role', '');
+        $foundUser = User::where('id',$user_id)->first();
+        $idJadwal = Arr::get($searchParams, 'idJadwal', '');
+        
+        $query = Jadwal::where('trx_jadwal_asesmen.id',$idJadwal)
+        ->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema')
+        ->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk')
+        ->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
+        ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor', 'f.no_reg')->first();
+
+        $queryApl01 = UjiKompApl1::where('id_jadwal',$idJadwal)->get();
+        
+        // $query->first();
+        // return response()->json(['jadwal' => $query, 'uji' => $queryApl01]);
+
+        $pdf = PDF::loadview('print/surat-tugas',['jadwal'=>$query, 'uji' => $queryApl01]);
+        $pdf->setPaper('a4' , 'portrait');
+	    return $pdf->output();
+    }
+
     /**
      * Store a newly created resource in storage.
      *

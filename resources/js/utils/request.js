@@ -59,7 +59,7 @@ service.interceptors.response.use(
         type: '"warning"',
         callback: action => {
           if (error.response.data.message === 'Unauthenticated.') {
-            window.location.reload();
+            console.log(error.response.data.message);
           } else {
             null;
           }
