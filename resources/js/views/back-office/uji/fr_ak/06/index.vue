@@ -84,6 +84,26 @@
             </el-table-column>
           </el-table-column>
         </el-table>
+        <el-table
+          v-loading="loading"
+          :data="rekomendasi"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center'}"
+        >
+          <el-table-column align="left" width="150px">
+            <template>
+              <span> Rekomendasi untuk peningkatan :</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.rekomendasi" type="textarea" />
+            </template>
+          </el-table-column>
+        </el-table>
+        <br>
 
         <el-table
           v-loading="loading"
@@ -92,15 +112,99 @@
           border
           highlight-current-row
           style="width: 100%"
-          :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
+          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
           <el-table-column align="left" label="Aspek Yang Ditinjau">
             <template slot-scope="scope">
               <span>{{ scope.row.item }}</span>
             </template>
           </el-table-column>
+          <el-table-column align="center" label="Pemenuhan Dimensi Kompetensi">
+            <el-table-column align="center" label="Task Skills">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.taskSkill" type="textarea" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="Task Management Skills">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.taskManagement" type="textarea" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="Contingency Management Skills">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.contigency" type="textarea" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="Job Role / Environment Skills">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.jobRole" type="textarea" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="Transfer Skills">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.transferSkill" type="textarea" />
+              </template>
+            </el-table-column>
+          </el-table-column>
+        </el-table>
+        <el-table
+          v-loading="loading"
+          :data="rekomendasiPemenuhan"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center'}"
+        >
+          <el-table-column align="left" width="150px">
+            <template>
+              <span> Rekomendasi untuk peningkatan :</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.rekomendasi" type="textarea" />
+            </template>
+          </el-table-column>
         </el-table>
 
+        <br>
+
+        <el-table
+          v-if="ttdTable"
+          v-loading="loading"
+          :data="ttdTable"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Nama Asesor">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanggal">
+            <template slot-scope="scope">
+              <span>{{ scope.row.tanggal }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan Asesor">
+            <template slot-scope="scope">
+              <el-image
+                style="width: 200px; height: 100px"
+                :src="scope.row.ttd"
+                fit="contain"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Komentar">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.komentar" type="textarea" />
+            </template>
+          </el-table-column>
+        </el-table>
+        <br>
+        <el-button @click="onSubmit">Submit</el-button>
       </div>
     </el-main>
   </el-container>
@@ -113,6 +217,7 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstAk03Resource = new Resource('mst-ak-03-get');
+// const apl01Resource = new Resource('detail/apl-01');
 
 export default {
   components: {},
@@ -219,11 +324,21 @@ export default {
       aspekPemenuhan: [
         {
           item: 'Konsistensi keputusan asesmen Bukti dari berbagai asesmen diperiksa untuk konsistensi dimensi kompetensi',
-          taskSkill: false,
-          taskManagement: false,
-          contigency: false,
-          jobRole: false,
-          transferSkill: false,
+          taskSkill: '',
+          taskManagement: '',
+          contigency: '',
+          jobRole: '',
+          transferSkill: '',
+        },
+      ],
+      rekomendasi: [
+        {
+          rekomendasi: '',
+        },
+      ],
+      rekomendasiPemenuhan: [
+        {
+          rekomendasi: '',
         },
       ],
       form: {
@@ -234,6 +349,15 @@ export default {
         catatanPenolakan: '',
         saranPerbaikan: '',
       },
+      ttdTable: [
+        {
+          no: 1,
+          nama: 'Nama Asesor',
+          tanggal: '12-2-2002',
+          ttd: '',
+          komentar: '',
+        },
+      ],
       active: 0,
       isWide: true,
       labelPosition: 'left',
@@ -247,6 +371,7 @@ export default {
     this.onResize();
   },
   created() {
+    this.getApl01();
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
@@ -263,6 +388,11 @@ export default {
           // kuk.is_kompeten = this.kompeten;
         }
       }
+    },
+    async getApl01() {
+      this.loading = true;
+      // const data = await apl01Resource.get(this.$route.params.id_apl_01);
+      // this.ttdTable[0].nama = this.$route.params.asesor;
     },
     async getListPertanyaan() {
       this.loading = true;
@@ -295,11 +425,12 @@ export default {
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = ujiDetail.nama_asesor;
-      this.headerTable[3].content = ujiDetail.nama_peserta;
+      this.headerTable[0].content = ujiDetail.nama_peserta;
+      this.headerTable[1].content = ujiDetail.asesor;
+      this.headerTable[2].content = ujiDetail.nama_tuk;
+      this.headerTable[3].content = ujiDetail.skema_sertifikasi;
       this.headerTable[4].content = ujiDetail.mulai;
+      this.ttdTable[0].nama = ujiDetail.asesor;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
