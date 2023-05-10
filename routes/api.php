@@ -42,9 +42,8 @@ Route::namespace('Api')->group(function() {
      // Testing API sebelum di middleware
         Route::apiResource('mapa2','Mapa2Controller');
         Route::post('del-mapa2','Mapa2Controller@destroy');
-        Route::post('uji-komp-mapa-02','UjiKompController@storeMapa02');
+       
 
-        Route::post('uji-komp-ak-06', 'UjiKompController@storeAk06');
 
 
     Route::get('mst-ia02-get', 'PerangkatController@indexIa02');
@@ -105,7 +104,8 @@ Route::namespace('Api')->group(function() {
         Route::post('uji-komp-ak-02', 'UjiKompController@storeAk02');
         Route::post('uji-komp-ak-04', 'UjiKompController@storeAk04');
         Route::post('uji-komp-ak-05', 'UjiKompController@storeAk05');
-        // Route::post('uji-komp-ak-06', 'UjiKompController@storeAk06');
+        Route::post('uji-komp-ak-06', 'UjiKompController@storeAk06');
+        Route::post('uji-komp-mapa-02','UjiKompController@storeMapa02');
         Route::post('uji-komp-va', 'UjiKompController@storeVa');
         // Jadwal Routes
         Route::apiResource('jadwal', 'JadwalController');
