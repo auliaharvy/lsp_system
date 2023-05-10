@@ -31,7 +31,7 @@ class SkemaKukElemen extends Model
     protected $table = "mst_skema_sertifikasi_kuk_elemen";
     protected $fillable = ['id_elemen','kuk', 'pertanyaan_kuk', 'jumlah_bukti', 'jenis_bukti_id', 'bukti'];
 
-    public function getSkemaKukElemen($unit_id)
+    public static function getSkemaKukElemen($unit_id)
     {
         $skemaUnit = SkemaKukElemen::where('id_elemen', $unit_id)
         ->select('mst_skema_sertifikasi_kuk_elemen.*', 'a.nama as nama_jenis_bukti')

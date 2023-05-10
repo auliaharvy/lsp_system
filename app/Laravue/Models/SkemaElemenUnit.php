@@ -32,7 +32,7 @@ class SkemaElemenUnit extends Model
     protected $table = "mst_skema_sertifikasi_elemen_kompetensi";
     protected $fillable = ['id_unit','nama_elemen'];
 
-    public function getSkemaElemen($unit_id)
+    public static function getSkemaElemen($unit_id)
     {
         $skemaElemenUnit = SkemaElemenUnit::where('id_unit', $unit_id)
         ->select('mst_skema_sertifikasi_elemen_kompetensi.*')

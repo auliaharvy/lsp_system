@@ -22,6 +22,7 @@ use App\Laravue\Models\UjiKompAk02;
 use App\Laravue\Models\UjiKompAk02Detail;
 use App\Laravue\Models\UjiKompAk04;
 use App\Laravue\Models\UjiKompAk05;
+use App\Laravue\Models\UjiKompAk06;
 use App\Laravue\Models\UjiKompIa01;
 use App\Laravue\Models\UjiKompIa01Detail;
 use App\Laravue\Models\UjiKompIa02;
@@ -33,6 +34,7 @@ use App\Laravue\Models\UjiKompIa06;
 use App\Laravue\Models\UjiKompIa06Detail;
 use App\Laravue\Models\UjiKompIa11;
 use App\Laravue\Models\UjiKompIa11Detail;
+use App\Laravue\Models\UjiKompMapa02;
 use App\Laravue\Models\UjiKompVa;
 use App\Laravue\Models\UjiKompVaAspek;
 use App\Laravue\Models\UjiKompVaRencana;
@@ -401,6 +403,7 @@ class UjiKompController extends BaseController
             UjiKompAk03Detail::where('id_ak_03', $foundUji->id_ak_03)->delete();
             UjiKompAk04::where('id', $foundUji->id_ak_04)->delete();
             UjiKompAk05::where('id', $foundUji->id_ak_05)->delete();
+            UjiKompAk06::where('id', $foundUji->id_ak_06)->delete();
             UjiKompIa01::where('id', $foundUji->id_ia_01)->delete();
             UjiKompIa01Detail::where('id_ia_01', $foundUji->id_ia_01)->delete();
             UjiKompIa02::where('id', $foundUji->id_ia_02)->delete();
@@ -466,6 +469,13 @@ class UjiKompController extends BaseController
     {
        
         $query = UjiKompAk05::where('trx_uji_komp_ak_05.id',$id)->first();
+       
+        return $query;
+    }
+    public function showAk06($id)
+    {
+       
+        $query = UjiKompAk06::where('trx_uji_komp_ak_06.id',$id)->first();
        
         return $query;
     }
@@ -1577,6 +1587,89 @@ class UjiKompController extends BaseController
             }
         }
     }
+    public function storeAk06(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesAk06(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            try {
+                $params = $request->all();
+                $ak06 = UjiKompAk06::create([
+                    'rencana_asesmen'=> $params['rencana_asesmen'],
+                    'persiapan_asesmen'=> $params['persiapan_asesmen'],
+                    'implementasi_asesmen'=> $params['implementasi_asesmen'],
+                    'keputusan_asesmen' => $params['keputusan_asesmen'],
+                    'umpan_balik_asesmen'=> $params['umpan_balik_asesmen'],
+                    'rekomendasi_prosedur' => $params['rekomendasi_prosedur'],
+                    'task_skill'=> $params['task_skill'],
+                    'task_management_skill' => $params['task_management_skill'],
+                    'contingency_management_skill' => $params['contingency_management_skill'],
+                    'job_role' => $params['job_role'],
+                    'transfer_skill' => $params['transfer_skill'],
+                    'rekomendasi_konsistensi' =>['rekomendasi_konsistensi'],
+                    'ttd_asesor' => $params['ttd_asesor'],
+                    'submit_by' => $params['submit_by'],
+                    'komentar' => $params['komentar'],
+                ]);
+
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->id_ak_06 = $ak06->id;
+                $foundUjiKomp->persentase = $progress + 6.6;
+                $foundUjiKomp->save();
+
+
+                DB::commit();
+                return response()->json(['message' => "Sukses membuat FR AK 06"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
+    public function storeMapa02(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationMapa02(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            $id_uji_komp = $request->get('id_uji_komp');
+            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            try {
+                $params = $request->all();
+                $mapa02 = UjiKompMapa02::create([
+                  'id_uji_komp' => $params['id_uji_komp'],'id_mst_mapa_02' => $params['id_mst_mapa_02'],'potensi_asesi_1'=> $params['potensi_asesi_1'],'potensi_asesi_2' =>$params['potensi_asesi_2'],'potensi_asesi_3'=>$params['potensi_asesi_3'],'potensi_asesi_4'=>$params['potensi_asesi_4'],'potensi_asesi_5'=>$params['potensi_asesi_5'],'submit_by'=>$params['user_id'],
+                  'updated_by'=>null
+                ]);
+
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->id_mapa_02 = $mapa02->id;
+                $foundUjiKomp->persentase = $progress + 6.6;
+                $foundUjiKomp->save();
+
+
+                DB::commit();
+                return response()->json(['message' => "Sukses membuat FR MAPA 02"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage();
+            }
+        }
+    }
 
     public function storeVa(Request $request)
     {
@@ -1748,6 +1841,26 @@ class UjiKompController extends BaseController
     {
         return [
             'namaAsesi' => 'required',
+        ];
+    }
+    private function getValidationRulesAk06()
+    {
+        return [
+            'rencana_asesmen' => 'required',
+            'persiapan_asesmen' => 'required',
+            'implementasi_asesmen' => 'required',
+            'keputusan_asesmen' => 'required',
+            'umpan_balik_asesmen' => 'required',
+            'rekomendasi_prosedur'=> 'required',
+            'submit_by' => 'required',
+        ];
+    }
+    private function getValidationMapa02()
+    {
+        return [
+            'id_uji_komp'=>'required',
+            'submit_by'=>'required',
+            'id_mst_mapa_02'=>'required',
         ];
     }
     
