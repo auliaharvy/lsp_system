@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Laravue\Faker;
 use \App\Laravue\JsonResponse;
 use \App\Laravue\Acl;
+use App\Http\Controllers\Api\Mapa2Controller;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,14 @@ Route::namespace('Api')->group(function() {
     Route::post('check-user-uji', 'UjiKompController@checkUser');
     Route::get('uji-komp-get', 'UjiKompController@index');
     Route::get('skema-kategori-get', 'AsesmenKategoriController@index');
+
+     // Testing API sebelum di middleware
+        Route::apiResource('mapa2','Mapa2Controller');
+        Route::post('del-mapa2','Mapa2Controller@destroy');
+        Route::post('uji-komp-mapa-02','UjiKompController@storeMapa02');
+
+        Route::post('uji-komp-ak-06', 'UjiKompController@storeAk06');
+
 
     Route::get('mst-ia02-get', 'PerangkatController@indexIa02');
     Route::get('mst-ia03-get', 'PerangkatController@indexIa03');
@@ -96,6 +105,7 @@ Route::namespace('Api')->group(function() {
         Route::post('uji-komp-ak-02', 'UjiKompController@storeAk02');
         Route::post('uji-komp-ak-04', 'UjiKompController@storeAk04');
         Route::post('uji-komp-ak-05', 'UjiKompController@storeAk05');
+        // Route::post('uji-komp-ak-06', 'UjiKompController@storeAk06');
         Route::post('uji-komp-va', 'UjiKompController@storeVa');
         // Jadwal Routes
         Route::apiResource('jadwal', 'JadwalController');
@@ -127,6 +137,8 @@ Route::namespace('Api')->group(function() {
         Route::post('skema/add/unit', 'SkemaController@storeUnit');
         Route::post('skema/upload/elemen', 'SkemaController@uploadElemenUnit');
         Route::post('skema/upload/kuk', 'SkemaController@uploadKuk');
+
+       
 
 
         // Auth routes

@@ -16,7 +16,6 @@
           <el-table-column align="left" min-width="30px">
             <template slot-scope="scope">
               <span>{{ scope.row.title }}</span>
-
             </template>
           </el-table-column>
           <el-table-column align="left">
@@ -60,25 +59,69 @@
         </el-table>
 
         <br>
-        <a target="_blank" :href="'/file/fr-02/' + selectedSkema.kode_skema + '.pdf'">
-          <el-button type="primary">
-            Klik untuk melihat soal
-          </el-button>
-        </a>
-        <br>
-
-        <el-form
-          ref="form"
-          :model="radio1"
-          label-width="250px"
-          label-position="left"
+        <!-- tambahan 07-05-2023 -->
+        <el-table
+          v-loading="loading"
+          :data="listMuk"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
-          <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
-            <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
-          </el-form-item>
-        </el-form>
+          <el-table-column align="center" min-width="10px" label="No">
+            <template slot-scope="scope">
+              <span>{{ scope.row.index }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="left" min-width="150px" label="MUK">
+            <template slot-scope="scope">
+              <span>{{ scope.row.muk }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" min-width="10px" label="Potensi Asesi *)">
+            <el-table-column align="center" min-width="15px" label="1">
+              <template slot-scope="scope">
+                <el-checkbox v-model="scope.row.potensi_asesi_1" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" min-width="15px" label="2">
+              <template slot-scope="scope">
+                <el-checkbox v-model="scope.row.potensi_asesi_2" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" min-width="15px" label="3">
+              <template slot-scope="scope">
+                <el-checkbox v-model="scope.row.potensi_asesi_3" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" min-width="15px" label="4">
+              <template slot-scope="scope">
+                <el-checkbox v-model="scope.row.potensi_asesi_4" />
+              </template>
+            </el-table-column>
+            <el-table-column align="center" min-width="15px" label="5">
+              <template slot-scope="scope">
+                <el-checkbox v-model="scope.row.potensi_asesi_5" />
+              </template>
+            </el-table-column>
+          </el-table-column>
+        </el-table>
       </div>
+      <br>
+      <el-table
+        v-loading
+        :data="['-']" fit
+        border highlight-current-row style="width: 100%" :header-cell-style="{'text-align':'left', 'background':'#324157', 'color':'white'}"
+      >
+        <el-table-column align="left" label="*) Keterangan">
+          <ol>
+            <li v-for="item in keterangan" :key="item">
+              {{ item }}
+            </li>
+          </ol>
+        </el-table-column>
+      </el-table>
       <br>
       <el-button @click="onSubmit">Submit</el-button>
     </el-main>
@@ -93,19 +136,18 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const ia02Resource = new Resource('uji-komp-ia-02');
+const mapa2Resource = new Resource('mapa2');
 
 export default {
   components: {},
   data() {
     return {
-      radio1: 'Kompeten',
-      kompeten: null,
       loading: false,
       listSkema: null,
       listTuk: null,
       listJadwal: null,
       listKodeUnit: [],
-      listJudulUnit: [],
+      listMuk: [],
       listKuk: [],
       listUji: [],
       selectedSkema: {},
@@ -129,27 +171,16 @@ export default {
           content: 'SKEMA SKNNI KLASIFIKASI II BISNIS DARING PEMASARAN',
         },
         {
-          title: 'TUK',
+          title: 'Nomor Skema',
           content: 'TUK BDP',
         },
-        {
-          title: 'Nama Asesor',
-          content: 'AULIA HARVY',
-        },
-        {
-          title: 'Nama Asesi',
-          content: 'INDAH',
-        },
-        {
-          title: 'Tanggal',
-          content: '20 - 12 -2022',
-        },
       ],
-      panduan: [
-        'Lengkapi nama unit kompetensi, elemen, kriteria unjuk kerja sesuai kolom dalam tabel.',
-        'Istilah Acuan Pembanding dengan SOP / spesifikasi produk dari industri / orginasi dari tempat kerja atau simulasi tempat kerja',
-        'Beri tanda centang pada kolom K jika Anda yakin asesi dapat melakukan/mendemonstrasikan tugas seuai KUK, atau centang pada kolom BK bila sebaliknya.',
-        'Penilaian lanjut diisi bila hasil belum dapat disimpulkan, untuk itu gunakan metode lain sehingga keputusan dapat dibuat',
+      keterangan: [
+        'Hasil pelatihan dan / atau pendidikan, dimana Kurikulum dan fasilitas praktek mampu telusur terhadap standar kompetensi.',
+        'Hasil pelatihan dan / atau pendidikan, dimana kurikulum belum berbasis kompetensi.',
+        'Pekerja berpengalaman, dimana berasal dari industri/tempat kerja yang dalam operasionalnya mampu telusur dengan standar kompetensi.',
+        'Pekerja berpengalaman, dimana berasal dari industri/tempat kerja yang dalam operasionalnya belum berbasis kompetensi.',
+        'Pelatihan / belajar mandiri atau otodidak.',
       ],
       form: {},
       active: 0,
@@ -176,6 +207,7 @@ export default {
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
+    this.getMuk();
   },
   methods: {
     allKompeten() {
@@ -189,6 +221,13 @@ export default {
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
+    },
+    async getMuk() {
+      const { data } = await mapa2Resource.list();
+      this.listMuk = data;
+      this.listMuk.forEach((element, index) => {
+        element['index'] = index + 1;
+      });
     },
     async getListUji() {
       const { data } = await ujiKomResource.list();
@@ -209,10 +248,10 @@ export default {
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = ujiDetail.nama_asesor;
-      this.headerTable[3].content = ujiDetail.nama_peserta;
-      this.headerTable[4].content = ujiDetail.mulai;
+      this.headerTable[1].content = ujiDetail.kode_skema;
+      // this.headerTable[2].content = ujiDetail.nama_asesor;
+      // this.headerTable[3].content = ujiDetail.nama_peserta;
+      // this.headerTable[4].content = ujiDetail.mulai;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;

@@ -100,7 +100,7 @@
               <span>{{ scope.row.pertanyaan }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" min-width="200px" label="Tangagpan">
+          <el-table-column align="left" min-width="200px" label="Tanggapan">
             <template slot-scope="scope">
               <el-input v-model="scope.row.tanggapan" type="textarea" :rows="3" placeholder="Isi Tanggapan" label="Tanggapan" />
             </template>
