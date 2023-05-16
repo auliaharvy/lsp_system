@@ -428,6 +428,29 @@ class UjiKompController extends BaseController
      * @param  UjiKomp $UjiKomp
      * @return MasterResource|\Illuminate\Http\JsonResponse
      */
+    public function showPreview($id)
+    {
+       
+        $queryUjiKomp = UjiKomp::where('trx_uji_komp.id',$id)
+            // $queryUjiKompApl1 = UjiKompApl1::where('trx_uji_komp_apl_01.id', $queryUjiKomp.id_apl_01)
+            // ->join('mst_skema_sertifikasi as b', 'b.id', '=', $queryUjiKompApl1.id_skema)
+        // ->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_uji_komp_apl_01.id_skema')
+        // ->join('mst_tuk as c', 'c.id', '=', 'trx_uji_komp_apl_01.id_tuk')
+        // ->join('trx_jadwal_asesmen as d', 'd.id', '=', 'trx_uji_komp_apl_01.id_jadwal')
+        // ->join('users as e', 'e.email', '=', 'trx_uji_komp_apl_01.email')
+        // ->leftJoin('users as f', 'f.id', '=', 'trx_uji_komp_apl_01.id_admin')
+        // $data = [
+        //     'ttd_asesor' => $queryApl02->ttd_asesor,
+        //     'status' => $queryApl02->status,
+        //     'detail' => $queryDetailApl02,
+        // ];
+ 
+        ->select('trx_uji_komp.*')
+        ->first();
+       
+        return $queryUjiKomp;
+    }
+
     public function showApl01($id)
     {
        
