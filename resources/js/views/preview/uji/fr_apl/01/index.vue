@@ -1,209 +1,14 @@
 <template>
-  <el-container class="app-container">
-    <vue-html2pdf
-      ref="html2Pdf"
-      :show-layout="false"
-      :float-layout="true"
-      :enable-download="true"
-      :preview-modal="true"
-      :paginate-elements-by-height="1100"
-      :filename="fileName"
-      :pdf-quality="2"
-      :manual-pagination="true"
-      pdf-format="a4"
-      pdf-orientation="portrait"
-      pdf-content-width="100%"
-      @hasStartedGeneration="hasStartedGeneration()"
-      @hasGenerated="hasGenerated($event)"
-    >
-      <section slot="pdf-content">
-        <el-main>
-          <div>
-            <section slot="pdf-item">
-              <h3>FR.APL.01 PERMOHONAN SERTIFIKASI KOMPETENSI</h3>
-              <h4>Bagian 1 : Rincian Data Pemohon Sertifikasi</h4>
-              <span>Pada bagian ini, cantumlah data pribadi, data pendidikan formal serta data pekerjaan anda pada saat ini.</span>
-              <br>
-              <h5>a. Data Pribadi</h5>
-              <el-table
-                v-loading="loading"
-                :data="headerTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 100%"
-                :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-              >
-                <el-table-column align="left" width="200px">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.title }}</span>
-
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.content }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <br>
-              <h5>b. Data Pekerjaan</h5>
-              <el-table
-                v-loading="loading"
-                :data="dataPekerjaanTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 100%"
-                :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-              >
-                <el-table-column align="left" width="200px">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.title }}</span>
-
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.content }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </section>
-
-            <div class="html2pdf__page-break" />
-
-            <section slot="pdf-item">
-              <h4>Bagian 2 : Data Sertifikasi</h4>
-              <span>Tuliskan Judul dan Nomor Skema Sertifikasi yang anda ajukan berikut Daftar Unit Kompetensi sesuai kemasan pada skema sertifikasi untuk mendapatkan pengakuan sesuai dengan latar belakang pendidikan, pelatihan serta pengalaman kerja yang anda miliki.</span>
-              <br>
-              <el-table
-                v-loading="loading"
-                :data="judulSertifikasiTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 100%"
-                :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-              >
-                <el-table-column align="left" width="200px">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.title }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.content }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <br>
-              <el-table
-                v-loading="loading"
-                :data="listKodeUnit"
-                fit
-                border
-                highlight-current-row
-                style="width: 750px"
-                :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-              >
-                <el-table-column align="center" min-width="10px" label="No">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.index }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="left" width="200px" label="Kode Unit">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.kode_unit }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="left" label="Unit Kompetensi">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.unit_kompetensi }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-
-            </section>
-
-            <div class="html2pdf__page-break" />
-
-            <section slot="pdf-item">
-              <h4>Bagian 3 : Bukti Kelengkapan Pemohon</h4>
-              <el-table
-                v-loading="loading"
-                :data="buktiKelengkapanTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 750px"
-                :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
-              >
-                <el-table-column align="left" width="200px" label="Bukti persyaratan Dasar">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.title }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left" label="Ada / Tidak">
-                  <template slot-scope="scope">
-                    <a v-if="scope.row.content !== ''" target="_blank" :href="scope.row.content">
-                      <i class="el-icon-check" style="color: green;" />
-                    </a>
-                    <i v-else class="el-icon-close" style="color: red;" />
-                  </template>
-                </el-table-column>
-              </el-table>
-              <br>
-              <el-table
-                v-loading="loading"
-                :data="ttdTable"
-                fit
-                border
-                highlight-current-row
-                style="width: 750px"
-                :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
-              >
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <template v-if="scope.row.no === 2">
-                      Tanda Tangan Asesi :
-                      <br>
-                      <img v-if="ttdAsesi" :src="'/uploads/users/signature/' + ttdAsesi" class="sidebar-logo">
-                    </template>
-                    <span>{{ scope.row.title }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column align="center" width="20px">
-                  <span> : </span>
-                </el-table-column>
-                <el-table-column align="left">
-                  <template slot-scope="scope">
-                    <template v-if="scope.row.no === 2">
-                      Tanda Tangan Admin LSP :
-                      <br>
-                      <img v-if="ttdAdmin" :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
-                    </template>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </section>
-          </div>
-        </el-main>
-      </section>
-    </vue-html2pdf>
-
+  <el-container v-if="$route.params.apl01 == null" class="app-container">
+    <el-header>
+      <el-page-header content="FORM FR.APL.01 BELUM DIISI" @back="$router.back()" />
+    </el-header>
+    <el-button-group>
+      <router-link :to="{name: ''}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
+      <router-link :to="{name: 'preview-apl-02', params: { iduji: $route.params.iduji, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02 }}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
+    </el-button-group>
+  </el-container>
+  <el-container v-else class="app-container">
     <el-header>
       <el-page-header content="FR.APL.01 PERMOHONAN SERTIFIKASI KOMPETENSI" @back="$router.back()" />
     </el-header>
@@ -369,26 +174,19 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <template v-if="scope.row.no === 1">
-                <el-select v-model="pilihanTerima" class="filter-item" placeholder="T/TT" value-key="status">
+                <!--<el-select v-model="pilihanTerima" class="filter-item" placeholder="T/TT" value-key="status" :disabled="!ttdAdmin">
                   <el-option :key="0" label="Terima / Tidak Terima" :value="0" />
                   <el-option :key="1" label="Terima" :value="1" />
                   <el-option :key="2" label="Tidak Terima" :value="2" />
-                </el-select>
+                </el-select>-->
+                <span>{{ status === 1 ? 'Terima' : 'Tidak Terima' }}</span>
               </template>
 
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Admin LSP :
                 <br>
                 <div v-if="!ttdAdmin">
-                  <vueSignature
-                    ref="signature"
-                    :sig-option="option"
-                    :w="'300px'"
-                    :h="'150px'"
-                    :disabled="false"
-                    style="border-style: outset"
-                  />
-                  <el-button size="small" @click="clear">Clear</el-button>
+                  <h2>FR.APL 01 belum di tanda tangan</h2>
                 </div>
                 <div v-else>
                   {{ namaAdmin }}
@@ -399,29 +197,25 @@
             </template>
           </el-table-column>
         </el-table>
-
+        <el-button-group>
+          <router-link :to="{name: ''}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
+          <router-link :to="{name: 'preview-apl-02', params: { iduji: $route.params.iduji, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02 }}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
+        </el-button-group>
       </div>
     </el-main>
-    <el-button v-if="dataAsesi.status === 0" @click="onSubmit">Submit</el-button>
-    <el-button v-else @click="generateReport">Print</el-button>
   </el-container>
 </template>
 
 <script>
-import vueSignature from 'vue-signature';
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
-import VueHtml2pdf from 'vue-html2pdf';
 import moment from 'moment';
 const apl01Resource = new Resource('detail/apl-01');
 const apl01UpdateResource = new Resource('uji-komp-apl-01');
 const skemaResource = new Resource('skema-get');
+const previewResource = new Resource('detail/preview');
 
 export default {
-  components: {
-    VueHtml2pdf,
-    vueSignature,
-  },
   data() {
     return {
       option: {
@@ -447,6 +241,7 @@ export default {
       pilihanTerima: 0,
       dataTrx: {},
       testPng: null,
+      status: '',
       headerTable: [
         {
           title: 'Nama Lengkap',
@@ -549,6 +344,7 @@ export default {
           no: 2,
           title: '',
           content: '',
+          status: '',
         },
       ],
       unitKompetensiTable: [],
@@ -563,6 +359,7 @@ export default {
       active: 0,
       isWide: true,
       labelPosition: 'left',
+      dataPreview: '',
     };
   },
   computed: {
@@ -578,13 +375,16 @@ export default {
     this.onResize();
   },
   created() {
+    this.getDataUjiKomp();
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
     this.getApl01();
-    console.log(this.$route.params.id_apl_01);
   },
   methods: {
+    async getDataUjiKomp(){
+      this.dataPreview = await previewResource.get(this.$route.params.iduji);
+    },
     clear() {
       this.$refs.signature.clear();
     },
@@ -614,8 +414,11 @@ export default {
     },
     async getApl01() {
       this.loading = true;
-      this.dataTrx.id_apl_01 = this.$route.params.id_apl_01;
-      const data = await apl01Resource.get(this.$route.params.id_apl_01);
+      // this.dataTrx.id_apl_01 = this.$route.params.id_apl_01;
+      // const data = await apl01Resource.get(this.$route.params.id_apl_01);
+      this.dataPreview = await previewResource.get(this.$route.params.iduji);
+      this.dataTrx.id_apl_01 = this.dataPreview.id_apl_01;
+      const data = await apl01Resource.get(this.dataPreview.id_apl_01);
       const ttl = data.tempat_lahir + ' / ' + moment(data.tanggal_lahir).format('DD-MM-YYYY');
       const pendidikan = data.nama_sekolah + ' (' + data.tingkatan + ')';
       this.fileName = 'APL.01 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
@@ -627,6 +430,7 @@ export default {
       this.headerTable[5].content = data.no_hp;
       this.headerTable[6].content = data.email;
       this.headerTable[7].content = pendidikan;
+      this.status = data.status;
 
       if (data.status === 0) {
         this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima / Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai';
@@ -659,7 +463,7 @@ export default {
       this.loading = false;
     },
     onJadwalSelect() {
-      var id_skema = this.$route.params.id_skema;
+      var id_skema = this.dataPreview.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var skemaId = this.listSkema.find((x) => x.id === id_skema);
       this.selectedSkema = skemaId;

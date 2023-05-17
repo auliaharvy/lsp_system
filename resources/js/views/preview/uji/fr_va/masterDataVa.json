@@ -1,0 +1,156 @@
+{
+    "periode": [
+        {
+        "id": 1,
+        "nama": "Sebelum asesmen"
+        },
+        {
+        "id": 2,
+        "nama": "Pada saat asesmen"
+        },
+        {
+        "id": 3,
+        "nama": "Setelah Asesmen"
+        }
+    ],
+    "tujuan": [
+        "Bagian dari proses penjaminan mutu organisasi",
+        "Mengantisipasi risiko",
+        "Memenuhi persyaratan BNSP",
+        "Memastikan kesesuaian bukti-bukti",
+        "Meningkatkan kualitas asesmen",
+        "Mengevaluasi kualitas perangkat asesmen"
+    ],
+    "konteks": [
+        "Internal organisasi",
+        "Eksternal organisasi",
+        "Proses lisensi/re lisensi",
+        "Dengan kolega asesor",
+        "Kolega dari organisasi pelatihan atau asesmen"
+    ],
+    "pendekatan": [
+        "Panel asesmen",
+        "Pertemuan moderasi",
+        "Mengkaji perangkat asesmen",
+        "Acuan pembanding",
+        "Pengujian lapangan dan uji coba perangkat asesmen",
+        "Umpan balik dari klien"
+    ],
+    "acuanPembanding": [
+        "Standar kompetensi",
+        "SOP / LK",
+        "Manual Instruction/Book",
+        "Standar Kinerja"
+    ],
+    "dokumenTerkait": [
+        "Skema Sertifikasi",
+        "Perangkat Asesmen",
+        "Peraturan / Pedoman"
+    ],
+    "keterampilanKomunikasi": [
+        "Pro Aktif",
+        "Active Listening"
+    ],
+    "aspekAspekKegiatan": [
+       {
+        "item": "Proses Asesmen",
+        "aturanV": false,
+        "aturanA": false,
+        "aturanT": false,
+        "aturanM": false,
+        "prinsipV": false,
+        "prinsipR": false,
+        "prinsipF": false,
+        "prinsipF2": false
+       },
+       {
+        "item": "Rencana Asesmen",
+        "aturanV": false,
+        "aturanA": false,
+        "aturanT": false,
+        "aturanM": false,
+        "prinsipV": false,
+        "prinsipR": false,
+        "prinsipF": false,
+        "prinsipF2": false
+       },
+       {
+        "item": "Interpretasi Standar Kompetensi",
+        "aturanV": false,
+        "aturanA": false,
+        "aturanT": false,
+        "aturanM": false,
+        "prinsipV": false,
+        "prinsipR": false,
+        "prinsipF": false,
+        "prinsipF2": false
+       },
+       {
+        "item": "Interpretasi acuan pembanding lainnya",
+        "aturanV": false,
+        "aturanA": false,
+        "aturanT": false,
+        "aturanM": false,
+        "prinsipV": false,
+        "prinsipR": false,
+        "prinsipF": false,
+        "prinsipF2": false
+       },
+       {
+        "item": "Penyeleksian dan penerapan metode asesmen",
+        "aturanV": false,
+        "aturanA": false,
+        "aturanT": false,
+        "aturanM": false,
+        "prinsipV": false,
+        "prinsipR": false,
+        "prinsipF": false,
+        "prinsipF2": false
+       },
+       {
+        "item": "Penyeleksian dan penerapan proses asesmen",
+        "aturanV": false,
+        "aturanA": false,
+        "aturanT": false,
+        "aturanM": false,
+        "prinsipV": false,
+        "prinsipR": false,
+        "prinsipF": false,
+        "prinsipF2": false
+       },
+       {
+        "item": "Bukti - bukti yang dikumpulkan",
+        "aturanV": false,
+        "aturanA": false,
+        "aturanT": false,
+        "aturanM": false,
+        "prinsipV": false,
+        "prinsipR": false,
+        "prinsipF": false,
+        "prinsipF2": false
+       },
+       {
+        "item": "Proses pengambilan keputusan",
+        "aturanV": false,
+        "aturanA": false,
+        "aturanT": false,
+        "aturanM": false,
+        "prinsipV": false,
+        "prinsipR": false,
+        "prinsipF": false,
+        "prinsipF2": false
+       }
+    ],
+    "aturanBukti": [
+        "V",
+        "A",
+        "T",
+        "M"
+    ],
+    "prinsipAsesmen": [
+        "V",
+        "R",
+        "F",
+        "F"
+    ]
+}

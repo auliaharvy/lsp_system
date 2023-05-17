@@ -26,6 +26,7 @@ import masterRoutes from './modules/master-data';
 // import perangkatRoutes from './modules/perangkat';
 import persiapanRoutes from './modules/persiapan';
 import ujiRoutes from './modules/uji-komp';
+import previewRoutes from './modules/preview';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -64,6 +65,7 @@ export const constantRoutes = [
   },
   // front page
   {
+
     path: '/',
     name: 'homepage',
     component: () => import('@/views/frontpage/index'),
@@ -75,6 +77,14 @@ export const constantRoutes = [
     component: () => import('@/views/frontpage/form-apl-02/index'),
     hidden: true,
   },
+
+  // {
+  //   // path: '/preview-page/:id',
+  //   path: '/preview-page',
+  //   name: 'preview-page',
+  //   component: () => import('@/views/preview/index'),
+  //   hidden: true,
+  // },
 
   {
     path: '/penelusuran-tamatan',
@@ -118,6 +128,7 @@ export const constantRoutes = [
     ],
   },
   ujiRoutes,
+  previewRoutes,
   // {
   //   path: '/documentation',
   //   component: Layout,
