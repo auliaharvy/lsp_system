@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Laravue\Models\MstFrMapa02;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Mapa2Resource extends JsonResource
@@ -14,6 +15,16 @@ class Mapa2Resource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $master = New MstFrMapa02();
+
+        return [
+            'id' => $this->id,
+            'muk' => $this->muk,
+            'potensi_asesi_1'=> false,
+            'potensi_asesi_2'=> false,
+            'potensi_asesi_3'=> false,
+            'potensi_asesi_4'=> false,
+            'potensi_asesi_5'=> false,
+        ];
     }
 }

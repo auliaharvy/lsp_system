@@ -39,13 +39,6 @@ Route::namespace('Api')->group(function() {
     Route::get('uji-komp-get', 'UjiKompController@index');
     Route::get('skema-kategori-get', 'AsesmenKategoriController@index');
 
-     // Testing API sebelum di middleware
-        Route::apiResource('mapa2','Mapa2Controller');
-        Route::post('del-mapa2','Mapa2Controller@destroy');
-       
-
-
-
     Route::get('mst-ia02-get', 'PerangkatController@indexIa02');
     Route::get('mst-ia03-get', 'PerangkatController@indexIa03');
     Route::get('mst-ia06-get', 'PerangkatController@indexIa06');
@@ -65,6 +58,8 @@ Route::namespace('Api')->group(function() {
     Route::get('detail/ia-11/{id}', 'UjiKompController@showIa11');
     Route::get('detail/ak-01/{id}', 'UjiKompController@showAk01');
     Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
+    Route::get('ak-06/{id}', 'UjiKompController@showAk06');
+    Route::get('trx-mapa-02/{id}', 'UjiKompController@showMapa02');
 
     Route::apiResource('dashboard', 'DashboardController');
 
@@ -77,6 +72,7 @@ Route::namespace('Api')->group(function() {
         Route::post('detail-mst-ia-05', 'PerangkatController@storeIa05Detail');
         Route::post('new-mst-ia-06', 'PerangkatController@storeIa06');
         Route::post('new-mst-ia-07', 'PerangkatController@storeIa07');
+        Route::apiResource('mapa2','Mapa2Controller');
 
         //Delete MST FR
         Route::post('del-mst-ia-02', 'PerangkatController@deleteIa02');
@@ -84,6 +80,7 @@ Route::namespace('Api')->group(function() {
         Route::post('del-mst-ia-05', 'PerangkatController@deleteIa05');
         Route::post('del-mst-ia-06', 'PerangkatController@deleteIa06');
         Route::post('del-mst-ia-07', 'PerangkatController@deleteIa07');
+        Route::post('del-mapa2','Mapa2Controller@destroy');
         
         //Post FR
         Route::post('uji-komp-apl-01', 'UjiKompController@submitApl01');

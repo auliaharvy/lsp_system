@@ -10,6 +10,8 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Resources\MasterResource;
 use App\Http\Resources\UjiKompResource;
+use App\Http\Resources\Mapa2Resource;
+use App\Http\Resources\Ak06Resource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\UjiKomp;
 use App\Laravue\Models\UjiKompApl1;
@@ -57,6 +59,7 @@ use Illuminate\Support\Facades\DB;
 use Validator;
 use File;
 use App\Image;
+use App\Laravue\Models\MstFrMapa02;
 use Carbon\Carbon;
 
 /**
@@ -475,9 +478,11 @@ class UjiKompController extends BaseController
     public function showAk06($id)
     {
        
-        $query = UjiKompAk06::where('trx_uji_komp_ak_06.id',$id)->first();
+        $query = UjiKompAk06::query();
+        // $query->where('trx_uji_komp_ak_06.id',$id);
+
        
-        return $query;
+        return MasterResource::collection($query->get());
     }
 
     public function showIa01($id)
@@ -615,6 +620,13 @@ class UjiKompController extends BaseController
         return MasterResource::collection($query->paginate($limit));
     }
 
+    public function showMapa02($id)
+    {   
+        $queryMapa02 = UjiKompMapa02::query();
+        $queryMapa02->join('mst_perangkat_mapa_02','mst_perangkat_mapa_02.id','=','trx_uji_komp_mapa_02.id_mst_mapa_02');
+        $queryMapa02->where('trx_uji_komp_mapa_02.id_uji_komp',$id);
+        return MasterResource::collection($queryMapa02->get());
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -1598,26 +1610,75 @@ class UjiKompController extends BaseController
             return response()->json(['errors' => $validator->errors()], 403);
         } else {
             DB::beginTransaction();
-            $id_uji_komp = $request->get('id_uji_komp');
+            $id_uji_komp = $request->get('id_uji');
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            $params = $request->all();
+            $rekomendasi = $request->rekomendasi[0]['rekomendasi'];
+            $rekomendasiPemenuhan = $request->rekomendasiPemenuhan[0]['rekomendasi'];
+            $aspekPemenuhan = $params['aspekPemenuhan'];
+            $ttdTable = $params['ttdTable'];
+            $aspek = $params['dataAspek'];
+            for ($i = 0 ; $i < count($aspek); $i++){
+                if($aspek[$i]['item'] == '- Rencana Asesmen'){
+                    $validitas_rencana_asesmen = $aspek[$i]['validitas'];
+                    $reliabel_rencana_asesmen = $aspek[$i]['reliabel'];
+                    $fleksibel_rencana_asesmen = $aspek[$i]['fleksibel'];
+                    $adil_rencana_asesmen = $aspek[$i]['adil'];
+                }else if($aspek[$i]['item'] == '- Persiapan Asesmen' ){
+                    $validitas_persiapan_asesmen = $aspek[$i]['validitas'];
+                    $reliabel_persiapan_asesmen = $aspek[$i]['reliabel'];
+                    $fleksibel_persiapan_asesmen = $aspek[$i]['fleksibel'];
+                    $adil_persiapan_asesmen = $aspek[$i]['adil'];
+                }else if($aspek[$i]['item'] == '- Implementasi Asesmen' ){
+                    $validitas_implementasi_asesmen = $aspek[$i]['validitas'];
+                    $reliabel_implementasi_asesmen = $aspek[$i]['reliabel'];
+                    $fleksibel_implementasi_asesmen = $aspek[$i]['fleksibel'];
+                    $adil_implementasi_asesmen = $aspek[$i]['adil'];
+                }else if($aspek[$i]['item'] == '- Keputusan Asesmen' ){
+                    $validitas_keputusan_asesmen = $aspek[$i]['validitas'];
+                    $reliabel_keputusan_asesmen = $aspek[$i]['reliabel'];
+                    $fleksibel_keputusan_asesmen = $aspek[$i]['fleksibel'];
+                    $adil_keputusan_asesmen = $aspek[$i]['adil'];
+                }else if($aspek[$i]['item'] == '- Umpan Balik Asesmen' ){
+                    $validitas_umpan_balik_asesmen = $aspek[$i]['validitas'];
+                    $reliabel_umpan_balik_asesmen = $aspek[$i]['reliabel'];
+                    $fleksibel_umpan_balik_asesmen = $aspek[$i]['fleksibel'];
+                    $adil_umpan_balik_asesmen = $aspek[$i]['adil'];
+                }
+            };
             try {
-                $params = $request->all();
+                // $params = $request->all();
                 $ak06 = UjiKompAk06::create([
-                    'rencana_asesmen'=> $params['rencana_asesmen'],
-                    'persiapan_asesmen'=> $params['persiapan_asesmen'],
-                    'implementasi_asesmen'=> $params['implementasi_asesmen'],
-                    'keputusan_asesmen' => $params['keputusan_asesmen'],
-                    'umpan_balik_asesmen'=> $params['umpan_balik_asesmen'],
-                    'rekomendasi_prosedur' => $params['rekomendasi_prosedur'],
-                    'task_skill'=> $params['task_skill'],
-                    'task_management_skill' => $params['task_management_skill'],
-                    'contingency_management_skill' => $params['contingency_management_skill'],
-                    'job_role' => $params['job_role'],
-                    'transfer_skill' => $params['transfer_skill'],
-                    'rekomendasi_konsistensi' =>['rekomendasi_konsistensi'],
-                    'ttd_asesor' => $params['ttd_asesor'],
-                    'submit_by' => $params['submit_by'],
-                    'komentar' => $params['komentar'],
+                    'rencana_asesmen_validitas'=> $validitas_rencana_asesmen,
+                    'persiapan_asesmen_validitas'=> $validitas_persiapan_asesmen,
+                    'implementasi_asesmen_validitas'=> $validitas_implementasi_asesmen,
+                    'keputusan_asesmen_validitas' => $validitas_keputusan_asesmen,
+                    'umpan_balik_asesmen_validitas'=> $validitas_umpan_balik_asesmen,
+                    'rencana_asesmen_reliabel'=> $reliabel_rencana_asesmen,
+                    'persiapan_asesmen_reliabel'=> $reliabel_persiapan_asesmen,
+                    'implementasi_asesmen_reliabel'=> $reliabel_implementasi_asesmen,
+                    'keputusan_asesmen_reliabel' => $reliabel_keputusan_asesmen,
+                    'umpan_balik_asesmen_reliabel'=> $reliabel_umpan_balik_asesmen,
+                    'rencana_asesmen_fleksibel'=> $fleksibel_rencana_asesmen,
+                    'persiapan_asesmen_fleksibel'=> $fleksibel_persiapan_asesmen,
+                    'implementasi_asesmen_fleksibel'=> $fleksibel_implementasi_asesmen,
+                    'keputusan_asesmen_fleksibel' => $fleksibel_keputusan_asesmen,
+                    'umpan_balik_asesmen_fleksibel'=> $fleksibel_umpan_balik_asesmen,
+                    'rencana_asesmen_adil'=> $adil_rencana_asesmen,
+                    'persiapan_asesmen_adil'=> $adil_persiapan_asesmen,
+                    'implementasi_asesmen_adil'=> $adil_implementasi_asesmen,
+                    'keputusan_asesmen_adil' => $adil_keputusan_asesmen,
+                    'umpan_balik_asesmen_adil'=> $adil_umpan_balik_asesmen,
+                    'rekomendasi_prosedur' => $rekomendasi,
+                    'task_skill'=> $aspekPemenuhan[0]['taskSkill'],
+                    'task_management_skill' => $aspekPemenuhan[0]['taskManagementSkill'],
+                    'contigency_management_skill' => $aspekPemenuhan[0]['contigency'],
+                    'job_role' => $aspekPemenuhan[0]['jobRole'],
+                    'transfer_skill' => $aspekPemenuhan[0]['transferSkill'],
+                    'rekomendasi_konsistensi' =>$rekomendasiPemenuhan,
+                    'ttd_asesor' => $ttdTable[0]['ttd'],
+                    'submit_by' => $ttdTable[0]['no'],
+                    'komentar' => $ttdTable[0]['komentar'],
                 ]);
 
                 $progress = $foundUjiKomp->persentase;
@@ -1633,6 +1694,7 @@ class UjiKompController extends BaseController
                 return response()->json(['message' => $e->getMessage()], 400);
                 //return $e->getMessage();
             }
+            
         }
     }
     public function storeMapa02(Request $request)
@@ -1646,14 +1708,24 @@ class UjiKompController extends BaseController
             return response()->json(['errors' => $validator->errors()], 403);
         } else {
             DB::beginTransaction();
-            $id_uji_komp = $request->get('id_uji_komp');
+            $id_uji_komp = $request->listMuk[0]['id_uji_komp'];
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
             try {
                 $params = $request->all();
-                $mapa02 = UjiKompMapa02::create([
-                  'id_uji_komp' => $params['id_uji_komp'],'id_mst_mapa_02' => $params['id_mst_mapa_02'],'potensi_asesi_1'=> $params['potensi_asesi_1'],'potensi_asesi_2' =>$params['potensi_asesi_2'],'potensi_asesi_3'=>$params['potensi_asesi_3'],'potensi_asesi_4'=>$params['potensi_asesi_4'],'potensi_asesi_5'=>$params['potensi_asesi_5'],'submit_by'=>$params['user_id'],
-                  'updated_by'=>null
-                ]);
+                $element = $params['listMuk'];
+                for ($i = 0; $i < count($element); $i++){
+                    $mapa02 = UjiKompMapa02::create([
+                        'id_uji_komp' => $element[$i]['id_uji_komp'],
+                        'id_mst_mapa_02' => $element[$i]['id'],
+                        'potensi_asesi_1'=> $element[$i]['potensi_asesi_1'],
+                        'potensi_asesi_2' =>$element[$i]['potensi_asesi_2'],
+                        'potensi_asesi_3'=>$element[$i]['potensi_asesi_3'],
+                        'potensi_asesi_4'=>$element[$i]['potensi_asesi_4'],
+                        'potensi_asesi_5'=>$element[$i]['potensi_asesi_5'],
+                        'submit_by'=>$element[$i]['submit_by'],
+                        'updated_by'=>$element[$i]['updated_by']
+                    ]);
+                }
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_mapa_02 = $mapa02->id;
@@ -1846,21 +1918,13 @@ class UjiKompController extends BaseController
     private function getValidationRulesAk06()
     {
         return [
-            'rencana_asesmen' => 'required',
-            'persiapan_asesmen' => 'required',
-            'implementasi_asesmen' => 'required',
-            'keputusan_asesmen' => 'required',
-            'umpan_balik_asesmen' => 'required',
-            'rekomendasi_prosedur'=> 'required',
-            'submit_by' => 'required',
+            'aspekPemenuhan'=> 'required',
         ];
     }
     private function getValidationMapa02()
     {
         return [
-            'id_uji_komp'=>'required',
-            'submit_by'=>'required',
-            'id_mst_mapa_02'=>'required',
+        'listMuk'=> 'required',
         ];
     }
     
