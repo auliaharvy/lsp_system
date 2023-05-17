@@ -55,6 +55,7 @@ Route::namespace('Api')->group(function() {
     Route::get('mst-ak-03-get', 'PerangkatController@indexAk03');
 
     //detail FR
+    Route::get('detail/preview/{id}', 'UjiKompController@showPreview');
     Route::get('detail/apl-01/{id}', 'UjiKompController@showApl01');
     Route::get('detail/apl-02/{id}', 'UjiKompController@showApl02');
     Route::get('detail/ia-01/{id}', 'UjiKompController@showIa01');

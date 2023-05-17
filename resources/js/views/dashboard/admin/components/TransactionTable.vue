@@ -83,8 +83,17 @@
         </template>
       </el-table-column>
 
-      <el-table-column type="expand">
+      <el-table-column align="center" label="Action">
         <template slot-scope="scope">
+          <!-- <router-link :to="{ name: 'preview-page', params:{ id_uji: scope.row.id, asesor: scope.row.asesor, id_skema: scope.row.id_skema, id_apl_01: scope.row.id_apl_01, id_apl_02: scope.row.id_apl_02, id_mapa_02: scope.row.id_mapa_02, id_ak_01: scope.row.id_ak_01, id_ak_04: scope.row.id_ak_04, id_ia_01: scope.row.id_ia_01, id_ia_02: scope.row.id_ia_02, id_ia_03: scope.row.id_ia_03, id_ia_05: scope.row.id_ia_05, id_ia_06: scope.row.id_ia_06, id_ia_07: scope.row.id_ia_07, id_ia_11: scope.row.id_ia_11, id_ak_02: scope.row.id_ak_02, id_ak_03: scope.row.id_ak_03, id_ak_05: scope.row.id_ak_05, id_ak_06: scope.row.id_ak_06, va: scope.row.id.va }}"> -->
+          <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor, apl01: scope.row.id_apl_01 }}">
+            <el-button type="primary" icon="el-icon-view">Preview</el-button>
+          </router-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column type="expand">
+        <template slot-scope="scope"> <!-- scope adalah yang nantinya akan digunakan untuk id apl01 dan seterusnya-->
           <el-row :gutter="20">
             <el-col class="table-expand" :span="4">
               <div class="grid-content">
@@ -108,8 +117,7 @@
                   </li>
                   <li class="list-progress">
                     Skema  <i v-if="scope.row.id_skema !== null" type="success" class="el-icon-check" />
-                  </li>
-                  <li class="list-progress">
+                  </li> <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-MAPA-02" placement="top-start">
                       <router-link :to="{ name: 'form-mapa-02', params: { id_mapa_02: scope.row.id_mapa_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">MAPA 02  <i v-if="scope.row.id_mapa_02 !== null" type="success" class="el-icon-check" /></span>
@@ -251,6 +259,12 @@ export default {
     },
     orderNoFilter(str) {
       return str;
+    },
+  },
+  props: {
+    idApl01: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
