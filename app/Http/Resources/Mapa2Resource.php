@@ -15,7 +15,7 @@ class Mapa2Resource extends JsonResource
      */
     public function toArray($request)
     {
-        $master = New MstFrMapa02();
+        // $master = New MstFrMapa02();
 
         return [
             'id' => $this->id,

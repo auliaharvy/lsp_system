@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
-use App\Laravue\Models\UjiKompAk06;
+
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,11 +15,17 @@ class Ak06Resource extends JsonResource
      */
     public function toArray($request)
     {
-        $ak06 = New UjiKompAk06();
 
         return [
             'id' => $this->id,
             'aspek' => [
+                [
+                'item' => 'Prosedur asesmen :',
+                'validitas'=> '',
+                'reliabel'=> '',
+                'fleksibel'=> '',
+                'adil'=> '',
+                ],
                 [
                 'item' => '- Rencana Asesmen',
                 'validitas'=> $this->rencana_asesmen_validitas,
@@ -50,17 +56,17 @@ class Ak06Resource extends JsonResource
                 ],
                 [
                 'item' => '- Umpan Balik Asesmen',
-                'validitas'=> $this->umpan_balik_akhir_validitas,
-                'reliabel'=> $this->umpan_balik_akhir_reliabel,
-                'fleksibel'=> $this->umpan_balik_akhir_fleksibel,
-                'adil'=> $this->umpan_balik_akhir_adil,
+                'validitas'=> $this->umpan_balik_asesmen_validitas,
+                'reliabel'=> $this->umpan_balik_asesmen_reliabel,
+                'fleksibel'=> $this->umpan_balik_asesmen_fleksibel,
+                'adil'=> $this->umpan_balik_asesmen_adil,
                 ]
             ],
             'aspekPemenuhan' => [
                 'item' => 'Konsistensi keputusan asesmen Bukti dari berbagai asesmen diperiksa untuk konsistensi dimensi kompetensi',
                 'taskSkill'=> $this->task_skill,
                 'taskManagementSkill'=> $this->task_management_skill,
-                'cotigency'=> $this->cotigency_management_skill,
+                'contigency'=> $this->contigency_management_skill,
                 'jobRole'=> $this->job_role,
                 'transferSkill'=> $this->transfer_skill, 
             ],
@@ -72,9 +78,7 @@ class Ak06Resource extends JsonResource
                 'item' => 'Rekomendasi untuk peningkatan',
                 'rekomendasi'=> $this->rekomendasi_konsistensi,
             ],'ttdTable'=> [
-                'no' => 1,
                 'ttd'=> $this->ttd_asesor,
-                'nama'=> $this->submit_by,
                 'komentar'=> $this->komentar,
             ],
 
