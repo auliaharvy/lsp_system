@@ -123,7 +123,7 @@
         </el-table-column>
       </el-table>
       <br>
-      <el-button @click="onSubmit">Submit</el-button>
+      <el-button v-if="!$route.params.id_mapa_02" @click="onSubmit">Submit</el-button>
     </el-main>
   </el-container>
 </template>
@@ -135,8 +135,9 @@ const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const ia02Resource = new Resource('uji-komp-ia-02');
-const mapa2Resource = new Resource('mapa2');
+const ujiMapa02Resource = new Resource('uji-komp-mapa-02');
+const mukMapa02Resource = new Resource('mapa2');
+const mapa2Resource = new Resource('trx-mapa-02');
 
 export default {
   components: {},
@@ -192,6 +193,9 @@ export default {
     ...mapGetters([
       'userId',
     ]),
+    // listMuk() {
+    //   this.$forceUpdate
+    // }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
@@ -223,11 +227,32 @@ export default {
       this.listSkema = data;
     },
     async getMuk() {
-      const { data } = await mapa2Resource.list();
-      this.listMuk = data;
-      this.listMuk.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
+      if (this.$route.params.id_mapa_02 !== null) {
+        this.loading = true;
+        const { data } = await mapa2Resource.get(this.$route.params.id_uji);
+        this.listMuk = data;
+        this.listMuk.forEach((element, index) => {
+          element['index'] = index + 1;
+          element['potensi_asesi_1'] = element['potensi_asesi_1'] === 1;
+          element['potensi_asesi_2'] = element['potensi_asesi_2'] === 1;
+          element['potensi_asesi_3'] = element['potensi_asesi_3'] === 1;
+          element['potensi_asesi_4'] = element['potensi_asesi_4'] === 1;
+          element['potensi_asesi_5'] = element['potensi_asesi_5'] === 1;
+        });
+        this.loading = false;
+      } else {
+        this.loading = true;
+        const { data } = await mukMapa02Resource.list();
+        console.log(data);
+        this.listMuk = data;
+        this.listMuk.forEach((element, index) => {
+          element['index'] = index + 1;
+          element['submit_by'] = this.userId;
+          element['updated_by'] = this.userId;
+          element['id_uji_komp'] = this.$route.params.id_uji;
+        });
+        this.loading = false;
+      }
     },
     async getListUji() {
       const { data } = await ujiKomResource.list();
@@ -290,15 +315,16 @@ export default {
       this.listKuk = kuk;
     },
     onSubmit() {
+      var dataKirim = {
+        'listMuk': this.listMuk,
+      };
+      console.log('listMuk');
       this.loading = true;
-      this.form.user_id = this.userId;
-      this.form.id_uji_komp = this.$route.params.id_uji;
-      this.form.id_skema = this.$route.params.id_skema;
-      ia02Resource
-        .store(this.form)
+      ujiMapa02Resource
+        .store(dataKirim)
         .then(response => {
           this.$message({
-            message: 'FR IA 02 has been created successfully.',
+            message: 'FR Mapa 2 has been created successfully.',
             type: 'success',
             duration: 5 * 1000,
           });

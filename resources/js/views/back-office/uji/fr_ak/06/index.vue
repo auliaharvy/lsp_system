@@ -64,22 +64,22 @@
           <el-table-column align="center" label="Kesesuaian dengan prinsip asesmen">
             <el-table-column align="center" label="Validitas">
               <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.validitas" />
+                <el-checkbox v-model="scope.row.validitas" />
               </template>
             </el-table-column>
             <el-table-column align="center" label="Reliabel">
               <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.reliabel" />
+                <el-checkbox v-model="scope.row.reliabel" />
               </template>
             </el-table-column>
             <el-table-column align="center" label="Fleksibel">
               <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.fleksibel" />
+                <el-checkbox v-model="scope.row.fleksibel" />
               </template>
             </el-table-column>
             <el-table-column align="center" label="Adil">
               <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.adil" />
+                <el-checkbox v-model="scope.row.adil" />
               </template>
             </el-table-column>
           </el-table-column>
@@ -204,7 +204,7 @@
           </el-table-column>
         </el-table>
         <br>
-        <el-button @click="onSubmit">Submit</el-button>
+        <el-button v-if="!$route.params.id_ak_06" @click="onSubmit">Submit</el-button>
       </div>
     </el-main>
   </el-container>
@@ -216,9 +216,8 @@ const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstAk03Resource = new Resource('mst-ak-03-get');
 const ak06Resource = new Resource('uji-komp-ak-06');
-// const apl01Resource = new Resource('detail/apl-01');
+const showAk06Resource = new Resource('ak-06');
 
 export default {
   components: {},
@@ -232,6 +231,7 @@ export default {
       listSkema: null,
       listTuk: null,
       listJadwal: null,
+      listAspek: [],
       listKodeUnit: [],
       listJudulUnit: [],
       listKuk: [],
@@ -314,7 +314,7 @@ export default {
         {
           item: 'Konsistensi keputusan asesmen Bukti dari berbagai asesmen diperiksa untuk konsistensi dimensi kompetensi',
           taskSkill: '',
-          taskManagement: '',
+          taskManagementSkill: '',
           contigency: '',
           jobRole: '',
           transferSkill: '',
@@ -322,7 +322,7 @@ export default {
       ],
       rekomendasi: [
         {
-          item: 'Rekomendasi untuk peningkatan :',
+          item: 'Rekomendasi untuk peningkatan',
           rekomendasi: '',
         },
       ],
@@ -332,20 +332,12 @@ export default {
           rekomendasi: '',
         },
       ],
-      form: {
-        namaAsesi: '',
-        rekomendasi: '',
-        keterangan: '',
-        aspek: '',
-        catatanPenolakan: '',
-        saranPerbaikan: '',
-      },
       ttdTable: [
         {
           no: 1,
           nama: 'Nama Asesor',
           tanggal: '12-2-2002',
-          ttd: '',
+          ttd: 'ttd',
           komentar: '',
         },
       ],
@@ -362,7 +354,6 @@ export default {
     this.onResize();
   },
   created() {
-    this.getApl01();
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
@@ -370,6 +361,7 @@ export default {
       this.getUjiKompDetail();
     });
     this.getListPertanyaan();
+    this.getAk06();
   },
   methods: {
     allKompeten() {
@@ -380,19 +372,9 @@ export default {
         }
       }
     },
-    async getApl01() {
-      this.loading = true;
-      // const data = await apl01Resource.get(this.$route.params.id_apl_01);
-      // this.ttdTable[0].nama = this.$route.params.asesor;
-    },
-    async getListPertanyaan() {
-      this.loading = true;
-      const { data } = await mstAk03Resource.list({ id_skema: this.$route.params.id_skema });
-      this.listSoal = data;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
-      this.loading = false;
+    async getAk06() {
+      const { data } = await showAk06Resource.list();
+      console.log('data ak06', data);
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -461,7 +443,16 @@ export default {
     },
     onSubmit() {
       this.loading = true;
-      ak06Resource
+      var data = {
+        'id_uji': this.$route.params.id_uji,
+        'dataAspek': this.aspek,
+        'aspekPemenuhan': this.aspekPemenuhan,
+        'rekomendasi': this.rekomendasi,
+        'rekomendasiPemenuhan': this.rekomendasiPemenuhan,
+        'ttdTable': this.ttdTable,
+      };
+      console.log(data);
+      ak06Resource.store(data)
         .then(response => {
           this.$message({
             message: 'FR AK 06 has been Submited successfully.',
@@ -532,10 +523,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form {
-  padding-right: 50px;
-  padding-left: 50px;
-}
 .edit-input {
   padding-right: 100px;
 }
