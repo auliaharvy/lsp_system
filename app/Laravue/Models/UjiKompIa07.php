@@ -19,7 +19,7 @@ use App\Laravue\Models\SkemaElemenUnit;
  *
  * @package App\Laravue\Models
  */
-class UjiKompIa06 extends Model
+class UjiKompIa07 extends Model
 {
     public $guard_name = 'api';
 

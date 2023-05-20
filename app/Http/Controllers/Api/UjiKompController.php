@@ -34,6 +34,8 @@ use App\Laravue\Models\UjiKompIa05;
 use App\Laravue\Models\UjiKompIa05Detail;
 use App\Laravue\Models\UjiKompIa06;
 use App\Laravue\Models\UjiKompIa06Detail;
+use App\Laravue\Models\UjiKompIa07;
+use App\Laravue\Models\UjiKompIa07Detail;
 use App\Laravue\Models\UjiKompIa11;
 use App\Laravue\Models\UjiKompIa11Detail;
 use App\Laravue\Models\UjiKompMapa02;
@@ -123,6 +125,23 @@ class UjiKompController extends BaseController
         }
 
         return UjiKompResource::collection($query->paginate($limit));
+    }
+
+    public function indexPreview($id)
+    {
+        $query = UjiKomp::query();
+        $query->join('trx_uji_komp_apl_01 as b', 'b.id', '=', 'trx_uji_komp.id_apl_01');
+        $query->join('trx_jadwal_asesmen as c', 'c.id', '=', 'b.id_jadwal');
+        $query->join('mst_skema_sertifikasi as d', 'd.id', '=', 'b.id_skema');
+        $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk');
+        $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
+        ->orderBy('c.created_at', 'desc')
+        ->select('trx_uji_komp.*', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
+        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor')
+        ->where('trx_uji_komp.id', '=', $id)
+        ->get();
+
+        return UjiKompResource::collection($query->paginate(1));
     }
 
     /**
@@ -483,6 +502,32 @@ class UjiKompController extends BaseController
         return $data;
     }
 
+    public function showAk02($id)
+    {
+        $queryAk02= UjiKompAk02::where('trx_uji_komp_ak_02.id',$id)->first();
+        $queryDetailAk02 = UjiKompAk02Detail::where('trx_uji_komp_ak_02_detail.id_ak_02',$id)->get();
+       
+        $data = [
+            'data' => $queryAk02,
+            'detail' => $queryDetailAk02,
+        ];
+ 
+        return $data;
+    }
+
+    public function showAk03($id)
+    {
+        $queryAk03 = UjiKompAk03::where('trx_uji_komp_ak_03.id',$id)->first();
+        $queryDetailAk03 = UjiKompAk03Detail::where('trx_uji_komp_ak_03_detail.id_ak_03',$id)->get();
+       
+        $data = [
+            'data' => $queryAk03,
+            'detail' => $queryDetailAk03,
+        ];
+ 
+        return $data;
+    }
+
     public function showAk01($id)
     {
        
@@ -490,6 +535,7 @@ class UjiKompController extends BaseController
        
         return $query;
     }
+
 
     public function showAk05($id)
     {
@@ -545,6 +591,20 @@ class UjiKompController extends BaseController
        
     }
 
+    public function showIa05($id)
+    {
+        $data = DB::table('trx_uji_komp_ia_05_detail as a')
+        ->leftJoin('trx_uji_komp_ia_05 as b', 'a.id_ia_05', '=', 'b.id')
+        ->leftJoin('mst_perangkat_ia_05 as c', 'a.id_perangkat_ia_05', '=', 'c.id')
+        ->leftJoin('mst_skema_sertifikasi_unit_kompetensi as d', 'c.id_unit_komp', '=', 'd.id')
+        ->select(DB::raw('a.id, b.rekomendasi_asesor, a.jawaban, c.pertanyaan, d.kode_unit, d.unit_kompetensi'))
+        ->where('a.id_ia_05', '=', $id)
+        ->groupBy('a.id')
+        ->get();
+
+        return $data;
+    }
+
     public function showIa06($id)
     {
        
@@ -562,17 +622,16 @@ class UjiKompController extends BaseController
 
     public function showIa07($id)
     {
-    
-        $queryIa07 = UjiKompIa07::where('trx_uji_komp_ia_07.id',$id)->first();
-        $queryDetailIa07 = UjiKompIa07Detail::where('trx_uji_komp_ia_07_detail.id_ia_07',$id)->get();
-    
-        $data = [
-            'ia_07' => $queryIa07,
-            // 'note' => $queryIa01->note,
-            'detail' => $queryDetailIa07,
-        ];
+        $data = DB::table('trx_uji_komp_ia_07_detail as a')
+        ->leftJoin('trx_uji_komp_ia_07 as b', 'a.id_ia_07', '=', 'b.id')
+        ->leftJoin('mst_perangkat_ia_07 as c', 'a.id_perangkat_ia_07', '=', 'c.id')
+        ->leftJoin('mst_skema_sertifikasi_unit_kompetensi as d', 'c.id_unit_komp', '=', 'd.id')
+        ->select(DB::raw('a.id, b.rekomendasi_asesor, b.umpan_balik, a.jawaban, c.pertanyaan, d.kode_unit, d.unit_kompetensi'))
+        ->where('a.id_ia_07', '=', $id)
+        ->groupBy('a.id')
+        ->get();
+  
         return $data;
-    
     }
 
     public function showIa11($id)
@@ -589,7 +648,56 @@ class UjiKompController extends BaseController
         return $data;
     
     }
-    
+
+    public function previewIa06($id)
+    {
+        $jawaban = DB::table('trx_uji_komp_ia_06_detail as a')
+        ->leftJoin('trx_uji_komp_ia_06 as b', 'a.id_ia_06', '=', 'b.id')
+        ->leftJoin('mst_perangkat_ia_06 as c', 'a.id_perangkat_ia_06', '=', 'c.id')
+        ->leftJoin('mst_skema_sertifikasi_unit_kompetensi as d', 'c.id_unit_komp', '=', 'd.id')
+        ->select(DB::raw('a.id, a.jawaban, c.pertanyaan, c.kunci_jawaban, d.kode_unit, d.unit_kompetensi'))
+        ->where('a.id_ia_06', '=', $id)
+        ->groupBy('a.id')
+        ->get();
+
+        return $jawaban;
+    }
+
+    public function previewIa11($id)
+    {
+        $jawaban = DB::table('trx_uji_komp_ia_11_detail as a')
+        ->leftJoin('mst_perangkat_ia_11 as b', 'a.id_perangkat_ia_11', '=', 'b.id')
+        ->leftJoin('trx_uji_komp_ia_11 as c', 'a.id_ia_11', '=', 'c.id')
+        ->select(DB::raw('a.id, b.pertanyaan, a.tanggapan as jawaban, a.komentar, c.komentar as komentar_asesor'))
+        ->where('a.id_ia_11', '=', $id)
+        ->groupBy('a.id')
+        ->get();
+
+        return $jawaban;
+    }
+
+    public function previewAk03($id)
+    {
+        $jawaban = DB::table('trx_uji_komp_ak_03_detail as a')
+        ->leftJoin('trx_uji_komp_ak_03 as b', 'a.id_ak_03', '=', 'b.id')
+        ->select(DB::raw('a.id, a.komponen, a.hasil, a.catatan, b.komentar as komentar_asesor'))
+        ->where('a.id_ak_03', '=', $id)
+        ->groupBy('a.id')
+        ->get();
+
+        return $jawaban;
+    }
+
+    public function previewAk04($id)
+    {
+        $jawaban = DB::table('trx_uji_komp_ak_04 as a')
+        ->select(DB::raw('a.*'))
+        ->get();
+
+        return $jawaban;
+    }
+
+
     public function indexIa02(Request $request)
     {
         $searchParams = $request->all();
