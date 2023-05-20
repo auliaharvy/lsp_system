@@ -54,17 +54,27 @@ Route::namespace('Api')->group(function() {
     Route::get('mst-ia-11-get', 'PerangkatController@indexIa11');
     Route::get('mst-ak-03-get', 'PerangkatController@indexAk03');
 
+    //previewFR
+    Route::get('preview/ia-06/{id}', 'UjiKompController@previewIa06');
+    Route::get('preview/ia-11/{id}', 'UjiKompController@previewIa11');
+    Route::get('preview/ak-03/{id}', 'UjiKompController@previewAk03');
+    Route::get('preview/ak-04/{id}', 'UjiKompController@previewAk04');
+
     //detail FR
     Route::get('detail/preview/{id}', 'UjiKompController@showPreview');
+    Route::get('detail/indexPreview/{id}', 'UjiKompController@indexPreview');
     Route::get('detail/apl-01/{id}', 'UjiKompController@showApl01');
     Route::get('detail/apl-02/{id}', 'UjiKompController@showApl02');
     Route::get('detail/ia-01/{id}', 'UjiKompController@showIa01');
     Route::get('detail/ia-02/{id}', 'UjiKompController@showIa02');
     Route::get('detail/ia-03/{id}', 'UjiKompController@showIa03');
     Route::get('detail/ia-06/{id}', 'UjiKompController@showIa06');
+    Route::get('detail/ia-05/{id}', 'UjiKompController@showIa05');
     Route::get('detail/ia-07/{id}', 'UjiKompController@showIa07');
     Route::get('detail/ia-11/{id}', 'UjiKompController@showIa11');
     Route::get('detail/ak-01/{id}', 'UjiKompController@showAk01');
+    Route::get('detail/ak-02/{id}', 'UjiKompController@showAk02');
+    Route::get('detail/ak-03/{id}', 'UjiKompController@showAk03');
     Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
 
     Route::apiResource('dashboard', 'DashboardController');

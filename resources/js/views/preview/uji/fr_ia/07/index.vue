@@ -1,17 +1,70 @@
 <template>
-  <el-container v-if="$route.params.ia07 == null" class="app-container">
+  <el-container v-if="dataPreview.id_ia_07 == null" v-loading="loading" class="app-container">
     <el-header>
       <el-page-header content="FORM FR.IA.07 BELUM DIISI" @back="$router.back()" />
+      <el-dropdown split-button type="primary">
+        {{ $route.name }}
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item><router-link :to="{ name: 'preview-apl-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">APL 01</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-apl-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">APL 02</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-mapa-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">MAPA 02</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ak-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 01</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ak-04', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 04</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ia-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 01</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ia-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 02</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ia-03', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 03</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ia-05', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 05</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ia-06', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 06</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ia-07', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 07</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ia-11', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 11</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ak-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 02</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ak-03', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 03</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ak-05', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 05</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-ak-06', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 06</router-link></el-dropdown-item>
+          <el-dropdown-item><router-link :to="{ name: 'preview-va', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">VA</router-link></el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-button-group>
+        <router-link :to="{name: 'preview-ia-06', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia06: dataPreview.id_ia_06 }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
+        <router-link :to="{name: 'preview-ia-11', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia11: dataPreview.id_ia_11}}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
+      </el-button-group>
     </el-header>
-    <el-button-group>
-      <router-link :to="{name: 'preview-ia-06', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia06: dataPreview.id_ia_06 }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
-      <router-link :to="{name: 'preview-ia-11', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia11: dataPreview.id_ia_11}}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
-    </el-button-group>
   </el-container>
   <el-container v-else class="app-container">
     <el-header>
-      <!-- TODO buat penyesuaian halaman dengan form -->
-      <el-page-header content="FR.IA.07 PERTANYAAN LISAN" @back="$router.back()" />
+      <span>
+        <el-page-header content="FR.IA.07 PERTANYAAN LISAN" @back="$router.back()" />
+      </span>
+      <span>
+        <el-dropdown split-button type="primary">
+          {{ $route.name }}
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item><router-link :to="{ name: 'preview-apl-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">APL 01</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-apl-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">APL 02</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-mapa-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">MAPA 02</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ak-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 01</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ak-04', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 04</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ia-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 01</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ia-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 02</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ia-03', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 03</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ia-05', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 05</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ia-06', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 06</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ia-07', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 07</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ia-11', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">IA 11</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ak-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 02</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ak-03', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 03</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ak-05', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 05</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-ak-06', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">AK 06</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link :to="{ name: 'preview-va', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: $route.params.apl01, apl02: $route.params.apl02, mapa02: $route.params.mapa02, ak01: $route.params.ak01, ak04: $route.params.ak04, ia01: $route.params.ia01, ia02: $route.params.ia02, ia03: dataPreview.id_ia_03, ia05: $route.params.ia05, id06: $route.params.ia06, ia07: $route.params.ia07, ia11: $route.params.ia11, ak02: $route.params.ak02, ak03: $route.params.ak03, ak05: $route.params.ak05, ak06: dataPreview.id_ak_06, va: dataPreview.id_va }}">VA</router-link></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </span>
+      <span>
+        <el-button-group>
+          <router-link :to="{name: 'preview-ia-06', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia06: dataPreview.id_ia_06 }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
+          <router-link :to="{name: 'preview-ia-11', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia11: dataPreview.id_ia_11}}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
+        </el-button-group>
+      </span>
     </el-header>
     <el-main>
       <div>
@@ -25,13 +78,13 @@
         >
           <el-table-column align="left" min-width="30px">
             <template slot-scope="scope">
-              <span>{{ scope.row.title }}</span>
+              <span>{{ scope.row.row.title }}</span>
 
             </template>
           </el-table-column>
           <el-table-column align="left">
             <template slot-scope="scope">
-              <span>{{ scope.row.content }}</span>
+              <span>{{ scope.row.row.content }}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -66,15 +119,19 @@
           </el-table-column>
           <el-table-column align="center" min-width="100px" label="Jawaban">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.jawaban" type="textarea" />
+              <!-- <el-input v-model="scope.row.jawaban" type="textarea" /> -->
+              <span>{{ scope.row.jawaban }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="checkRole(['asesor'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
+              <!-- <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
                 <el-option key="belum kompeten" label="Belum Kompeten" value="belum kompeten" />
-              </el-select>
+              </el-select> -->
+              <span v-if="scope.row.rekomendasi_asesor == 'kompeten'">Kompeten</span>
+              <span v-if="scope.row.rekomendasi_asesor == 'belum kompeten'">Belum Kompeten</span>
+              <span v-if="scope.row.rekomendasi_asesor == 'belum penilaian'">Belum Penilaian</span>
             </template>
           </el-table-column>
         </el-table>
@@ -83,28 +140,25 @@
         <br>
 
         <el-form
-          v-if="checkRole(['asesor'])"
           ref="form"
           :model="form"
           label-width="250px"
           label-position="left"
         >
           <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
-            <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
+            <!-- <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
+            <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio> -->
+            <span v-if="scope.row.rekomendasi_asesor == 'kompeten'">Kompeten</span>
+            <span v-if="scope.row.rekomendasi_asesor == 'belum kompeten'">Belum Kompeten</span>
+            <span v-if="scope.row.rekomendasi_asesor == 'belum penilaian'">Belum Penilaian</span>
           </el-form-item>
           <el-form-item label="Umpan balik untuk asesi" prop="feedback">
-            <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
+            <!-- <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" /> -->
+            <span v-if="scope.row.umpan_balik == 'belum penilaian'">Belum Penilaian</span>
           </el-form-item>
         </el-form>
         <br>
-
-        <el-button-group>
-          <router-link :to="{name: 'preview-ia-06', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia06: dataPreview.id_ia_06 }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
-          <router-link :to="{name: 'preview-ia-11', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia11: dataPreview.id_ia_11}}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
-        </el-button-group>
       </div>
-
     </el-main>
   </el-container>
 </template>
@@ -131,7 +185,7 @@ export default {
     return {
       umpanBalikAsesi: '',
       kompeten: null,
-      loading: false,
+      loading: true,
       listSoal: null,
       listSkema: null,
       listTuk: null,
@@ -204,7 +258,7 @@ export default {
     this.onResize();
   },
   created() {
-    this.getDataPreview();
+    this.getSoalDanJawaban();
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
@@ -217,8 +271,14 @@ export default {
     this.getDate();
   },
   methods: {
-    async getDataPreview(){
+    async getSoalDanJawaban(){
       this.dataPreview = await previewResource.get(this.$route.params.iduji);
+      console.log(this.dataPreview.id_ia_07);
+      this.listSoal = await ia07Detail.get(this.dataPreview.id_ia_07);
+      console.log(this.listSoal);
+      this.listSoal.forEach((element, index) => {
+        element['index'] = index + 1;
+      });
     },
     checkRole,
     getDate() {
@@ -251,20 +311,18 @@ export default {
       }
     },
     async getListPertanyaan() {
-      this.loading = true;
-      this.dataPreview = await previewResource(this.$route.params.iduji);
+      this.dataPreview = await previewResource.get(this.$route.params.iduji);
       const { data } = await mstResource.list({ id_skema: this.dataPreview.id_skema });
       this.listSoal = data;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
-      const dataia07 = await ia07Detail.get(this.$route.params.ia07);
+      const dataia07 = await ia07Detail.get(this.dataPreview.id_ia_07);
       this.ia07 = dataia07;
       this.loading = false;
     },
     async getIa07() {
       if (this.$route.params.ia07 !== null) {
-        this.loading = true;
         const data = await ia07Detail.get(this.dataPreview.id_ia_03);
         // this.ia07 = data;
         this.listSoal.forEach((element, index) => {
