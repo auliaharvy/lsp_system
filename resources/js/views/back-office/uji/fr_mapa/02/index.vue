@@ -274,9 +274,6 @@ export default {
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.kode_skema;
-      // this.headerTable[2].content = ujiDetail.nama_asesor;
-      // this.headerTable[3].content = ujiDetail.nama_peserta;
-      // this.headerTable[4].content = ujiDetail.mulai;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;

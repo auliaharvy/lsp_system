@@ -548,10 +548,11 @@ class UjiKompController extends BaseController
     {
        
         $query = UjiKompAk06::query();
-        // $query->where('trx_uji_komp_ak_06.id',$id);
+        $query->join('trx_uji_komp', 'trx_uji_komp.id_ak_06', '=', 'trx_uji_komp_ak_06.id');
+        $query->where('trx_uji_komp_ak_06.id',$id)->get();
 
        
-        return MasterResource::collection($query->get());
+        return Ak06Resource::collection($query->get());
     }
 
     public function showIa01($id)
@@ -1741,13 +1742,22 @@ class UjiKompController extends BaseController
             return response()->json(['errors' => $validator->errors()], 403);
         } else {
             DB::beginTransaction();
-            $id_uji_komp = $request->get('id_uji');
-            $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            $id = $request->get('id_uji');
+            $foundUjiKomp = UjiKomp::where('id', $id)->first();
             $params = $request->all();
             $rekomendasi = $request->rekomendasi[0]['rekomendasi'];
             $rekomendasiPemenuhan = $request->rekomendasiPemenuhan[0]['rekomendasi'];
             $aspekPemenuhan = $params['aspekPemenuhan'];
-            $ttdTable = $params['ttdTable'];
+            $nama_asesor = $request->ttdTable[0]['nama'];
+            $komentar = $request->ttdTable[0]['komentar'];
+            $file = $request->ttdTable[0]['ttd'];  
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                // membuat nama file unik
+                $nama_file = $now  . $nama_asesor . '-asesor-' . 'ak-06' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
             $aspek = $params['dataAspek'];
             for ($i = 0 ; $i < count($aspek); $i++){
                 if($aspek[$i]['item'] == '- Rencana Asesmen'){
@@ -1806,10 +1816,10 @@ class UjiKompController extends BaseController
                     'contigency_management_skill' => $aspekPemenuhan[0]['contigency'],
                     'job_role' => $aspekPemenuhan[0]['jobRole'],
                     'transfer_skill' => $aspekPemenuhan[0]['transferSkill'],
-                    'rekomendasi_konsistensi' =>$rekomendasiPemenuhan,
-                    'ttd_asesor' => $ttdTable[0]['ttd'],
-                    'submit_by' => $ttdTable[0]['no'],
-                    'komentar' => $ttdTable[0]['komentar'],
+                    'rekomendasi_konsistensi' => $rekomendasiPemenuhan,
+                    'ttd_asesor' => $nama_file,
+                    'submit_by' => $params['submitBy'],
+                    'komentar' => $komentar,
                 ]);
 
                 $progress = $foundUjiKomp->persentase;
