@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Ak06Resource extends JsonResource
@@ -14,8 +14,32 @@ class Ak06Resource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
-
+    {   
+        if($this->bulan == 'Januari'){
+            $this->bulan = '01';
+        }elseif($this->bulan == 'Februari'){
+            $this->bulan = '02';
+        }elseif($this->bulan == 'Maret'){
+            $this->bulan = '03';
+        }elseif($this->bulan == 'April'){
+            $this->bulan = '04';
+        }elseif($this->bulan == 'Mei'){
+            $this->bulan = '05';
+        }elseif($this->bulan == 'Juni'){
+            $this->bulan = '06';
+        }elseif($this->bulan == 'Juli'){
+            $this->bulan = '07';
+        }elseif($this->bulan == 'Agustus'){
+            $this->bulan = '08';
+        }elseif($this->bulan == 'September'){
+            $this->bulan = '09';
+        }elseif($this->bulan == 'Oktober'){
+            $this->bulan = '10';
+        }elseif($this->bulan == 'November'){
+            $this->bulan = '11';
+        }elseif($this->bulan == 'Desember'){
+            $this->bulan = '12';
+        }
         return [
             'id' => $this->id,
             'aspek' => [
@@ -79,10 +103,10 @@ class Ak06Resource extends JsonResource
                 'rekomendasi'=> $this->rekomendasi_konsistensi,
             ],'ttdTable'=> [
                 'ttd'=> $this->ttd_asesor,
+                'nama'=> $this->nama_asesor,
+                'tanggal'=> $this->tahun . '-' . $this->bulan . '-' . $this->tanggal,
                 'komentar'=> $this->komentar,
             ],
-
-
         ];
                 
                 
