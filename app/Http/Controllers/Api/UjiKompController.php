@@ -548,7 +548,8 @@ class UjiKompController extends BaseController
     {
        
         $query = UjiKompAk06::query();
-        $query->join('trx_uji_komp', 'trx_uji_komp.id_ak_06', '=', 'trx_uji_komp_ak_06.id');
+        $query->join('trx_uji_komp as a', 'a.id_ak_06', '=', 'trx_uji_komp_ak_06.id');
+        $query->join('trx_uji_komp_ak_01 as b', 'b.id', '=', 'a.id_ak_01');
         $query->where('trx_uji_komp_ak_06.id',$id)->get();
 
        
@@ -1748,7 +1749,7 @@ class UjiKompController extends BaseController
             $rekomendasi = $request->rekomendasi[0]['rekomendasi'];
             $rekomendasiPemenuhan = $request->rekomendasiPemenuhan[0]['rekomendasi'];
             $aspekPemenuhan = $params['aspekPemenuhan'];
-            $nama_asesor = $request->ttdTable[0]['nama'];
+            
             $komentar = $request->ttdTable[0]['komentar'];
             $file = $request->ttdTable[0]['ttd'];  
                 $image = str_replace('data:image/png;base64,', '', $file);
@@ -1756,7 +1757,7 @@ class UjiKompController extends BaseController
                 $mytime = Carbon::now();
                 $now = $mytime->toDateString();
                 // membuat nama file unik
-                $nama_file = $now  . $nama_asesor . '-asesor-' . 'ak-06' . '-' . '.png';
+                $nama_file = $now . '-asesor-' . 'ak-06' . '-' . '.png';
                 \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
             $aspek = $params['dataAspek'];
             for ($i = 0 ; $i < count($aspek); $i++){
