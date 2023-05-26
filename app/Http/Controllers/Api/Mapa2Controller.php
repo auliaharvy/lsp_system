@@ -32,16 +32,7 @@ class Mapa2Controller extends BaseController
     // public function indexIa03(Request $request)
     public function index()
     {
-        // $searchParams = $request->all();
-        // $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        // // $keyword = Arr::get($searchParams, 'keyword', '');
-        // // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
-        // $id_skema = Arr::get($searchParams, 'id_skema', '');
-
         $query = MstFrMapa02::query();
-        // $query->where('mst_perangkat_ia_03.id_skema', $id_skema)
-        // ->select('mst_perangkat_ia_03.*');
-
         return Mapa2Resource::collection($query->paginate(100));
 
 
@@ -78,10 +69,11 @@ class Mapa2Controller extends BaseController
         }
     }
 
-    public function destroy($id)
-    {
+    public function destroy(Request $request)
+    {   
+        $params = $request->all();
         try {
-            MstFrMapa02::where('id',$id)->delete();
+            MstFrMapa02::where('id',$params['id'])->delete();
             return response()->json(['message' => "Success Delete MUK MAPA 02"], 201);
         } catch (\Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], 403);

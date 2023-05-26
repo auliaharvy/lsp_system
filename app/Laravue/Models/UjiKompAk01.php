@@ -30,6 +30,6 @@ class UjiKompAk01 extends Model
      */
     protected $table = "trx_uji_komp_ak_01";
     protected $fillable = ['nama_asesi', 'nama_asesor', 'verifikasi_portofolio', 'observasi_langsung', 'hasil_tes_tulis', 'hasil_tes_lisan', 
-                            'hasil_tes_wawancara', 'hari', 'tanggal', 'bulan', 'tahun', 'jam', 'tuk', 'pernyataan_asesor', 'tanda_tangan_asesor', 
-                            'pernyataan_asesi', 'tanda_tangan_asesi'];
+    'hasil_tes_wawancara', 'hari', 'tanggal', 'bulan', 'tahun', 'jam', 'tuk', 'pernyataan_asesor', 'tanda_tangan_asesor', 
+    'pernyataan_asesi', 'tanda_tangan_asesi'];
 }

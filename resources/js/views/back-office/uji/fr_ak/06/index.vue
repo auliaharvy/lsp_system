@@ -64,22 +64,22 @@
           <el-table-column align="center" label="Kesesuaian dengan prinsip asesmen">
             <el-table-column align="center" label="Validitas">
               <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.validitas" />
+                <el-checkbox v-model="scope.row.validitas" />
               </template>
             </el-table-column>
             <el-table-column align="center" label="Reliabel">
               <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.reliabel" />
+                <el-checkbox v-model="scope.row.reliabel" />
               </template>
             </el-table-column>
             <el-table-column align="center" label="Fleksibel">
               <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.fleksibel" />
+                <el-checkbox v-model="scope.row.fleksibel" />
               </template>
             </el-table-column>
             <el-table-column align="center" label="Adil">
               <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.item !== 'Prosedur asesmen :'" v-model="scope.row.adil" />
+                <el-checkbox v-model="scope.row.adil" />
               </template>
             </el-table-column>
           </el-table-column>
@@ -127,7 +127,7 @@
             </el-table-column>
             <el-table-column align="center" label="Task Management Skills">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.taskManagement" type="textarea" />
+                <el-input v-model="scope.row.taskManagementSkill" type="textarea" />
               </template>
             </el-table-column>
             <el-table-column align="center" label="Contingency Management Skills">
@@ -190,7 +190,19 @@
           </el-table-column>
           <el-table-column align="center" label="Tanda Tangan Asesor">
             <template slot-scope="scope">
+              <div v-if="!$route.params.id_ak_06">
+                <vueSignature
+                  ref="signature"
+                  :sig-option="option"
+                  :w="'300px'"
+                  :h="'150px'"
+                  :disabled="false"
+                  style="border-style: outset"
+                />
+                <el-button size="small" @click="clear">Clear</el-button>
+              </div>
               <el-image
+                v-else
                 style="width: 200px; height: 100px"
                 :src="scope.row.ttd"
                 fit="contain"
@@ -204,26 +216,33 @@
           </el-table-column>
         </el-table>
         <br>
-        <el-button @click="onSubmit">Submit</el-button>
+        <el-button v-if="!$route.params.id_ak_06" @click="onSubmit">Submit</el-button>
       </div>
     </el-main>
   </el-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import vueSignature from 'vue-signature/src/components/vueSignature.vue';
 import Resource from '@/api/resource';
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstAk03Resource = new Resource('mst-ak-03-get');
 const ak06Resource = new Resource('uji-komp-ak-06');
-// const apl01Resource = new Resource('detail/apl-01');
+const showAk06Resource = new Resource('ak-06');
 
 export default {
-  components: {},
+  components: {
+    vueSignature,
+  },
   data() {
     return {
+      option: {
+        penColor: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(255,255,255)',
+      },
       umpanBalikAsesi: '',
       checkList: [],
       kompeten: null,
@@ -232,13 +251,14 @@ export default {
       listSkema: null,
       listTuk: null,
       listJadwal: null,
+      listAspek: [],
       listKodeUnit: [],
       listJudulUnit: [],
       listKuk: [],
       listUji: [],
       selectedSkema: {},
       selectedUji: {},
-      dataTrx: {},
+      dataTrx: [],
       headerTable: [
         {
           title: 'Nama Asesi',
@@ -314,7 +334,7 @@ export default {
         {
           item: 'Konsistensi keputusan asesmen Bukti dari berbagai asesmen diperiksa untuk konsistensi dimensi kompetensi',
           taskSkill: '',
-          taskManagement: '',
+          taskManagementSkill: '',
           contigency: '',
           jobRole: '',
           transferSkill: '',
@@ -322,7 +342,7 @@ export default {
       ],
       rekomendasi: [
         {
-          item: 'Rekomendasi untuk peningkatan :',
+          item: 'Rekomendasi untuk peningkatan',
           rekomendasi: '',
         },
       ],
@@ -332,17 +352,8 @@ export default {
           rekomendasi: '',
         },
       ],
-      form: {
-        namaAsesi: '',
-        rekomendasi: '',
-        keterangan: '',
-        aspek: '',
-        catatanPenolakan: '',
-        saranPerbaikan: '',
-      },
       ttdTable: [
         {
-          no: 1,
           nama: 'Nama Asesor',
           tanggal: '12-2-2002',
           ttd: '',
@@ -354,6 +365,9 @@ export default {
       labelPosition: 'left',
     };
   },
+  computed: {
+    ...mapGetters(['userId']),
+  },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
   },
@@ -362,16 +376,22 @@ export default {
     this.onResize();
   },
   created() {
-    this.getApl01();
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getListPertanyaan();
+    this.getAk06();
   },
   methods: {
+    clear() {
+      this.$refs.signature.clear();
+    },
+    saveSign() {
+      var _this = this;
+      this.testPng = _this.$refs.signature.save();
+    },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -380,19 +400,57 @@ export default {
         }
       }
     },
-    async getApl01() {
-      this.loading = true;
-      // const data = await apl01Resource.get(this.$route.params.id_apl_01);
-      // this.ttdTable[0].nama = this.$route.params.asesor;
-    },
-    async getListPertanyaan() {
-      this.loading = true;
-      const { data } = await mstAk03Resource.list({ id_skema: this.$route.params.id_skema });
-      this.listSoal = data;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
+    async getAk06() {
+      const { data } = await showAk06Resource.get(this.$route.params.id_ak_06);
+      this.aspek = data[0]['aspek'];
+      this.aspek.forEach((element, index) => {
+        if (index === 0) {
+          element.validitas = element.validitas === 1;
+          element.reliabel = element.reliabel === 1;
+          element.fleksibel = element.fleksibel === 1;
+          element.adil = element.adil === 1;
+        } else if (index === 1){
+          element.validitas = element.validitas === 1;
+          element.reliabel = element.reliabel === 1;
+          element.fleksibel = element.fleksibel === 1;
+          element.adil = element.adil === 1;
+        } else if (index === 2){
+          element.validitas = element.validitas === 1;
+          element.reliabel = element.reliabel === 1;
+          element.fleksibel = element.fleksibel === 1;
+          element.adil = element.adil === 1;
+        } else if (index === 3){
+          element.validitas = element.validitas === 1;
+          element.reliabel = element.reliabel === 1;
+          element.fleksibel = element.fleksibel === 1;
+          element.adil = element.adil === 1;
+        } else if (index === 4){
+          element.validitas = element.validitas === 1;
+          element.reliabel = element.reliabel === 1;
+          element.fleksibel = element.fleksibel === 1;
+          element.adil = element.adil === 1;
+        } else if (index === 5){
+          element.validitas = element.validitas === 1;
+          element.reliabel = element.reliabel === 1;
+          element.fleksibel = element.fleksibel === 1;
+          element.adil = element.adil === 1;
+        }
       });
-      this.loading = false;
+      this.aspekPemenuhan[0].item = data[0].aspekPemenuhan.item;
+      this.aspekPemenuhan[0].taskSkill = data[0].aspekPemenuhan.taskSkill;
+      this.aspekPemenuhan[0].taskManagementSkill = data[0].aspekPemenuhan.taskManagementSkill;
+      this.aspekPemenuhan[0].contigency = data[0].aspekPemenuhan.contigency;
+      this.aspekPemenuhan[0].jobRole = data[0].aspekPemenuhan.jobRole;
+      this.aspekPemenuhan[0].transferSkill = data[0].aspekPemenuhan.transferSkill;
+      this.rekomendasi[0].item = data[0].rekomendasi.item;
+      this.rekomendasi[0].rekomendasi = data[0].rekomendasi.rekomendasi;
+      this.rekomendasiPemenuhan[0].item = data[0].rekomendasiPemenuhan.item;
+      this.rekomendasiPemenuhan[0].rekomendasi = data[0].rekomendasiPemenuhan.rekomendasi;
+      this.ttdTable[0].nama = data[0].ttdTable.nama;
+      this.ttdTable[0].tanggal = data[0].ttdTable.tanggal;
+      this.ttdTable[0].ttd = '/uploads/users/signature/' + data[0].ttdTable.ttd;
+      this.ttdTable[0].komentar = data[0].ttdTable.komentar;
+      console.log(this.ttdTable[0].ttd);
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -461,7 +519,21 @@ export default {
     },
     onSubmit() {
       this.loading = true;
-      ak06Resource
+      var sign = this.$refs.signature.save();
+      this.ttdTable[0].ttd = sign;
+      // var nama = this.$route.params.asesor;
+      // this.ttdTable[0].nama = nama;
+      var data = {
+        'id_uji': this.$route.params.id_uji,
+        'submitBy': this.userId,
+        'dataAspek': this.aspek,
+        'aspekPemenuhan': this.aspekPemenuhan,
+        'rekomendasi': this.rekomendasi,
+        'rekomendasiPemenuhan': this.rekomendasiPemenuhan,
+        'ttdTable': this.ttdTable,
+      };
+      console.log(data);
+      ak06Resource.store(data)
         .then(response => {
           this.$message({
             message: 'FR AK 06 has been Submited successfully.',
@@ -532,10 +604,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form {
-  padding-right: 50px;
-  padding-left: 50px;
-}
 .edit-input {
   padding-right: 100px;
 }
