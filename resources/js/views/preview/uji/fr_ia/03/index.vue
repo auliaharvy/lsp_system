@@ -143,7 +143,6 @@
         </el-table>
 
         <br>
-
         <el-table
           v-loading="loading"
           :data="listSoal"
@@ -213,16 +212,14 @@ const mstIa03Resource = new Resource('mst-ia03-get');
 const ia03Resource = new Resource('uji-komp-ia-03');
 const ia03NilaiResource = new Resource('uji-komp-ia-03-nilai');
 const ia03Detail = new Resource('detail/ia-03');
-const previewResource = new Resource('detail/preview');
-const indexPreview = new Resource('detail/indexPreview');
+const preview = new Resource('detail/preview');
 
 export default {
-  components: {},
   data() {
     return {
       umpanBalikAsesi: '',
       kompeten: null,
-      loading: true,
+      loading: false,
       listSoal: null,
       listSkema: null,
       listTuk: null,
@@ -296,20 +293,27 @@ export default {
     this.onResize();
   },
   created() {
-    this.getDataPreview();
+    this.getDataPreview().then((value) => {
+      this.getListPertanyaan().then((value) => {
+        // this.getIa03();
+      });
+    });
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getListPertanyaan().then((value) => {
-      this.getIa03();
-    });
+    // this.getListPertanyaan().then((value) => {
+    //   this.getIa03();
+    // });
   },
   methods: {
     async getDataPreview(){
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
+      this.loading = true;
+      const data = await preview.get(this.$route.params.iduji);
+      this.dataPreview = data;
+      this.loading = false;
     },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
@@ -321,31 +325,32 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
       const { data } = await mstIa03Resource.list({ id_skema: this.dataPreview.id_skema });
+      // console.log(data);
+      const dataia03 = await ia03Detail.get(this.dataPreview.id_ia_03);
+      // console.log(dataia03);
+      this.ia03 = dataia03;
       this.listSoal = data;
+
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
+        element['tanggapan'] = this.ia03.detail[index].tanggapan;
+        element['rekomendasi'] = this.ia03.detail[index].rekomendasi;
       });
-      // const dataia03 = await ia03Detail.get(this.dataPreview.id_ia_03);
-      // this.ia03 = dataia03.detail;
       this.loading = false;
     },
-    async getIa03() {
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-      if (this.dataPreview.id_ia_03 !== null) {
-        this.loading = true;
-        const data = await ia03Detail.get(this.dataPreview.id_ia_03);
-        this.ia03 = data;
-        // this.ia03 = dataia03.detail;
-        this.listSoal.forEach((element, index) => {
-          var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_03 === element['id']);
-          element['tanggapan'] = data.detail[foundIndex].tanggapan;
-          element['rekomendasi'] = data.detail[foundIndex].rekomendasi;
-        });
-        this.loading = false;
-      }
-    },
+    // getIa03() {
+    //   if (this.dataPreview.id_ia_03 !== null) {
+    //     this.loading = true;
+    //     this.listSoal.forEach((element, index) => {
+    //       // var foundIndex = this.ia03.detail.findIndex(x => x.id_perangkat_ia_03 === element['id']);
+    //       // element['tanggapan'] = this.ia03.detail[foundIndex].tanggapan;
+    //       element['tanggapan'] = this.ia03.detail[index].tanggapan;
+    //       element['rekomendasi'] = this.ia03.detail[index].rekomedasi;
+    //     });
+    //     this.loading = false;
+    //   }
+    // },
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
@@ -362,16 +367,17 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    async getUjiKompDetail() {
-      this.loading = true;
-      const ujiDetail = await indexPreview.get(this.$route.params.iduji);
-      console.log(ujiDetail.data);
-      this.headerTable[0].content = ujiDetail.data[0].skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.data[0].nama_tuk;
-      this.headerTable[2].content = ujiDetail.data[0].asesor;
-      this.headerTable[3].content = ujiDetail.data[0].nama_peserta;
-      this.headerTable[4].content = ujiDetail.data[0].mulai;
-      this.loading = false;
+    getUjiKompDetail() {
+      var id_uji = this.dataPreview.id;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      this.selectedUji = ujiDetail;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
+      this.headerTable[1].content = ujiDetail.nama_tuk;
+      this.headerTable[2].content = ujiDetail.asesor;
+      this.headerTable[3].content = ujiDetail.nama_peserta;
+      this.headerTable[4].content = ujiDetail.mulai;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
@@ -411,8 +417,8 @@ export default {
       this.loading = true;
       this.form.detail_ia_03 = this.listSoal;
       this.form.user_id = this.userId;
-      this.form.id_uji_komp = this.$route.params.iduji;
-      this.form.id_skema = this.dataPreview.id_skema;
+      this.form.id_uji_komp = this.$route.params.id_uji;
+      this.form.id_skema = this.$route.params.id_skema;
       ia03Resource
         .store(this.form)
         .then(response => {
@@ -435,9 +441,9 @@ export default {
       this.loading = true;
       this.form.detail_ia_03 = this.listSoal;
       this.form.user_id = this.userId;
-      this.form.id_uji_komp = this.$route.params.iduji;
-      this.form.id_skema = this.dataPreview.id_skema;
-      this.form.id_ia_03 = this.dataPreview.id_ia_03;
+      this.form.id_uji_komp = this.$route.params.id_uji;
+      this.form.id_skema = this.$route.params.id_skema;
+      this.form.id_ia_03 = this.$route.params.id_ia_03;
       ia03NilaiResource
         .store(this.form)
         .then(response => {

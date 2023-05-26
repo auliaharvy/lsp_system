@@ -66,7 +66,7 @@
         </el-button-group>
       </span>
     </el-header>
-    <el-main>
+    <el-main v-loading="loading">
       <div>
         <el-table
           v-loading="loading"
@@ -171,17 +171,15 @@ const ia02Resource = new Resource('uji-komp-ia-02');
 const ia02NilaiResource = new Resource('uji-komp-ia-02-nilai');
 const mstIa02Resource = new Resource('mst-ia02-get');
 const ia02Detail = new Resource('detail/ia-02');
-const previewResource = new Resource('detail/preview');
-const indexPreview = new Resource('detail/indexPreview');
+const preview = new Resource('detail/preview');
 
 export default {
-  components: {},
   data() {
     return {
       radio1: 'Kompeten',
       role: null,
       kompeten: null,
-      loading: true,
+      loading: false,
       listSkema: null,
       listTuk: null,
       listJadwal: null,
@@ -267,17 +265,19 @@ export default {
   },
   methods: {
     async getDataPreview(){
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
+      this.loading = true;
+      const data = await preview.get(this.$route.params.iduji);
+      this.dataPreview = data;
+      console.log(this.dataPreview);
+      this.loading = false;
     },
     async getIa02() {
       this.role = this.roles[0];
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-      console.log('id ia 02 : ' + this.dataPreview.id_ia_02);
-      if (this.$route.params.ia02 !== null) {
+      if (this.dataPreview.id_ia_02 !== null) {
         this.loading = true;
-        const data = await ia02Detail.get(this.$route.params.ia02);
+        const data = await ia02Detail.get(this.dataPreview.id_ia_02);
         this.detail = data;
-        this.dataTrx.rekomendasi_asesor = data.rekomendasi_asesor;
+        // this.dataTrx.rekomendasi_asesor = data.rekomendasi_asesor;
         this.loading = false;
       }
     },
@@ -291,7 +291,6 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
       const { data } = await mstIa02Resource.list({ id_skema: this.dataPreview.id_skema });
       this.listSoal = data;
       this.dataSoal = data[0].file;
@@ -322,16 +321,17 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    async getUjiKompDetail() {
-      this.loading = true;
-      const ujiDetail = await indexPreview.get(this.$route.params.iduji);
-      console.log(ujiDetail.data);
-      this.headerTable[0].content = ujiDetail.data[0].skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.data[0].nama_tuk;
-      this.headerTable[2].content = ujiDetail.data[0].asesor;
-      this.headerTable[3].content = ujiDetail.data[0].nama_peserta;
-      this.headerTable[4].content = ujiDetail.data[0].mulai;
-      this.loading = false;
+    getUjiKompDetail() {
+      var id_uji = this.dataPreview.id;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      this.selectedUji = ujiDetail;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
+      this.headerTable[1].content = ujiDetail.nama_tuk;
+      this.headerTable[2].content = ujiDetail.asesor;
+      this.headerTable[3].content = ujiDetail.nama_peserta;
+      this.headerTable[4].content = ujiDetail.mulai;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
@@ -373,8 +373,8 @@ export default {
       this.loading = true;
       const uploadData = new FormData();
       uploadData.append('role', this.roles[0]);
-      uploadData.append('id_skema', this.dataPreview.id_skema);
-      uploadData.append('id_uji_komp', this.$route.params.iduji);
+      uploadData.append('id_skema', this.$route.params.id_skema);
+      uploadData.append('id_uji_komp', this.$route.params.id_uji);
       uploadData.append('user_id', this.userId);
       uploadData.append('file', this.dataTrx.file);
       uploadData.append('rekomendasi_asesor', this.dataTrx.rekomendasi_asesor);
@@ -401,9 +401,9 @@ export default {
       this.loading = true;
       const uploadData = new FormData();
       uploadData.append('role', this.roles[0]);
-      uploadData.append('id_ia_02', this.dataPreview.id_ia_02);
-      uploadData.append('id_uji_komp', this.$route.params.iduji);
-      uploadData.append('user_id', this.$route.params.userId);
+      uploadData.append('id_ia_02', this.$route.params.id_ia_02);
+      uploadData.append('id_uji_komp', this.$route.params.id_uji);
+      uploadData.append('user_id', this.userId);
       uploadData.append('rekomendasi_asesor', this.dataTrx.rekomendasi_asesor);
 
       ia02NilaiResource

@@ -1,5 +1,5 @@
 <template>
-  <el-container v-if="dataPreview.id_ak_02 == null" class="app-container">
+  <el-container v-if="dataPreview.id_ak_02 == null" v-loading="loading" class="app-container">
     <el-header>
       <el-page-header content="FORM FR.AK 02 BELUM DIISI" @back="$router.back()" />
       <el-dropdown split-button type="primary">
@@ -107,37 +107,37 @@
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Observasi Demonstrasi">
             <template slot-scope="scope">
-              <el-checkbox v-model="scope.row.observasi_demonstrasi" />
+              <span v-if="scope.row.observasi_demonstrasi == 1"><i class="el-icon-success ceklist-icon" /></span>
             </template>
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Portofolio">
             <template slot-scope="scope">
-              <el-checkbox v-model="scope.row.portofolio" />
+              <span v-if="scope.row.portofolio == 1"><i class="el-icon-success ceklist-icon" /></span>
             </template>
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Pernyataan Pihak Ketiga Pertanyaan Wawancara">
             <template slot-scope="scope">
-              <el-checkbox v-model="scope.row.pernyataan_pihak_3" />
+              <span v-if="scope.row.pernyataan_pihak_3 == 1"><i class="el-icon-success ceklist-icon" /></span>
             </template>
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Pernyataan Lisan">
             <template slot-scope="scope">
-              <el-checkbox v-model="scope.row.pernyataan_lisan" />
+              <span v-if="scope.row.pernyataan_lisan == 1"><i class="el-icon-success ceklist-icon" /></span>
             </template>
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Pernyataan Tertulis">
             <template slot-scope="scope">
-              <el-checkbox v-model="scope.row.pernyataan_tertulis" />
+              <span v-if="scope.row.pernyataan_tertulis == 1"><i class="el-icon-success ceklist-icon" /></span>
             </template>
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Proyek Kerja">
             <template slot-scope="scope">
-              <el-checkbox v-model="scope.row.proyek_kerja" />
+              <span v-if="scope.row.proyek_kerja == 1"><i class="el-icon-success ceklist-icon" /></span>
             </template>
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Lainnya">
             <template slot-scope="scope">
-              <el-checkbox v-model="scope.row.lainnya" />
+              <span v-if="scope.row.lainnya == 1"><i class="el-icon-success ceklist-icon" /></span>
             </template>
           </el-table-column>
         </el-table>
@@ -149,13 +149,13 @@
           label-position="left"
         >
           <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <div>{{ aktivitasAsesor.rekomendasi }}</div>
+            <div>{{ dataSend.rekomendasi_asesor }}</div>
           </el-form-item>
           <el-form-item label="Tindak Lanjut Yang di butuhkan" prop="rekomendasi_asesor">
-            <div>{{ aktivitasAsesor.tindakLanjut }}</div>
+            <div>{{ dataSend.tindak_lanjut }}</div>
           </el-form-item>
           <el-form-item label="Komentar Observasi Oleh Asesor" prop="rekomendasi_asesor">
-            <div>{{ aktivitasAsesor.komentarObservasi }}</div>
+            <div>{{ dataSend.komentar_observasi }}</div>
           </el-form-item>
         </el-form>
         <br>
@@ -171,32 +171,16 @@ const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-// const mstIa03Resource = new Resource('mst-ia03-get');
+const mstIa03Resource = new Resource('mst-ia03-get');
 const ak02Resource = new Resource('uji-komp-ak-02');
-const ak02Preview = new Resource('detail/ak-02');
-const indexPreview = new Resource('detail/indexPreview');
+const ak02Detail = new Resource('detail/ak-02');
+const preview = new Resource('detail/preview');
 
 export default {
-  components: {},
-  props: {
-    iduji: {
-      type: Number,
-      default: 0,
-    },
-    idskema: {
-      type: Number,
-      default: 0,
-    },
-  },
   data() {
     return {
       dataSend: {},
       umpanBalikAsesi: '',
-      aktivitasAsesor: {
-        rekomendasi: '',
-        tindakLanjut: '',
-        komentarObservasi: '',
-      },
       checkList: [],
       kompeten: null,
       loading: false,
@@ -280,18 +264,45 @@ export default {
     this.onResize();
   },
   created() {
-    this.getDataPreview();
+    this.getDataPreview().then((value) => {
+      this.getListPertanyaan();
+    });
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getListPertanyaan();
+    // this.getListPertanyaan();
+    this.getDate();
   },
   methods: {
+    getDate() {
+      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      var date = new Date();
+      // var millisecond = date.getMilliseconds();
+      // var detik = date.getSeconds();
+      var menit = date.getMinutes();
+      var jam = date.getHours();
+      var hari = date.getDay();
+      var tanggal = date.getDate();
+      var bulan = date.getMonth();
+      var tahun = date.getFullYear();
+      this.dataTrx.jam = jam;
+      this.dataTrx.menit = menit;
+      this.dataTrx.tanggal = tanggal;
+      this.dataTrx.bulan = arrbulan[bulan];
+      this.dataTrx.tahun = tahun;
+      this.dataTrx.hari = arrHari[hari];
+      this.headerTable[4].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
+      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
+    },
     async getDataPreview(){
-      this.dataPreview = await indexPreview.get(this.$route.params.iduji);
+      this.loading = true;
+      const data = await preview.get(this.$route.params.iduji);
+      this.dataPreview = data;
+      this.loading = false;
     },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
@@ -302,24 +313,26 @@ export default {
       }
     },
     async getListPertanyaan() {
-      // this.loading = true;
-      // const { data } = await mstIa03Resource.list({ id_skema: this.idskema });
-      // this.listSoal = data;
-      // this.listSoal.forEach((element, index) => {
-      //   element['index'] = index + 1;
-      //   element['observasi_demonstrasi'] = true;
-      //   element['portofolio'] = false;
-      //   element['pernyataan_pihak_3'] = true;
-      //   element['pernyataan_lisan'] = false;
-      //   element['pernyataan_tertulis'] = false;
-      //   element['proyek_kerja'] = false;
-      //   element['lainnya'] = false;
-      // });
-      const data = await ak02Preview.get(this.$route.params.ak02);
-      this.aktivitasAsesor.rekomendasi = data.data.rekomendasi_asesor;
-      this.aktivitasAsesor.tindakLanjut = data.data.tindak_lanjut;
-      this.aktivitasAsesor.komentarObservasi = data.data.komentar;
-      // this.loading = false;
+      this.loading = true;
+      const { data } = await mstIa03Resource.list({ id_skema: this.dataPreview.id_skema });
+      const result = await ak02Detail.get(this.dataPreview.id_skema);
+      console.log(result.detail[0].observasi_demonstrasi);
+      this.listSoal = data;
+      this.listSoal.forEach((element, index) => {
+        element['index'] = index + 1;
+        // element['observasi_demonstrasi'] = result.detail[index].observasi_demonstrasi;
+        // element['portofolio'] = result.detail[index].portofolio;
+        // element['pernyataan_pihak_3'] = result.detail[index].pernyataan_pihak_3;
+        // element['pernyataan_lisan'] = result.detail[index].pernyataan_lisan;
+        // element['pernyataan_tertulis'] = result.detail[index].pernyataan_tertulis;
+        // element['proyek_kerja'] = result.detail[index].proyek_kerja;
+        // element['lainnya'] = result.detail[index].lainnya;
+      });
+      this.dataSend.rekomendasi_asesor = result.ak_02.rekomendasi_asesor;
+      this.dataSend.tindak_lanjut = result.ak_02.tindak_lanjut;
+      this.dataSend.komentar_observasi = result.ak_02.komentar_observasi;
+
+      this.loading = false;
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -337,17 +350,20 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    async getUjiKompDetail() {
-      var ujiDetail = await indexPreview.get(this.$route.params.iduji);
-      console.log(ujiDetail);
-      this.headerTable[0].content = ujiDetail.data[0].nama_peserta;
-      this.headerTable[1].content = ujiDetail.data[0].asesor;
-      this.headerTable[2].content = ujiDetail.data[0].skema_sertifikasi;
-      this.headerTable[3].content = ujiDetail.data[0].mulai;
-      this.headerTable[4].content = ujiDetail.data[0].selesai;
+    getUjiKompDetail() {
+      var id_uji = this.dataPreview.id;
+      console.log(id_uji);
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      this.selectedUji = ujiDetail;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      this.headerTable[2].content = ujiDetail.skema_sertifikasi;
+      this.headerTable[1].content = ujiDetail.asesor;
+      this.headerTable[0].content = ujiDetail.nama_peserta;
+      this.headerTable[4].content = ujiDetail.mulai;
     },
     onJadwalSelect() {
-      var id_skema = this.idskema;
+      var id_skema = this.dataPreview.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var skemaId = this.listSkema.find((x) => x.id === id_skema);
       this.selectedSkema = skemaId;
@@ -356,16 +372,28 @@ export default {
       // this.dataTrx.id_tuk = tukId.id;
       this.getKuk();
     },
-    getKuk(){
+    async getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
       console.log(unitKomp);
+      const result = await ak02Detail.get(this.dataPreview.id_skema);
+      console.log(result);
+      // console.log(result.detail[0].observasi_demonstrasi);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
         element['index'] = number++;
+        element['observasi_demonstrasi'] = result.detail[index].observasi_demonstrasi;
+        element['portofolio'] = result.detail[index].portofolio;
+        element['pernyataan_pihak_3'] = result.detail[index].pernyataan_pihak_3;
+        element['pernyataan_lisan'] = result.detail[index].pernyataan_lisan;
+        element['pernyataan_tertulis'] = result.detail[index].pernyataan_tertulis;
+        element['proyek_kerja'] = result.detail[index].proyek_kerja;
+        element['lainnya'] = result.detail[index].lainnya;
         kuk.push(element);
         this.unitKompetensiTable[0].col3.push(element['kode_unit']);
+        // this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
         this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
         // this.headerTable[3].content.push(element['unit_kompetensi']);
         this.listJudulUnit.push(element);
@@ -379,21 +407,21 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
     },
     onSubmit() {
       this.loading = true;
-      this.dataTrx.id_uji_komp = this.iduji;
+      this.dataTrx.id_uji_komp = this.$route.params.id_uji;
       this.dataTrx.komentar = this.dataSend.komentar;
       this.dataTrx.tindak_lanjut = this.dataSend.tindakLanjut;
       this.dataTrx.rekomendasi_asesor = this.dataSend.status;
       this.dataTrx.nama_asesi = this.headerTable[0].content;
       this.dataTrx.nama_asesor = this.headerTable[1].content;
       this.dataTrx.detail = this.listSoal;
-      console.log(this.dataTrx.detail);
+      // console.log(this.dataTrx.detail);
       this.dataTrx.userId = this.userId;
       ak02Resource
         .store(this.dataTrx)
@@ -467,6 +495,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.ceklist-icon{
+  color: #67C23A;
+}
 .form {
   padding-right: 50px;
   padding-left: 50px;

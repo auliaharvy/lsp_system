@@ -191,26 +191,28 @@
 
         <el-form
           ref="form"
+          v-loading="loading"
           :model="form"
           label-width="250px"
           label-position="left"
         >
           <el-form-item label="Apakah Asesi Kompeten?" prop="kompeten">
-            <el-select v-if="$route.params.ia01 === null" v-model="form.status" class="filter-item" placeholder="B/BK">
+            <!-- <el-select v-if="dataPreview.id_ia_01 === null" class="filter-item" placeholder="B/BK">
               <el-option :key="0" label="Kompeten" :value="0" />
               <el-option :key="1" label="Belum Kompeten" :value="1" />
-            </el-select>
-            <div v-else>
+            </el-select> -->
+            <!-- <div v-else> -->
+            <div>
               <span v-if="ia01.status === 0">Kompeten</span>
               <span v-if="ia01.status === 1">Belum Kompeten</span>
             </div>
           </el-form-item>
           <el-form-item label="Umpan Balik untuk Asesi" prop="umpanBalik">
-            <el-input v-if="$route.params.ia01 === null" v-model="form.note" placeholder="Isi umpan balik untuk asesi" />
+            <el-input v-if="dataPreview.id_ia_01 === null" placeholder="Isi umpan balik untuk asesi" />
             <span v-else>{{ ia01.note }}</span>
           </el-form-item>
           <el-form-item label="Tanda Tangan Asesor">
-            <div v-if="$route.params.ia01 === null">
+            <div v-if="dataPreview.id_ia_01 === null">
               <h3>FR.IA 01 belum ditanda tangani</h3>
             </div>
             <el-image
@@ -221,7 +223,7 @@
             />
           </el-form-item>
           <el-form-item label="Tanda Tangan Asesi">
-            <div v-if="$route.params.ia01 === null">
+            <div v-if="dataPreview.id_ia_01 === null">
               <h3>FR.IA 01 belum ditanda tangani</h3>
             </div>
             <el-image
@@ -248,8 +250,7 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const ia01Resource = new Resource('uji-komp-ia-01');
 const ia01Detail = new Resource('detail/ia-01');
-const previewResource = new Resource('detail/preview');
-const indexPreview = new Resource('detail/indexPreview');
+const preview = new Resource('detail/preview');
 
 export default {
   data() {
@@ -259,7 +260,7 @@ export default {
         backgroundColor: 'rgb(255,255,255)',
       },
       kompeten: null,
-      loading: true,
+      loading: false,
       listSkema: null,
       listTuk: null,
       listJadwal: null,
@@ -332,18 +333,45 @@ export default {
     this.onResize();
   },
   created() {
-    this.getDataPreview();
+    this.getDataPreview().then((value) => {
+      this.getIa01();
+    });
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getIa01();
+    this.getDate();
   },
   methods: {
+    getDate() {
+      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      var date = new Date();
+      // var millisecond = date.getMilliseconds();
+      // var detik = date.getSeconds();
+      var menit = date.getMinutes();
+      var jam = date.getHours();
+      var hari = date.getDay();
+      var tanggal = date.getDate();
+      var bulan = date.getMonth();
+      var tahun = date.getFullYear();
+      this.dataTrx.jam = jam;
+      this.dataTrx.menit = menit;
+      this.dataTrx.tanggal = tanggal;
+      this.dataTrx.bulan = arrbulan[bulan];
+      this.dataTrx.tahun = tahun;
+      this.dataTrx.hari = arrHari[hari];
+      this.headerTable[4].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
+      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
+    },
     async getDataPreview(){
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
+      this.loading = true;
+      const data = await preview.get(this.$route.params.iduji);
+      this.dataPreview = data;
+      // console.log(this.dataPreview);
+      this.loading = false;
     },
     clear() {
       this.$refs.signature.clear();
@@ -352,12 +380,12 @@ export default {
       this.$refs.signature1.clear();
     },
     async getIa01() {
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
       if (this.dataPreview.id_ia_01 !== null) {
         this.loading = true;
         const data = await ia01Detail.get(this.dataPreview.id_ia_01);
         this.listDetailIa01 = data.detail;
         this.ia01 = data.ia_01;
+        console.log(this.ia01);
         this.ttdAsesor = '/uploads/users/signature/' + this.ia01.ttd_asesor;
         this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi;
         this.listKuk.forEach((element, index) => {
@@ -413,21 +441,20 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    async getUjiKompDetail() {
+    getUjiKompDetail() {
       this.loading = true;
-      const ujiDetail = await indexPreview.get(this.$route.params.iduji);
-      console.log(ujiDetail.data);
-      this.headerTable[0].content = ujiDetail.data[0].skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.data[0].kode_skema;
-      this.headerTable[2].content = ujiDetail.data[0].nama_tuk;
-      this.headerTable[3].content = ujiDetail.data[0].asesor;
-      this.headerTable[4].content = ujiDetail.data[0].nama_peserta;
-      this.fileName = 'APL.02 - ' + ujiDetail.data[0].nama_peserta + ' - ' + ujiDetail.kode_skema;
-      this.headerTable[0].content = ujiDetail.data[0].skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.data[0].nama_tuk;
-      this.headerTable[2].content = ujiDetail.data[0].asesor;
-      this.headerTable[3].content = ujiDetail.data[0].nama_peserta;
-      this.headerTable[4].content = ujiDetail.data[0].mulai;
+      var id_uji = this.dataPreview.id;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      this.selectedUji = ujiDetail;
+      this.selectedUji = ujiDetail;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      this.fileName = 'APL.02 - ' + ujiDetail.nama_peserta + ' - ' + ujiDetail.kode_skema;
+      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
+      this.headerTable[1].content = ujiDetail.nama_tuk;
+      this.headerTable[2].content = ujiDetail.asesor;
+      this.headerTable[3].content = ujiDetail.nama_peserta;
+      this.headerTable[4].content = ujiDetail.mulai;
       this.loading = false;
     },
     onJadwalSelect() {
@@ -477,8 +504,8 @@ export default {
       this.form.signature_asesi = this.$refs.signature1.save();
       this.form.detail_ia_01 = this.listKuk;
       this.form.user_id = this.userId;
-      this.form.id_uji_komp = this.$route.params.iduji;
-      this.form.id_skema = this.$route.params.idskema;
+      this.form.id_uji_komp = this.$route.params.id_uji;
+      this.form.id_skema = this.$route.params.id_skema;
       const formData = new FormData();
       formData.append('id_uji_komp', this.form.id_uji_komp);
       var arrayDetail = JSON.stringify(this.form.detail_ia_01);

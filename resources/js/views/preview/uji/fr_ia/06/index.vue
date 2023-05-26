@@ -168,13 +168,11 @@ const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
-const mstIa06Resource = new Resource('mst-ia06-get');
+const mstResource = new Resource('mst-ia06-get');
 const postResource = new Resource('uji-komp-ia-06');
 const ia06Detail = new Resource('detail/ia-06');
 const ia06NilaiResource = new Resource('uji-komp-ia-06-nilai');
-const previewIa06 = new Resource('preview/ia-06');
-const previewResource = new Resource('detail/preview');
-const indexPreview = new Resource('detail/indexPreview');
+const preview = new Resource('detail/preview');
 
 export default {
   components: {},
@@ -183,8 +181,13 @@ export default {
     return {
       umpanBalikAsesi: '',
       kompeten: null,
-      loading: true,
-      listSoal: null,
+      loading: false,
+      listSoal: [
+        {
+          jawaban: '',
+          is_kompeten: '',
+        },
+      ],
       listSkema: null,
       listTuk: null,
       listJadwal: null,
@@ -241,7 +244,6 @@ export default {
       isWide: true,
       labelPosition: 'left',
       dataPreview: '',
-      ia06Detail: '',
     };
   },
   computed: {
@@ -257,6 +259,11 @@ export default {
     this.onResize();
   },
   created() {
+    this.getDataPreview().then((value) => {
+      this.getListPertanyaan().then((value) => {
+        // this.getIa06();
+      });
+    });
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
@@ -266,48 +273,17 @@ export default {
     // this.getListPertanyaan().then((value) => {
     //   this.getIa06();
     // });
-    this.getSoalDanJawaban();
+    this.getDate();
+    // this.getIa06();
   },
   methods: {
-    async getSoalDanJawaban(){
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-      this.listSoal = await previewIa06.get(this.dataPreview.id_ia_06);
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
-    },
-    async getListPertanyaan() {
-      this.loading = true;
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-      const { data } = await mstIa06Resource.list({ id_skema: this.dataPreview.id_skema });
-      const detail = await ia06Detail.get(this.dataPreview.id_ia_06);
-      this.listSoal = data;
-      this.ia06Detail = detail;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
-      // const data = await ia06Detail.get(this.dataPreview.id_ia_06);
-      // this.ia06 = data;
-      // // this.ia03 = dataia03.detail;
-      // console.log(data.detail);
-      // this.listSoal.forEach((element, index) => {
-      //   var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_06 === element['id']);
-      //   element['jawaban'] = data.detail[foundIndex].jawaban;
-      // });
-      this.loading = false;
-    },
-    getIa06() {
-      this.loading = true;
-      if (this.dataPreview.id_ia_06 !== null) {
-        this.listSoal.forEach((element, index) => {
-          var foundIndex = this.ia06Detail.detail.findIndex(x => x.id_perangkat_ia_06 === element['id']);
-          element['jawaban'] = this.ia06Detail.detail[foundIndex].jawaban;
-        });
-        console.log(this.listSoal);
-      }
-      this.loading = false;
-    },
     checkRole,
+    async getDataPreview(){
+      this.loading = true;
+      const data = await preview.get(this.$route.params.iduji);
+      this.dataPreview = data;
+      this.loading = false;
+    },
     getDate() {
       var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
       var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
@@ -337,6 +313,29 @@ export default {
         }
       }
     },
+    async getListPertanyaan() {
+      this.loading = true;
+      const { data } = await mstResource.list({ id_skema: this.dataPreview.id_skema });
+      // console.log(data);
+      const dataia06 = await ia06Detail.get(this.dataPreview.id_ia_06);
+      this.listSoal = data;
+      this.ia06 = dataia06;
+      this.listSoal.forEach((element, index) => {
+        element['index'] = index + 1;
+        element['jawaban'] = this.ia06.detail[index].jawaban;
+      });
+      this.loading = false;
+    },
+    // getIa06() {
+    //   if (this.dataPreview.id_ia_06 !== null) {
+    //     this.loading = true;
+    //     this.listSoal.forEach((element, index) => {
+    //       var foundIndex = this.ia06.detail.findIndex(x => x.id_perangkat_ia_06 === element['id']);
+    //       element['jawaban'] = this.ia06.detail[foundIndex].jawaban;
+    //     });
+    //     this.loading = false;
+    //   }
+    // },
     async getListSkema() {
       const { data } = await skemaResource.list();
       this.listSkema = data;
@@ -353,16 +352,15 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    async getUjiKompDetail() {
-      this.loading = true;
-      const ujiDetail = await indexPreview.get(this.$route.params.iduji);
-      console.log(ujiDetail.data);
-      this.headerTable[0].content = ujiDetail.data[0].skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.data[0].nama_tuk;
-      this.headerTable[2].content = ujiDetail.data[0].asesor;
-      this.headerTable[3].content = ujiDetail.data[0].nama_peserta;
-      this.headerTable[4].content = ujiDetail.data[0].mulai;
-      this.loading = false;
+    getUjiKompDetail() {
+      var id_uji = this.dataPreview.id;
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
+      this.headerTable[1].content = ujiDetail.nama_tuk;
+      this.headerTable[2].content = ujiDetail.asesor;
+      this.headerTable[3].content = ujiDetail.nama_peserta;
+      this.dataTrx.nama_asesor = ujiDetail.asesor;
+      this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
@@ -374,7 +372,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -398,8 +396,8 @@ export default {
       this.loading = true;
       this.form.detail_ia_06 = this.listSoal;
       this.form.user_id = this.userId;
-      this.form.id_uji_komp = this.$route.params.iduji;
-      this.form.id_skema = this.dataPreview.id_skema;
+      this.form.id_uji_komp = this.$route.params.id_uji;
+      this.form.id_skema = this.$route.params.id_skema;
       postResource
         .store(this.form)
         .then(response => {
@@ -425,9 +423,9 @@ export default {
       this.loading = true;
       this.form.detail_ia_06 = this.listSoal;
       this.form.user_id = this.userId;
-      this.form.id_uji_komp = this.$route.params.iduji;
-      this.form.id_ia_06 = this.dataPreview.id_ia_06;
-      this.form.id_skema = this.dataPreview.id_skema;
+      this.form.id_uji_komp = this.$route.params.id_uji;
+      this.form.id_ia_06 = this.$route.params.id_ia_06;
+      this.form.id_skema = this.$route.params.id_skema;
       ia06NilaiResource
         .store(this.form)
         .then(response => {

@@ -89,6 +89,7 @@ class PerangkatController extends BaseController
         ->select('mst_perangkat_ia_03.*');
 
         return MasterResource::collection($query->paginate(100));
+        // return $searchParams;
     }
 
     public function indexIa05(Request $request)

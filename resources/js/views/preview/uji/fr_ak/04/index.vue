@@ -1,5 +1,5 @@
 <template>
-  <el-container v-if="dataPreview.id_ak_04 == null" class="app-container">
+  <el-container v-if="dataPreview.id_ak_04 == null" v-loading="loading" class="app-container">
     <el-header>
       <el-page-header content="FORM FR.AK.04 BELUM DIISI" @back="$router.back()" />
       <el-dropdown split-button type="primary">
@@ -71,40 +71,41 @@
         <br>
         <el-form
           ref="form"
+          v-loading="loading"
           :model="dataSend"
           label-width="250px"
           label-position="left"
         >
           <el-form-item label="Nama Asesi" prop="namaAsesi">
-            <div>{{ dataSend.nama_asesi }}</div>
+            <div>: {{ dataSend.nama_asesi }}</div>
           </el-form-item>
 
           <el-form-item label="Nama Asesor" prop="namaAsesor">
-            <div>{{ dataSend.nama_asesor }}</div>
+            <div>: {{ dataSend.nama_asesor }}</div>
           </el-form-item>
 
           <el-form-item label="Apakah proses banding telah dijelaskan kepada anda?" prop="proses">
-            <div>{{ dataSend.penjelasan ? 'Tidak' : 'Ya' }}</div>
+            <div>: {{ dataSend.penjelasan == 1 ? 'Ya' : 'Tidak' }}</div>
           </el-form-item>
 
           <el-form-item label="Apakah anda telah mendiskusikan banding dengan asesor?" prop="diskusi">
-            <div>{{ dataSend.diskusi ? 'Tidak' : 'Ya' }}</div>
+            <div>: {{ dataSend.diskusi == 1 ? 'Ya' : 'Tidak' }}</div>
           </el-form-item>
 
           <el-form-item label="Apakah anda mau melibatkan 'Orang Lain' membantu anda dalam proses banding?" prop="bantuBanding">
-            <div>{{ dataSend.melibatkan ? 'Tidak' : 'Ya' }}</div>
+            <div>: {{ dataSend.melibatkan == 1 ? 'Ya' : 'Tidak' }}</div>
           </el-form-item>
 
           <el-form-item label="Skema Sertifikasi" prop="skema">
-            <div>{{ dataSend.skema }}</div>
+            <div>: {{ dataSend.skema }}</div>
           </el-form-item>
 
           <el-form-item label="No Skema" prop="noSkema">
-            <div>{{ dataSend.no_skema }}</div>
+            <div>: {{ dataSend.no_skema }}</div>
           </el-form-item>
 
           <el-form-item label="Alasan banding" prop="alasanBanding">
-            <div>{{ dataSend.alasan_banding }}</div>
+            <div>: {{ dataSend.alasan_banding }}</div>
           </el-form-item>
         </el-form>
         <br>
@@ -121,10 +122,11 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstAk03Resource = new Resource('mst-ak-03-get');
 const ak04Resource = new Resource('uji-komp-ak-04');
-const previewResource = new Resource('detail/preview');
-const previewAk04 = new Resource('preview/ak-04');
+const ak04Preview = new Resource('detail/ak-04');
+const preview = new Resource('detail/preview');
 
 export default {
+  components: {},
   data() {
     return {
       umpanBalikAsesi: '',
@@ -155,15 +157,15 @@ export default {
         },
       ],
       dataSend: {
-        nama_asesi: '',
-        nama_asesor: '',
-        tanggal_asesmen: '',
-        proses_banding: '',
-        diskusi_banding: '',
-        membantu_banding: '',
+        namaAsesi: '',
+        namaAsesor: '',
+        tanggalAsesmen: '',
+        prosesBanding: '',
+        diskusiBanding: '',
+        membantuBanding: '',
         skema: '',
-        no_skema: '',
-        alasan_banding: '',
+        noSkema: '',
+        alasanBanding: '',
       },
       active: 0,
       isWide: true,
@@ -183,12 +185,16 @@ export default {
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
-    this.getAk04();
+    this.getListUji().then((value) => {
+      this.getUjiKompDetail();
+    });
     this.getListPertanyaan();
   },
   methods: {
     async getDataPreview(){
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
+      const data = await preview.get(this.$route.params.iduji);
+      this.dataPreview = data;
+      // console.log(this.dataPreview);
     },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
@@ -200,8 +206,8 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      const { data } = await mstAk03Resource.list({ id_skema: this.idskema });
-      this.listSoal = data[0];
+      const { data } = await mstAk03Resource.list({ id_skema: this.dataPreview.id_skema });
+      this.listSoal = data;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
@@ -209,36 +215,50 @@ export default {
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
-      this.listSkema = data[0];
+      this.listSkema = data;
     },
     async getListUji() {
       const { data } = await ujiKomResource.list();
-      this.listUji = data[0];
+      this.listUji = data;
     },
     async getListTuk() {
       const { data } = await tukResource.list();
-      this.listTuk = data[0];
+      this.listTuk = data;
     },
     async getListJadwal() {
       const { data } = await jadwalResource.list();
-      this.listJadwal = data[0];
+      this.listJadwal = data;
     },
-    async getAk04() {
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-      const data = await previewAk04.get(this.dataPreview.id_ak_04);
-      this.dataSend.skema = data[0].skema;
-      this.dataSend.nama_asesor = this.$route.params.asesor;
-      this.dataSend.nama_asesi = data[0].nama_asesi;
-      this.dataSend.no_skema = data[0].no_skema;
-      this.dataSend.tanggal_asesmen = data[0].tanggal_asesmen;
-      this.dataSend.penjelasan = data[0].penjelasan;
-      this.dataSend.diskusi = data[0].diskusi;
-      this.dataSend.melibatkan = data[0].melibatkan;
-      this.dataSend.alasan_banding = data[0].alasan_banding;
+    async getUjiKompDetail() {
+      this.loading = true;
+      var id_uji = this.dataPreview.id;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      if (this.dataPreview.id_ak_04 !== null){
+        this.ak04Detail = await ak04Preview.get(this.dataPreview.id_ak_04);
+        // console.log(this.ak04Detail);
+        this.dataSend.penjelasan = this.ak04Detail.penjelasan;
+        this.dataSend.diskusi = this.ak04Detail.diskusi;
+        this.dataSend.melibatkan = this.ak04Detail.melibatkan;
+        this.dataSend.nama_asesor = this.ak04Detail.nama_asesor;
+        this.dataSend.alasan_banding = this.ak04Detail.alasan_banding;
+      }
+      this.selectedUji = ujiDetail;
+      // var asesor = ujiDetail.asesor;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      // console.log(ujiDetail);
+      this.dataSend.skema = ujiDetail.skema_sertifikasi;
+      this.dataSend.email_asesi = ujiDetail.email_peserta;
+      this.dataSend.nama_asesi = ujiDetail.nama_peserta;
+      this.dataSend.no_skema = ujiDetail.kode_skema;
+      this.dataSend.tanggal_asesmen = ujiDetail.mulai;
+
+      this.loading = false;
     },
-    async onJadwalSelect() {
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
+    onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
+      // console.log(this.dataPreview.id_skema);
+      // console.log(this.dataPreview);
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var skemaId = this.listSkema.find((x) => x.id === id_skema);
       this.selectedSkema = skemaId;
@@ -250,7 +270,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -270,15 +290,15 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
     },
     onSubmit() {
       this.loading = true;
-      this.dataSend.id_uji_komp = this.$route.params.iduji;
-      console.log(this.dataSend);
+      this.dataSend.id_uji_komp = this.$route.params.id_uji;
+      // console.log(this.dataSend);
       ak04Resource
         .store(this.dataSend)
         .then(response => {

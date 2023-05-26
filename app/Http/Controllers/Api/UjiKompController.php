@@ -48,7 +48,9 @@ use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\MstFrIa03;
+use App\Laravue\Models\MstFrIa05;
 use App\Laravue\Models\MstFrAk03;
+use App\Laravue\Models\MstFrAk04;
 use App\Laravue\Models\MstFrIa11;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -134,7 +136,7 @@ class UjiKompController extends BaseController
         $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
         ->orderBy('c.created_at', 'desc')
         ->select('trx_uji_komp.*', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
-        'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor')
+        'd.id as id_skema','d.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor')
         ->where('trx_uji_komp.id', '=', $id)
         ->get();
 
@@ -499,29 +501,58 @@ class UjiKompController extends BaseController
         return $data;
     }
 
+    public function showMapa02($id)
+    {
+        $idUjiKomp = DB::table('trx_uji_komp as a')
+        ->select(DB::raw('a.id'))
+        ->where('a.id_mapa_02', '=', $id)
+        ->get();
+
+        $query = DB::table('trx_uji_komp_mapa_02 as a')
+        ->join('trx_uji_komp as b', 'a.id_uji_komp', '=', 'b.id')
+        ->join('mst_perangkat_mapa_02 as c', 'a.id_mst_mapa_02', '=', 'c.id')
+        ->select(DB::raw('a.*, c.muk'))
+        ->where('a.id_uji_komp', '=', $idUjiKomp[0]->id)
+        ->get();
+
+        return $query;
+        // return $idUjiKomp;
+    }
+
     public function showAk02($id)
     {
-        $queryAk02= UjiKompAk02::where('trx_uji_komp_ak_02.id',$id)->first();
+        // $data = DB::table('trx_uji_komp_ak_02_detail as a')
+        // ->join('mst_skema_sertifikasi_unit_kompetensi as b', 'a.id_unit', '=', 'b.id')
+        // ->join('trx_uji_komp_ak_02 as c', 'a.id_ak_02', '=', 'c.id')
+        // ->select(DB::raw('b.unit_kompetensi, a.*, c.rekomendasi_asesor, c.tindak_lanjut, c.komentar'))
+        // ->where('a.id_ak_02', '=', $id)
+        // ->get();
+
+        $queryAk02 = UjiKompAk02::where('trx_uji_komp_ak_02.id',$id)->first();
         $queryDetailAk02 = UjiKompAk02Detail::where('trx_uji_komp_ak_02_detail.id_ak_02',$id)->get();
        
         $data = [
-            'data' => $queryAk02,
+            'ttd_asesor' => $queryAk02->ttd_asesor,
+            'status' => $queryAk02->status,
+            'ak_02' => $queryAk02,
             'detail' => $queryDetailAk02,
         ];
- 
+        return $data;
+
         return $data;
     }
 
     public function showAk03($id)
     {
-        $queryAk03 = UjiKompAk03::where('trx_uji_komp_ak_03.id',$id)->first();
-        $queryDetailAk03 = UjiKompAk03Detail::where('trx_uji_komp_ak_03_detail.id_ak_03',$id)->get();
-       
-        $data = [
-            'data' => $queryAk03,
-            'detail' => $queryDetailAk03,
-        ];
- 
+        $data = DB::table('trx_uji_komp_ak_03_detail as a')
+        ->leftJoin('trx_uji_komp_ak_03 as b', 'a.id_ak_03', '=', 'b.id')
+        ->leftJoin('mst_perangkat_ak_03 as c', 'a.id_perangkat_ak_03', '=', 'c.id')
+        ->leftJoin('mst_skema_sertifikasi_unit_kompetensi as d', 'a.id_unit', '=', 'd.id')
+        ->select(DB::raw('a.id, b.rekomendasi_asesor, a.jawaban, c.pertanyaan, d.kode_unit, d.unit_kompetensi'))
+        ->where('a.id_ak_03', '=', $id)
+        ->groupBy('a.id')
+        ->get();
+
         return $data;
     }
 
@@ -533,6 +564,13 @@ class UjiKompController extends BaseController
         return $query;
     }
 
+    public function showAk04($id)
+    {
+       
+        $query = UjiKompAk04::where('trx_uji_komp_ak_04.id',$id)->first();
+       
+        return $query;
+    }
 
     public function showAk05($id)
     {
@@ -541,6 +579,7 @@ class UjiKompController extends BaseController
        
         return $query;
     }
+
     public function showAk06($id)
     {
        
@@ -588,15 +627,23 @@ class UjiKompController extends BaseController
 
     public function showIa05($id)
     {
-        $data = DB::table('trx_uji_komp_ia_05_detail as a')
-        ->leftJoin('trx_uji_komp_ia_05 as b', 'a.id_ia_05', '=', 'b.id')
-        ->leftJoin('mst_perangkat_ia_05 as c', 'a.id_perangkat_ia_05', '=', 'c.id')
-        ->leftJoin('mst_skema_sertifikasi_unit_kompetensi as d', 'c.id_unit_komp', '=', 'd.id')
-        ->select(DB::raw('a.id, b.rekomendasi_asesor, a.jawaban, c.pertanyaan, d.kode_unit, d.unit_kompetensi'))
-        ->where('a.id_ia_05', '=', $id)
-        ->groupBy('a.id')
-        ->get();
+        // $data = DB::table('trx_uji_komp_ia_05_detail as a')
+        // ->leftJoin('trx_uji_komp_ia_05 as b', 'a.id_ia_05', '=', 'b.id')
+        // ->leftJoin('mst_perangkat_ia_05 as c', 'a.id_perangkat_ia_05', '=', 'c.id')
+        // ->leftJoin('mst_skema_sertifikasi_unit_kompetensi as d', 'c.id_unit_komp', '=', 'd.id')
+        // ->select(DB::raw('a.id, b.rekomendasi_asesor, a.jawaban, c.pertanyaan, d.kode_unit, d.unit_kompetensi'))
+        // ->where('a.id_ia_05', '=', $id)
+        // ->groupBy('a.id')
+        // ->get();
 
+        $queryIa05 = UjiKompIa05::where('trx_uji_komp_ia_05.id',$id)->first();
+        $queryDetailIa05 = UjiKompIa05Detail::where('trx_uji_komp_ia_05_detail.id_ia_05',$id)->get();
+       
+        $data = [
+            'ia_05' => $queryIa05,
+            // 'note' => $queryIa05->note,
+            'detail' => $queryDetailIa05,
+        ];
         return $data;
     }
 
@@ -629,6 +676,7 @@ class UjiKompController extends BaseController
         return $data;
     }
 
+
     public function showIa11($id)
     {
     
@@ -642,6 +690,48 @@ class UjiKompController extends BaseController
         ];
         return $data;
     
+    }
+
+    public function showVa($id)
+    {
+        $dataVa = DB::table('trx_uji_komp_va as a')
+        ->join('trx_uji_komp_va_aspek_aspek as b', 'a.id', '=', 'b.id_trx_va')
+        ->join('trx_uji_komp_va_rencana_implementasi as c', 'a.id', '=', 'c.id_trx_va')
+        ->join('trx_uji_komp_va_temuan as d', 'a.id', '=', 'd.id_trx_va')
+        ->join('trx_uji_komp as e', 'b.id_uji_komp', '=', 'e.id')
+        ->join('mst_skema_sertifikasi as f', 'e.id_skema', '=', 'f.id')
+        ->join('trx_uji_komp_apl_01 as g', 'e.id_apl_01', '=', 'g.id')
+        ->join('mst_tuk as h', 'g.id_tuk', '=', 'h.id')
+        ->leftJoin('mst_asesor as i', 'a.asesor_1', '=', 'i.id')
+        ->leftJoin('mst_asesor as j', 'a.asesor_2', '=', 'j.id')
+        ->leftJoin('mst_asesor as k', 'a.asesor_3', '=', 'k.id')
+        ->leftJoin('mst_asesor as l', 'a.lead_asesor', '=', 'l.id')
+        ->select(DB::raw('a.*, c.*, d.*, f.kode_skema, f.skema_sertifikasi, h.nama as nama_tuk, i.nama as nama_asesor_1, j.nama as nama_asesor_2, k.nama as nama_asesor_3, l.nama as nama_lead_asesor, e.id as id_uji_komp_for_va'))
+        ->where('b.id_trx_va', '=', $id)
+        ->groupBy('b.id_trx_va')
+        ->get();
+
+        $aspek = DB::table('trx_uji_komp_va_aspek_aspek as a')
+        ->select(DB::raw('a.*'))
+        ->where('a.id_uji_komp', '=', $dataVa[0]->id_uji_komp_for_va) 
+        ->get();
+
+        $temuan = DB::table('trx_uji_komp_va_temuan as a')
+        ->select(DB::raw('a.*'))
+        ->where('a.id_uji_komp', '=', $dataVa[0]->id_uji_komp_for_va)
+        ->get();
+
+        $rencana = DB::table('trx_uji_komp_va_rencana_implementasi as a')
+        ->select(DB::raw('a.*'))
+        ->where('a.id_uji_komp', '=', $dataVa[0]->id_uji_komp_for_va)
+        ->get();
+
+        return [
+            'dataVa' => $dataVa,
+            'aspek' => $aspek,
+            'temuan' => $temuan,
+            'rencana' => $rencana,
+        ];
     }
 
     public function previewIa06($id)
@@ -723,6 +813,21 @@ class UjiKompController extends BaseController
         return MasterResource::collection($query->paginate($limit));
     }
 
+    public function indexIa05(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        // $keyword = Arr::get($searchParams, 'keyword', '');
+        // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
+
+        $query = MstFrIa05::query();
+        $query->where('mst_perangkat_ia_05.id_skema', $id_skema)
+        ->select('mst_perangkat_ia_05.*');
+
+        return MasterResource::collection($query->paginate($limit));
+    }
+
     public function indexIa11(Request $request)
     {
         $searchParams = $request->all();
@@ -742,6 +847,18 @@ class UjiKompController extends BaseController
         // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
         $query = MstFrAk03::query()
         ->select('mst_perangkat_ak_03.*');
+
+        return MasterResource::collection($query->paginate($limit));
+    }
+
+    public function indexAk04(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        // $keyword = Arr::get($searchParams, 'keyword', '');
+        // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
+        $query = MstFrAk04::query()
+        ->select('mst_perangkat_ak_04.*');
 
         return MasterResource::collection($query->paginate($limit));
     }

@@ -61,7 +61,7 @@
       </span>
       <span>
         <el-button-group>
-          <router-link :to="{name: 'preview-ia-11', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia11: dataPreview.id_ia_01 }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
+          <router-link :to="{name: 'preview-ak-02', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ak02: dataPreview.id_ak_02 }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
           <router-link :to="{name: 'preview-ak-05', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ak05: dataPreview.id_ak_05 }}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
         </el-button-group>
       </span>
@@ -107,7 +107,7 @@
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Hasil">
             <template slot-scope="scope">
-              <span>{{ scope.row.hasil }}</span>
+              <span>{{ scope.row.hasil == 1 ? 'Ya' : 'Tidak' }}</span>
               <!-- <el-select v-model="scope.row.hasil" placeholder="Select">
                 <el-option label="Ya" value="ya" />
                 <el-option label="Tidak" value="tidak" />

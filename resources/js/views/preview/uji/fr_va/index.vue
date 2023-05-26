@@ -34,7 +34,7 @@
     <el-header>
       <!-- TODO Penyesuain dengan form -->
       <span>
-        <el-page-header content="FR.IA.05 PERTANYAAN TERTULIS PILIHAN GANDA" @back="$router.back()" />
+        <el-page-header content="FR.VA MEMBERIKAN KONTRIBUSI DALAM VALIDASI ASESMEN" @back="$router.back()" />
       </span>
       <span>
         <el-dropdown split-button type="primary">
@@ -71,59 +71,45 @@
       <div>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="12">
-            <el-form ref="form" :model="dataTrx" label-width="120px">
-              <el-form-item label="Tim Validas 1">
-                <el-input v-model="dataTrx.tim_validasi_1" />
+            <el-form ref="form" label-width="120px">
+              <el-form-item label="Tim Validasi 1">
+                <span>: {{ informasiValidasiAsesmen.tim_validasi_1 }}</span>
               </el-form-item>
               <el-form-item label="Tim Validasi 2">
-                <el-input v-model="dataTrx.tim_validasi_2" />
+                <span>: {{ informasiValidasiAsesmen.tim_validasi_2 }}</span>
               </el-form-item>
             </el-form>
           </el-col>
           <el-col :sm="24" :md="24" :lg="12">
-            <el-form ref="form" :model="dataTrx" label-width="120px">
+            <el-form ref="form" label-width="120px">
               <el-form-item label="Hari / Tanggal">
-                <!-- <span>{{ dataTrx.hari }} / {{ dataTrx.tanggal }} - {{ dataTrx.bulan }} - {{ dataTrx.tahun }}</span> -->
-                <el-date-picker v-model="dataTrx.date" type="date" placeholder="Pilih hari dan tanggal" style="width: 100%;" />
+                <span>: {{ informasiValidasiAsesmen.hari_tanggal }}</span>
               </el-form-item>
               <el-form-item label="Tempat">
-                <span>{{ dataTrx.tempat }}</span>
-                <!-- <el-date-picker v-model="dataTrx.date" type="date" placeholder="Pilih hari dan tanggal" style="width: 100%;" /> -->
+                <span>: {{ informasiValidasiAsesmen.tempat }}</span>
               </el-form-item>
             </el-form>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="120px">
+            <el-form ref="form" label-width="120px">
               <el-form-item label="Periode">
-                <el-select
-                  v-model="dataTrx.periode"
-                  filterable
-                  clearable
-                  class="filter-item full"
-                  placeholder="pilih periode"
-                  style="width: 100%;"
-                >
-                  <el-option
-                    v-for="item in masterData.periode"
-                    :key="item.id"
-                    :label="item.nama"
-                    :value="item.id"
-                  />
-                </el-select>
+                <span v-if="informasiValidasiAsesmen.periode === 1">: Sebelum asesmen</span>
+                <span v-if="informasiValidasiAsesmen.periode === 2">: Pada saat asesmem</span>
+                <span v-if="informasiValidasiAsesmen.periode === 3">: Setelah asesmen</span>
               </el-form-item>
             </el-form>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="120px">
+            <el-form ref="form" label-width="120px">
               <el-form-item label="Nama Skema">
-                <span>{{ dataTrx.namaSkema }}</span>
+                <span>: {{ informasiValidasiAsesmen.nama_skema }}</span>
               </el-form-item>
               <el-form-item label="No Skema">
-                <span>{{ dataTrx.noSkema }}</span>
+                <span>: {{ informasiValidasiAsesmen.no_skema }}</span>
               </el-form-item>
             </el-form>
           </el-col>
@@ -132,57 +118,15 @@
         <br>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="200px">
+            <el-form ref="form" label-width="200px">
               <el-form-item label="Tujuan dan fokus validasi">
-                <el-select
-                  v-model="dataTrx.tujuan_dan_fokus_validasi"
-                  filterable
-                  clearable
-                  class="filter-item full"
-                  placeholder="pilih tujuan validasi"
-                  style="width: 100%;"
-                >
-                  <el-option
-                    v-for="item in masterData.tujuan"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
+                <span>: {{ informasiValidasiAsesmen.tujuan_dan_fokus_validasi ? informasiValidasiAsesmen.tujuan_dan_fokus_validasi : '' }}</span>
               </el-form-item>
               <el-form-item label="Konteks validasi">
-                <el-select
-                  v-model="dataTrx.konteks_validasi"
-                  filterable
-                  clearable
-                  class="filter-item full"
-                  placeholder="pilih konteks validasi"
-                  style="width: 100%;"
-                >
-                  <el-option
-                    v-for="item in masterData.konteks"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
+                <span>: {{ informasiValidasiAsesmen.tujuan_dan_fokus_validasi ? informasiValidasiAsesmen.konteks_validasi : '' }}</span>
               </el-form-item>
               <el-form-item label="Pendekatan validasi">
-                <el-select
-                  v-model="dataTrx.pendekatan_validasi"
-                  filterable
-                  clearable
-                  class="filter-item full"
-                  placeholder="pilih Pendekatan validasi"
-                  style="width: 100%;"
-                >
-                  <el-option
-                    v-for="item in masterData.pendekatan"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
+                <span>: {{ informasiValidasiAsesmen.tujuan_dan_fokus_validasi ? informasiValidasiAsesmen.pendekatan_validasi : '' }}</span>
               </el-form-item>
             </el-form>
           </el-col>
@@ -220,81 +164,53 @@
                   </template>
                 </template>
               </el-table-column>
-              <el-table-column align="center" min-width="200px" label="Nama">
+              <el-table-column align="left" min-width="200px" label="Nama">
                 <template slot-scope="scope">
                   <template v-if="scope.row.no === 1">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item label="1">
-                        <el-select v-model="dataTrx.asesor_1" filterable placeholder="Select" style="width: 100%">
-                          <el-option
-                            v-for="item in listAsesor"
-                            :key="item.id"
-                            :label="item.nama"
-                            :value="item.id"
-                          />
-                        </el-select>
+                        <span>{{ tableOrangRelevan[0].asesor.asesor_1 }}</span>
                       </el-form-item>
                       <el-form-item label="2">
-                        <el-select v-model="dataTrx.asesor_2" filterable placeholder="Select" style="width: 100%">
-                          <el-option
-                            v-for="item in listAsesor"
-                            :key="item.id"
-                            :label="item.nama"
-                            :value="item.id"
-                          />
-                        </el-select>
+                        <span>{{ tableOrangRelevan[0].asesor.asesor_2 }}</span>
                       </el-form-item>
                       <el-form-item label="3">
-                        <el-select v-model="dataTrx.asesor_3" filterable placeholder="Select" style="width: 100%">
-                          <el-option
-                            v-for="item in listAsesor"
-                            :key="item.id"
-                            :label="item.nama"
-                            :value="item.id"
-                          />
-                        </el-select>
+                        <span>{{ tableOrangRelevan[0].asesor.asesor_3 }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 2">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-select v-model="dataTrx.lead_asesor" filterable placeholder="Select" style="width: 100%">
-                          <el-option
-                            v-for="item in listAsesor"
-                            :key="item.id"
-                            :label="item.nama"
-                            :value="item.id"
-                          />
-                        </el-select>
+                        <span>{{ tableOrangRelevan[1].lead_asesor }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 3">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.manager" />
+                        <span>{{ tableOrangRelevan[2].manager }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 4">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.tenaga_ahli" />
+                        <span>{{ tableOrangRelevan[3].tenaga_ahli }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 5">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.koordinator_pelatihan" />
+                        <span>{{ tableOrangRelevan[4].koordinator_pelatihan }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 6">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.anggota_asosiasi" />
+                        <span>{{ tableOrangRelevan[5].anggota_asosiasi }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
@@ -303,50 +219,50 @@
               <el-table-column align="left" min-width="200px" label="Hasil Konfirmasi/diskusi tujuan, fokus & konteks">
                 <template slot-scope="scope">
                   <template v-if="scope.row.no === 1">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item label="1">
-                        <el-input v-model="dataTrx.hasil_konfirmasi_asesor_1" />
+                        <span>{{ tableOrangRelevan[0].hasil_konfirmasi.hasil_konfirmasi_asesor_1 }}</span>
                       </el-form-item>
                       <el-form-item label="2">
-                        <el-input v-model="dataTrx.hasil_konfirmasi_asesor_2" />
+                        <span>{{ tableOrangRelevan[0].hasil_konfirmasi.hasil_konfirmasi_asesor_2 }}</span>
                       </el-form-item>
                       <el-form-item label="3">
-                        <el-input v-model="dataTrx.hasil_konfirmasi_asesor_3" />
+                        <span>{{ tableOrangRelevan[0].hasil_konfirmasi.hasil_konfirmasi_asesor_3 }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 2">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.hasil_konfirmasi_lead_asesor" />
+                        <span>{{ tableOrangRelevan[1].hasil_konfirmasi_lead_asesor }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 3">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.hasil_konfirmasi_manager" />
+                        <span>{{ tableOrangRelevan[2].hasil_konfirmasi_manager }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 4">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.hasil_konfirmasi_tenaga_ahli" />
+                        <span>{{ tableOrangRelevan[3].hasil_konfirmasi_tenaga_ahli }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 5">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.hasil_konfirmasi_koordinator_pelatihan" />
+                        <span>{{ tableOrangRelevan[4].hasil_konfirmasi_koordinator_pelatihan }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 6">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form label-width="20px">
                       <el-form-item>
-                        <el-input v-model="dataTrx.hasil_konfirmasi_anggota_asosiasi" />
+                        <span>{{ tableOrangRelevan[5].hasil_konfirmasi_anggota_asosiasi }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
@@ -358,46 +274,18 @@
         <br>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="200px">
+            <el-form ref="form" label-width="200px">
               <el-form-item label="Acuan Pembanding">
-                <el-select
-                  v-model="dataTrx.acuan_pembanding"
-                  filterable
-                  clearable
-                  class="filter-item full"
-                  placeholder="pilih tujuan validasi"
-                  style="width: 100%;"
-                >
-                  <el-option
-                    v-for="item in masterData.acuanPembanding"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
+                <span>: {{ informasiValidasiAsesmen.acuan_pembanding ? informasiValidasiAsesmen.acuan_pembanding : '' }}</span>
               </el-form-item>
             </el-form>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="200px">
+            <el-form label-width="200px">
               <el-form-item label="Dokumen Terkait dan Bahan - Bahan">
-                <el-select
-                  v-model="dataTrx.dokumen_terkait"
-                  filterable
-                  clearable
-                  class="filter-item full"
-                  placeholder="pilih tujuan validasi"
-                  style="width: 100%;"
-                >
-                  <el-option
-                    v-for="item in masterData.dokumenTerkait"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
+                <span>: {{ informasiValidasiAsesmen.dokumen_terkait ? informasiValidasiAsesmen.dokumen_terkait : '' }}</span>
               </el-form-item>
             </el-form>
           </el-col>
@@ -406,23 +294,9 @@
         <br>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="200px">
+            <el-form label-width="200px">
               <el-form-item label="Keterampilan Komunikasi">
-                <el-select
-                  v-model="dataTrx.keterampilan_komunikasi"
-                  filterable
-                  clearable
-                  class="filter-item full"
-                  placeholder="pilih Keterampilan Komunikasi"
-                  style="width: 100%;"
-                >
-                  <el-option
-                    v-for="item in masterData.keterampilanKomunikasi"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
+                <span>{{ aspekKegiatan[0].keterampilan_komunikasi }}</span>
               </el-form-item>
             </el-form>
           </el-col>
@@ -431,7 +305,7 @@
           <el-col :sm="24" :md="24" :lg="24">
             <el-table
               v-loading="loading"
-              :data="masterData.aspekAspekKegiatan"
+              :data="aspekKegiatan[1].listAspek"
               border
               fit
               highlight-current-row
@@ -447,45 +321,44 @@
                 <el-table-column label="Aturan Bukti">
                   <el-table-column align="center" min-width="10px" label="V">
                     <template slot-scope="{row}">
-                      <el-checkbox v-model="row.aturanV" />
+                      <span v-if="row.aturan_v == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                   <el-table-column align="center" min-width="10px" label="A">
                     <template slot-scope="{row}">
-                      <el-checkbox v-model="row.aturanA" />
+                      <span v-if="row.aturan_a == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                   <el-table-column align="center" min-width="10px" label="T">
                     <template slot-scope="{row}">
-                      <el-checkbox v-model="row.aturanT" />
+                      <span v-if="row.aturan_t == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                   <el-table-column align="center" min-width="10px" label="M">
                     <template slot-scope="{row}">
-                      <el-checkbox v-model="row.aturanM" />
+                      <span v-if="row.aturan_m == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                 </el-table-column>
                 <el-table-column label="Prinsip Asesmen">
                   <el-table-column align="center" min-width="10px" label="V">
                     <template slot-scope="{row}">
-                      <el-checkbox v-model="row.prinsipV" />
+                      <span v-if="row.prinsip_m == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                   <el-table-column align="center" min-width="10px" label="R">
                     <template slot-scope="{row}">
-                      <el-checkbox v-model="row.prinsipR" />
+                      <span v-if="row.prinsip_r == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                   <el-table-column align="center" min-width="10px" label="F">
                     <template slot-scope="{row}">
-                      <el-checkbox v-if="row.item === 'Proses pengambilan keputusan'" v-model="row.prinsipF" :disabled="true" />
-                      <el-checkbox v-else v-model="row.prinsipF" />
+                      <span v-if="row.prinsip_f == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                   <el-table-column align="center" min-width="10px" label="F">
                     <template slot-scope="{row}">
-                      <el-checkbox v-model="row.prinsipF2" />
+                      <span v-if="row.prinsip_f_2 == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                 </el-table-column>
@@ -495,9 +368,6 @@
         </el-row>
         <h4>Bagian 3 : Memberikan kontribusi untuk hasil asesmen</h4>
         <br>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="addTemuan">
-          {{ $t('table.add') }}
-        </el-button>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
             <el-table
@@ -511,19 +381,12 @@
             >
               <el-table-column align="left" min-width="80px" label="Temuan-temuan validasi :">
                 <template slot-scope="{row}">
-                  <el-input v-model="row.temuan" type="textarea" />
+                  <span>{{ row.temuan }}</span>
                 </template>
               </el-table-column>
               <el-table-column align="left" min-width="80px" label="Rekomendasi-rekomendasi untuk meningkatkan praktek asesmen">
                 <template slot-scope="{row}">
-                  <el-input v-model="row.rekomendasi" type="textarea" />
-                </template>
-              </el-table-column>
-              <el-table-column align="left" width="80px" label="-">
-                <template slot-scope="{row}">
-                  <el-tooltip class="item" effect="dark" content="Delete" placement="top-end">
-                    <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteTemuan(row)" />
-                  </el-tooltip>
+                  <span>{{ row.rekomendasi }}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -531,9 +394,6 @@
         </el-row>
         <h4>Rencana Implementasi  perubahan/perbaikan pelaksanaan asesmen :</h4>
         <br>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="addRencanaImplementasi">
-          {{ $t('table.add') }}
-        </el-button>
         <el-row :gutter="20">
           <el-col :sm="24" :md="24" :lg="24">
             <el-table
@@ -548,24 +408,17 @@
               <el-table-column label="Rencana Implementasi  perubahan/perbaikan pelaksanaan asesmen :">
                 <el-table-column align="left" min-width="80px" label="Kegiatan Perbaikan sesuai Rekomendasi">
                   <template slot-scope="{row}">
-                    <el-input v-model="row.kegiatan" type="textarea" />
+                    <span>{{ row.kegiatan }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column align="left" min-width="80px" label="Waktu Penyelesaian">
                   <template slot-scope="{row}">
-                    <el-input v-model="row.waktu" type="textarea" />
+                    <span>{{ row.waktu }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column align="left" min-width="80px" label="Penanggungjawab">
                   <template slot-scope="{row}">
-                    <el-input v-model="row.penanggungJawab" type="textarea" />
-                  </template>
-                </el-table-column>
-                <el-table-column align="left" width="80px" label="-">
-                  <template slot-scope="{row}">
-                    <el-tooltip class="item" effect="dark" content="Delete" placement="top-end">
-                      <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteRencanaImplementasi(row)" />
-                    </el-tooltip>
+                    <span>{{ row.penanggung_jawab }}</span>
                   </template>
                 </el-table-column>
               </el-table-column>
@@ -574,103 +427,83 @@
         </el-row>
       </div>
     </el-main>
-    <el-button @click="onSubmit">Submit</el-button>
   </el-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
-import masterDataVa from './masterDataVa.json';
-const jadwalResource = new Resource('jadwal-get');
-const skemaResource = new Resource('skema-get');
-const tukResource = new Resource('tuk-get');
-const ujiKomResource = new Resource('uji-komp-get');
-const apl01Resource = new Resource('detail/apl-01');
-const vaResource = new Resource('uji-komp-va');
-const asesorResource = new Resource('assesor');
-const previewResource = new Resource('detail/preview');
 const indexPreview = new Resource('detail/indexPreview');
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const vaDetail = new Resource('detail/va');
 
 export default {
-  props: {
-    iduji: {
-      type: Number,
-      default: 0,
-    },
-    idskema: {
-      type: Number,
-      default: 0,
-    },
-  },
   data() {
     return {
-      masterData: masterDataVa,
-      dataAsesi: {},
-      dataAdmin: {},
-      kompeten: null,
-      fileName: null,
       loading: false,
-      listSkema: null,
-      listTuk: null,
-      listAsesor: null,
-      listJadwal: null,
-      listKodeUnit: [],
-      listJudulUnit: [],
-      listKuk: [],
-      listUji: [],
-      listTemuanValidasi: [],
-      listRencanaImplementasi: [],
-      detail: {},
-      selectedSkema: {},
-      selectedUji: {},
-      dataTrx: {
-        asesor_1: null,
-        asesor_2: null,
-        asesor_3: null,
-        hasil_konfirmasi_asesor_1: null,
-        hasil_konfirmasi_asesor_2: null,
-        hasil_konfirmasi_asesor_3: null,
-        lead_asesor: null,
-        hasil_konfirmasi_lead_asesor: null,
-        manager: null,
-        hasil_konfirmasi_manager: null,
-        tenaga_ahli: null,
-        hasil_konfirmasi_tenaga_ahli: null,
-        koordinator_pelatihan: null,
-        hasil_konfirmasi_koordinator_pelatihan: null,
-        anggota_asosiasi: null,
-        hasil_konfirmasi_anggota_asosiasi: null,
+      informasiValidasiAsesmen: {
+        tim_validasi_1: '',
+        tim_validasi_2: '',
+        periode: '',
+        nama_skema: '',
+        no_skema: '',
+        hari_tanggal: '',
+        tempat: '',
+        tujuan_dan_fokus_validasi: '',
+        konteks_validasi: '',
+        pendekatan_validasi: '',
+        acuan_pembanding: '',
+        dokumen_terkait: '',
       },
-      unitKompetensiTable: [],
-      buktiTable: [],
       tableOrangRelevan: [
         {
           no: 1,
-          asesorKompetensi: '',
+          asesor: {
+            asesor_1: '',
+            asesor_2: '',
+            asesor_3: '',
+          },
+          hasil_konfirmasi: {
+            hasil_konfirmasi_asesor_1: '',
+            hasil_konfirmasi_asesor_2: '',
+            hasil_konfirmasi_asesor_3: '',
+          },
         },
         {
           no: 2,
-          leadAsesor: '',
+          lead_asesor: '',
+          hasil_konfirmasi_lead_asesor: '',
         },
         {
           no: 3,
-          managerSupervisor: '',
+          manager: '',
+          hasil_konfirmasi_manager: '',
         },
         {
           no: 4,
-          tenagaAhli: '',
+          tenaga_ahli: '',
+          hasil_konfirmasi_tenaga_ahli: '',
         },
         {
           no: 5,
-          koordinator: '',
+          koordinator_pelatihan: '',
+          hasil_konfirmasi_koordinator_pelatihan: '',
         },
         {
           no: 6,
-          anggotaAsosiasi: '',
+          anggota_asosiasi: '',
+          hasil_konfirmasi_anggota_asosiasi: '',
         },
       ],
+      aspekKegiatan: [
+        {
+          keterampilan_komunikasi: '',
+        },
+        {
+          listAspek: [],
+        },
+      ],
+      listTemuanValidasi: [],
+      listRencanaImplementasi: [],
       panduan: [
         'Lengkapi nama unit kompetensi, elemen, kriteria unjuk kerja sesuai kolom dalam tabel.',
         'Istilah Acuan Pembanding dengan SOP / spesifikasi produk dari industri / orginasi dari tempat kerja atau simulasi tempat kerja',
@@ -682,6 +515,10 @@ export default {
       isWide: true,
       labelPosition: 'left',
       dataPreview: '',
+      previewInformasi: '',
+      previewTableAspek: '',
+      previewTemuan: '',
+      previewRencanaImplementasi: '',
     };
   },
   computed: {
@@ -697,163 +534,83 @@ export default {
     this.onResize();
   },
   created() {
-    this.getDataPreview();
-    this.getListSkema().then((value) => {
-      this.onJadwalSelect();
+    this.getDataUjiPreview().then(() => {
+      this.getInformasiValidasiAsesmen();
+      this.getTableOrangRelevan();
+      this.getAspek();
+      this.getTemuan();
+      this.getRencanaImplementasi();
     });
-    this.getListUji().then((value) => {
-      this.getUjiKompDetail();
-      this.getListAsesor();
-      this.getListTuk();
-      this.getListJadwal();
-      this.getDate();
-    });
-    this.getApl01();
   },
   methods: {
-    async getDataPreview(){
-      this.dataPreview = await indexPreview.get(this.$route.params.iduji);
-    },
-    async getListAsesor() {
-      const { data } = await asesorResource.list();
-      this.listAsesor = data;
-    },
-    async getListSkema() {
-      const { data } = await skemaResource.list();
-      this.listSkema = data;
-    },
-    async getListUji() {
-      const { data } = await ujiKomResource.list();
-      this.listUji = data;
-    },
-    async getListTuk() {
-      const { data } = await tukResource.list();
-      this.listTuk = data;
-    },
-    async getListJadwal() {
-      const { data } = await jadwalResource.list();
-      this.listJadwal = data;
-    },
-    getUjiKompDetail() {
-      var id_uji = this.iduji;
-      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
-      this.selectedUji = ujiDetail;
-      this.dataTrx.tempat = this.selectedUji.nama_tuk;
-      this.dataTrx.namaSkema = this.selectedUji.skema_sertifikasi;
-      this.dataTrx.noSkema = this.selectedUji.kode_skema;
-      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-    },
-    getDate() {
-      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-      var date = new Date();
-      // var millisecond = date.getMilliseconds();
-      // var detik = date.getSeconds();
-      var menit = date.getMinutes();
-      var jam = date.getHours();
-      var hari = date.getDay();
-      var tanggal = date.getDate();
-      var bulan = date.getMonth();
-      var tahun = date.getFullYear();
-      this.dataTrx.jam = jam;
-      this.dataTrx.menit = menit;
-      this.dataTrx.tanggal = tanggal;
-      this.dataTrx.bulan = arrbulan[bulan];
-      this.dataTrx.tahun = tahun;
-      this.dataTrx.hari = arrHari[hari];
-      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
-    },
-    async generateReport() {
+    async getDataUjiPreview(){
       this.loading = true;
-      await delay(3000);
-      this.$router.push({ name: 'uji-komp-list' });
-      this.loading = false;
-      // this.$refs.html2Pdf.generatePdf();
-    },
-    async beforeDownload({ html2pdf, options, pdfContent }) {
-      await html2pdf().set(options).from(pdfContent).toPdf().get('pdf').then((pdf) => {
-        const totalPages = pdf.internal.getNumberOfPages();
-        for (let i = 1; i <= totalPages; i++) {
-          pdf.setPage(i);
-          pdf.setFontSize(10);
-          pdf.setTextColor(150);
-          pdf.text('Page ' + i + ' of ' + totalPages, (pdf.internal.pageSize.getWidth() * 0.88), (pdf.internal.pageSize.getHeight() - 0.3));
-        }
-      }).save();
-    },
-    async getApl01() {
-      this.dataPreview = await previewResource(this.iduji);
-      const data = await apl01Resource.get(this.dataPreview.id_apl_01);
-      this.fileName = 'APL.01 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
-    },
-    onJadwalSelect() {
-      var id_skema = this.idskema;
-      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      var skemaId = this.listSkema.find((x) => x.id === id_skema);
-      this.selectedSkema = skemaId;
-      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      this.dataTrx.id_skema = skemaId.id;
-      // this.dataTrx.id_tuk = tukId.id;
-      this.getKuk();
-    },
-    getKuk(){
-      var number = 1;
-      var unitKomp = this.selectedSkema.children;
-      var kuk = [];
-      unitKomp.forEach((element, index) => {
-        element['type'] = 'unitKomp';
-        element['index'] = number++;
-        kuk.push(element);
-        // this.headerTable[3].content.push(element['unit_kompetensi']);
-        this.listKodeUnit.push(element);
-        element.elemen.forEach((element, index) => {
-          element['type'] = 'elemen';
-          kuk.push(element);
-          element.kuk.forEach((element, index) => {
-            element['type'] = 'kuk';
-            element['bukti_pendukung'] = 'raport';
-            kuk.push(element);
-          });
-        });
-      });
-      // var elemen = unitKomp.elemen;
-      // var kuk = elemen.kuk;
-      this.listKuk = kuk;
-    },
-    search(nameKey, myArray){
-      for (var i = 0; i < myArray.length; i++) {
-        if (myArray[i].status === nameKey) {
-          return myArray[i];
-        }
+      const result = await indexPreview.get(this.$route.params.iduji);
+      this.dataPreview = result.data[0];
+      if (this.dataPreview.id_va !== null){
+        const data = await vaDetail.get(this.dataPreview.id_va);
+        this.previewInformasi = data.dataVa[0];
+        this.previewTableAspek = data.aspek;
+        this.previewTemuan = data.temuan;
+        this.previewRencanaImplementasi = data.rencana;
       }
+      this.loading = false;
     },
-    onSubmit() {
+    async getInformasiValidasiAsesmen(){
       this.loading = true;
-      this.dataTrx.aspek = this.masterData.aspekAspekKegiatan;
-      this.dataTrx.temuan = this.listTemuanValidasi;
-      this.dataTrx.rencana = this.listRencanaImplementasi;
-      this.dataTrx.user_id = this.userId;
-      this.dataTrx.id_uji_komp = this.iduji;
-      this.dataTrx.id_skema = this.idskema;
-      vaResource
-        .store(this.dataTrx)
-        .then(response => {
-          this.$message({
-            message: 'FR VA has been created successfully.',
-            type: 'success',
-            duration: 5 * 1000,
-          });
-          this.$router.push({ name: 'uji-komp-list' });
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      this.informasiValidasiAsesmen.tim_validasi_1 = this.previewInformasi.tim_validasi_1;
+      this.informasiValidasiAsesmen.tim_validasi_2 = this.previewInformasi.tim_validasi_2;
+      this.informasiValidasiAsesmen.tempat = this.previewInformasi.nama_tuk;
+      this.informasiValidasiAsesmen.periode = this.previewInformasi.periode;
+      this.informasiValidasiAsesmen.nama_skema = this.previewInformasi.skema_sertifikasi;
+      this.informasiValidasiAsesmen.no_skema = this.previewInformasi.kode_skema;
+      this.informasiValidasiAsesmen.hari_tanggal = this.previewInformasi.waktu;
+      this.informasiValidasiAsesmen.tujuan_dan_fokus_validasi = this.previewInformasi.tujuan_dan_fokus_validasi;
+      this.informasiValidasiAsesmen.konteks_validasi = this.previewInformasi.konteks_validasi;
+      this.informasiValidasiAsesmen.pendekatan_validasi = this.previewInformasi.pendekatan_validasi;
+      this.informasiValidasiAsesmen.acuan_pembanding = this.previewInformasi.acuan_pembanding;
+      this.informasiValidasiAsesmen.dokumen_terkait = this.previewInformasi.dokumen_terkait;
+
+      this.loading = false;
     },
+    async getTableOrangRelevan(){
+      this.loading = true;
+      this.tableOrangRelevan[0].asesor.asesor_1 = this.previewInformasi.nama_asesor_1;
+      this.tableOrangRelevan[0].asesor.asesor_2 = this.previewInformasi.nama_asesor_2;
+      this.tableOrangRelevan[0].asesor.asesor_3 = this.previewInformasi.nama_asesor_3;
+      this.tableOrangRelevan[0].hasil_konfirmasi.hasil_konfirmasi_asesor_1 = this.previewInformasi.hasil_konfirmasi_asesor_1;
+      this.tableOrangRelevan[0].hasil_konfirmasi.hasil_konfirmasi_asesor_2 = this.previewInformasi.hasil_konfirmasi_asesor_2;
+      this.tableOrangRelevan[0].hasil_konfirmasi.hasil_konfirmasi_asesor_3 = this.previewInformasi.hasil_konfirmasi_asesor_3;
+      this.tableOrangRelevan[1].lead_asesor = this.previewInformasi.nama_lead_asesor;
+      this.tableOrangRelevan[1].hasil_konfirmasi_lead_asesor = this.previewInformasi.hasil_konfirmasi_lead_asesor;
+      this.tableOrangRelevan[2].manager = this.previewInformasi.manager;
+      this.tableOrangRelevan[2].hasil_konfirmasi_manager = this.previewInformasi.hasil_konfirmasi_manager;
+      this.tableOrangRelevan[3].tenaga_ahli = this.previewInformasi.tenaga_ahli;
+      this.tableOrangRelevan[3].hasil_konfirmasi_tenaga_ahli = this.previewInformasi.hasil_konfirmasi_tenaga_ahli;
+      this.tableOrangRelevan[4].koordinator_pelatihan = this.previewInformasi.koordinator_pelatihan;
+      this.tableOrangRelevan[4].hasil_konfirmasi_koordinator_pelatihan = this.previewInformasi.hasil_konfirmasi_koordinator_pelatihan;
+      this.tableOrangRelevan[5].anggota_asosiasi = this.previewInformasi.anggota_asosiasi;
+      this.tableOrangRelevan[5].hasil_konfirmasi_anggota_asosiasi = this.previewInformasi.hasil_konfirmasi_anggota_asosiasi;
+    },
+    async getAspek(){
+      this.loading = true;
+      this.aspekKegiatan[0].keterampilan_komunikasi = this.previewInformasi.keterampilan_komunikasi;
+      this.aspekKegiatan[1].listAspek = this.previewTableAspek;
+      this.loading = false;
+    },
+    async getTemuan(){
+      this.loading = true;
+      this.listTemuanValidasi = this.previewTemuan;
+      console.log(this.listTemuanValidasi);
+      this.loading = false;
+    },
+    async getRencanaImplementasi(){
+      this.loading = true;
+      this.listRencanaImplementasi = this.previewRencanaImplementasi;
+      console.log(this.listRencanaImplementasi);
+      this.loading = false;
+    },
+
     onResize() {
       const width = document.body.clientWidth;
       this.isWide = width > 800;
@@ -863,49 +620,14 @@ export default {
         this.labelPosition = 'top';
       }
     },
-    addTemuan(){
-      this.listTemuanValidasi.push({ temuan: '', rekomendasi: '' });
-    },
-    addRencanaImplementasi(){
-      this.listRencanaImplementasi.push({ kegiatan: '', waktu: '', penanggungJawab: '' });
-    },
-    deleteTemuan(row){
-      const deleteIndex = this.listTemuanValidasi.findIndex(item => item.temuan === row.temuan && item.rekomendasi === row.rekomendasi);
-      if (deleteIndex > -1) {
-        this.listTemuanValidasi.splice(deleteIndex, 1);
-      }
-    },
-    deleteRencanaImplementasi(row){
-      const deleteIndex = this.listRencanaImplementasi.findIndex(item => item.kegiatan === row.kegiatan && item.waktu === row.waktu && item.penanggungJawab === row.penanggungJawab);
-      if (deleteIndex > -1) {
-        this.listRencanaImplementasi.splice(deleteIndex, 1);
-      }
-    },
-    handleFotoSuccess(res, file) {
-      this.dataTrx.foto = URL.createObjectURL(file.raw);
-    },
-    handleIdentitasSuccess(res, file) {
-      this.dataTrx.identitas = URL.createObjectURL(file.raw);
-    },
-    handleRaportSuccess(res, file) {
-      this.dataTrx.raport = URL.createObjectURL(file.raw);
-    },
-    handleSertifikatSuccess(res, file) {
-      this.dataTrx.sertifikat = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isLt2M) {
-        this.$message.error('Document size can not exceed 2MB!');
-      }
-      return isLt2M;
-    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.ceklist-icon{
+  color: #67C23A;
+}
 .form {
   padding-right: 50px;
   padding-left: 50px;

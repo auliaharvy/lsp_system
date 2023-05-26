@@ -237,7 +237,7 @@ const ujiRoutes = {
     },
     {
       path: 'preview-ak-06/:iduji/:asesor',
-      component: () => import('@/views/preview/uji/fr_ak/05/index'),
+      component: () => import('@/views/preview/uji/fr_ak/06/index'),
       name: 'preview-ak-06',
       meta: { title: 'Preview AK 06', icon: 'list', permissions: ['manage user'], previousPage: 'preview-ak-06' },
     },

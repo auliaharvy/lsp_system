@@ -169,7 +169,7 @@
                 <el-option label="Ya" value="ya" />
                 <el-option label="Tidak" value="tidak" />
               </el-select> -->
-              <span>{{ scope.row.jawaban }}</span>
+              <span>{{ scope.row.jawaban === 'ya' ? 'Ya' : 'Tidak' }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" min-width="80px" label="Komentar">
@@ -188,15 +188,15 @@
           label-position="left"
         >
           <el-form-item label="Nama Peninjau" prop="feedback">
-            <div>{{ dataTrx.nama_peninjau }}</div>
+            <div>: {{ dataTrx.nama_peninjau }}</div>
             <!-- <el-input v-model="dataTrx.nama_peninjau" placeholder="Isi nama peninjau" label="Nama Peninjau" /> -->
           </el-form-item>
           <el-form-item label="Tanggal" prop="feedback">
-            <div>{{ dataTrx.tanggal }}</div>
+            <div>: {{ dataTrx.waktu }}</div>
             <!-- <el-input v-model="dataTrx.tanggal" placeholder="Isi Tanggal" label="Tanggal" /> -->
           </el-form-item>
           <el-form-item label="Komentar" prop="feedback">
-            <div>{{ dataTrx.komentar }}</div>
+            <div>: {{ dataTrx.komentar }}</div>
             <!-- <el-input v-model="dataTrx.komentar" type="textarea" :rows="3" placeholder="Isi Komentar" label="Komentar" /> -->
           </el-form-item>
         </el-form>
@@ -216,9 +216,7 @@ const ujiKomResource = new Resource('uji-komp-get');
 const mstIa11Resource = new Resource('mst-ia-11-get');
 const ia11Resource = new Resource('uji-komp-ia-11');
 const ia11Detail = new Resource('detail/ia-11');
-const previewResource = new Resource('detail/preview');
-const indexPreview = new Resource('detail/indexPreview');
-const previewIa11 = new Resource('preview/ia-11');
+const preview = new Resource('detail/preview');
 
 export default {
   components: {},
@@ -226,7 +224,7 @@ export default {
     return {
       umpanBalikAsesi: '',
       kompeten: null,
-      loading: true,
+      loading: false,
       listSoal: null,
       listSkema: null,
       listTuk: null,
@@ -237,10 +235,7 @@ export default {
       listUji: [],
       selectedSkema: {},
       selectedUji: {},
-      dataTrx: {
-        nama_peninjau: '',
-        komentar: '',
-      },
+      dataTrx: {},
       ia11: null,
       listDetailIa11: null,
       unitKompetensiTable: [
@@ -303,58 +298,64 @@ export default {
     this.onResize();
   },
   created() {
-    this.getDataPreview();
+    this.getDataPreview().then((value) => {
+      this.getListPertanyaan();
+    });
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
+      // this.getIa11();
     });
-    // this.getListPertanyaan().then((value) => {
-    //   this.getIa11();
-    // });
-    this.getSoalDanJawaban();
+    this.getListPertanyaan();
+    this.getDate();
   },
   methods: {
+    getDate() {
+      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      var date = new Date();
+      // var millisecond = date.getMilliseconds();
+      // var detik = date.getSeconds();
+      var menit = date.getMinutes();
+      var jam = date.getHours();
+      var hari = date.getDay();
+      var tanggal = date.getDate();
+      var bulan = date.getMonth();
+      var tahun = date.getFullYear();
+      this.dataTrx.jam = jam;
+      this.dataTrx.menit = menit;
+      this.dataTrx.tanggal = tanggal;
+      this.dataTrx.bulan = arrbulan[bulan];
+      this.dataTrx.tahun = tahun;
+      this.dataTrx.hari = arrHari[hari];
+      this.headerTable[4].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
+      this.dataTrx.waktu = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
+      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
+    },
     async getDataPreview(){
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-    },
-    async getSoalDanJawaban(){
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-      this.listSoal = await previewIa11.get(this.dataPreview.id_ia_11);
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
-      this.dataTrx.komentar = this.listSoal[0].komentar_asesor;
-    },
-    async getListPertanyaan() {
       this.loading = true;
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-      const { data } = await mstIa11Resource.list({ id_skema: this.dataPreview.id_skema });
-      this.listSoal = data;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
+      const data = await preview.get(this.$route.params.iduji);
+      this.dataPreview = data;
       this.loading = false;
     },
-    async getIa11() {
-      this.dataPreview = await previewResource.get(this.$route.params.iduji);
-      if (this.dataPreview.id_ia_11 !== null) {
-        this.loading = true;
-        const data = await ia11Detail.get(this.dataPreview.id_ia_11);
-        console.log(data);
-        this.listDetailIa11 = data.detail;
-        this.ia11 = data.ia_11;
-        this.dataTrx.komentar = this.ia11.komentar;
-        this.listSoal.forEach((element, index) => {
-          var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_11 === element['id']);
-          element['jawaban'] = data.detail[foundIndex].tanggapan;
-          element['komentar'] = data.detail[foundIndex].komentar;
-        });
-        console.log(this.listSoal);
-        this.loading = false;
-      }
-    },
+    // async getIa11() {
+    //   if (this.dataPreview.id_ia_11 !== null) {
+    //     this.loading = true;
+    //     const data = await ia11Detail.get(this.dataPreview.id_ia_11);
+    //     this.listDetailIa11 = data.detail;
+    //     this.ia11 = data.ia_11;
+    //     this.dataTrx.komentar = this.ia11.komentar;
+    //     this.listSoal.forEach((element, index) => {
+    //       var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_11 === element['id']);
+    //       console.log(foundIndex);
+    //       element['jawaban'] = data.detail[foundIndex].tanggapan;
+    //       element['komentar'] = data.detail[foundIndex].komentar;
+    //     });
+    //     this.loading = false;
+    //   }
+    // },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -362,6 +363,22 @@ export default {
           // kuk.is_kompeten = this.kompeten;
         }
       }
+    },
+    async getListPertanyaan() {
+      this.loading = true;
+      const { data } = await mstIa11Resource.list({ id_skema: this.dataPreview.id_skema });
+      const result = await ia11Detail.get(this.dataPreview.id_ia_11);
+      this.listDetailIa11 = result.detail;
+      // console.log(this.listDetailIa11);
+      this.listSoal = data;
+      // console.log(this.listSoal);
+      this.listSoal.forEach((element, index) => {
+        element['index'] = index + 1;
+        element['jawaban'] = this.listDetailIa11[index].tanggapan;
+        element['komentar'] = this.listDetailIa11[index].komentar;
+      });
+      this.dataTrx.komentar = result.ia_11.komentar;
+      this.loading = false;
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -379,18 +396,18 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    async getUjiKompDetail() {
-      this.loading = true;
-      const ujiDetail = await indexPreview.get(this.$route.params.iduji);
-      console.log(ujiDetail.data[0]);
-      this.headerTable[0].content = ujiDetail.data[0].skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.data[0].nama_tuk;
-      this.headerTable[2].content = ujiDetail.data[0].asesor;
-      this.headerTable[3].content = ujiDetail.data[0].nama_peserta;
-      this.headerTable[4].content = ujiDetail.data[0].mulai;
-      this.dataTrx.nama_peninjau = this.$route.params.asesor;
-      this.dataTrx.tanggal = ujiDetail.data[0].mulai;
-      this.loading = false;
+    getUjiKompDetail() {
+      var id_uji = this.dataPreview.id;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      this.selectedUji = ujiDetail;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
+      this.headerTable[1].content = ujiDetail.nama_tuk;
+      this.headerTable[2].content = ujiDetail.asesor;
+      this.headerTable[3].content = ujiDetail.nama_peserta;
+
+      this.dataTrx.nama_peninjau = ujiDetail.asesor;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
@@ -405,7 +422,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -423,7 +440,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -432,8 +449,8 @@ export default {
       this.loading = true;
       this.dataTrx.detail_ia_11 = this.listSoal;
       this.dataTrx.user_id = this.userId;
-      this.dataTrx.id_uji_komp = this.$route.params.iduji;
-      this.dataTrx.id_skema = this.dataPreview.id_skema;
+      this.dataTrx.id_uji_komp = this.$route.params.id_uji;
+      this.dataTrx.id_skema = this.$route.params.id_skema;
       ia11Resource
         .store(this.dataTrx)
         .then(response => {
