@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Mapa2Controller;
 Route::namespace('Api')->group(function() {
     // print
     Route::get('print-surat-tugas', 'PrintController@index');
+    Route::get('print-semua-module', 'PrintController@printModules');
     // Jadwal Routes
     Route::apiResource('jadwaltest', 'JadwalController');
     Route::apiResource('tamatan', 'TamatanController');

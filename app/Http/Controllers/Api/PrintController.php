@@ -43,14 +43,20 @@ use App\Laravue\Models\Perangkat;
 use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
+use App\Http\Controllers\Api\UjiKompController;
+use App\Http\Controllers\Api\SkemaController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\App;
 use Validator;
-use PDF;
+// use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 /**
  * Class UjiKompController
@@ -70,12 +76,12 @@ class PrintController extends BaseController
     public function index(Request $request)
     {
         $searchParams = $request->all();
-        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        $keyword = Arr::get($searchParams, 'keyword', '');
-        $visibility = Arr::get($searchParams, 'visibility', 0);
-        $user_id = Arr::get($searchParams, 'user_id', '');
-        $role = Arr::get($searchParams, 'role', '');
-        $foundUser = User::where('id',$user_id)->first();
+        // $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        // $keyword = Arr::get($searchParams, 'keyword', '');
+        // $visibility = Arr::get($searchParams, 'visibility', 0);
+        // $user_id = Arr::get($searchParams, 'user_id', '');
+        // $role = Arr::get($searchParams, 'role', '');
+        // $foundUser = User::where('id',$user_id)->first();
         $idJadwal = Arr::get($searchParams, 'idJadwal', '');
         
         $query = Jadwal::where('trx_jadwal_asesmen.id',$idJadwal)
@@ -89,9 +95,45 @@ class PrintController extends BaseController
         // $query->first();
         // return response()->json(['jadwal' => $query, 'uji' => $queryApl01]);
 
-        $pdf = PDF::loadview('print/surat-tugas',['jadwal'=>$query, 'uji' => $queryApl01]);
-        $pdf->setPaper('a4' , 'portrait');
-	    return $pdf->output();
+        $pdf = PDF::loadview('print/surat-tugas',['jadwal' => $query, 'uji' => $queryApl01]);
+        $pdf->setPaper('A4' , 'portrait');
+	    return $pdf->download('example.pdf');
+    }
+
+    public function printModules(Request $request)
+    {
+        $searchParams = $request->all();
+        $iduji = Arr::get($searchParams, 'iduji', '');
+
+        $ujikom = new UjiKompController();
+
+        $idujikom = $ujikom->showPreview($iduji);
+
+        $arguments = [
+            'id_skema' => $idujikom->id_skema,
+        ];
+
+        $queryApl01 = $ujikom->showApl01($idujikom->id_apl_01);
+        $skemas = call_user_func([SkemaController::class, 'index'], new Request($arguments));
+        $unit = call_user_func([SkemaController::class, 'indexUnit'], new Request($arguments));
+        $skema = $skemas->collection->toArray();
+
+        return $iduji;
+
+    //    return [
+    //         'apl01' => $queryApl01,
+    //         'skema' => $skema[0],
+    //         'unit_kompetensi' => $unit,
+    //     ];
+
+        $pdf = PDF::loadview('print/semua-module',[
+            'apl01' => $queryApl01,
+            'skema' => $skema[0],
+            'unit_kompetensi' => $unit,
+        ]);
+        $pdf->setPaper('A4' , 'portrait');
+	    return $pdf->download('modules.pdf');
+	    // return $pdf->stream('modules.pdf');
     }
 
     public function printHasilUji(Request $request)

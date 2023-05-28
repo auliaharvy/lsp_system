@@ -90,6 +90,7 @@
           <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor, apl01: scope.row.id_apl_01 }}">
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
           </router-link>
+          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button>
         </template>
       </el-table-column>
 
@@ -247,6 +248,7 @@ import Resource from '@/api/resource';
 const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
 const jadwalResource = new Resource('jadwal-get');
+const print = new Resource('print-semua-module');
 
 export default {
   components: { Pagination },
@@ -309,6 +311,24 @@ export default {
     this.getListSkema();
   },
   methods: {
+    async generateReport(id) {
+      this.loading = true;
+      // console.log(id);
+      // await print.list({ iduji: id });
+      var result = await print.list({ iduji: id });
+      console.log(result);
+      // await print.download({ iduji: id }).then((response) => {
+      //   console.log(response);
+      //   const url = window.URL.createObjectURL(new Blob([response]));
+      //   const link = document.createElement('a');
+      //   link.href = url;
+      //   link.setAttribute('download', 'semua-module.pdf');
+      //   document.body.appendChild(link);
+      //   link.click();
+      // });
+      // await print.download({ iduji: id });
+      this.loading = false;
+    },
     async getList() {
       this.query.role = this.roles[0];
       this.query.user_id = this.userId;

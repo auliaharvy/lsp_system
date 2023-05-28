@@ -47,6 +47,7 @@ class SkemaController extends BaseController
         $searchParams = $request->all();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
 
         $skemaQuery = Skema::query();
         $skemaQuery->join('mst_skema_sertifikasi_kategori as a', 'a.id', '=', 'mst_skema_sertifikasi.kategori_id');
@@ -59,6 +60,11 @@ class SkemaController extends BaseController
             $skemaQuery->orWhere('skema_sertifikasi', 'LIKE', '%' . $keyword . '%');
         }
 
+        if (!empty($id_skema)) {
+            $skemaQuery->where('mst_skema_sertifikasi.id', 'LIKE', '%' . $id_skema. '%');
+        }
+
+        // return SkemaResource::collection($skemaQuery->paginate($limit));
         return SkemaResource::collection($skemaQuery->paginate($limit));
     }
 

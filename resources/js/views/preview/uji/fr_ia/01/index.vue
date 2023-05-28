@@ -236,6 +236,7 @@
         </el-form>
         <br>
       </div>
+      <el-button v-if="dataPreview.id_ia_01 !== null" @click="generateReport">Print</el-button>
     </el-main>
   </el-container>
 </template>
@@ -244,6 +245,7 @@
 import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 // import moment from 'moment';
+const print = new Resource('print-surat-tugas');
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
@@ -407,9 +409,21 @@ export default {
       }
       this.loading = false;
     },
-    generateReport() {
+    async generateReport() {
       this.loading = true;
-      this.$refs.html2Pdf.generatePdf();
+      // this.$refs.html2Pdf.generatePdf();
+      // await print.download({ idJadwal: 11 });
+      await print.download({ idJadwal: 11 }).then((response) => {
+        console.log(response);
+        const url = window.URL.createObjectURL(new Blob([response]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'surat-tugas.pdf');
+        document.body.appendChild(link);
+        link.click();
+      });
+      // console.log(data);
+      // await preview.get(this.$route.params.iduji);
       this.loading = false;
     },
     async beforeDownload({ html2pdf, options, pdfContent }) {

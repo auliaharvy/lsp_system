@@ -303,18 +303,20 @@ export default {
       this.loading = false;
     },
     async getListPertanyaan() {
-      this.loading = true;
-      const { data } = await mstIa05Resource.list({ id_skema: this.dataPreview.id_skema });
-      const result = await ia05Detail.get(this.dataPreview.id_ia_05);
-      console.log(result);
-      this.listSoal = data;
-      // console.log(data);
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-        element['jawaban'] = result.detail[index].jawaban;
-      });
-      this.rekomendasi_asesor = result.ia_05.rekomendasi_asesor;
-      this.loading = false;
+      if (this.dataPreview.id_ia_05 !== null){
+        this.loading = true;
+        const { data } = await mstIa05Resource.list({ id_skema: this.dataPreview.id_skema });
+        const result = await ia05Detail.get(this.dataPreview.id_ia_05);
+        console.log(result);
+        this.listSoal = data;
+        // console.log(data);
+        this.listSoal.forEach((element, index) => {
+          element['index'] = index + 1;
+          element['jawaban'] = result.detail[index].jawaban;
+        });
+        this.rekomendasi_asesor = result.ia_05.rekomendasi_asesor;
+        this.loading = false;
+      }
     },
     async getListSkema() {
       const { data } = await skemaResource.list();

@@ -61,8 +61,8 @@
       </span>
       <span>
         <el-button-group>
-          <router-link :to="{name: 'preview-ia-02', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia02: dataPreview.id_ia_02 }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
-          <router-link :to="{name: 'preview-ia-05', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia05: dataPreview.id_ia_05 }}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
+          <router-link :to="{ name: 'preview-ia-02', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia02: dataPreview.id_ia_02 }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
+          <router-link :to="{ name: 'preview-ia-05', params: { iduji: $route.params.iduji, idskema: $route.params.idskema, asesor: $route.params.asesor, ia05: dataPreview.id_ia_05 }}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
         </el-button-group>
       </span>
     </el-header>

@@ -192,7 +192,7 @@
             <!-- <el-input v-model="dataTrx.nama_peninjau" placeholder="Isi nama peninjau" label="Nama Peninjau" /> -->
           </el-form-item>
           <el-form-item label="Tanggal" prop="feedback">
-            <div>: {{ dataTrx.waktu }}</div>
+            <div>: {{ dataTrx.tanggal }}</div>
             <!-- <el-input v-model="dataTrx.tanggal" placeholder="Isi Tanggal" label="Tanggal" /> -->
           </el-form-item>
           <el-form-item label="Komentar" prop="feedback">
@@ -309,7 +309,7 @@ export default {
       // this.getIa11();
     });
     this.getListPertanyaan();
-    this.getDate();
+    // this.getDate();
   },
   methods: {
     getDate() {
@@ -406,8 +406,10 @@ export default {
       this.headerTable[1].content = ujiDetail.nama_tuk;
       this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
+      this.headerTable[4].content = ujiDetail.mulai;
 
       this.dataTrx.nama_peninjau = ujiDetail.asesor;
+      this.dataTrx.tanggal = ujiDetail.mulai;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;

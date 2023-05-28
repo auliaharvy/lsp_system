@@ -273,7 +273,7 @@ export default {
     // this.getListPertanyaan().then((value) => {
     //   this.getIa06();
     // });
-    this.getDate();
+    // this.getDate();
     // this.getIa06();
   },
   methods: {
@@ -353,14 +353,17 @@ export default {
       this.listJadwal = data;
     },
     getUjiKompDetail() {
+      this.loading = true;
       var id_uji = this.dataPreview.id;
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.nama_tuk;
       this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
+      this.headerTable[4].content = ujiDetail.mulai;
       this.dataTrx.nama_asesor = ujiDetail.asesor;
       this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
+      this.loading = false;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;

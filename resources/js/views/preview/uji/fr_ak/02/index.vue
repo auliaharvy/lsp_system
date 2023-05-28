@@ -315,7 +315,7 @@ export default {
     async getListPertanyaan() {
       this.loading = true;
       const { data } = await mstIa03Resource.list({ id_skema: this.dataPreview.id_skema });
-      const result = await ak02Detail.get(this.dataPreview.id_skema);
+      const result = await ak02Detail.get(this.dataPreview.id_ak_02);
       console.log(result.detail[0].observasi_demonstrasi);
       this.listSoal = data;
       this.listSoal.forEach((element, index) => {
@@ -330,7 +330,7 @@ export default {
       });
       this.dataSend.rekomendasi_asesor = result.ak_02.rekomendasi_asesor;
       this.dataSend.tindak_lanjut = result.ak_02.tindak_lanjut;
-      this.dataSend.komentar_observasi = result.ak_02.komentar_observasi;
+      this.dataSend.komentar_observasi = result.ak_02.komentar;
 
       this.loading = false;
     },
@@ -376,7 +376,7 @@ export default {
       var number = 1;
       var unitKomp = this.selectedSkema.children;
       console.log(unitKomp);
-      const result = await ak02Detail.get(this.dataPreview.id_skema);
+      const result = await ak02Detail.get(this.dataPreview.id_ak_02);
       console.log(result);
       // console.log(result.detail[0].observasi_demonstrasi);
       // console.log(unitKomp);

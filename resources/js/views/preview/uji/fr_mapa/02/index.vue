@@ -198,7 +198,7 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const ia02Resource = new Resource('uji-komp-ia-02');
 const mapa2Resource = new Resource('mapa2');
-const mapa02Detail = new Resource('detail/mapa-02');
+const mapa02Detail = new Resource('trx-mapa-02');
 const preview = new Resource('detail/preview');
 
 export default {
@@ -299,22 +299,24 @@ export default {
       this.loading = false;
     },
     async getMuk() {
-      this.loading = true;
-      const { data } = await mapa2Resource.list();
-      const result = await mapa02Detail.get(this.dataPreview.id_mapa_02);
-      this.dataMapa02 = result;
-      console.log(this.dataMapa02);
-      this.listMuk = data;
-      console.log(this.listMuk);
-      // var a = 0;
-      this.listMuk.forEach((element, index) => {
-        element['index'] = index + 1;
-        element['potensi_asesi_1'] = this.dataMapa02[index].potensi_asesi_1;
-        element['potensi_asesi_2'] = this.dataMapa02[index].potensi_asesi_2;
-        element['potensi_asesi_3'] = this.dataMapa02[index].potensi_asesi_3;
-        element['potensi_asesi_4'] = this.dataMapa02[index].potensi_asesi_4;
-      });
-      this.loading = false;
+      if (this.dataPreview.id_mapa_02 !== null){
+        this.loading = true;
+        const { data } = await mapa2Resource.list();
+        const result = await mapa02Detail.get(this.dataPreview.id);
+        this.dataMapa02 = result;
+        console.log(this.dataMapa02);
+        this.listMuk = data;
+        console.log(this.listMuk);
+        // var a = 0;
+        this.listMuk.forEach((element, index) => {
+          element['index'] = index + 1;
+          element['potensi_asesi_1'] = this.dataMapa02.data[index].potensi_asesi_1;
+          element['potensi_asesi_2'] = this.dataMapa02.data[index].potensi_asesi_2;
+          element['potensi_asesi_3'] = this.dataMapa02.data[index].potensi_asesi_3;
+          element['potensi_asesi_4'] = this.dataMapa02.data[index].potensi_asesi_4;
+        });
+        this.loading = false;
+      }
     },
     async getListUji() {
       this.loading = true;
