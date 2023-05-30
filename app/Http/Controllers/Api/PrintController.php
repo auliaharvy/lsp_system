@@ -118,7 +118,6 @@ class PrintController extends BaseController
         $unit = call_user_func([SkemaController::class, 'indexUnit'], new Request($arguments));
         $skema = $skemas->collection->toArray();
 
-        return $iduji;
 
     //    return [
     //         'apl01' => $queryApl01,
@@ -126,7 +125,7 @@ class PrintController extends BaseController
     //         'unit_kompetensi' => $unit,
     //     ];
 
-        $pdf = PDF::loadview('print/semua-module',[
+        $pdf = PDF::loadview('print/ak-01',[
             'apl01' => $queryApl01,
             'skema' => $skema[0],
             'unit_kompetensi' => $unit,

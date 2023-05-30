@@ -326,12 +326,12 @@
 				</td>
 				<td style="width: 10%;">
 					@if($apl01->foto !== '')
-						<div style="text-align: center;"><i class='fa fa-check'></i></div>
+						<div style="text-align: center;"></div>
 					@endif
 				</td>
 				<td style="width: 10%; text-align: center;">
 					@if($apl01->foto === '')
-						<div style="text-align: center;"><i class='fa fa-x'></i></div>
+						<div style="text-align: center;"><i class="bi bi-x-lg"></i></div>
 					@endif
 				</td>
 				<td style="width: 20%; text-align: center;">
@@ -347,12 +347,12 @@
 				</td>
 				<td style="width: 10%; text-align: center;">
 					@if($apl01->sertifikat !== '')
-						<div style="text-align: center;"><i class='fa fa-check'></i></div>
+						<div style="text-align: center;"><i class="bi bi-check2"></i></div>
 					@endif
 				</td>
 				<td style="width: 10%; text-align: center;">
 					@if($apl01->sertifikat === '')
-						<div style="text-align: center;"><i class='fa fa-x'></i></div>
+						<div style="text-align: center;"><i class="bi bi-x-lg"></i></div>
 					@endif
 				</td>
 				<td style="width: 20%; text-align: center;">
@@ -368,12 +368,12 @@
 				</td>
 				<td style="width: 10%; text-align: center;">
 					@if($apl01->identitas !== '')
-						<div style="text-align: center;"><i class='fa fa-check'></i></div>
+						<div style="text-align: center;"><i class="bi bi-check2"></i></div>
 					@endif
 				</td>
 				<td style="width: 10%; text-align: center;">
 					@if($apl01->identitas === '')
-						<div style="text-align: center;"><i class='fa fa-x'></i></div>
+						<div style="text-align: center;"><i class="bi bi-x-lg"></i></div>
 					@endif
 				</td>
 				<td style="width: 20%; text-align: center;">
@@ -389,12 +389,12 @@
 				</td>
 				<td style="width: 10%; text-align: center;">
 					@if($apl01->raport !== '')
-						<div style="text-align: center;"><i class='fa fa-check'></i></div>
+						<div style="text-align: center;"><i class="bi bi-check2" /></div>
 					@endif
 				</td>
 				<td style="width: 10%; text-align: center;">
 					@if($apl01->raport === '')
-						<div style="text-align: center;"><i class='fa fa-x'></i></div>
+						<div style="text-align: center;"><i class="bi bi-x-lg" /></div>
 					@endif
 				</td>
 				<td style="width: 20%; text-align: center;">
@@ -453,6 +453,5 @@
 			</tr>
 		</tbody>
 	</table>
-	<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 </body>
 </html>

@@ -315,17 +315,17 @@ export default {
       this.loading = true;
       // console.log(id);
       // await print.list({ iduji: id });
-      var result = await print.list({ iduji: id });
-      console.log(result);
-      // await print.download({ iduji: id }).then((response) => {
-      //   console.log(response);
-      //   const url = window.URL.createObjectURL(new Blob([response]));
-      //   const link = document.createElement('a');
-      //   link.href = url;
-      //   link.setAttribute('download', 'semua-module.pdf');
-      //   document.body.appendChild(link);
-      //   link.click();
-      // });
+      // var result = await print.list({ iduji: id });
+      // console.log(result);
+      await print.download({ iduji: id }).then((response) => {
+        console.log(response);
+        const url = window.URL.createObjectURL(new Blob([response]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'semua-module.pdf');
+        document.body.appendChild(link);
+        link.click();
+      });
       // await print.download({ iduji: id });
       this.loading = false;
     },
