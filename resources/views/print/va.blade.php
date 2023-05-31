@@ -1,5 +1,5 @@
 <div class="container">
-  <h6>FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI</h6>
+  <h6>FR.IA.05 PERTANYAAN TERTULIS PILIHAN GANDA</h6>
 </div>
 <div class="container">
   <div class="row">

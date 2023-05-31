@@ -1,5 +1,5 @@
 <div class="container">
-  <h6>FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI</h6>
+  <h6>FR.IA.11 CEKLIS MENINJAU INSTRUMEN ASESMEN</h6>
 </div>
 <div class="container">
   <div class="row">
@@ -37,7 +37,7 @@
       </table>
       <table class="table">
         <tr>
-          <td class="bg-dark text-white" colspan="3">PANDUAN BAGI ASESOR</td>
+          <td class="bg-dark text-white" colspan="3">PANDUAN BAGI PENINJAU /ASESOR</td>
         </tr>
         <tr>
           <td>
@@ -60,10 +60,10 @@
           <td class="bg-dark text-white" colspan="3"></td>
         </tr>
         <tr>
-          <td class="align-middle" rowspan="2">
+          <td class="justify-content-center" rowspan="2">
             Uji Kompetensi
           </td>
-          <td class="align-middle">Kode Unit</td>
+          <td class="justify-content-center">Kode Unit</td>
           <td>
             <ul>
               <li>N.821.100.002.02 -</li>
@@ -76,7 +76,7 @@
           {{-- <td>
             Uji Kompetensi
           </td> --}}
-          <td class="align-middle">Judul Unit</td>
+          <td class="justify-content-center">Judul Unit</td>
           <td>
             <ul>
               <li>Mengatur Penggandaan dan Pengumpulan Dokumen</li>
@@ -90,45 +90,44 @@
         <tr>
           <td class="bg-dark text-white text-center px-2">No.</td>
           <td class="bg-dark text-white text-center px-2">Pertanyaan</td>
-          <td class="bg-dark text-white text-center px-2">Tanggapan</td>
-          <td class="bg-dark text-white text-center px-2">Rekomendasi</td>
+          <td class="bg-dark text-white text-center px-2">Ya / Tidak</td>
+          <td class="bg-dark text-white text-center px-2">Komentar</td>
         </tr>
         <tr>
           <td class="text-center px-2">1.</td>
-          <td class="align-middle px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS</td>
-          <td class="align-middle px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
+          <td class="justify-content-center px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS
+          </td>
+          <td class="justify-content-center px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
             mempermudah
             akuntan perusahaan dalam pencatatan
             keuangan dalam perusahaan</td>
-          <td class="align-middle text-center px-2">Kompeten</td>
+          <td class="justify-content-center text-center px-2">Kompeten</td>
         </tr>
         <tr>
           <td class="text-center px-2">2.</td>
-          <td class="align-middle px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS</td>
-          <td class="align-middle px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
+          <td class="justify-content-center px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS
+          </td>
+          <td class="justify-content-center px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
             mempermudah
             akuntan perusahaan dalam pencatatan
             keuangan dalam perusahaan</td>
-          <td class="align-middle text-center px-2">Kompeten</td>
+          <td class="justify-content-center text-center px-2">Kompeten</td>
         </tr>
       </table>
     </div>
     <div class="col-12 mt-3">
-      Rekomendasi Asesor :
-      <div class="formradio d-inline p-3">
-        <input type="radio" id=radiokompeten>
-        <label for="radiokompeten">Kompeten</label>
+      <div class="formradio p-3">
+        <label for="radiokompeten">Nama Peninjau</label>
+        <input type="input" class="formcontrol" id=radiokompeten value="Iqbal Tawal, M.Pd">
       </div>
-      <div class="formradio d-inline p-3">
-        <input type="radio" id=radiobelumkompeten>
-        <label for="radiobelumkompeten">Belum Kompeten</label>
+      <div class="formradio p-3">
+        <label for="radiobelumkompeten">Tanggal</label>
+        <input type="input" class="formcontrol" id=radiobelumkompeten value="2023-04-14">
       </div>
-    </div>
-    <div class="col-12 mt-3">
-      <label for="textareakompeten" class="align-top d-inline">Umpan Balik untuk Asesi : </label>
-      <textarea id=textareakompeten class="form-control" cols="80" rows="5"></textarea>
+      <div class="formradio p-3">
+        <label for="radiobelumkompeten">Komentar</label>
+        <input type="textarea" class="formcontrol" id=radiobelumkompeten placeholder="Isi Komentar">
+      </div>
     </div>
   </div>
-</div>
-</div>
 </div>

@@ -1,5 +1,5 @@
 <div class="container">
-  <h6>FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI</h6>
+  <h6>FR.IA.05 PERTANYAAN TERTULIS PILIHAN GANDA</h6>
 </div>
 <div class="container">
   <div class="row">
@@ -35,26 +35,7 @@
           <td>2023-04-14</td>
         </tr>
       </table>
-      <table class="table">
-        <tr>
-          <td class="bg-dark text-white" colspan="3">PANDUAN BAGI ASESOR</td>
-        </tr>
-        <tr>
-          <td>
-            <ul>
-              <li>Lengkapi nama unit kompetensi, elemen, kriteria unjuk kerja sesuai kolom dalam tabel.</li>
-              <li>Istilah Acuan Pembanding dengan SOP / spesifikasi produk dari industri / orginasi dari tempat kerja
-                atau simulasi tempat
-                kerja</li>
-              <li>Beri tanda centang pada kolom K jika Anda yakin asesi dapat melakukan/mendemonstrasikan tugas seuai
-                KUK, atau centang
-                pada kolom BK bila sebaliknya.</li>
-              <li>Penilaian lanjut diisi bila hasil belum dapat disimpulkan, untuk itu gunakan metode lain sehingga
-                keputusan dapat dibuat</li>
-            </ul>
-          </td>
-        </tr>
-      </table>
+
       <table class="table table-bordered">
         <tr>
           <td class="bg-dark text-white" colspan="3"></td>
@@ -89,9 +70,9 @@
       <table class="col-md-12 table-bordered table-striped">
         <tr>
           <td class="bg-dark text-white text-center px-2">No.</td>
+          <td class="bg-dark text-white text-center px-2">Unit Kompetensi</td>
           <td class="bg-dark text-white text-center px-2">Pertanyaan</td>
-          <td class="bg-dark text-white text-center px-2">Tanggapan</td>
-          <td class="bg-dark text-white text-center px-2">Rekomendasi</td>
+          <td class="bg-dark text-white text-center px-2">Jawaban</td>
         </tr>
         <tr>
           <td class="text-center px-2">1.</td>
@@ -112,21 +93,6 @@
           <td class="align-middle text-center px-2">Kompeten</td>
         </tr>
       </table>
-    </div>
-    <div class="col-12 mt-3">
-      Rekomendasi Asesor :
-      <div class="formradio d-inline p-3">
-        <input type="radio" id=radiokompeten>
-        <label for="radiokompeten">Kompeten</label>
-      </div>
-      <div class="formradio d-inline p-3">
-        <input type="radio" id=radiobelumkompeten>
-        <label for="radiobelumkompeten">Belum Kompeten</label>
-      </div>
-    </div>
-    <div class="col-12 mt-3">
-      <label for="textareakompeten" class="align-top d-inline">Umpan Balik untuk Asesi : </label>
-      <textarea id=textareakompeten class="form-control" cols="80" rows="5"></textarea>
     </div>
   </div>
 </div>
