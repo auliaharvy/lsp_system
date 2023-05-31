@@ -100,11 +100,23 @@ class PrintController extends BaseController
 	    return $pdf->download('example.pdf');
     }
 
-    public function printMaster(){
+    public function printMaster(Request $request){
 
         $query = "query master";
         $query2 = "query uji komp ai 03";
-        return view('print.masterprint', ['master' => $query, 'ia03' => $query2]);
+
+        // $searchParams = $request->all();
+        // $iduji = Arr::get($searchParams, 'iduji', '');
+
+        // return view('print/masterprint', ['master' => $query, 'ia03' => $query2]);
+
+        $pdf = PDF::loadview('print/masterprint',[
+            'master' => $query,
+            'ia03' => $query2,
+        ]);
+        $pdf->setPaper('A4' , 'portrait');
+	    return $pdf->download('modules.pdf');
+
     }
 
     public function printModules(Request $request)

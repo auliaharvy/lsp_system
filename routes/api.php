@@ -23,6 +23,7 @@ Route::namespace('Api')->group(function() {
     // print
     Route::get('print-surat-tugas', 'PrintController@index');
     Route::get('print-semua-module', 'PrintController@printMaster');
+    Route::get('print-modules', 'PrintController@printModules');
     // Jadwal Routes
     Route::apiResource('jadwaltest', 'JadwalController');
     Route::apiResource('tamatan', 'TamatanController');

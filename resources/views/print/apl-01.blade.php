@@ -5,11 +5,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-	<p style=""><strong>FR.APL.01. PERMOHONAN SERTIFIKASI KOMPETENSI</strong></div>
-	&nbsp;</div>
-	<p style=""><strong>Bagian 1 :&nbsp; Rincian Data Pemohon Sertifikasi</strong></div>
+	<div style=""><strong>FR.APL.01. PERMOHONAN SERTIFIKASI KOMPETENSI</strong></div>
+	<div style=""><strong>Bagian 1 :&nbsp; Rincian Data Pemohon Sertifikasi</strong></div>
 	<div style=" font-weight: 400; padding: 0 0 10px 0;">Pada bagian ini,&nbsp; cantumlan data pribadi, data pendidikan formal serta data pekerjaan anda pada saat ini.</div>
-	<p style=""><strong>a. Data Pribadi</strong></div>
+	<div style=""><strong>a. Data Pribadi</strong></div>
 	<table >
 		<tr  >
 			<td style="padding-left: 15px;">
@@ -100,7 +99,7 @@
 		</tbody>
 	</table>
 	<p style=""><strong>b. Data Pekerjaan Sekarang</strong></div>
-	<table >
+	<table style="margin-bottom: 30px;">
 		<tbody>
 			<tr  >
 				<td style="padding-left: 15px;">
@@ -152,109 +151,56 @@
 			</tr>
 		</tbody>
 	</table>
-	<div style="font-weight: 400">Bagian&nbsp; 2 :&nbsp; Data Sertifikasi</strong></div>
+	<div style="font-weight: 400"><strong>Bagian&nbsp; 2 :&nbsp; Data Sertifikasi</strong></div>
 	<div style="font-weight: 400; padding-bottom: 20px;">Tuliskan Judul dan Nomor Skema Sertifikasi yang anda ajukan berikut Daftar Unit Kompetensi sesuai kemasan pada skema sertifikasi untuk mendapatkan pengakuan sesuai dengan latar belakang pendidikan, pelatihan serta pengalaman kerja yang anda miliki.</div></div>
-	<table style="border: 1px solid black;">
+	<table border="1" style="width: 100%; margin-top: 30px;">
 		<tbody>
 			<tr>
-				<td style="border: 1px solid black;">
-					<div style="text-align: center;">Skema Sertifikasi &nbsp; (KKNI/Okupasi/Klaster)</div>
+				<td rowspan="2" style="width: 30%;">
+					<div style="font-weight: 400;">Skema Sertifikasi (KKNI/Okupasi/Klaster)</div>
 				</td>
-				<td style="border: 1px solid black;">
-					<table>
-						<tr>
-							<td>
-								<span style="text-align: center;">Judul</span>
-							</td>
-							<td>
-								<span style=" font-weight: 400; padding: 0 10px 10px 0;">:</span>
-							</td>
-							<td style="width: 100%;">
-								<span style="text-align: center;">@php echo $skema->skema_sertifikasi@endphp</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span style="text-align: center;">Nomor</span>
-							</td>
-							<td>
-								<span style=" font-weight: 400; padding: 0 10px 10px 0;">:</span>
-							</td>
-							<td>
-								<span style="text-align: center;">@php echo $skema->kode_skema@endphp</span>
-							</td>
-						</tr>
-					</table>
+				<td style="width: 13%;">
+					<div style="font-weight: 400;">Judul</div>
+				</td>
+				<td style="width: 2%;">
+					<div style="font-weight: 400;">:</div>
+				</td>
+				<td style="width: 55%;">
+					<div style="font-weight: 400;">SKEMA KKNI KUALIFIKASI II KOMPETENSI KEAHLIAN OTOMATISASI TATA KELOLA PERKANTORAN : 5.7.5 MEMBANTU PENGELOLAAN KAS KECIL</div>
 				</td>
 			</tr>
 			<tr>
-				<td style="border: 1px solid black;">
-					<span style="text-align: center;">Tujuan Asesmen</span>
+				<td style="width: 13%;">
+					<div style="font-weight: 400;">Nomor</div>
 				</td>
-				<td style="border: 1px solid black;">
-					<table>
-						<tr>
-							<td style="padding-left: 52px;">
-								<span style="padding-left: 30px; font-weight: 400; padding: 0 10px 10px 0;">:</span>
-							</td>
-							<td>
-								<span style=" font-weight: 400; padding: 0 10px 10px 0;">1. </span>
-							</td>
-							<td>
-								<span style="text-align: center;">Sertifikasi</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span style="padding-left: 30px; font-weight: 400; padding: 0 10px 10px 0;"></span>
-							</td>
-							<td>
-								<span style=" font-weight: 400; padding: 0 10px 10px 0;">2. </span>
-							</td>
-							<td>
-								<span style="text-align: center;">Sertifikasi Ulang</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span style="padding-left: 30px; font-weight: 400; padding: 0 10px 10px 0;"></span>
-							</td>
-							<td>
-								<span style=" font-weight: 400; padding: 0 10px 10px 0;">3. </span>
-							</td>
-							<td>
-								<span style="text-align: center;">Pengakuan Kompetensi Terkini (PKT)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span style="padding-left: 30px; font-weight: 400; padding: 0 10px 10px 0;"></span>
-							</td>
-							<td>
-								<span style=" font-weight: 400; padding: 0 10px 10px 0;">4. </span>
-							</td>
-							<td>
-								<span style="text-align: center;">Rekognisi Pembelajaran Lampau</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span style="padding-left: 30px; font-weight: 400; padding: 0 10px 10px 0;"></span>
-							</td>
-							<td>
-								<span style=" font-weight: 400; padding: 0 10px 10px 0;">5. </span>
-							</td>
-							<td>
-								<span style="text-align: center;">Lainnya</span>
-							</td>
-						</tr>
-					</table>
+				<td style="width: 2%;">
+					<div style="font-weight: 400;">:</div>
+				</td>
+				<td style="width: 55%;">
+					<div style="font-weight: 400;">SKM/ BNSP/00015/1/2017/73E</div>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 43%;" colspan="2">
+					<div style="font-weight: 400;">Tujuan Asesmen</div>
+				</td>
+				<td style="width: 2%;">
+					<div style="font-weight: 400;">:</div>
+				</td>
+				<td style="width: 55%;">
+					<ul>
+						<li style="font-weight: 400;">Sertifikasi</li>
+						<li style="font-weight: 400;">Sertifikasi Ulang</li>
+						<li style="font-weight: 400;">Pengakuan Kompetensi Terkini (PKT)</li>
+						<li style="font-weight: 400;">Rekognisi Pembelajaran Lampau</li>
+						<li style="font-weight: 400;">Lainnya</li>
+					</ul>
 				</td>
 			</tr>
 		</tbody>
 	</table>
-	<div style="font-weight: 400">Daftar Unit Kompetensi sesuai kemasan:&nbsp;</strong></div>
-	<table style="width: 100%;">
+	<div style="font-weight: 400"><strong>Daftar Unit Kompetensi sesuai kemasan:&nbsp;</strong></div>
+	<table border="1" style="width: 100%;">
 		<tbody style="width: 100%;">
 			<tr style="width: 100%;">
 				<td style="width: 5%;">
@@ -293,7 +239,7 @@
 	</table>
 	<p><strong>Bagian&nbsp; 3&nbsp; :&nbsp; Bukti Kelengkapan Pemohon&nbsp;&nbsp;</strong></p>
 	<p><strong>Bukti Persyaratan Dasar Pemohon</strong></p>
-	<table style="width: 100%;">
+	<table border="1" style="width: 100%;">
 		<tbody style="width: 100%;">
 			<tr style="width: 100%;">
 				<td style="width: 5%;" rowspan="2">
@@ -403,7 +349,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<table style="width: 100%;">
+	<table border="1" style="width: 100%; margin-top: 30px;">
 		<tbody style="width: 100%;">
 			<tr style="width: 100%;">
 				<td style="width: 50%;" rowspan="3">
@@ -420,11 +366,17 @@
 				<td style="width: 50%;">
 					<div style="font-weight: 400;">Nama&nbsp;</div>
 				</td>
+				<td style="width: 50%;">
+					<div style="font-weight: 400;"></div>
+				</td>
 			</tr>
 			<tr>
 				<td style="width: 50%; height: 100px;">
 					<div style="font-weight: 400;">Tanda tangan/</div>
 					<div style="font-weight: 400;">Tanggal</div>
+				</td>
+				<td style="width: 50%;">
+					<div style="font-weight: 400;"></div>
 				</td>
 			</tr>
 			<tr>
@@ -439,16 +391,24 @@
 				<td style="width: 50%;">
 					<div style="font-weight: 400;">Nama&nbsp;</div>
 				</td>
+				<td style="width: 50%;">
+					<div style="font-weight: 400;"></div>
+				</td>
 			</tr>
 			<tr>
 				<td style="width: 50%;">
 					<div style="font-weight: 400;">No. Reg</div>
 				</td>
+				<td style="width: 50%;">
+					<div style="font-weight: 400;"></div>
+				</td>
 			</tr>
 			<tr>
-				<td style="width: 50%; height: 100px;">
-					<div style="font-weight: 400;">Tanda tangan/</div>
-					<div style="font-weight: 400;">Tanggal</div>
+				<td style="width: 50%;">
+					<div style="font-weight: 400;">Tanda Tangan / Tanggal</div>
+				</td>
+				<td style="width: 50%;">
+					<div style="font-weight: 400;"></div>
 				</td>
 			</tr>
 		</tbody>

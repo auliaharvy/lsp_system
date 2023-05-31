@@ -90,7 +90,50 @@
           <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor, apl01: scope.row.id_apl_01 }}">
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
           </router-link>
-          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button>
+          <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
+          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id)">Print</el-button>
+          <el-dialog
+            title="Tips"
+            :visible.sync="dialogVisible"
+            width="50%"
+            :before-close="handleClose"
+          >
+            <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">Check all</el-checkbox>
+            <!-- <el-checkbox-group v-model="checkedDataUjiKomp" @change="handleCheckedCitiesChange"> -->
+            <!-- <el-checkbox v-for="ujiKomp in dataUjiKomp" :key="ujiKomp" :label="ujiKomp" style="">
+                <div style="font-weight: 400;">{{ ujiKomp }}</div>
+              </el-checkbox> -->
+            <table style="width: 100%;">
+              <tr style="width: 100%;">
+                <td style="width: 25%;">
+                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                    <!-- <el-checkbox v-if="ujiKomp.index < 5">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox> -->
+                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                  </div>
+                </td>
+                <td style="width: 25%;">
+                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                  </div>
+                </td>
+                <td style="width: 25%;">
+                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                  </div>
+                </td>
+                <td style="width: 25%;">
+                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <!-- </el-checkbox-group> -->
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible = false">Cancel</el-button>
+              <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+            </span>
+          </el-dialog>
         </template>
       </el-table-column>
 
@@ -249,6 +292,9 @@ const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
 const jadwalResource = new Resource('jadwal-get');
 const print = new Resource('print-semua-module');
+// const print = new Resource('print-modules');
+const preview = new Resource('detail/preview');
+const cityOptions = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen'];
 
 export default {
   components: { Pagination },
@@ -277,6 +323,7 @@ export default {
       listSkema: null,
       loading: true,
       dialog: false,
+      dialogVisible: false,
       query: {
         page: 1,
         limit: 5,
@@ -291,6 +338,31 @@ export default {
         { color: '#1989fa', percentage: 80 },
         { color: '#6f7ad3', percentage: 100 },
       ],
+      dataUjiKomp: [
+        { index: 1, name: 'APL 01', nameInDatabase: 'id_apl_01', idujikom: null, value: true },
+        { index: 2, name: 'APL 02', nameInDatabase: 'id_apl_02', idujikom: null, value: false },
+        { index: 3, name: 'MAPA 02', nameInDatabase: 'id_mapa_02', idujikom: null, value: false },
+        { index: 4, name: 'AK 01', nameInDatabase: 'id_ak_01', idujikom: null, value: false },
+        { index: 5, name: 'AK 04', nameInDatabase: 'id_ak_04', idujikom: null, value: false },
+        { index: 6, name: 'IA 01', nameInDatabase: 'id_ia_01', idujikom: null, value: false },
+        { index: 7, name: 'IA 02', nameInDatabase: 'id_ia_02', idujikom: null, value: true },
+        { index: 8, name: 'IA 03', nameInDatabase: 'id_ia_03', idujikom: null, value: false },
+        { index: 9, name: 'IA 05', idujikom: null, value: false },
+        { index: 10, name: 'IA 06', idujikom: null, value: false },
+        { index: 11, name: 'IA 07', idujikom: null, value: false },
+        { index: 12, name: 'IA 11', idujikom: null, value: false },
+        { index: 13, name: 'AK 02', idujikom: null, value: false },
+        { index: 14, name: 'AK 03', idujikom: null, value: false },
+        { index: 15, name: 'AK 05', idujikom: null, value: false },
+        { index: 16, name: 'AK 06', idujikom: null, value: false },
+        { index: 17, name: 'VA', idujikom: null, value: false },
+      ],
+      checkAll: false,
+      checkedCities: ['Shanghai', 'Beijing'],
+      checkedDataUjiKomp: [],
+      cities: cityOptions,
+      isIndeterminate: true,
+      regex: '',
     };
   },
   computed: {
@@ -311,9 +383,48 @@ export default {
     this.getListSkema();
   },
   methods: {
+    async showDialogPrint(id){
+      const data = await preview.get(id);
+      this.dialogVisible = true;
+      let index = 0;
+      for (const property in data){
+        if (this.dataUjiKomp[index].nameInDatabase === property){
+          this.dataUjiKomp[index].idujikom = data[property];
+          index++;
+        }
+      }
+      console.log(this.dataUjiKomp);
+    },
+    handleCheckAllChange(val) {
+      // this.checkedCities = val ? cityOptions : [];
+      this.checkedDataUjiKomp = val ? this.dataUjiKomp : [];
+      let index = 0;
+      for (const data in this.dataUjiKomp){
+        this.dataUjiKomp[index].value = this.checkAll;
+        console.log(data);
+        index++;
+      }
+      this.isIndeterminate = false;
+      console.log(val);
+      console.log(this.dataUjiKomp);
+    },
+    handleCheckedCitiesChange(value) {
+      const checkedCount = value.length;
+      this.checkAll = checkedCount === this.dataUjiKomp.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataUjiKomp.length;
+      console.log(value);
+    },
+    handleClose(done){
+      this.$confirm('Are you sure to close this dialog?')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
     async generateReport(id) {
       this.loading = true;
       // console.log(id);
+      // await print.download(id);
       // await print.list({ iduji: id });
       // var result = await print.list({ iduji: id });
       // console.log(result);

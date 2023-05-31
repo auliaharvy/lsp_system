@@ -471,8 +471,16 @@ class UjiKompController extends BaseController
  
         ->select('trx_uji_komp.*')
         ->first();
-       
+        // ->get();
+
+        // $query = UjiKomp::query();
+        // $query->where('trx_uji_komp.id', $id);
+        // $query->select('trx_uji_komp.*');
+        // $query->get();
+
+
         return $queryUjiKomp;
+        // return MasterResource::collection($query->paginate(1));
     }
 
     public function showApl01($id)

@@ -3,7 +3,7 @@
 
 <button class="btn btn-success">Ini Tombol Hijau</button>
 
-<table class="table">
+<table class="table table-bordered border-primary">
   <thead>
     <tr>
       <th scope="col">#</th>
