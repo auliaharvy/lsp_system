@@ -109,7 +109,7 @@ class PrintController extends BaseController
 
         $iduji = Arr::get($searchParams, 'iduji', '');
 
-        $dataUjiKomp = $ujiKompController->showPreview($iduji);
+        // $dataUjiKomp = $ujiKompController->showPreview($iduji);
         // $dataSkemaUnit = $skemaController->indexUnit(['id_skema' => $dataUjiKomp->id_skema]);
 
         $idapl01 = Arr::get($searchParams, 'idapl01', '');
@@ -128,16 +128,19 @@ class PrintController extends BaseController
         // $valueia01 = Arr::get($searchParams, 'valueia01', '');
         // $valueia02 = Arr::get($searchParams, 'valueia02', '');
 
-        $dataapl01 = 'tidak ada';
+        $dataapl01 = '';
         // $dataapl02 = null;
         // $datamapa02 = null;
         // $dataak01 = null;
-        $dataak04 = 'tidak ada';
+        $dataak04 = '';
         // $dataia01 = null;
         // $dataia02 = null;
 
-        if ($valueapl01){
+        $datamodule = collect([]);
+
+        if($valueapl01 == true){
             $dataapl01 = $ujiKompController->showApl01($idapl01);
+            $datamodule->push(['nama' => 'apl01', 'data' => $dataapl01]);
         }
 
         // if ($valueapl02){
@@ -154,8 +157,9 @@ class PrintController extends BaseController
         //     $dataak01 = $ak01->showAk01($idak01);
         // }
 
-        if ($valueak04){
+        if($valueak04 == true){
             $dataak04 = $ujiKompController->showAk04($idak04);
+            $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
         }
 
         // if ($valueia01){
@@ -172,24 +176,7 @@ class PrintController extends BaseController
         // ->join('trx_jadwal_asesmen as b', 'b.id', '=', 'trx_uji_komp_ia_03.id_jadwal')
         // ->join('mst_skema_sertifikasi as c', 'c.id', '=', 'b.id_skema');
 
-        $datamodule = [
-            'apl01' => [
-                'nama' => 'apl01',
-                'data' => $dataapl01,
-            ],
-            'ak04' => [
-                'nama' => 'ak04',
-                'data' => $dataak04,
-            ]
-            // 'apl02' => $dataapl02, 
-            // 'mapa02' => $datamapa02, 
-            // 'ak01' => $dataak01,
-            // 'ak04' => $dataak04,
-            // 'ia01' => $dataia01,
-            // 'ia02' => $dataia02
-        ];
-
-        // return view('print.masterprint', ['datamodule' => $datamodule]);
+        // return view('print.masterprint', ['valueak04' => $valueak04, 'valueapl01' => $valueapl01]);
 
         $pdf = PDF::loadview('print.masterprint', ['datamodule' => $datamodule]);
         $pdf->setPaper('A4','portrait');
