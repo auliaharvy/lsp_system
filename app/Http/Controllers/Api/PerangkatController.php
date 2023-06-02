@@ -136,7 +136,7 @@ class PerangkatController extends BaseController
         $query = MstFrIa07::query();
         $query->where('mst_perangkat_ia_07.id_skema', $id_skema)
         ->join('mst_skema_sertifikasi_unit_kompetensi as a', 'a.id', '=', 'mst_perangkat_ia_07.id_unit_komp')
-        ->select('mst_perangkat_ia_07.*', 'a.kode_unit');
+        ->select('mst_perangkat_ia_07.*', 'a.kode_unit', 'a.unit_kompetensi');
 
         return MasterResource::collection($query->paginate(100));
     }

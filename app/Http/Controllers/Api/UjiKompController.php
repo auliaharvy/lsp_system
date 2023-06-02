@@ -519,7 +519,7 @@ class UjiKompController extends BaseController
     public function showAk03($id)
     {
         $queryAk03 = UjiKompAk03::where('trx_uji_komp_ak_03.id',$id)->first();
-        $queryDetailAk03 = UjiKompAk03::where('trx_uji_komp_ak_03_detail.id_ak_03',$id)->get();
+        $queryDetailAk03 = UjiKompAk03Detail::where('trx_uji_komp_ak_03_detail.id_ak_03',$id)->get();
        
         $data = [
             'ak_03' => $queryAk03,

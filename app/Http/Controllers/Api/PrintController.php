@@ -102,14 +102,121 @@ class PrintController extends BaseController
 
     public function printMaster(Request $request){
 
+        $searchParams = $request->all();
+
+        $ujiKompController = App::make(UjiKompController::class);
+        $skemaController = App::make(SkemaController::class);
+
+        $iduji = Arr::get($searchParams, 'iduji', '');
+
+        $dataUjiKomp = $ujiKompController->showPreview($iduji);
+        // $dataSkemaUnit = $skemaController->indexUnit(['id_skema' => $dataUjiKomp->id_skema]);
+
+        $idapl01 = Arr::get($searchParams, 'idapl01', '');
+        // $idapl02 = Arr::get($searchParams, 'idapl02', '');
+        // $idmapa02 = Arr::get($searchParams, 'idmapa02', '');
+        // $idak01 = Arr::get($searchParams, 'idak01', '');
+        $idak04 = Arr::get($searchParams, 'idak04', '');
+        // $idia01 = Arr::get($searchParams, 'idak01', '');
+        // $idia02 = Arr::get($searchParams, 'idak02', '');
+
+        $valueapl01 = Arr::get($searchParams, 'valueapl01', '');
+        // $valueapl02 = Arr::get($searchParams, 'valueapl02', '');
+        // $valuemapa02 = Arr::get($searchParams, 'valuemapa02', '');
+        // $valueak01 = Arr::get($searchParams, 'valueak01', '');
+        $valueak04 = Arr::get($searchParams, 'valueak04', '');
+        // $valueia01 = Arr::get($searchParams, 'valueia01', '');
+        // $valueia02 = Arr::get($searchParams, 'valueia02', '');
+
+        $dataapl01 = 'tidak ada';
+        // $dataapl02 = null;
+        // $datamapa02 = null;
+        // $dataak01 = null;
+        $dataak04 = 'tidak ada';
+        // $dataia01 = null;
+        // $dataia02 = null;
+
+        if ($valueapl01){
+            $dataapl01 = $ujiKompController->showApl01($idapl01);
+        }
+
+        // if ($valueapl02){
+        //     $dataapl02 = $apl02->showApl02($idapl02);
+        // }
+
+        // if ($valuemapa02){
+        //     $mapa02 = App::make(UjiKompController::class);
+        //     $datamapa02 = $mapa02->showMapa02($idmapa02);
+        // }
+
+        // if ($valueak01){
+        //     $ak01 = App::make(UjiKompController::class);
+        //     $dataak01 = $ak01->showAk01($idak01);
+        // }
+
+        if ($valueak04){
+            $dataak04 = $ujiKompController->showAk04($idak04);
+        }
+
+        // if ($valueia01){
+        //     $ia01 = App::make(UjiKompController::class);
+        //     $dataia01 = $ia01->showIa01($idia01);
+        // }
+
+        // if ($valueia02){
+        //     $ia02 = App::make(UjiKompController::class);
+        //     $dataia02 = $ia02->showIa02($idia02);
+        // }
+
+        // $queryia03 = UjiKompIa03::where('trx_uji_komp_ia_03.id',$searchParams['id_ia_03'])
+        // ->join('trx_jadwal_asesmen as b', 'b.id', '=', 'trx_uji_komp_ia_03.id_jadwal')
+        // ->join('mst_skema_sertifikasi as c', 'c.id', '=', 'b.id_skema');
+
+        $datamodule = [
+            'apl01' => [
+                'nama' => 'apl01',
+                'data' => $dataapl01,
+            ],
+            'ak04' => [
+                'nama' => 'ak04',
+                'data' => $dataak04,
+            ]
+            // 'apl02' => $dataapl02, 
+            // 'mapa02' => $datamapa02, 
+            // 'ak01' => $dataak01,
+            // 'ak04' => $dataak04,
+            // 'ia01' => $dataia01,
+            // 'ia02' => $dataia02
+        ];
+
+        // return view('print.masterprint', ['datamodule' => $datamodule]);
+
+        $pdf = PDF::loadview('print.masterprint', ['datamodule' => $datamodule]);
+        $pdf->setPaper('A4','portrait');
+        return $pdf->download('module.pdf');
+        // return $pdf->stream();   
+    }
+    
+    public function print($array){
+
         // $searchParams = $request->all();
         // $queryia03 = UjiKompIa03::where('trx_uji_komp_ia_03.id',$searchParams['id_ia_03'])
         // ->join('trx_jadwal_asesmen as b', 'b.id', '=', 'trx_uji_komp_ia_03.id_jadwal')
         // ->join('mst_skema_sertifikasi as c', 'c.id', '=', 'b.id_skema');
 
-        $pdf = PDF::loadView('print.masterprint');
+        $apl01 = App::make(UjiKompController::class);
+        $dataApl01 = $apl01->showApl01($array[0].idujikom);
+
+        $pdf = PDF::loadview('print.masterprint', [ 'dataApl01' => $array[0].idujikom ]);
         $pdf->setPaper('A4','portrait');
-        return $pdf->stream();   
+        return $pdf->download('module.pdf');
+
+
+        $pdf = PDF::loadview('print.masterprint');
+        $pdf->setPaper('A4','portrait');
+        return $pdf->download('module.pdf');
+        // return $pdf->stream();   
     }
+
 
 }

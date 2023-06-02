@@ -10,24 +10,9 @@
 </head>
 
 <body>
-  <hr>
-  @include('print.ia03')
-  <hr>
-  @include('print.ia05')
-  <hr>
-  @include('print.ia06')
-  <hr>
-  @include('print.ia07')
-  <hr>
-  @include('print.ia11')
-  <hr>
-  @include('print.ak02')
-  <hr>
-  @include('print.ak03')
-  <hr>
-  @include('print.ak05')
-  <hr>
-
+  @foreach ($datamodule as $module)
+    @include('print.' . $module['nama'], ['data' => $module['data']])
+  @endforeach
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 
