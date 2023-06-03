@@ -531,8 +531,8 @@ class UjiKompController extends BaseController
         // ->select('mst_perangkat_ia_02.*');
 
 
-        return MasterResource::collection($queryMapa02->paginate(static::ITEM_PER_PAGE));
-        // return $queryMapa02;
+        return MasterResource::collection($queryMapa02->get());
+        // return $queryMapa02->get();
     }
 
 
@@ -700,13 +700,13 @@ class UjiKompController extends BaseController
 
     public function showVa($id)
     {
-        $queryIa07 = UjiKompIa07::where('trx_uji_komp_ia_07.id',$id)->first();
-        $queryDetailIa07 = UjiKompIa07Detail::where('trx_uji_komp_ia_07_detail.id_ia_07',$id)->get();
+        // $queryIa07 = UjiKompIa07::where('trx_uji_komp_ia_07.id',$id)->first();
+        // $queryDetailIa07 = UjiKompIa07Detail::where('trx_uji_komp_ia_07_detail.id_ia_07',$id)->get();
        
-        $data = [
-            'ia_07' => $queryIa07,
-            'detail' => $queryDetailIa07,
-        ];
+        // $data = [
+        //     'ia_07' => $queryIa07,
+        //     'detail' => $queryDetailIa07,
+        // ];
         // return $data;
 
         $dataVa = DB::table('trx_uji_komp_va as a')

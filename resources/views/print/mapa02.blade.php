@@ -1,4 +1,4 @@
- <div class="container">
+ <div class="container mt-10">
 	<h6>FR.MAPA.02- PETA INSTRUMEN ASESSMEN HASIL PENDEKATAN ASESMEN DAN PERENCANAAN ASESMEN</h6>
  </div>
  <div class="container">
@@ -29,18 +29,18 @@
 					<td>
 						<div>:<div>
 					</td>
-					<td colspan="2">
+					<td colspan="3">
 						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
 			</table>
 			<table class="table table-bordered mt-10" >
 				<tr>
-					<td class="bg-dark" colspan="4"></td>
+					<td class="bg-dark" colspan="7"></td>
 				</tr>
 				<tr>
 					@php $a = 1; @endphp
-					@foreach($skemaUnit as $data)
+					@foreach($skemaUnit as $item)
 						<tr>
 							<td rowspan="2">
 								<div>Unit Kompetensi {{ $a }}</div>
@@ -52,7 +52,7 @@
 								<div>:</div>
 							</td>
 							<td colspan="2">
-								<div>{{ $data->kode_unit }}</div>
+								<div>{{ $item->kode_unit }}</div>
 							</td>
 						</tr>
 						<tr>
@@ -62,8 +62,8 @@
 							<td>
 								<div>:</div>
 							</td>
-							<td colspan="2">
-								<div>{{ $data->unit_kompetensi }}</div>
+							<td colspan="3">
+								<div>{{ $item->unit_kompetensi }}</div>
 							</td>
 						</tr>
 						@php $a++; @endphp
@@ -99,11 +99,39 @@
 						<div>5</div>
 					</td>
 				</tr>
+				@php $a = 1; @endphp
+				@foreach($data as $mapa02)
 				<tr>
-					@foreach($data as $item)
- 						{{ $item['potensi_asesi_1'] }}
-					@endforeach
+					<td>{{ $a }}</td>
+					<td>{{ $mapa02->muk }}</td>
+					<td>
+						@if ($mapa02->potensi_asesi_1 == 1)
+							<input type="checkbox" checked aria-label="Checkbox for following text input">
+						@endif
+					</td>
+					<td>
+						@if ($mapa02->potensi_asesi_2 == 1)
+							<input type="checkbox" checked aria-label="Checkbox for following text input">
+						@endif
+					</td>
+					<td>
+						@if ($mapa02->potensi_asesi_3 == 1)
+							<input type="checkbox" checked aria-label="Checkbox for following text input">
+						@endif
+					</td>
+					<td>
+						@if ($mapa02->potensi_asesi_4 == 1)
+							<input type="checkbox" checked aria-label="Checkbox for following text input">
+						@endif
+					</td>
+					<td>
+						@if ($mapa02->potensi_asesi_5 == 1)
+							<input type="checkbox" checked aria-label="Checkbox for following text input">
+						@endif
+					</td>
 				</tr>
+				@php $a++; @endphp
+				@endforeach
 		</table>
 			<p>*) diisi berdasarkan hasil penentuan pendekatan asesmen dan perencanaan asesmen</p>
 		</div>
