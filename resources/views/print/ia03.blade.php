@@ -1,5 +1,15 @@
 <div class="container">
   <h6>FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI</h6>
+  @php
+  $collection = collect($asesor);
+  @endphp
+  {{ $collection }}
+  {{-- {{ $skemaSerifikasi }}
+  {{ $skemaUnit}} --}}
+  {{ $asesor }}
+  {{-- @foreach ($collection as $key => $item)
+  {{ $collection[$key] }}
+  @endforeach --}}
 </div>
 <div class="container">
   <div class="row">
@@ -9,6 +19,7 @@
           <td class="bg-dark" colspan="3"></td>
         </tr>
         <tr>
+
           <td>Skema Sertifikasi</td>
           <td>:</td>
           <td>SKEMA KKNI KUALIFIKASI II KOMPETENSI KEAHLIAN OTOMATISASI TATA KELOLA PERKANTORAN : 5.7.5 MEMBANTU
@@ -60,10 +71,10 @@
           <td class="bg-dark text-white" colspan="3"></td>
         </tr>
         <tr>
-          <td class="align-middle" rowspan="2">
+          <td class="justify-content-center" rowspan="2">
             Uji Kompetensi
           </td>
-          <td class="align-middle">Kode Unit</td>
+          <td class="justify-content-center">Kode Unit</td>
           <td>
             <ul>
               <li>N.821.100.002.02 -</li>
@@ -73,10 +84,10 @@
           </td>
         </tr>
         <tr>
-          {{-- <td>
-            Uji Kompetensi
-          </td> --}}
-          <td class="align-middle">Judul Unit</td>
+          <td>
+            {{-- Uji Kompetensi --}}
+          </td>
+          <td class="justify-content-center">Judul Unit</td>
           <td>
             <ul>
               <li>Mengatur Penggandaan dan Pengumpulan Dokumen</li>
@@ -99,9 +110,9 @@
         @foreach ($collection as $key => $val)
         <tr>
           <td class="text-center px-2">{{$key+1}}</td>
-          <td class="align-middle px-2">{{ $collection[$key]['id_perangkat_ia_03']}}</td>
-          <td class="align-middle px-2">{{ $collection[$key]['tanggapan']}}</td>
-          <td class="align-middle px-2">{{ $collection[$key]['rekomendasi']}}</td>
+          <td class="justify-content-center px-2">{{ $collection[$key]['pertanyaan']}}</td>
+          <td class="justify-content-center px-2">{{ $collection[$key]['tanggapan']}}</td>
+          <td class="justify-content-center px-2">{{ $collection[$key]['rekomendasi']}}</td>
         </tr>
         @endforeach
       </table>
