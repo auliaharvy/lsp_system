@@ -1,5 +1,9 @@
 <div class="container">
   <h6>FR.IA.06 PERTANYAAN TERTULIS ESAI</h6>
+  @php
+  $collection = collect( $data['detail']);
+  @endphp
+  {{ $collection }}
 </div>
 <div class="container">
   <div class="row">

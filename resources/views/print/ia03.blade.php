@@ -86,47 +86,52 @@
           </td>
         </tr>
       </table>
-      <table class="col-md-12 table-bordered table-striped">
+      <table class="col-md-12 table-bordered">
         <tr>
           <td class="bg-dark text-white text-center px-2">No.</td>
           <td class="bg-dark text-white text-center px-2">Pertanyaan</td>
           <td class="bg-dark text-white text-center px-2">Tanggapan</td>
           <td class="bg-dark text-white text-center px-2">Rekomendasi</td>
         </tr>
+        @php
+        $collection = collect( $data['detail'] );
+        @endphp
+        @foreach ($collection as $key => $val)
         <tr>
-          <td class="text-center px-2">1.</td>
-          <td class="align-middle px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS</td>
-          <td class="align-middle px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
-            mempermudah
-            akuntan perusahaan dalam pencatatan
-            keuangan dalam perusahaan</td>
-          <td class="align-middle text-center px-2">Kompeten</td>
+          <td class="text-center px-2">{{$key+1}}</td>
+          <td class="align-middle px-2">{{ $collection[$key]['id_perangkat_ia_03']}}</td>
+          <td class="align-middle px-2">{{ $collection[$key]['tanggapan']}}</td>
+          <td class="align-middle px-2">{{ $collection[$key]['rekomendasi']}}</td>
         </tr>
-        <tr>
-          <td class="text-center px-2">2.</td>
-          <td class="align-middle px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS</td>
-          <td class="align-middle px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
-            mempermudah
-            akuntan perusahaan dalam pencatatan
-            keuangan dalam perusahaan</td>
-          <td class="align-middle text-center px-2">Kompeten</td>
-        </tr>
+        @endforeach
       </table>
     </div>
     <div class="col-12 mt-3">
       Rekomendasi Asesor :
-      <div class="formradio d-inline p-3">
-        <input type="radio" id=radiokompeten>
+      @if ($data['ia_03']['rekomendasi_asesor'] == 'kompeten')
+      <div class="formradio d-inline">
+        <input type="radio" id=radiokompeten checked>
         <label for="radiokompeten">Kompeten</label>
       </div>
-      <div class="formradio d-inline p-3">
+      <div class="formradio d-inline">
         <input type="radio" id=radiobelumkompeten>
         <label for="radiobelumkompeten">Belum Kompeten</label>
       </div>
+      @else
+      <div class="formradio d-inline">
+        <input type="radio" id=radiokompeten>
+        <label for="radiokompeten">Kompeten</label>
+      </div>
+      <div class="formradio d-inline">
+        <input type="radio" id=radiobelumkompeten checked>
+        <label for="radiobelumkompeten">Belum Kompeten</label>
+      </div>
+      @endif
     </div>
     <div class="col-12 mt-3">
       <label for="textareakompeten" class="align-top d-inline">Umpan Balik untuk Asesi : </label>
-      <textarea id=textareakompeten class="form-control" cols="80" rows="5"></textarea>
+      <textarea id=textareakompeten class="form-control" cols="80"
+        rows="5">{{ $data['ia_03']['umpan_balik']}}</textarea>
     </div>
   </div>
 </div>

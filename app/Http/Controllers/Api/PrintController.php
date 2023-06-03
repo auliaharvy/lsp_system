@@ -73,32 +73,32 @@ class PrintController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response|ResourceCollection
      */
-    public function index(Request $request)
-    {
-        $searchParams = $request->all();
-        // $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        // $keyword = Arr::get($searchParams, 'keyword', '');
-        // $visibility = Arr::get($searchParams, 'visibility', 0);
-        // $user_id = Arr::get($searchParams, 'user_id', '');
-        // $role = Arr::get($searchParams, 'role', '');
-        // $foundUser = User::where('id',$user_id)->first();
-        $idJadwal = Arr::get($searchParams, 'idJadwal', '');
+    // public function index(Request $request)
+    // {
+    //     $searchParams = $request->all();
+    //     // $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+    //     // $keyword = Arr::get($searchParams, 'keyword', '');
+    //     // $visibility = Arr::get($searchParams, 'visibility', 0);
+    //     // $user_id = Arr::get($searchParams, 'user_id', '');
+    //     // $role = Arr::get($searchParams, 'role', '');
+    //     // $foundUser = User::where('id',$user_id)->first();
+    //     $idJadwal = Arr::get($searchParams, 'idJadwal', '');
         
-        $query = Jadwal::where('trx_jadwal_asesmen.id',$idJadwal)
-        ->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema')
-        ->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk')
-        ->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
-        ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor', 'f.no_reg')->first();
+    //     $query = Jadwal::where('trx_jadwal_asesmen.id',$idJadwal)
+    //     ->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema')
+    //     ->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk')
+    //     ->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
+    //     ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor', 'f.no_reg')->first();
 
-        $queryApl01 = UjiKompApl1::where('id_jadwal',$idJadwal)->get();
+    //     $queryApl01 = UjiKompApl1::where('id_jadwal',$idJadwal)->get();
         
-        // $query->first();
-        // return response()->json(['jadwal' => $query, 'uji' => $queryApl01]);
+    //     // $query->first();
+    //     // return response()->json(['jadwal' => $query, 'uji' => $queryApl01]);
 
-        $pdf = PDF::loadview('print/surat-tugas',['jadwal' => $query, 'uji' => $queryApl01]);
-        $pdf->setPaper('A4' , 'portrait');
-	    return $pdf->download('example.pdf');
-    }
+    //     $pdf = PDF::loadview('print/surat-tugas',['jadwal' => $query, 'uji' => $queryApl01]);
+    //     $pdf->setPaper('A4' , 'portrait');
+	//     return $pdf->download('example.pdf');
+    // }
 
     public function printMaster(Request $request){
 
@@ -119,6 +119,9 @@ class PrintController extends BaseController
         $idak04 = Arr::get($searchParams, 'idak04', '');
         // $idia01 = Arr::get($searchParams, 'idak01', '');
         // $idia02 = Arr::get($searchParams, 'idak02', '');
+        $idia03 = Arr::get($searchParams, 'idia03', '');
+        $idia05 = Arr::get($searchParams, 'idia05', '');
+        $idia06 = Arr::get($searchParams, 'idia06', '');
 
         $valueapl01 = Arr::get($searchParams, 'valueapl01', '');
         // $valueapl02 = Arr::get($searchParams, 'valueapl02', '');
@@ -127,6 +130,9 @@ class PrintController extends BaseController
         $valueak04 = Arr::get($searchParams, 'valueak04', '');
         // $valueia01 = Arr::get($searchParams, 'valueia01', '');
         // $valueia02 = Arr::get($searchParams, 'valueia02', '');
+        $valueia03 = Arr::get($searchParams, 'valueia03', '');
+        $valueia05 = Arr::get($searchParams, 'valueia05', '');
+        $valueia06 = Arr::get($searchParams, 'valueia06', '');
 
         $dataapl01 = '';
         // $dataapl02 = null;
@@ -138,7 +144,7 @@ class PrintController extends BaseController
 
         $datamodule = collect([]);
 
-        if($valueapl01 == true){
+        if ($valueapl01) {
             $dataapl01 = $ujiKompController->showApl01($idapl01);
             $datamodule->push(['nama' => 'apl01', 'data' => $dataapl01]);
         }
@@ -157,10 +163,10 @@ class PrintController extends BaseController
         //     $dataak01 = $ak01->showAk01($idak01);
         // }
 
-        if($valueak04 == true){
-            $dataak04 = $ujiKompController->showAk04($idak04);
-            $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
-        }
+        // if ($valueak04) {
+        //     $dataak04 = $ujiKompController->showAk04($idak04);
+        //     $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
+        // }
 
         // if ($valueia01){
         //     $ia01 = App::make(UjiKompController::class);
@@ -172,11 +178,25 @@ class PrintController extends BaseController
         //     $dataia02 = $ia02->showIa02($idia02);
         // }
 
+        // if ($valueia03){
+        //     $dataia03 = $ujiKompController->showIa03($idia03);
+        //     $datamodule->push(['nama' => 'ia03', 'data' => $dataia03]);
+        // }
+        // if ($valueia05){
+        //     $dataia03 = $ujiKompController->showIa03($idia03);
+        //     $datamodule->push(['nama' => 'ia03', 'data' => $dataia03]);
+        // }
+
+        if ($valueia06){
+            $dataia06 = $ujiKompController->showIa06($idia06);
+            $datamodule->push(['nama' => 'ia06', 'data' => $dataia06]);
+        }
+
         // $queryia03 = UjiKompIa03::where('trx_uji_komp_ia_03.id',$searchParams['id_ia_03'])
         // ->join('trx_jadwal_asesmen as b', 'b.id', '=', 'trx_uji_komp_ia_03.id_jadwal')
         // ->join('mst_skema_sertifikasi as c', 'c.id', '=', 'b.id_skema');
 
-        // return view('print.masterprint', ['valueak04' => $valueak04, 'valueapl01' => $valueapl01]);
+        // return view('print.masterprint', ['datamodule' => $datamodule]);
 
         $pdf = PDF::loadview('print.masterprint', ['datamodule' => $datamodule]);
         $pdf->setPaper('A4','portrait');

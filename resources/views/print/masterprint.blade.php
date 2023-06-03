@@ -11,12 +11,9 @@
 
 <body>
   @foreach ($datamodule as $module)
-    {{ $module['nama'] }}
-    {{ $module['data'] }}
-    <!-- @if ($module['data'] != null)
-      @include('print.' . $module['nama'], ['data' => $module['data']])
-    @endif -->
+  @include('print.' . $module['nama'], ['data' => $module['data']])
   @endforeach
+  {{-- {{ $datamodule }} --}}
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 
