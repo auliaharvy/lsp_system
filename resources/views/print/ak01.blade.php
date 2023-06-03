@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-10">
 	<h6>FR.AK.01. PERSETUJUAN ASESMEN DAN KERAHASIAAN</h6>
 </div>
 <div class="container">

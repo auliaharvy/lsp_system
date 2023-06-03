@@ -91,7 +91,7 @@
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
           </router-link>
           <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
-          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id)">Print</el-button>
+          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor)">Print</el-button>
           <el-dialog
             title="Tips"
             :visible.sync="dialogVisible"
@@ -340,6 +340,7 @@ export default {
         { color: '#6f7ad3', percentage: 100 },
       ],
       iduji: '',
+      asesor: '',
       dataUjiKomp: [
         { index: 1, name: 'APL 01', nameInDatabase: 'id_apl_01', idujikom: null, value: false },
         { index: 2, name: 'APL 02', nameInDatabase: 'id_apl_02', idujikom: null, value: false },
@@ -385,9 +386,10 @@ export default {
     this.getListSkema();
   },
   methods: {
-    async showDialogPrint(id){
+    async showDialogPrint(id, asesor){
       const data = await preview.get(id);
       this.iduji = data.id;
+      this.asesor = asesor;
       const skema = await skemaunit.list({ id_skema: data.id_skema });
       console.log(skema);
       this.dialogVisible = true;
@@ -449,6 +451,7 @@ export default {
       // console.log(result);
       const data = {
         iduji: this.iduji,
+        asesor: this.asesor,
         idapl01: this.dataUjiKomp[0].idujikom,
         idapl02: this.dataUjiKomp[1].idujikom,
         idmapa02: this.dataUjiKomp[2].idujikom,

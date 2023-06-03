@@ -504,6 +504,33 @@ class UjiKompController extends BaseController
         return $data;
     }
 
+    public function showMapa02($id)
+    {   
+        // $queryMapa02 = UjiKompMapa02::where('trx_uji_komp_mapa_02.id',$id)->get();
+        // $queryPerangkatMapa02 = MstFrMapa02::where('mst_perangkat_mapa_02.id',$queryMapa02->id_mst_mapa_02)->get();
+       
+        // $data = [
+        //     'detail' => $queryMapa02,
+        //     'perangkat' => $queryPerangkatMapa02,
+        // ];
+
+        // return $data;
+
+        $queryMapa02 = UjiKompMapa02::query();
+        $queryMapa02->join('mst_perangkat_mapa_02','mst_perangkat_mapa_02.id','=','trx_uji_komp_mapa_02.id_mst_mapa_02');
+        $queryMapa02->where('trx_uji_komp_mapa_02.id_uji_komp',$id)
+        ->select('trx_uji_komp_mapa_02.*', 'mst_perangkat_mapa_02.*');
+
+        // $query = MstFrIa02::query();
+        // $query->where('mst_perangkat_ia_02.id_skema', $id_skema)
+        // ->select('mst_perangkat_ia_02.*');
+
+
+        return MasterResource::collection($queryMapa02->paginate(static::ITEM_PER_PAGE));
+        // return $queryMapa02;
+    }
+
+
     public function showAk02($id)
     {
         $queryAk02 = UjiKompAk02::where('trx_uji_komp_ak_02.id',$id)->first();
@@ -668,13 +695,13 @@ class UjiKompController extends BaseController
 
     public function showVa($id)
     {
-        $queryIa07 = UjiKompIa07::where('trx_uji_komp_ia_07.id',$id)->first();
-        $queryDetailIa07 = UjiKompIa07Detail::where('trx_uji_komp_ia_07_detail.id_ia_07',$id)->get();
+        // $queryIa07 = UjiKompIa07::where('trx_uji_komp_ia_07.id',$id)->first();
+        // $queryDetailIa07 = UjiKompIa07Detail::where('trx_uji_komp_ia_07_detail.id_ia_07',$id)->get();
        
-        $data = [
-            'ia_07' => $queryIa07,
-            'detail' => $queryDetailIa07,
-        ];
+        // $data = [
+        //     'ia_07' => $queryIa07,
+        //     'detail' => $queryDetailIa07,
+        // ];
         // return $data;
 
         $dataVa = DB::table('trx_uji_komp_va as a')

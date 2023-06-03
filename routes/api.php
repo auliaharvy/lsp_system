@@ -74,6 +74,7 @@ Route::namespace('Api')->group(function() {
     Route::get('detail/ak-03/{id}', 'UjiKompController@showAk03');
     Route::get('detail/ak-04/{id}', 'UjiKompController@showAk04');
     Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
+    Route::get('detail/va/{id}', 'UjiKompController@showVa');
     Route::get('ak-06/{id}', 'UjiKompController@showAk06');
     Route::get('trx-mapa-02/{id}', 'UjiKompController@showMapa02');
 

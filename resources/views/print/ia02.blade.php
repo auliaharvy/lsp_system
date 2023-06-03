@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-10">
 	<h6>FR.IA.02. TUGAS PRAKTIK DEMONSTRASI</h6>
 </div>
 <div class="container">

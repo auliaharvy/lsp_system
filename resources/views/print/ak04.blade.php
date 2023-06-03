@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-10">
 	<h6>FR.AK.04. BANDING ASESMEN</h6>
 </div>
 <div class="container">
@@ -22,7 +22,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td colspan="5">
 						<div>Jawablah dengan Ya atau Tidak pertanyaan-pertanyaan berikut ini</div>
 					</td>
 					<td>

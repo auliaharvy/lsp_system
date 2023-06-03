@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-10">
 	<h6>FR.IA.01. CEKLIS OBSERVASI AKTIVITAS DI TEMPAT KERJA ATAU TEMPAT KERJA SIMULASI</h6>
 </div>
 <div class="container">
@@ -102,7 +102,7 @@
 					<td class="bg-dark" colspan="6"></td>
 				</tr>
 				@php $a = 1; @endphp
-				@foreach($skemaunit as $data)
+				@foreach($skemaUnit as $data)
 				<tr>
 					<td rowspan="2">
 						<div>Unit Kompetensi {{ $a }}</div>

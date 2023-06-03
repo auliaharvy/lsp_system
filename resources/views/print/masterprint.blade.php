@@ -11,7 +11,6 @@
 
 <body>
   @foreach ($datamodule as $module)
-  @if ($module['data'] != null)
   @include('print.' . $module['nama'],
   [
   'data' => $module['data'],
@@ -20,7 +19,6 @@
   'asesor' => $asesor
   ])
   <br />
-  @endif
   @endforeach
   {{-- {{ $datamodule }} --}}
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
