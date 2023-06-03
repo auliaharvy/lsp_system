@@ -108,77 +108,78 @@ class PrintController extends BaseController
         $skemaController = App::make(SkemaController::class);
 
         $iduji = Arr::get($searchParams, 'iduji', '');
+        $asesor = Arr::get($searchParams, 'asesor', '');
 
-        // $dataUjiKomp = $ujiKompController->showPreview($iduji);
-        // $dataSkemaUnit = $skemaController->indexUnit(['id_skema' => $dataUjiKomp->id_skema]);
+        $dataUjiKomp = $ujiKompController->showPreview($iduji);
+        $dataSkemaSertifikasi = $ujiKompController->index(new Request(['idujikomp' => $dataUjiKomp->id]));
+        $dataSkemaUnit = $skemaController->indexUnit(new Request(['id_skema' => $dataUjiKomp->id_skema]));
 
         $idapl01 = Arr::get($searchParams, 'idapl01', '');
-        // $idapl02 = Arr::get($searchParams, 'idapl02', '');
-        // $idmapa02 = Arr::get($searchParams, 'idmapa02', '');
-        // $idak01 = Arr::get($searchParams, 'idak01', '');
+        $idapl02 = Arr::get($searchParams, 'idapl02', '');
+        $idmapa02 = Arr::get($searchParams, 'idmapa02', '');
+        $idak01 = Arr::get($searchParams, 'idak01', '');
         $idak04 = Arr::get($searchParams, 'idak04', '');
-        // $idia01 = Arr::get($searchParams, 'idak01', '');
-        // $idia02 = Arr::get($searchParams, 'idak02', '');
+        $idia01 = Arr::get($searchParams, 'idak01', '');
+        $idia02 = Arr::get($searchParams, 'idia02', '');
 
         $valueapl01 = Arr::get($searchParams, 'valueapl01', '');
-        // $valueapl02 = Arr::get($searchParams, 'valueapl02', '');
-        // $valuemapa02 = Arr::get($searchParams, 'valuemapa02', '');
-        // $valueak01 = Arr::get($searchParams, 'valueak01', '');
+        $valueapl02 = Arr::get($searchParams, 'valueapl02', '');
+        $valuemapa02 = Arr::get($searchParams, 'valuemapa02', '');
+        $valueak01 = Arr::get($searchParams, 'valueak01', '');
         $valueak04 = Arr::get($searchParams, 'valueak04', '');
-        // $valueia01 = Arr::get($searchParams, 'valueia01', '');
-        // $valueia02 = Arr::get($searchParams, 'valueia02', '');
-
-        $dataapl01 = '';
-        // $dataapl02 = null;
-        // $datamapa02 = null;
-        // $dataak01 = null;
-        $dataak04 = '';
-        // $dataia01 = null;
-        // $dataia02 = null;
+        $valueia01 = Arr::get($searchParams, 'valueia01', '');
+        $valueia02 = Arr::get($searchParams, 'valueia02', '');
 
         $datamodule = collect([]);
 
-        if($valueapl01 == true){
+        if($valueapl01){
             $dataapl01 = $ujiKompController->showApl01($idapl01);
             $datamodule->push(['nama' => 'apl01', 'data' => $dataapl01]);
         }
 
-        // if ($valueapl02){
-        //     $dataapl02 = $apl02->showApl02($idapl02);
-        // }
+        if ($valueapl02){
+            $dataapl02 = $ujiKompController->showApl02($idapl02);
+            $datamodule->push(['nama' => 'apl02', 'data' => $dataapl02]);
+        }
 
-        // if ($valuemapa02){
-        //     $mapa02 = App::make(UjiKompController::class);
-        //     $datamapa02 = $mapa02->showMapa02($idmapa02);
-        // }
+        if ($valuemapa02){
+            $datamapa02 = $ujiKompController->showMapa02($iduji);
+            $datamodule->push(['nama' => 'mapa02', 'data' => $datamapa02]);
+        }
 
-        // if ($valueak01){
-        //     $ak01 = App::make(UjiKompController::class);
-        //     $dataak01 = $ak01->showAk01($idak01);
-        // }
+        if ($valueak01){
+            $dataak01 = $ujiKompController->showAk01($idak01);
+            $datamodule->push(['nama' => 'ak01', 'data' => $dataak01]);
+        }
 
-        if($valueak04 == true){
+        if($valueak04){
             $dataak04 = $ujiKompController->showAk04($idak04);
             $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
         }
 
-        // if ($valueia01){
-        //     $ia01 = App::make(UjiKompController::class);
-        //     $dataia01 = $ia01->showIa01($idia01);
-        // }
+        if ($valueia01){
+            $dataia01 = $ujiKompController->showIa01($idia01);
+            $datamodule->push(['nama' => 'ia01', 'data' => $dataia01]);
+        }
 
-        // if ($valueia02){
-        //     $ia02 = App::make(UjiKompController::class);
-        //     $dataia02 = $ia02->showIa02($idia02);
-        // }
+        if ($valueia02){
+            $dataia02 = $ujiKompController->showIa02($idia02);
+            $datamodule->push(['nama' => 'ia02', 'data' => $dataia02]);
+        }
 
         // $queryia03 = UjiKompIa03::where('trx_uji_komp_ia_03.id',$searchParams['id_ia_03'])
         // ->join('trx_jadwal_asesmen as b', 'b.id', '=', 'trx_uji_komp_ia_03.id_jadwal')
         // ->join('mst_skema_sertifikasi as c', 'c.id', '=', 'b.id_skema');
 
+        // return ['datamodule' => $datamodule, 'iduji' => $iduji];
         // return view('print.masterprint', ['valueak04' => $valueak04, 'valueapl01' => $valueapl01]);
 
-        $pdf = PDF::loadview('print.masterprint', ['datamodule' => $datamodule]);
+        $pdf = PDF::loadview('print.masterprint', [
+            'datamodule' => $datamodule, 
+            'skemaunit' => $dataSkemaUnit, 
+            'skemasertifikasi' => $dataSkemaSertifikasi[0], 
+            'asesor' => $asesor,
+        ]);
         $pdf->setPaper('A4','portrait');
         return $pdf->download('module.pdf');
         // return $pdf->stream();   

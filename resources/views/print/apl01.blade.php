@@ -95,12 +95,12 @@
 					<td rowspan="2">Skema Sertifikasi (KKNI/Okupasi/Klaster)</td>
 					<td>Judul</td>
 					<td>:</td>
-					<td>Judul</td>
+					<td>{{ $skemaSertifikasi->skema_sertifikasi }}</td>
 				</tr>
 				<tr>
 					<td>Nomor</td>
 					<td>:</td>
-					<td>Nomor</td>
+					<td>{{ $skemaSertifikasi->kode_skema }}</td>
 				</tr>
 				<tr>
 					<td colspan="2">Tujuan Asesmen</td>
@@ -124,12 +124,16 @@
 					<td class="bg-dark text-white text-center">Judul Unit</td>
 					<td class="bg-dark text-white text-center">Jenis Standar (Standar Khusus/Standar Internasional/SKKNI)</td>
 				</tr>
-				<tr>
-					<td>No unit</td>
-					<td>Kode unit</td>
-					<td>Unit kompetensi</td>
-					<td>SSKNI</td>
-				</tr>
+				@php $a = 1; @endphp
+				@foreach ($skemaUnit as $data)
+					<tr>
+						<td>{{ $a }}</td>
+						<td>{{ $data->kode_unit }}</td>
+						<td>{{ $data->unit_kompetensi }}</td>
+						<td>SSKNI</td>
+					</tr>
+					@php $a++; @endphp
+				@endforeach
 			</table>
 			<h6>Bagian 3 : Bukti Kelengkapan Pemohon</h6>
 			<p>Bukti Persyaratan Dasar Pemohon</p>

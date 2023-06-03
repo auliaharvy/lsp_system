@@ -11,11 +11,16 @@
 
 <body>
   @foreach ($datamodule as $module)
-    {{ $module['nama'] }}
-    {{ $module['data'] }}
-    <!-- @if ($module['data'] != null)
-      @include('print.' . $module['nama'], ['data' => $module['data']])
-    @endif -->
+    @if ($module['data'] != null)
+      @include('print.' . $module['nama'], 
+      [
+        'data' => $module['data'], 
+        'skemaUnit' => $skemaunit, 
+        'skemaSertifikasi' => $skemasertifikasi, 
+        'asesor' => $asesor
+      ])
+      <br/>
+    @endif
   @endforeach
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>

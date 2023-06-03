@@ -6,7 +6,7 @@
 		<div class="col-12">
 			<table class="table table-bordered">
 				<tr>
-					<td class="bg-dark" colspan="3"></td>
+					<td class="bg-dark" colspan="5"></td>
 				</tr>
 				<tr>
 					<td rowspan="2">
@@ -19,7 +19,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div>Skema Kluster Pra produksi pada Kompetensi Keahlian Animasi</div>
+						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -30,7 +30,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div>SKM/BNSP/00010/1/2020/37A</div>
+						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -41,7 +41,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div>Sewaktu/Tempat Kerja/Mandiri*</div>
+						<div>{{ $skemaSertifikasi->nama_tuk }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -52,7 +52,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div></div>
+						<div>{{ $skemaSertifikasi->nama_asesor }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -63,7 +63,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div></div>
+						<div>{{ $skemaSertifikasi->nama_lengkap }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -74,7 +74,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div></div>
+						<div>{{ $skemaSertifikasi->mulai }}</div>
 					</td>
 				</tr>
 			</table>

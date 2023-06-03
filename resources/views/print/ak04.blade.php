@@ -93,15 +93,17 @@
 				</tr>
 				<tr>
 					<td colspan="3">
-						<div>Banding ini diajukan atas Keputusan Asesmen yang dibuat terhadap Skema Sertifikasi (Kualifikasi/Klaster/Okupasi) berikut</div>
-						<div><span>Skema Sertifikasi</span><span> : </span>SKEMA OTKP<span></span></div>
-						<div><span>No. Skema Sertifikasi</span><span> : </span><span>0892134234</span></div>
+						<div class="mb-2">Banding ini diajukan atas Keputusan Asesmen yang dibuat terhadap Skema Sertifikasi (Kualifikasi/Klaster/Okupasi) berikut</div>
+						<div><strong>Skema Sertifikasi : </strong></div>
+						<div class="mb-2">{{ $data->skema }}</div>
+						<div><strong>No. Skema Sertifikasi</strong></div>
+						<div>{{ $data->no_skema}}</div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">
 						<div>Banding ini diajukan atas alasan sebagai berikut : </div>
-						<div>Dengan Alasan</div>
+						<div>{{ $data->alasan_banding }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -112,7 +114,7 @@
 				<tr>
 					<td colspan="3">
 						<div><span>Tanda Tangan Asesi : </span><span>Tanggal : </span></div>
-						<div><span>Letakan foto disini</span><span>Masukan tanggal disini</span></div>
+						<div><span>Letakan foto disini</span><span>{{ $data->tanggal_asesmen }}</span></div>
 					</td>
 				</tr>
 			</table>

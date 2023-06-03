@@ -92,6 +92,7 @@ class UjiKompController extends BaseController
         $foundUser = User::where('id',$user_id)->first();
         $visibility = Arr::get($searchParams, 'visibility', 0);
         $skema = Arr::get($searchParams, 'id_skema', '');
+        $idujikomp = Arr::get($searchParams, 'idujikomp', '');
 
         $query = UjiKomp::query();
         $query->join('trx_uji_komp_apl_01 as b', 'b.id', '=', 'trx_uji_komp.id_apl_01');
@@ -100,7 +101,7 @@ class UjiKompController extends BaseController
         $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk');
         $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
         ->orderBy('c.created_at', 'desc')
-        ->select('trx_uji_komp.*', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
+        ->select('trx_uji_komp.*', 'b.nama_lengkap', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
         'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor');
 
         if ($visibility === 0) {
@@ -119,6 +120,10 @@ class UjiKompController extends BaseController
         }
         if (!empty($skema)) {
             $query->where('b.id_skema', $skema);
+        }
+
+        if (!empty($idujikomp)) {
+            $query->where('trx_uji_komp.id', $idujikomp);
         }
 
         if (!empty($keyword)) {
@@ -504,6 +509,33 @@ class UjiKompController extends BaseController
         return $data;
     }
 
+    public function showMapa02($id)
+    {   
+        // $queryMapa02 = UjiKompMapa02::where('trx_uji_komp_mapa_02.id',$id)->get();
+        // $queryPerangkatMapa02 = MstFrMapa02::where('mst_perangkat_mapa_02.id',$queryMapa02->id_mst_mapa_02)->get();
+       
+        // $data = [
+        //     'detail' => $queryMapa02,
+        //     'perangkat' => $queryPerangkatMapa02,
+        // ];
+
+        // return $data;
+
+        $queryMapa02 = UjiKompMapa02::query();
+        $queryMapa02->join('mst_perangkat_mapa_02','mst_perangkat_mapa_02.id','=','trx_uji_komp_mapa_02.id_mst_mapa_02');
+        $queryMapa02->where('trx_uji_komp_mapa_02.id_uji_komp',$id)
+        ->select('trx_uji_komp_mapa_02.*', 'mst_perangkat_mapa_02.*');
+
+        // $query = MstFrIa02::query();
+        // $query->where('mst_perangkat_ia_02.id_skema', $id_skema)
+        // ->select('mst_perangkat_ia_02.*');
+
+
+        return MasterResource::collection($queryMapa02->paginate(static::ITEM_PER_PAGE));
+        // return $queryMapa02;
+    }
+
+
     public function showAk02($id)
     {
         $queryAk02 = UjiKompAk02::where('trx_uji_komp_ak_02.id',$id)->first();
@@ -834,13 +866,6 @@ class UjiKompController extends BaseController
         return MasterResource::collection($query->paginate($limit));
     }
 
-    public function showMapa02($id)
-    {   
-        $queryMapa02 = UjiKompMapa02::query();
-        $queryMapa02->join('mst_perangkat_mapa_02','mst_perangkat_mapa_02.id','=','trx_uji_komp_mapa_02.id_mst_mapa_02');
-        $queryMapa02->where('trx_uji_komp_mapa_02.id_uji_komp',$id);
-        return MasterResource::collection($queryMapa02->get());
-    }
     /**
      * Store a newly created resource in storage.
      *
