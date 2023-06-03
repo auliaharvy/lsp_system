@@ -24,7 +24,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div>Skema Kluster Pra produksi pada Kompetensi Keahlian Animasi</div>
+						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -35,7 +35,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div>SKM/BNSP/00010/1/2020/37A5</div>
+						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -46,7 +46,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div>Sewaktu/Tempat Kerja/Mandiri*</div>
+						<div>{{ $data->tuk }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -57,7 +57,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div></div>
+						<div>{{ $data->nama_asesor }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -68,31 +68,34 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div></div>
+						<div>{{ $data->nama_asesi }}</div>
 					</td>
 				</tr>
 				<tr>
-					<td rowspan="2" colspan="2">
+					<td colspan="2">
 						<div>Bukti yang akan dikumpulkan</div>
 					</td>
 					<td>
 						<div>:<div>
 					</td>
-					<td>
-						<div>TL : Verifikasi Portofolio  </div>
-					</td>
-					<td>
-						<div>L : Observasi Langsung</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>:<div>
-					</td>
 					<td colspan="2">
-						<div>T : Hasil Tes Tulis</div>
-						<div>T : Hasil Tes Lisan</div>
-						<div>T : Hasil Wawancara</div>
+						<div>
+							@if($data->verifikasi_portfolio == 1)
+								<span>Verifikasi portfolio, </span>
+							@endif
+							@if($data->observasi_langsung == 1)
+								<span>Obervasi langsung, </span>
+							@endif
+							@if($data->hasil_tes_tulis == 1)
+								<span>Hasil tes tulis, </span>
+							@endif
+							@if($data->hasil_tes_lisan == 1)
+								<span>Hasil tes lisan, </span>
+							@endif
+							@if($data->hasil_tes_wawancara == 1)
+								<span>Hasil tes wawancara, </span>
+							@endif
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -106,7 +109,7 @@
 						<div>Hari / Tanggal</div>
 					</td>
 					<td>
-						<div></div>
+						<div>{{ $data->hari }}, {{ $data->tanggal }} {{ $data->bulan }} {{ $data->tahun }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -117,7 +120,7 @@
 						<div>Waktu</div>
 					</td>
 					<td>
-						<div></div>
+						<div>{{ $skemaSertifikasi->mulai }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -128,25 +131,19 @@
 						<div>TUK</div>
 					</td>
 					<td>
-						<div></div>
+						<div>{{ $data->tuk }}</div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="5">
 						<div>Asesi: </div>
-						<div>Bahwa Saya Sudah Mendapatkan Penjelasan Hak dan Prosedur Banding Oleh Asesor.</div>
+						<div>{{ $data->pernyataan_asesi }}</div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="5">
 						<div>Asesor: </div>
-						<div>Menyatakan tidak akan membuka hasil pekerjaan yang saya peroleh karena penugasan saya sebagai Asesor dalam pekerjaan Asesmen kepada siapapun atau organisasi apapun selain kepada pihak yang berwenang sehubungan dengan kewajiban saya sebagai Asesor yang ditugaskan oleh LSP.</div>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="5">
-						<div>Asesi: </div>
-						<div>Saya setuju mengikuti asesmen dengan pemahaman bahwa informasi yang dikumpulkan hanya digunakan untuk pengembangan profesional dan hanya dapat diakses oleh orang tertentu saja.</div>
+						<div>{{ $data->pernyataan_asesor }}</div>
 					</td>
 				</tr>
 				<tr>

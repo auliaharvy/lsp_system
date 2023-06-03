@@ -19,7 +19,7 @@
 						<div>:</div>
 					</td>
 					<td>
-						<div><strong>Skema Kluster Pra produksi pada Kompetensi Keahlian Animasi</div>
+						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -29,7 +29,7 @@
 						<div>:</div>
 					</td>
 					<td>
-						<div><strong>SKM/BNSP/00010/1/2020/37A</strong></div>
+						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
 			</table>
@@ -99,10 +99,23 @@
 					<td>Tanda Tangan Asesi:</td>
 				</tr>
 				<tr>
+					<td>{{ $skemaSertifikasi->nama_peserta }}</td>
+					<td>{{ $skemaSertifikasi->mulai }}</td>
+					<td>Tanda Tangan Asesi</td>
+				</tr>
+				<tr>
 					<td class="bg-dark text-white text-center" colspan="3">Ditinjau oleh Asesor:</td>
 				</tr>
 				<tr>
 					<td>Nama Asesor:</td>
+					<td>
+						<div><strong>Rekomendasi:</strong></div>
+						<div>Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
+					</td>
+					<td>Tanda Tangan dan Tanggal:</td>
+				</tr>
+				<tr>
+					<td>{{ $skemaSertifikasi->nama_asesor }}</td>
 					<td>
 						<div><strong>Rekomendasi:</strong></div>
 						<div>Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>

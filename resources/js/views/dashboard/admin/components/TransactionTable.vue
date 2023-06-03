@@ -292,8 +292,9 @@ const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
 const jadwalResource = new Resource('jadwal-get');
 const print = new Resource('print-semua-module');
-// const print = new Resource('print-modules');
 const preview = new Resource('detail/preview');
+// const print = new Resource('print-modules');
+const skemaunit = new Resource('unit-kompetensi-get');
 const cityOptions = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen'];
 
 export default {
@@ -348,15 +349,15 @@ export default {
         { index: 6, name: 'IA 01', nameInDatabase: 'id_ia_01', idujikom: null, value: false },
         { index: 7, name: 'IA 02', nameInDatabase: 'id_ia_02', idujikom: null, value: false },
         { index: 8, name: 'IA 03', nameInDatabase: 'id_ia_03', idujikom: null, value: false },
-        { index: 9, name: 'IA 05', idujikom: null, value: false },
+        { index: 9, name: 'IA 05', nameInDatabase: 'id_ia_05', idujikom: null, value: false },
         { index: 10, name: 'IA 06', nameInDatabase: 'id_ia_06', idujikom: null, value: false },
-        { index: 11, name: 'IA 07', idujikom: null, value: false },
-        { index: 12, name: 'IA 11', idujikom: null, value: false },
-        { index: 13, name: 'AK 02', idujikom: null, value: false },
-        { index: 14, name: 'AK 03', idujikom: null, value: false },
-        { index: 15, name: 'AK 05', idujikom: null, value: false },
-        { index: 16, name: 'AK 06', idujikom: null, value: false },
-        { index: 17, name: 'VA', idujikom: null, value: false },
+        { index: 11, name: 'IA 07', nameInDatabase: 'id_ia_07', idujikom: null, value: false },
+        { index: 12, name: 'IA 11', nameInDatabase: 'id_ia_11', idujikom: null, value: false },
+        { index: 13, name: 'AK 02', nameInDatabase: 'id_ak_02', idujikom: null, value: false },
+        { index: 14, name: 'AK 03', nameInDatabase: 'id_ak_03', idujikom: null, value: false },
+        { index: 15, name: 'AK 05', nameInDatabase: 'id_ak_05', idujikom: null, value: false },
+        { index: 16, name: 'AK 06', nameInDatabase: 'id_ak_06', idujikom: null, value: false },
+        { index: 17, name: 'VA', nameInDatabase: 'id_va', idujikom: null, value: false },
       ],
       checkAll: false,
       checkedCities: ['Shanghai', 'Beijing'],
@@ -387,6 +388,8 @@ export default {
     async showDialogPrint(id){
       const data = await preview.get(id);
       this.iduji = data.id;
+      const skema = await skemaunit.list({ id_skema: data.id_skema });
+      console.log(skema);
       this.dialogVisible = true;
       let index = 0;
       for (const property in data){
@@ -394,6 +397,8 @@ export default {
           this.dataUjiKomp[index].idujikom = data[property];
           index++;
         }
+        // console.log(property);
+        console.log(this.dataUjiKomp);
       }
       console.log(this.dataUjiKomp);
       // if (!this.dialogVisible){

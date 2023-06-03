@@ -80,7 +80,7 @@ class SkemaController extends BaseController
         $query->where('mst_skema_sertifikasi_unit_kompetensi.id_skema', $id_skema)
         ->select('mst_skema_sertifikasi_unit_kompetensi.*');
 
-        return MasterResource::collection($query->paginate(100));
+        return MasterResource::collection($query->paginate($limit));
     }
 
     /**

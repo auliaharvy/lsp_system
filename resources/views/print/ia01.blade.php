@@ -19,7 +19,7 @@
 						<div>:</div>
 					</td>
 					<td colspan="2">
-						<div>Skema Kluster Pra produksi pada Kompetensi Keahlian Animasi</div>
+						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -30,7 +30,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div>SKM/BNSP/00010/1/2020/37A</div>
+						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -41,7 +41,7 @@
 						<div>:</div>
 					</td>
 					<td colspan="2">
-						<div>Sewaktu/Tempat Kerja/Mandiri*</div>
+						<div>{{ $skemaSertifikasi->nama_tuk }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -52,7 +52,7 @@
 						<div>:</div>
 					</td>
 					<td colspan="2">
-						<div></div>
+						<div>{{ $skemaSertifikasi->nama_asesor }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -63,7 +63,7 @@
 						<div>:</div>
 					</td>
 					<td colspan="2">
-						<div></div>
+						<div>{{ $skemaSertifikasi->nama_lengkap }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -74,7 +74,7 @@
 						<div>:</div>
 					</td>
 					<td colspan="2">
-						<div></div>
+						<div>{{ $skemaSertifikasi->mulai }}</div>
 					</td>
 				</tr>
 			</table>
@@ -99,31 +99,35 @@
 				<tr>
 					<td class="bg-dark" colspan="6"></td>
 				</tr>
-				<tr>
-					<td rowspan="2">
-						<div>Unit Kompetensi 1</div>
-					</td>
-					<td>
-						<div>Kode Unit</div>
-					</td>
-					<td>
-						<div>:</div>
-					</td>
-					<td colspan="2">
-						<div>MIS.SH.00.001.01</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>Judul Unit</div>
-					</td>
-					<td>
-						<div>:</div>
-					</td>
-					<td colspan="2">
-						<div>Mengikuti prosedur kesehatan, keselamatan dan keamanan keria</div>
-					</td>
-				</tr>
+				@php $a = 1; @endphp
+				@foreach($skema as $data)
+					<tr>
+						<td rowspan="2">
+							<div>Unit Kompetensi {{ $a }}</div>
+						</td>
+						<td>
+							<div>Kode Unit</div>
+						</td>
+						<td>
+							<div>:</div>
+						</td>
+						<td colspan="2">
+							<div>{{ $data->kode_unit }}</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div>Judul Unit</div>
+						</td>
+						<td>
+							<div>:</div>
+						</td>
+						<td colspan="2">
+							<div>{{ $data->unit_kompetensi }}</div>
+						</td>
+					</tr>
+					@php $a++; @endphp
+				@endforeach
 			</table>
 			<table class="table table-bordered">
 				<tr>

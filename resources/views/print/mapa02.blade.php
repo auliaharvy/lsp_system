@@ -19,7 +19,7 @@
 						<div>:</div>
 					</td>
 					<td colspan="2">
-						<div>Skema Kluster Pra produksi pada Kompetensi Keahlian Animasi</div>
+						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -30,7 +30,7 @@
 						<div>:<div>
 					</td>
 					<td colspan="2">
-						<div>SKM/BNSP/00010/1/2020/37A</div>
+						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
 			</table>
@@ -39,29 +39,35 @@
 					<td class="bg-dark" colspan="4"></td>
 				</tr>
 				<tr>
-					<td rowspan="2">
-						<div>Unit Kompetensi</div>
-					</td>
-					<td>
-						<div>Kode Unit</div>
-					</td>
-					<td>
-						<div>:</div>
-					</td>
-					<td colspan="2">
-						<div>MIS.SH.00.001.01</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>Judul Unit</div>
-					</td>
-					<td>
-						<div>:</div>
-					</td>
-					<td colspan="2">
-						<div>Mengikuti prosedur kesehatan, keselamatan dan keamanan keria</div>
-					</td>
+					@php $a = 1; @endphp
+					@foreach($skemaUnit as $data)
+						<tr>
+							<td rowspan="2">
+								<div>Unit Kompetensi {{ $a }}</div>
+							</td>
+							<td>
+								<div>Kode Unit</div>
+							</td>
+							<td>
+								<div>:</div>
+							</td>
+							<td colspan="2">
+								<div>{{ $data->kode_unit }}</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div>Judul Unit</div>
+							</td>
+							<td>
+								<div>:</div>
+							</td>
+							<td colspan="2">
+								<div>{{ $data->unit_kompetensi }}</div>
+							</td>
+						</tr>
+						@php $a++; @endphp
+					@endforeach
 				</tr>
 			</table>
 			<table class="table table-bordered">
@@ -94,259 +100,11 @@
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<div>1.</div>
-					</td>
-					<td>
-						<div>Ceklis Observasi Untuk Aktivitas di Tempat Kerja atau Tempat Kerja Simulasi</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
+					@foreach($data as $item)
+ 						{{ $item['potensi_asesi_1'] }}
+					@endforeach
 				</tr>
-				<tr>
-					<td>
-						<div>2.</div>
-					</td>
-					<td>
-						<div>Tugas Praktik Demonstrasi</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>3.</div>
-					</td>
-					<td>
-						<div>Pertanyaan untuk mendukung Observasi</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>4.</div>
-					</td>
-					<td>
-						<div>Penjelasan Singkat Proyek terkait Pekerjaan / Kegiatan Terstruktur lainnya</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>5. </div>
-					</td>
-					<td>
-						<div>Pertanyaan Tertulis - Pilihan Ganda</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>6. </div>
-					</td>
-					<td>
-						<div>Pertanyaan Tertulis - Esai</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>7. </div>
-					</td>
-					<td>
-						<div>Pertanyaan Lisan</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>8. </div>
-					</td>
-					<td>
-						<div>Ceklis Verifikasi Portofolio</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>9. </div>
-					</td>
-					<td>
-						<div>Pertanyaan Wawancara</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>10. </div>
-					</td>
-					<td>
-						<div>Klarifikasi Bukti Pihak Ketiga</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>11. </div>
-					</td>
-					<td>
-						<div>Ceklis Meninjau Materi Uji Kompetensi</div>
-					</td>
-					<td>
-						<div>1</div>
-					</td>
-					<td>
-						<div>2</div>
-					</td>
-					<td>
-						<div>3</div>
-					</td>
-					<td>
-						<div>4</div>
-					</td>
-					<td>
-						<div>5</div>
-					</td>
-				</tr>
-			</table>
+		</table>
 			<p>*) diisi berdasarkan hasil penentuan pendekatan asesmen dan perencanaan asesmen</p>
 		</div>
 	</div>
