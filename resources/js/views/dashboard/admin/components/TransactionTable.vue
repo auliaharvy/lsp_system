@@ -294,7 +294,7 @@ const jadwalResource = new Resource('jadwal-get');
 const print = new Resource('print-semua-module');
 const preview = new Resource('detail/preview');
 // const print = new Resource('print-modules');
-const skemaunit = new Resource('unit-kompetensi-get');
+// const skemaunit = new Resource('unit-kompetensi-get');
 const cityOptions = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen'];
 
 export default {
@@ -390,8 +390,8 @@ export default {
       const data = await preview.get(id);
       this.iduji = data.id;
       this.asesor = asesor;
-      const skema = await skemaunit.list({ id_skema: data.id_skema });
-      console.log(skema);
+      // const skema = await skemaunit.list({ id_skema: data.id_skema });
+      // console.log(skema);
       this.dialogVisible = true;
       let index = 0;
       for (const property in data){
@@ -399,7 +399,7 @@ export default {
           this.dataUjiKomp[index].idujikom = data[property];
           index++;
         }
-        // console.log(property);
+        console.log(property);
         console.log(this.dataUjiKomp);
       }
       console.log(this.dataUjiKomp);
@@ -419,11 +419,12 @@ export default {
     handleCheckAllChange(val) {
       // this.checkedCities = val ? cityOptions : [];
       this.checkedDataUjiKomp = val ? this.dataUjiKomp : [];
-      let index = 0;
+      // let index = 0;
       for (const data in this.dataUjiKomp){
-        this.dataUjiKomp[index].value = this.checkAll;
+        // this.dataUjiKomp[index].value = this.checkAll;
+        this.data.value = this.checkAll;
         console.log(data);
-        index++;
+        // index++;
       }
       this.isIndeterminate = false;
       console.log(val);
@@ -449,7 +450,7 @@ export default {
       // await print.list({ iduji: id });
       // var result = await print.list({ iduji: id });
       // console.log(result);
-      const data = {
+      const ujikomp = {
         iduji: this.iduji,
         asesor: this.asesor,
         idapl01: this.dataUjiKomp[0].idujikom,
@@ -488,8 +489,8 @@ export default {
         valueva: this.dataUjiKomp[16].value,
       };
 
-      console.log(data);
-      await print.download(data).then((response) => {
+      console.log(ujikomp);
+      await print.download(ujikomp).then((response) => {
         console.log(response);
         const url = window.URL.createObjectURL(new Blob([response]));
         const link = document.createElement('a');

@@ -167,6 +167,46 @@ class PrintController extends BaseController
             $dataak03 = $ujiKompController->showAk03($idak03);
             $datamodule->push(['nama' => 'ak03', 'data' => $dataak03]);
         }
+        
+        // if ($valueapl02){
+        //     // $dataapl02 = $ujiKompController->showApl02($idapl02);
+        //     $dataapl02 = $ujiKompController->indexApl02(new Request(['idapl02' => $idapl02]));
+        //     $collection = collect();
+        //     $tempKodeUnit;
+        //     $tempNamaElemen;
+        //     $tempKuk;
+        //     $tempPertanyaanKuk;
+
+        //     for($a = 1; $a < 7; $a++){
+        //         foreach($dataapl02 as $kodeUnit){
+        //             if($collection->isEmpty() || $kodeUnit->kode_unit !== $collection->last()['kode_unit']){
+        //                 $tempKodeUnit = $kodeUnit->kode_unit;
+        //                 $collection->push(['kode_unit' => $tempKodeUnit]);
+        //             }
+        //         }
+        //         foreach($dataapl02 as $namaElemen){
+        //             if($collection->isEmpty() || $namaElemen->nama_elemen !== $collection->last()['nama_elemen']){
+        //                 $tempNamaElemen = $namaElemen->nama_elemen;
+        //                 $collection->push(['nama_elemen' => $tempNamaElemen]);
+        //             }
+        //         }
+        //         foreach($dataapl02 as $kuk){
+        //             if($collection->isEmpty() || $kuk->kuk!== $collection->last()['kuk']){
+        //                 $tempKuk = $kuk->kuk;
+        //                 $collection->push(['kuk' => $tempKuk]);
+        //             }
+        //         }
+        //         foreach($dataapl02 as $pertanyaanKuk){
+        //             if($collection->isEmpty() || $pertanyaanKuk->pertanyaan_kuk !== $collection->last()['pertanyaan_kuk']){
+        //                 $collection->push(['pertanyaan_kuk' => $tempPertanyaanKuk]);
+        //             }
+        //         }
+
+        //         // $collection->push(['kode_unit' => $tempKodeUnit, 'nama_elemen' => $tempNamaElemen, 'kuk' => $tempKuk, 'pertanyaan_kuk' => $tempPertanyaanKuk]);
+        //     }
+        //     $collection->push(['kode_unit' => $tempKodeUnit, 'nama_elemen' => $tempNamaElemen]);
+        //     $datamodule->push(['nama' => 'apl02', 'data' => $collection]);
+        // }
 
         // if ($valueak04) {
         //     $dataak04 = $ujiKompController->showAk04($idak04);

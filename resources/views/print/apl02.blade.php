@@ -1,4 +1,19 @@
 <div class="container mt-10">
+	@php 
+		$collection = collect($data);
+	@endphp
+	@foreach ($collection as $key => $val)
+		<table class="table table-bordered">
+			@foreach($val as $item)
+				<tr>
+					<td>{{ $item }}</td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+			@endforeach
+		</table>
+	@endforeach
 	<h6>FR.APL.02. ASESMEN MANDIRI</h6>
 </div>
 <div class="container">
@@ -19,7 +34,6 @@
 						<div>:</div>
 					</td>
 					<td>
-						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -29,7 +43,6 @@
 						<div>:</div>
 					</td>
 					<td>
-						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
 			</table>

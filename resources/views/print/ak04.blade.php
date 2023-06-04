@@ -6,23 +6,22 @@
 		<div class="col-12">
 			<table class="table table-bordered">
 				<tr>
-					<td colspan="5">
-						<div><span>Nama Asesi</span><span> : </span><span>{{ $data['nama_asesi'] }}</span></div>
+					<td colspan="6">
+						<div><span>Nama Asesi</span><span> : </span><span>{{ $data->nama_asesi }}</span></div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="5">
+					<td colspan="6">
 						<div><span>Nama Asesor</span><span> : </span><span>{{ $data->nama_asesor }}</span></div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="5">
-						<div><span>Tanggal Asesmen</span><span> : </span><span>{{ $data->tanggal_asesmen }}</span>
-						</div>
+					<td colspan="6">
+						<div><span>Tanggal Asesmen</span><span> : </span><span>{{ $data->tanggal_asesmen }}</span></div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="5">
+					<td colspan="6">
 						<div>Jawablah dengan Ya atau Tidak pertanyaan-pertanyaan berikut ini</div>
 					</td>
 					<td>
@@ -93,7 +92,7 @@
 					@endif
 				</tr>
 				<tr>
-					<td colspan="3">
+					<td colspan="6">
 						<div class="mb-2">Banding ini diajukan atas Keputusan Asesmen yang dibuat terhadap Skema
 							Sertifikasi (Kualifikasi/Klaster/Okupasi) berikut</div>
 						<div><strong>Skema Sertifikasi : </strong></div>
@@ -103,19 +102,19 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">
+					<td colspan="6">
 						<div>Banding ini diajukan atas alasan sebagai berikut : </div>
 						<div>{{ $data->alasan_banding }}</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">
+					<td colspan="6">
 						<div>Anda mempunyai hak mengajukan banding jika Anda menilai proses asesmen tidak sesuai SOP dan
 							tidak memenuhi Prinsip Asesmen.</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">
+					<td colspan="6">
 						<div><span>Tanda Tangan Asesi : </span><span>Tanggal : </span></div>
 						<div><span>Letakan foto disini</span><span>{{ $data->tanggal_asesmen }}</span></div>
 					</td>
