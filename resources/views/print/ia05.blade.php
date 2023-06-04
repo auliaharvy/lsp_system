@@ -11,60 +11,27 @@
         <tr>
           <td>Skema Sertifikasi</td>
           <td>:</td>
-          <td>SKEMA KKNI KUALIFIKASI II KOMPETENSI KEAHLIAN OTOMATISASI TATA KELOLA PERKANTORAN : 5.7.5 MEMBANTU
-            PENGELOLAAN KAS KECIL</td>
+          <td>{{ $skemaSertifikasi->skema_sertifikasi }}</td>
         </tr>
         <tr>
           <td>TUK</td>
           <td>:</td>
-          <td>TUK OTKP SMKN 2 Cikarang Barat</td>
+          <td>{{ $skemaSertifikasi->nama_tuk }}</td>
         </tr>
         <tr>
           <td>Nama Asesor</td>
           <td>:</td>
-          <td>Iqbal Tawakal, M.Pd</td>
+          <td>{{ $asesor }}</td>
         </tr>
         <tr>
           <td>Nama Asesi</td>
           <td>:</td>
-          <td>Sinta</td>
+          <td>{{ $skemaSertifikasi->nama_peserta}}</td>
         </tr>
         <tr>
           <td>Tanggal</td>
           <td>:</td>
-          <td>2023-04-14</td>
-        </tr>
-      </table>
-
-      <table class="table table-bordered">
-        <tr>
-          <td class="bg-dark text-white" colspan="3"></td>
-        </tr>
-        <tr>
-          <td class="align-middle" rowspan="2">
-            Uji Kompetensi
-          </td>
-          <td class="align-middle">Kode Unit</td>
-          <td>
-            <ul>
-              <li>N.821.100.002.02 -</li>
-              <li>N.821.100.002.02 -</li>
-              <li>N.821.100.002.02 -</li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          {{-- <td>
-            Uji Kompetensi
-          </td> --}}
-          <td class="align-middle">Judul Unit</td>
-          <td>
-            <ul>
-              <li>Mengatur Penggandaan dan Pengumpulan Dokumen</li>
-              <li>Mengatur Penggandaan dan Pengumpulan Dokumen</li>
-              <li>Mengatur Penggandaan dan Pengumpulan Dokumen</li>
-            </ul>
-          </td>
+          <td>{{ $skemaSertifikasi->mulai }}</td>
         </tr>
       </table>
       <table class="col-md-12 table-bordered table-striped">
@@ -74,27 +41,19 @@
           <td class="bg-dark text-white text-center px-2">Pertanyaan</td>
           <td class="bg-dark text-white text-center px-2">Jawaban</td>
         </tr>
+        @php
+        $detailIa05 = collect( $data['detail'] );
+        @endphp
+        @foreach ($detailIa05 as $key => $item)
         <tr>
-          <td class="text-center px-2">1.</td>
-          <td class="align-middle px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS</td>
-          <td class="align-middle px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
-            mempermudah
-            akuntan perusahaan dalam pencatatan
-            keuangan dalam perusahaan</td>
-          <td class="align-middle text-center px-2">Kompeten</td>
+          <td class="text-center px-2">{{ $key+1 }}</td>
+          <td class="justify-content-center px-2">{{ $detailIa05[$key]['kode_unit'] }} <br>
+            {{ $detailIa05[$key]['unit_kompetensi'] }}</td>
+          <td class="justify-content-center px-2">{{ $detailIa05[$key]['pertanyaan'] }}</td>
+          <td class="justify-content-center px-2">{{ $detailIa05[$key]['jawaban'] }}</td>
         </tr>
-        <tr>
-          <td class="text-center px-2">2.</td>
-          <td class="align-middle px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS</td>
-          <td class="align-middle px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
-            mempermudah
-            akuntan perusahaan dalam pencatatan
-            keuangan dalam perusahaan</td>
-          <td class="align-middle text-center px-2">Kompeten</td>
-        </tr>
+        @endforeach
       </table>
     </div>
   </div>
-</div>
-</div>
 </div>

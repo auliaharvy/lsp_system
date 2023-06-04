@@ -92,25 +92,35 @@ class PrintController extends BaseController
         $idapl02 = Arr::get($searchParams, 'idapl02', '');
         $idmapa02 = Arr::get($searchParams, 'idmapa02', '');
         $idak01 = Arr::get($searchParams, 'idak01', '');
+        $idak02 = Arr::get($searchParams, 'idak02', '');
+        $idak03 = Arr::get($searchParams, 'idak03', '');
         $idak04 = Arr::get($searchParams, 'idak04', '');
-        // $idia01 = Arr::get($searchParams, 'idak01', '');
-        // $idia02 = Arr::get($searchParams, 'idak02', '');
+        $idak05 = Arr::get($searchParams, 'idak05', '');
+        $idak06 = Arr::get($searchParams, 'idak06', '');
+        $idia01 = Arr::get($searchParams, 'idia01', '');
+        $idia02 = Arr::get($searchParams, 'idak02', '');
         $idia03 = Arr::get($searchParams, 'idia03', '');
         $idia05 = Arr::get($searchParams, 'idia05', '');
         $idia06 = Arr::get($searchParams, 'idia06', '');
-        $idia01 = Arr::get($searchParams, 'idak01', '');
-        $idia02 = Arr::get($searchParams, 'idia02', '');
-
+        $idia07 = Arr::get($searchParams, 'idia07', '');
+        $idia11 = Arr::get($searchParams, 'idia11', '');
+        
         $valueapl01 = Arr::get($searchParams, 'valueapl01', '');
         $valueapl02 = Arr::get($searchParams, 'valueapl02', '');
         $valuemapa02 = Arr::get($searchParams, 'valuemapa02', '');
         $valueak01 = Arr::get($searchParams, 'valueak01', '');
+        $valueak02 = Arr::get($searchParams, 'valueak02', '');
+        $valueak03 = Arr::get($searchParams, 'valueak03', '');
         $valueak04 = Arr::get($searchParams, 'valueak04', '');
-        // $valueia01 = Arr::get($searchParams, 'valueia01', '');
-        // $valueia02 = Arr::get($searchParams, 'valueia02', '');
+        $valueak05 = Arr::get($searchParams, 'valueak05', '');
+        $valueak06 = Arr::get($searchParams, 'valueak06', '');
+        $valueia01 = Arr::get($searchParams, 'valueia01', '');
+        $valueia02 = Arr::get($searchParams, 'valueia02', '');
         $valueia03 = Arr::get($searchParams, 'valueia03', '');
         $valueia05 = Arr::get($searchParams, 'valueia05', '');
         $valueia06 = Arr::get($searchParams, 'valueia06', '');
+        $valueia07 = Arr::get($searchParams, 'valueia07', '');
+        $valueia11 = Arr::get($searchParams, 'valueia11', '');
 
         $dataapl01 = '';
         // $dataapl02 = null;
@@ -148,10 +158,30 @@ class PrintController extends BaseController
         //     $datamodule->push(['nama' => 'ak01', 'data' => $dataak01]);
         // }
 
-        // // if ($valueak04) {
-        // //     $dataak04 = $ujiKompController->showAk04($idak04);
-        // //     $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
-        // // }
+        if ($valueak02){
+            $dataak02 = $ujiKompController->showAk02($idak02);
+            $datamodule->push(['nama' => 'ak02', 'data' => $dataak02]);
+        }
+
+        if ($valueak03){
+            $dataak03 = $ujiKompController->showAk03($idak03);
+            $datamodule->push(['nama' => 'ak03', 'data' => $dataak03]);
+        }
+
+        // if ($valueak04) {
+        //     $dataak04 = $ujiKompController->showAk04($idak04);
+        //     $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
+        // }
+
+        if ($valueak05) {
+            $dataak05 = $ujiKompController->showAk05($idak05);
+            $datamodule->push(['nama' => 'ak05', 'data' => $dataak05]);
+        }
+
+        if ($valueak06) {
+            $dataak06 = $ujiKompController->indexAk06($idak06);
+            $datamodule->push(['nama' => 'ak06', 'data' => $dataak06]);
+        }
 
         // if ($valueia01){
         //     $dataia01 = $ujiKompController->showIa01($idia01);
@@ -167,23 +197,29 @@ class PrintController extends BaseController
             $dataia03 = $ujiKompController->showIa03($idia03);
             $datamodule->push(['nama' => 'ia03', 'data' => $dataia03]);
         }
-        // if ($valueia05){
-        //     $dataia03 = $ujiKompController->showIa03($idia03);
-        //     $datamodule->push(['nama' => 'ia03', 'data' => $dataia03]);
-        // }
 
-        // if ($valueia06){
-        //     $dataia06 = $ujiKompController->showIa06($idia06);
-        //     $datamodule->push(['nama' => 'ia06', 'data' => $dataia06]);
-        // }
+        if ($valueia05){
+            $dataia05 = $ujiKompController->showIa03($idia05);
+            $datamodule->push(['nama' => 'ia05', 'data' => $dataia05]);
+        }
 
-        // $queryia03 = UjiKompIa03::where('trx_uji_komp_ia_03.id',$searchParams['id_ia_03'])
-        // ->join('trx_jadwal_asesmen as b', 'b.id', '=', 'trx_uji_komp_ia_03.id_jadwal')
-        // ->join('mst_skema_sertifikasi as c', 'c.id', '=', 'b.id_skema');
+        if ($valueia06){
+            $dataia06 = $ujiKompController->showIa06($idia06);
+            $datamodule->push(['nama' => 'ia06', 'data' => $dataia06]);
+        }
+
+        if ($valueia07){
+            $dataia07 = $ujiKompController->showIa06($idia07);
+            $datamodule->push(['nama' => 'ia07', 'data' => $dataia07]);
+        }
+
+        if ($valueia11){
+            $dataia11 = $ujiKompController->showIa11($idia11);
+            $datamodule->push(['nama' => 'ia11', 'data' => $dataia11]);
+        }
 
         // return ['datamodule' => $datamodule, 'iduji' => $iduji];
         // return view('print.masterprint', ['valueak04' => $valueak04, 'valueapl01' => $valueapl01]);
-
         $pdf = PDF::loadview('print.masterprint', [
             'datamodule' => $datamodule, 
             'skemaunit' => $dataSkemaUnit, 
