@@ -1,4 +1,4 @@
- <div class="container mt-10">
+ <div class="container mt-30">
 	<h6>FR.MAPA.02- PETA INSTRUMEN ASESSMEN HASIL PENDEKATAN ASESMEN DAN PERENCANAAN ASESMEN</h6>
  </div>
  <div class="container">

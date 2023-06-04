@@ -497,15 +497,25 @@ class UjiKompController extends BaseController
 
     public function showApl02($id)
     {
-       
+        // $queryApl02 = UjiKompApl2::where('trx_uji_komp_apl_02.id',$id)->first();
+        // $queryDetailApl02 = UjiKompApl2Detail::query()
+        //     ->join('trx_uji_komp as a', 'trx_uji_komp_apl_02_detail.id_apl_02', '=', 'a.id_apl_02')
+        //     ->join('mst_skema_sertifikasi_kuk_elemen as b', 'trx_uji_komp_apl_02_detail.id_kuk_elemen', '=', 'b.id')
+        //     ->join('mst_skema_sertifikasi_unit_kompetensi as c', 'a.id_skema', '=', 'c.id_skema')
+        //     ->join('mst_skema_sertifikasi_elemen_kompetensi as d', 'c.id', '=', 'd.id_unit')
+        //     // ->join('mst_skema_sertifikasi_kuk_elemen as b', 'd.id', '=', 'b.id_elemen')
+        //     ->where('trx_uji_komp_apl_02_detail.id_apl_02',$id)
+        //     // ->select('b.kuk', 'b.pertanyaan_kuk', 'd.nama_elemen', 'c.kode_unit', 'c.unit_kompetensi')
+        //     ->get();
+
         $queryApl02 = UjiKompApl2::where('trx_uji_komp_apl_02.id',$id)->first();
         $queryDetailApl02 = UjiKompApl2Detail::where('trx_uji_komp_apl_02_detail.id_apl_02',$id)->get();
        
         $data = [
-            'ttd_asesor' => $queryApl02->ttd_asesor,
-            'status' => $queryApl02->status,
+            'apl_02' => $queryApl02,
             'detail' => $queryDetailApl02,
         ];
+
         return $data;
     }
 
@@ -797,6 +807,50 @@ class UjiKompController extends BaseController
         return $jawaban;
     }
 
+    public function indexApl02(Request $request){
+        $searchParams = $request->all();        
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        $idapl02 = Arr::get($searchParams, 'idapl02', '');
+
+        $query = UjiKompApl2Detail::query()
+            ->join('trx_uji_komp as a', 'trx_uji_komp_apl_02_detail.id_apl_02', '=', 'a.id_apl_02')
+            // ->join('mst_skema_sertifikasi_kuk_elemen as b', 'trx_uji_komp_apl_02_detail.id_kuk_elemen', '=', 'b.id')
+            // ->join('mst_skema_sertifikasi_unit_kompetensi as c', 'a.id_skema', '=', 'c.id_skema')
+            // ->join('mst_skema_sertifikasi_elemen_kompetensi as d', 'c.id', '=', 'd.id_unit')
+            // ->join('mst_skema_sertifikasi_kuk_elemen as b', 'd.id', '=', 'b.id_elemen')
+            ->join(DB::raw('(SELECT id, id_skema, kode_unit, unit_kompetensi FROM mst_skema_sertifikasi_unit_kompetensi) as b'),
+                function($join){
+                    $join->on('a.id_skema', '=', 'b.id_skema');
+                })
+            ->join(DB::raw('(SELECT id, nama_elemen, id_unit FROM mst_skema_sertifikasi_elemen_kompetensi) as c'),
+                function($join){
+                    $join->on('b.id', '=', 'c.id_unit');
+                })
+            ->join(DB::raw('(SELECT id, id_elemen, kuk, pertanyaan_kuk FROM mst_skema_sertifikasi_kuk_elemen) as d'),
+                function($join){
+                    $join->on('c.id', '=', 'd.id_elemen');
+                })
+            ->where('trx_uji_komp_apl_02_detail.id_apl_02',$idapl02)
+            // ->where('b.id_elemen','=', 'd.id')
+            ->select('d.kuk', 'd.pertanyaan_kuk', 'c.nama_elemen', 'b.kode_unit', 'b.unit_kompetensi')
+            ->groupBy('d.id')
+            ->get();
+
+        // $query = UjiKompApl2::query(); 
+        // $query->join('trx_uji_komp_apl_02_detail as a', 'trx_uji_komp_apl_02.id', '=', 'a.id_apl_02');
+        // $query->join('trx_uji_komp as e', 'e.id_apl_02', '=', 'a.id_apl_02');
+        // $query->join('mst_skema_sertifikasi_unit_kompetensi as d', 'e.id_skema', '=', 'd.id_skema');
+        // $query->join('mst_skema_sertifikasi_elemen_kompetensi as c', 'd.id', '=', 'c.id_unit');
+        // $query->join('mst_skema_sertifikasi_kuk_elemen as b', 'c.id', '=', 'b.id_elemen');
+        // $query->where('trx_uji_komp_apl_02.id',$idapl02)
+        // ->select('trx_uji_komp_apl_02.status', 'b.kuk', 'trx_uji_komp_apl_02.ttd_asesor', 'b.pertanyaan_kuk', 'c.nama_elemen', 'd.kode_unit', 'd.unit_kompetensi')
+        // ->groupBy('d.kode_unit')
+        // ->get();
+
+        // return MasterResource::collection($query->paginate($limit));
+        return $query;
+        // return MasterResource::collection($query);
+    } 
 
     public function indexIa02(Request $request)
     {

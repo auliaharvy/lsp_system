@@ -149,31 +149,63 @@
 					<td class="bg-dark text-white text-center">Tidak Memenuhi Syarat</td>
 				</tr>
 				<tr>
-					<td>1.</td>
-					<td>Pas Foto 3x4</td>
-					<td></td>
-					<td><i class="bi bi-x-lg"></i></td>
+					<td>1. </td>
+					<td>Pas Foto 3 x 4</td>
+					<td class="text-justify">
+						@if ($data->foto !== '')
+							<div style="text-align: center;"><input type="checkbox" checked aria-label="Checkbox for following text input"></div>
+						@endif
+					</td>
+					<td>
+						@if ($data->foto === '')
+							<div></div>
+						@endif
+					</td>
 					<td></td>
 				</tr>
 				<tr>
-					<td>2.</td>
+					<td>2. </td>
 					<td>Fotocopy Sertifikat PKL</td>
-					<td><i class="bi bi-check2"></i></td>
-					<td><i class="bi bi-x-lg"></i></td>
+					<td class="text-justify">
+						@if ($data->sertifikat !== '')
+							<div style="text-align: center;"><input type="checkbox" checked aria-label="Checkbox for following text input"></div>
+						@endif
+					</td>
+					<td>
+						@if ($data->sertifikat === '')
+							<div></div>
+						@endif
+					</td>
 					<td></td>
 				</tr>
 				<tr>
-					<td>3.</td>
+					<td>3. </td>
 					<td>Fotocopy KK/KTP/Kartu Pelajar</td>
-					<td><i class="bi bi-check2"></i></td>
-					<td><i class="bi bi-x-lg"></i></td>
+					<td class="text-justify">
+						@if ($data->identitas !== '')
+							<div style="text-align: center;"><input type="checkbox" checked aria-label="Checkbox for following text input"></div>
+						@endif
+					</td>
+					<td>
+						@if ($data->identitas === '')
+							<div></div>
+						@endif
+					</td>
 					<td></td>
 				</tr>
 				<tr>
-					<td>4.</td>
+					<td>4. </td>
 					<td>Fotocopy Raport sem. 1-4</td>
-					<td><i class="bi bi-check2"></i></td>
-					<td><i class="bi bi-x-lg"></i></td>
+					<td>
+						@if ($data->raport !== '')
+							<div style="text-align: center;"><input type="checkbox" checked aria-label="Checkbox for following text input"></div>
+						@endif
+					</td>
+					<td>
+						@if ($data->raport === '')
+							<div></div>
+						@endif
+					</td>
 					<td></td>
 				</tr>
 			</table>
