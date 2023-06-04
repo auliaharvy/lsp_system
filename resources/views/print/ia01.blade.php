@@ -89,8 +89,10 @@
 						<div><strong>Instruksi:</strong></div>
 						<ul>
 							<li>Baca setiap pertanyaan di kolom sebelah kiri.</li>
-							<li>Beri tanda centang (&radic;) pada kotak jika Anda yakin dapat melakukan tugas yang dijelaskan.</li>
-							<li>Isi kolom di sebelah kanan dengan mendaftar bukti yang Anda miliki untuk menunjukkan bahwa Anda melakukan tugas-tugas ini.</li>
+							<li>Beri tanda centang (&radic;) pada kotak jika Anda yakin dapat melakukan tugas yang
+								dijelaskan.</li>
+							<li>Isi kolom di sebelah kanan dengan mendaftar bukti yang Anda miliki untuk menunjukkan
+								bahwa Anda melakukan tugas-tugas ini.</li>
 						</ul>
 					</td>
 				</tr>
@@ -101,32 +103,32 @@
 				</tr>
 				@php $a = 1; @endphp
 				@foreach($skemaUnit as $data)
-					<tr>
-						<td rowspan="2">
-							<div>Unit Kompetensi {{ $a }}</div>
-						</td>
-						<td>
-							<div>Kode Unit</div>
-						</td>
-						<td>
-							<div>:</div>
-						</td>
-						<td colspan="2">
-							<div>{{ $data->kode_unit }}</div>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<div>Judul Unit</div>
-						</td>
-						<td>
-							<div>:</div>
-						</td>
-						<td colspan="2">
-							<div>{{ $data->unit_kompetensi }}</div>
-						</td>
-					</tr>
-					@php $a++; @endphp
+				<tr>
+					<td rowspan="2">
+						<div>Unit Kompetensi {{ $a }}</div>
+					</td>
+					<td>
+						<div>Kode Unit</div>
+					</td>
+					<td>
+						<div>:</div>
+					</td>
+					<td colspan="2">
+						<div>{{ $data->kode_unit }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>Judul Unit</div>
+					</td>
+					<td>
+						<div>:</div>
+					</td>
+					<td colspan="2">
+						<div>{{ $data->unit_kompetensi }}</div>
+					</td>
+				</tr>
+				@php $a++; @endphp
 				@endforeach
 			</table>
 			<table class="table table-bordered">

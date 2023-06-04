@@ -11,57 +11,48 @@
         <tr>
           <td>Skema Sertifikasi</td>
           <td>:</td>
-          <td>SKEMA KKNI KUALIFIKASI II KOMPETENSI KEAHLIAN OTOMATISASI TATA KELOLA PERKANTORAN : 5.7.5 MEMBANTU
-            PENGELOLAAN KAS KECIL</td>
+          <td>{{ $skemaSertifikasi->skema_sertifikasi }}</td>
         </tr>
         <tr>
           <td>TUK</td>
           <td>:</td>
-          <td>TUK OTKP SMKN 2 Cikarang Barat</td>
+          <td>{{ $skemaSertifikasi->nama_tuk }}</td>
         </tr>
         <tr>
           <td>Nama Asesor</td>
           <td>:</td>
-          <td>Iqbal Tawakal, M.Pd</td>
+          <td>{{ $asesor }}</td>
         </tr>
         <tr>
           <td>Nama Asesi</td>
           <td>:</td>
-          <td>Sinta</td>
+          <td>{{ $skemaSertifikasi->nama_peserta}}</td>
         </tr>
         <tr>
           <td>Tanggal</td>
           <td>:</td>
-          <td>Kamis, 2023-Mei-14</td>
+          <td>{{ $skemaSertifikasi->mulai }}</td>
         </tr>
       </table>
       <table class="col-md-12 table-bordered table-striped">
         <tr>
           <td class="bg-dark text-white text-center px-2">No.</td>
+          <td class="bg-dark text-white text-center px-2">Unit Kompetensi</td>
           <td class="bg-dark text-white text-center px-2">Pertanyaan</td>
-          <td class="bg-dark text-white text-center px-2">Tanggapan</td>
           <td class="bg-dark text-white text-center px-2">Jawaban</td>
         </tr>
+        @php
+        $detailIa07 = collect( $data['detail'] );
+        @endphp
+        @foreach ($detailIa07 as $key => $item)
         <tr>
-          <td class="text-center px-2">1.</td>
-          <td class="justify-content-center px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS
-          </td>
-          <td class="justify-content-center px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
-            mempermudah
-            akuntan perusahaan dalam pencatatan
-            keuangan dalam perusahaan</td>
-          <td class="justify-content-center text-center px-2">Kompeten</td>
+          <td class="text-center px-2">{{ $key+1 }}</td>
+          <td class="justify-content-center px-2">{{ $detailIa07[$key]['kode_unit'] }} <br>
+            {{ $detailIa07[$key]['unit_kompetensi'] }}</td>
+          <td class="justify-content-center px-2">{{ $detailIa07[$key]['pertanyaan'] }}</td>
+          <td class="justify-content-center px-2">{{ $detailIa07[$key]['jawaban'] }}</td>
         </tr>
-        <tr>
-          <td class="text-center px-2">2.</td>
-          <td class="justify-content-center px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS
-          </td>
-          <td class="justify-content-center px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
-            mempermudah
-            akuntan perusahaan dalam pencatatan
-            keuangan dalam perusahaan</td>
-          <td class="justify-content-center text-center px-2">Kompeten</td>
-        </tr>
+        @endforeach
       </table>
     </div>
   </div>

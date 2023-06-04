@@ -1,4 +1,4 @@
- <div class="container mt-30">
+ <div class="container mt-10">
 	<h6>FR.MAPA.02- PETA INSTRUMEN ASESSMEN HASIL PENDEKATAN ASESMEN DAN PERENCANAAN ASESMEN</h6>
  </div>
  <div class="container">
@@ -68,72 +68,72 @@
 						</tr>
 						@php $a++; @endphp
 					@endforeach
-				</tr>
-			</table>
-			<table class="table table-bordered">
-				<tr>
-					<td class="bg-dark text-white text-center" rowspan="2">
-						<div>No.</div>
-					</td>
-					<td class="bg-dark text-white text-center"rowspan="2">
-						<div>MUK</div>
-					</td>
-					<td class="bg-dark text-white text-center" colspan="5">
-						<div>Potensi Asesi**</div>
-					</td>
-				</tr>
-				<tr>
-					<td class="bg-dark text-white text-center">
-						<div>1</div>
-					</td>
-					<td class="bg-dark text-white text-center">
-						<div>2</div>
-					</td>
-					<td class="bg-dark text-white text-center">
-						<div>3</div>
-					</td>
-					<td class="bg-dark text-white text-center">
-						<div>4</div>
-					</td>
-					<td class="bg-dark text-white text-center">
-						<div>5</div>
-					</td>
-				</tr>
-				@php $a = 1; @endphp
-				@foreach($data as $mapa02)
-				<tr>
-					<td>{{ $a }}</td>
-					<td>{{ $mapa02->muk }}</td>
-					<td>
-						@if ($mapa02->potensi_asesi_1 == 1)
+					</tr>
+				</table>
+				<table class="table table-bordered">
+					<tr>
+						<td class="bg-dark text-white text-center" rowspan="2">
+							<div>No.</div>
+						</td>
+						<td class="bg-dark text-white text-center" rowspan="2">
+							<div>MUK</div>
+						</td>
+						<td class="bg-dark text-white text-center" colspan="5">
+							<div>Potensi Asesi**</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="bg-dark text-white text-center">
+							<div>1</div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div>2</div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div>3</div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div>4</div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div>5</div>
+						</td>
+					</tr>
+					@php $a = 1; @endphp
+					@foreach($data as $mapa02)
+					<tr>
+						<td>{{ $a }}</td>
+						<td>{{ $mapa02->muk }}</td>
+						<td>
+							@if ($mapa02->potensi_asesi_1 == 1)
 							<input type="checkbox" checked aria-label="Checkbox for following text input">
-						@endif
-					</td>
-					<td>
-						@if ($mapa02->potensi_asesi_2 == 1)
+							@endif
+						</td>
+						<td>
+							@if ($mapa02->potensi_asesi_2 == 1)
 							<input type="checkbox" checked aria-label="Checkbox for following text input">
-						@endif
-					</td>
-					<td>
-						@if ($mapa02->potensi_asesi_3 == 1)
+							@endif
+						</td>
+						<td>
+							@if ($mapa02->potensi_asesi_3 == 1)
 							<input type="checkbox" checked aria-label="Checkbox for following text input">
-						@endif
-					</td>
-					<td>
-						@if ($mapa02->potensi_asesi_4 == 1)
+							@endif
+						</td>
+						<td>
+							@if ($mapa02->potensi_asesi_4 == 1)
 							<input type="checkbox" checked aria-label="Checkbox for following text input">
-						@endif
-					</td>
-					<td>
-						@if ($mapa02->potensi_asesi_5 == 1)
+							@endif
+						</td>
+						<td>
+							@if ($mapa02->potensi_asesi_5 == 1)
 							<input type="checkbox" checked aria-label="Checkbox for following text input">
-						@endif
-					</td>
-				</tr>
-				@php $a++; @endphp
-				@endforeach
-		</table>
-			<p>*) diisi berdasarkan hasil penentuan pendekatan asesmen dan perencanaan asesmen</p>
+							@endif
+						</td>
+					</tr>
+					@php $a++; @endphp
+					@endforeach
+				</table>
+				<p>*) diisi berdasarkan hasil penentuan pendekatan asesmen dan perencanaan asesmen</p>
+			</div>
 		</div>
 	</div>
-</div>

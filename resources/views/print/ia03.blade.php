@@ -11,31 +11,30 @@
         <tr>
           <td>Skema Sertifikasi</td>
           <td>:</td>
-          <td>SKEMA KKNI KUALIFIKASI II KOMPETENSI KEAHLIAN OTOMATISASI TATA KELOLA PERKANTORAN : 5.7.5 MEMBANTU
-            PENGELOLAAN KAS KECIL</td>
+          <td>{{ $skemaSertifikasi['skema_sertifikasi']}}</td>
         </tr>
         <tr>
           <td>TUK</td>
           <td>:</td>
-          <td>TUK OTKP SMKN 2 Cikarang Barat</td>
+          <td>{{ $skemaSertifikasi['nama_tuk'] }}</td>
         </tr>
         <tr>
           <td>Nama Asesor</td>
           <td>:</td>
-          <td>Iqbal Tawakal, M.Pd</td>
+          <td>{{ $asesor }}</td>
         </tr>
         <tr>
           <td>Nama Asesi</td>
           <td>:</td>
-          <td>Sinta</td>
+          <td>{{ $skemaSertifikasi['nama_peserta'] }}</td>
         </tr>
         <tr>
           <td>Tanggal</td>
           <td>:</td>
-          <td>2023-04-14</td>
+          <td>{{ $skemaSertifikasi['mulai'] }}</td>
         </tr>
       </table>
-      <table class="table">
+      <table class="table col-12">
         <tr>
           <td class="bg-dark text-white" colspan="3">PANDUAN BAGI ASESOR</td>
         </tr>
@@ -55,78 +54,80 @@
           </td>
         </tr>
       </table>
-      <table class="table table-bordered">
+      <table class="table table-bordered col-md-12">
         <tr>
           <td class="bg-dark text-white" colspan="3"></td>
         </tr>
         <tr>
-          <td class="align-middle" rowspan="2">
+          <td class="justify-content-center" rowspan="2">
             Uji Kompetensi
           </td>
-          <td class="align-middle">Kode Unit</td>
+          <td class="justify-content-center">Kode Unit</td>
           <td>
             <ul>
-              <li>N.821.100.002.02 -</li>
-              <li>N.821.100.002.02 -</li>
-              <li>N.821.100.002.02 -</li>
+              @foreach ($skemaUnit as $unit)
+              <li>{{ $unit['kode_unit'] }}</li>
+              @endforeach
             </ul>
           </td>
         </tr>
         <tr>
-          {{-- <td>
-            Uji Kompetensi
-          </td> --}}
-          <td class="align-middle">Judul Unit</td>
+          <td class="justify-content-center">Judul Unit</td>
           <td>
             <ul>
-              <li>Mengatur Penggandaan dan Pengumpulan Dokumen</li>
-              <li>Mengatur Penggandaan dan Pengumpulan Dokumen</li>
-              <li>Mengatur Penggandaan dan Pengumpulan Dokumen</li>
+              @foreach ($skemaUnit as $unit)
+              <li>{{ $unit['unit_kompetensi']}}</li>
+              @endforeach
             </ul>
           </td>
         </tr>
       </table>
-      <table class="col-md-12 table-bordered table-striped">
+      <table class="col-md-12 table-bordered">
         <tr>
           <td class="bg-dark text-white text-center px-2">No.</td>
           <td class="bg-dark text-white text-center px-2">Pertanyaan</td>
           <td class="bg-dark text-white text-center px-2">Tanggapan</td>
           <td class="bg-dark text-white text-center px-2">Rekomendasi</td>
         </tr>
+        @php
+        $collection = collect( $data['detail'] );
+        @endphp
+        @foreach ($collection as $key => $val)
         <tr>
-          <td class="text-center px-2">1.</td>
-          <td class="align-middle px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS</td>
-          <td class="align-middle px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
-            mempermudah
-            akuntan perusahaan dalam pencatatan
-            keuangan dalam perusahaan</td>
-          <td class="align-middle text-center px-2">Kompeten</td>
+          <td class="text-center px-2">{{$key+1}}</td>
+          <td class="justify-content-center px-2">{{ $collection[$key]['pertanyaan']}}</td>
+          <td class="justify-content-center px-2">{{ $collection[$key]['tanggapan']}}</td>
+          <td class="justify-content-center px-2">{{ $collection[$key]['rekomendasi']}}</td>
         </tr>
-        <tr>
-          <td class="text-center px-2">2.</td>
-          <td class="align-middle px-2">Jelaskan Mengapa suatu perusahaan perlu membentuk Dana Kas kecil? CMS</td>
-          <td class="align-middle px-2">karena digunakan untuk pengeluaran yang relatif kecil, kas kecil dapat
-            mempermudah
-            akuntan perusahaan dalam pencatatan
-            keuangan dalam perusahaan</td>
-          <td class="align-middle text-center px-2">Kompeten</td>
-        </tr>
+        @endforeach
       </table>
     </div>
     <div class="col-12 mt-3">
       Rekomendasi Asesor :
-      <div class="formradio d-inline p-3">
-        <input type="radio" id=radiokompeten>
+      @if ($data['ia_03']['rekomendasi_asesor'] == 'kompeten')
+      <div class="formradio d-inline">
+        <input type="radio" id=radiokompeten checked>
         <label for="radiokompeten">Kompeten</label>
       </div>
-      <div class="formradio d-inline p-3">
+      <div class="formradio d-inline">
         <input type="radio" id=radiobelumkompeten>
         <label for="radiobelumkompeten">Belum Kompeten</label>
       </div>
+      @else
+      <div class="formradio d-inline">
+        <input type="radio" id=radiokompeten>
+        <label for="radiokompeten">Kompeten</label>
+      </div>
+      <div class="formradio d-inline">
+        <input type="radio" id=radiobelumkompeten checked>
+        <label for="radiobelumkompeten">Belum Kompeten</label>
+      </div>
+      @endif
     </div>
     <div class="col-12 mt-3">
       <label for="textareakompeten" class="align-top d-inline">Umpan Balik untuk Asesi : </label>
-      <textarea id=textareakompeten class="form-control" cols="80" rows="5"></textarea>
+      <textarea id=textareakompeten class="form-control" cols="80"
+        rows="5">{{ $data['ia_03']['umpan_balik']}}</textarea>
     </div>
   </div>
 </div>

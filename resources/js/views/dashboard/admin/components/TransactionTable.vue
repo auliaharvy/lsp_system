@@ -342,13 +342,13 @@ export default {
       iduji: '',
       asesor: '',
       dataUjiKomp: [
-        { index: 1, name: 'APL 01', nameInDatabase: 'id_apl_01', idujikom: null, value: true },
+        { index: 1, name: 'APL 01', nameInDatabase: 'id_apl_01', idujikom: null, value: false },
         { index: 2, name: 'APL 02', nameInDatabase: 'id_apl_02', idujikom: null, value: false },
         { index: 3, name: 'MAPA 02', nameInDatabase: 'id_mapa_02', idujikom: null, value: false },
         { index: 4, name: 'AK 01', nameInDatabase: 'id_ak_01', idujikom: null, value: false },
         { index: 5, name: 'AK 04', nameInDatabase: 'id_ak_04', idujikom: null, value: false },
         { index: 6, name: 'IA 01', nameInDatabase: 'id_ia_01', idujikom: null, value: false },
-        { index: 7, name: 'IA 02', nameInDatabase: 'id_ia_02', idujikom: null, value: true },
+        { index: 7, name: 'IA 02', nameInDatabase: 'id_ia_02', idujikom: null, value: false },
         { index: 8, name: 'IA 03', nameInDatabase: 'id_ia_03', idujikom: null, value: false },
         { index: 9, name: 'IA 05', nameInDatabase: 'id_ia_05', idujikom: null, value: false },
         { index: 10, name: 'IA 06', nameInDatabase: 'id_ia_06', idujikom: null, value: false },
@@ -402,7 +402,7 @@ export default {
         console.log(property);
         console.log(this.dataUjiKomp);
       }
-
+      console.log(this.dataUjiKomp);
       // if (!this.dialogVisible){
       //   await print.download({ iduji: id }).then((response) => {
       //     console.log(response);
