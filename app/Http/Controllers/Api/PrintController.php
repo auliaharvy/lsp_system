@@ -163,6 +163,11 @@ class PrintController extends BaseController
             $datamodule->push(['nama' => 'ak02', 'data' => $dataak02]);
         }
 
+        if ($valueak03){
+            $dataak03 = $ujiKompController->showAk03($idak03);
+            $datamodule->push(['nama' => 'ak03', 'data' => $dataak03]);
+        }
+        
         // if ($valueapl02){
         //     // $dataapl02 = $ujiKompController->showApl02($idapl02);
         //     $dataapl02 = $ujiKompController->indexApl02(new Request(['idapl02' => $idapl02]));
@@ -202,10 +207,6 @@ class PrintController extends BaseController
         //     $collection->push(['kode_unit' => $tempKodeUnit, 'nama_elemen' => $tempNamaElemen]);
         //     $datamodule->push(['nama' => 'apl02', 'data' => $collection]);
         // }
-        if ($valueak03){
-            $dataak03 = $ujiKompController->showAk03($idak03);
-            $datamodule->push(['nama' => 'ak03', 'data' => $dataak03]);
-        }
 
         // if ($valueak04) {
         //     $dataak04 = $ujiKompController->showAk04($idak04);
