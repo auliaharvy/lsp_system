@@ -29,5 +29,5 @@ class UjiKompAk04 extends Model
      * @return Builder
      */
     protected $table = "trx_uji_komp_ak_04";
-    protected $fillable = ['nama_asesi', 'nama_asesor', 'tanngal_asesmen', 'penjelasan','diskusi', 'melibatkan', 'skema', 'no_skema', 'alasan_banding', 'ttd_asesi'];
+    protected $fillable = ['nama_asesi', 'nama_asesor', 'tanggal_asesmen', 'penjelasan','diskusi', 'melibatkan', 'skema', 'no_skema', 'alasan_banding', 'ttd_asesi'];
 }

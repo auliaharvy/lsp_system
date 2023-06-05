@@ -22,6 +22,8 @@ use App\Http\Controllers\Api\Mapa2Controller;
 Route::namespace('Api')->group(function() {
     // print
     Route::get('print-surat-tugas', 'PrintController@index');
+    Route::get('print-semua-module', 'PrintController@printMaster');
+    Route::get('print-modules', 'PrintController@printModules');
     // Jadwal Routes
     Route::apiResource('jadwaltest', 'JadwalController');
     Route::apiResource('tamatan', 'TamatanController');
@@ -46,6 +48,7 @@ Route::namespace('Api')->group(function() {
     Route::get('mst-ia07-get', 'PerangkatController@indexIa07');
     Route::get('mst-ia-11-get', 'PerangkatController@indexIa11');
     Route::get('mst-ak-03-get', 'PerangkatController@indexAk03');
+    Route::get('mst-ak-04-get', 'PerangkatController@indexAk04');
 
     //previewFR
     Route::get('preview/ia-06/{id}', 'UjiKompController@previewIa06');
@@ -58,6 +61,7 @@ Route::namespace('Api')->group(function() {
     Route::get('detail/indexPreview/{id}', 'UjiKompController@indexPreview');
     Route::get('detail/apl-01/{id}', 'UjiKompController@showApl01');
     Route::get('detail/apl-02/{id}', 'UjiKompController@showApl02');
+    Route::get('detail/mapa-02/{id}', 'UjiKompController@showMapa02');
     Route::get('detail/ia-01/{id}', 'UjiKompController@showIa01');
     Route::get('detail/ia-02/{id}', 'UjiKompController@showIa02');
     Route::get('detail/ia-03/{id}', 'UjiKompController@showIa03');
@@ -68,7 +72,9 @@ Route::namespace('Api')->group(function() {
     Route::get('detail/ak-01/{id}', 'UjiKompController@showAk01');
     Route::get('detail/ak-02/{id}', 'UjiKompController@showAk02');
     Route::get('detail/ak-03/{id}', 'UjiKompController@showAk03');
+    Route::get('detail/ak-04/{id}', 'UjiKompController@showAk04');
     Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
+    Route::get('detail/va/{id}', 'UjiKompController@showVa');
     Route::get('ak-06/{id}', 'UjiKompController@showAk06');
     Route::get('trx-mapa-02/{id}', 'UjiKompController@showMapa02');
 

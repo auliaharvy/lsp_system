@@ -43,14 +43,20 @@ use App\Laravue\Models\Perangkat;
 use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
+use App\Http\Controllers\Api\UjiKompController;
+use App\Http\Controllers\Api\SkemaController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\App;
 use Validator;
-use PDF;
+// use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 /**
  * Class UjiKompController
@@ -67,238 +73,204 @@ class PrintController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response|ResourceCollection
      */
-    public function index(Request $request)
-    {
+
+    public function printMaster(Request $request){
+
         $searchParams = $request->all();
-        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        $keyword = Arr::get($searchParams, 'keyword', '');
-        $visibility = Arr::get($searchParams, 'visibility', 0);
-        $user_id = Arr::get($searchParams, 'user_id', '');
-        $role = Arr::get($searchParams, 'role', '');
-        $foundUser = User::where('id',$user_id)->first();
-        $idJadwal = Arr::get($searchParams, 'idJadwal', '');
+
+        $ujiKompController = App::make(UjiKompController::class);
+        $skemaController = App::make(SkemaController::class);
+
+        $iduji = Arr::get($searchParams, 'iduji', '');
+        $asesor = Arr::get($searchParams, 'asesor', '');
+
+        $dataUjiKomp = $ujiKompController->showPreview($iduji);
+        $dataSkemaSertifikasi = $ujiKompController->index(new Request(['idujikomp' => $dataUjiKomp->id]));
+        $dataSkemaUnit = $skemaController->indexUnit(new Request(['id_skema' => $dataUjiKomp->id_skema]));
+
+        $idapl01 = Arr::get($searchParams, 'idapl01', '');
+        $idapl02 = Arr::get($searchParams, 'idapl02', '');
+        $idmapa02 = Arr::get($searchParams, 'idmapa02', '');
+        $idak01 = Arr::get($searchParams, 'idak01', '');
+        $idak02 = Arr::get($searchParams, 'idak02', '');
+        $idak03 = Arr::get($searchParams, 'idak03', '');
+        $idak04 = Arr::get($searchParams, 'idak04', '');
+        $idak05 = Arr::get($searchParams, 'idak05', '');
+        $idak06 = Arr::get($searchParams, 'idak06', '');
+        $idia01 = Arr::get($searchParams, 'idia01', '');
+        $idia02 = Arr::get($searchParams, 'idak02', '');
+        $idia03 = Arr::get($searchParams, 'idia03', '');
+        $idia05 = Arr::get($searchParams, 'idia05', '');
+        $idia06 = Arr::get($searchParams, 'idia06', '');
+        $idia07 = Arr::get($searchParams, 'idia07', '');
+        $idia11 = Arr::get($searchParams, 'idia11', '');
         
-        $query = Jadwal::where('trx_jadwal_asesmen.id',$idJadwal)
-        ->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema')
-        ->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk')
-        ->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
-        ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor', 'f.no_reg')->first();
+        $valueapl01 = Arr::get($searchParams, 'valueapl01', '');
+        $valueapl02 = Arr::get($searchParams, 'valueapl02', '');
+        $valuemapa02 = Arr::get($searchParams, 'valuemapa02', '');
+        $valueak01 = Arr::get($searchParams, 'valueak01', '');
+        $valueak02 = Arr::get($searchParams, 'valueak02', '');
+        $valueak03 = Arr::get($searchParams, 'valueak03', '');
+        $valueak04 = Arr::get($searchParams, 'valueak04', '');
+        $valueak05 = Arr::get($searchParams, 'valueak05', '');
+        $valueak06 = Arr::get($searchParams, 'valueak06', '');
+        $valueia01 = Arr::get($searchParams, 'valueia01', '');
+        $valueia02 = Arr::get($searchParams, 'valueia02', '');
+        $valueia03 = Arr::get($searchParams, 'valueia03', '');
+        $valueia05 = Arr::get($searchParams, 'valueia05', '');
+        $valueia06 = Arr::get($searchParams, 'valueia06', '');
+        $valueia07 = Arr::get($searchParams, 'valueia07', '');
+        $valueia11 = Arr::get($searchParams, 'valueia11', '');
 
-        $queryApl01 = UjiKompApl1::where('id_jadwal',$idJadwal)->get();
+        $dataapl01 = '';
+        // $dataapl02 = null;
+        // $datamapa02 = null;
+        // $dataak01 = null;
+        $dataak04 = '';
+        // $dataia01 = null;
+        // $dataia02 = null;
+
+        $datamodule = collect([]);
+
+        if ($valueapl01) {
+        $valueia01 = Arr::get($searchParams, 'valueia01', '');
+        $valueia02 = Arr::get($searchParams, 'valueia02', '');
+
+        $datamodule = collect([]);
+
+        // if($valueapl01){
+        //     $dataapl01 = $ujiKompController->showApl01($idapl01);
+        //     $datamodule->push(['nama' => 'apl01', 'data' => $dataapl01]);
+        // }
+
+        // if ($valueapl02){
+        //     $dataapl02 = $ujiKompController->showApl02($idapl02);
+        //     $datamodule->push(['nama' => 'apl02', 'data' => $dataapl02]);
+        // }
+
+        // if ($valuemapa02){
+        //     $datamapa02 = $ujiKompController->showMapa02($iduji);
+        //     $datamodule->push(['nama' => 'mapa02', 'data' => $datamapa02]);
+        // }
+
+        // if ($valueak01){
+        //     $dataak01 = $ujiKompController->showAk01($idak01);
+        //     $datamodule->push(['nama' => 'ak01', 'data' => $dataak01]);
+        // }
+
+        if ($valueak02){
+            $dataak02 = $ujiKompController->showAk02($idak02);
+            $datamodule->push(['nama' => 'ak02', 'data' => $dataak02]);
+        }
+
+        if ($valueak03){
+            $dataak03 = $ujiKompController->showAk03($idak03);
+            $datamodule->push(['nama' => 'ak03', 'data' => $dataak03]);
+        }
         
-        // $query->first();
-        // return response()->json(['jadwal' => $query, 'uji' => $queryApl01]);
+        // if ($valueapl02){
+        //     // $dataapl02 = $ujiKompController->showApl02($idapl02);
+        //     $dataapl02 = $ujiKompController->indexApl02(new Request(['idapl02' => $idapl02]));
+        //     $collection = collect();
+        //     $tempKodeUnit;
+        //     $tempNamaElemen;
+        //     $tempKuk;
+        //     $tempPertanyaanKuk;
 
-        $pdf = PDF::loadview('print/surat-tugas',['jadwal'=>$query, 'uji' => $queryApl01]);
-        $pdf->setPaper('a4' , 'portrait');
-	    return $pdf->output();
-    }
+        //     for($a = 1; $a < 7; $a++){
+        //         foreach($dataapl02 as $kodeUnit){
+        //             if($collection->isEmpty() || $kodeUnit->kode_unit !== $collection->last()['kode_unit']){
+        //                 $tempKodeUnit = $kodeUnit->kode_unit;
+        //                 $collection->push(['kode_unit' => $tempKodeUnit]);
+        //             }
+        //         }
+        //         foreach($dataapl02 as $namaElemen){
+        //             if($collection->isEmpty() || $namaElemen->nama_elemen !== $collection->last()['nama_elemen']){
+        //                 $tempNamaElemen = $namaElemen->nama_elemen;
+        //                 $collection->push(['nama_elemen' => $tempNamaElemen]);
+        //             }
+        //         }
+        //         foreach($dataapl02 as $kuk){
+        //             if($collection->isEmpty() || $kuk->kuk!== $collection->last()['kuk']){
+        //                 $tempKuk = $kuk->kuk;
+        //                 $collection->push(['kuk' => $tempKuk]);
+        //             }
+        //         }
+        //         foreach($dataapl02 as $pertanyaanKuk){
+        //             if($collection->isEmpty() || $pertanyaanKuk->pertanyaan_kuk !== $collection->last()['pertanyaan_kuk']){
+        //                 $collection->push(['pertanyaan_kuk' => $tempPertanyaanKuk]);
+        //             }
+        //         }
 
-    public function printHasilUji(Request $request)
-    {
-        $searchParams = $request->all();
-        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        $keyword = Arr::get($searchParams, 'keyword', '');
-        $visibility = Arr::get($searchParams, 'visibility', 0);
-        $user_id = Arr::get($searchParams, 'user_id', '');
-        $role = Arr::get($searchParams, 'role', '');
-        $foundUser = User::where('id',$user_id)->first();
-        $idJadwal = Arr::get($searchParams, 'idJadwal', '');
-        
-        $query = Jadwal::where('trx_jadwal_asesmen.id',$idJadwal)
-        ->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema')
-        ->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk')
-        ->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
-        ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor', 'f.no_reg')->first();
+        //         // $collection->push(['kode_unit' => $tempKodeUnit, 'nama_elemen' => $tempNamaElemen, 'kuk' => $tempKuk, 'pertanyaan_kuk' => $tempPertanyaanKuk]);
+        //     }
+        //     $collection->push(['kode_unit' => $tempKodeUnit, 'nama_elemen' => $tempNamaElemen]);
+        //     $datamodule->push(['nama' => 'apl02', 'data' => $collection]);
+        // }
 
-        $queryApl01 = UjiKompApl1::where('id_jadwal',$idJadwal)->get();
-        
-        // $query->first();
-        // return response()->json(['jadwal' => $query, 'uji' => $queryApl01]);
+        // if ($valueak04) {
+        //     $dataak04 = $ujiKompController->showAk04($idak04);
+        //     $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
+        // }
 
-        $pdf = PDF::loadview('print/surat-tugas',['jadwal'=>$query, 'uji' => $queryApl01]);
-        $pdf->setPaper('a4' , 'portrait');
-	    return $pdf->output();
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            $this->getValidationRules(),
-        );
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
-        } else {
-            DB::beginTransaction();
-            try {
-                $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $password = substr(str_shuffle(str_repeat($pool, 5)), 0, 6);
-
-                $params = $request->all();
-                $jadwal = Jadwal::create([
-                    'id_skema' => $params['id_skema'],
-                    'id_tuk' => $params['id_tuk'],
-                    'id_asesor' => $params['id_asesor'],
-                    'persyaratan' => $params['persyaratan'],
-                    'jadwal' => $params['jadwal'],
-                    'start_date' => $params['start_date'],
-                    'end_date' => $params['end_date'],
-                    'password_asesi' => $password,
-                ]);
-
-                // // create relation asesor
-                // $asesor = $params['asesor'];
-                // $asesorCount = count($asesor);
-                // for($i=0; $i < $asesorCount ; $i++) {
-                //     $jadwalAsesor = JadwalAsesor::create([
-                //         'id_asesor' => $asesor[$i],
-                //         'id_jadwal' => $jadwal->id,
-                //     ]);
-                // }
-
-                DB::commit();
-                return response()->json(['message' => "Success Create Jadwal"], 200);
-            } catch (\Exception $e) {
-                DB::rollback();
-                return response()->json(['message' => $e->getMessage()], 400);
-                //return $e->getMessage();
-            }
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  Jadwal $UjiKomp
-     * @return MasterResource|\Illuminate\Http\JsonResponse
-     */
-    public function show($id)
-    {
-       
-        $query = Jadwal::where('id',$id)->first();
-       
-        return $query;
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param Jadwal $ujikom
-     * @return MasterResource|\Illuminate\Http\JsonResponse
-     */
-    public function update(Request $request, Jadwal $jadwal)
-    {
-        if ($jadwal === null) {
-            return response()->json(['error' => 'Jadwal not found'], 404);
+        if ($valueak05) {
+            $dataak05 = $ujiKompController->showAk05($idak05);
+            $datamodule->push(['nama' => 'ak05', 'data' => $dataak05]);
         }
 
-        $validator = Validator::make($request->all(), $this->getValidationRules(false));
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
-        } else {
-            DB::beginTransaction();
-            try {
-
-                $jadwal->id_skema = $request->get('id_skema');
-                $jadwal->id_tuk = $request->get('id_tuk');
-                $jadwal->id_asesor = $request->get('id_asesor');
-                $jadwal->persyaratan = $request->get('persyaratan');
-                $jadwal->jadwal = $request->get('jadwal');
-                $jadwal->start_date = $request->get('start_date');
-                $jadwal->end_date = $request->get('end_date');
-                $jadwal->save();
-
-                DB::commit();
-                return new MasterResource($jadwal);
-            } catch (\Exception $e) {
-                DB::rollback();
-                return response()->json(['message' => $e->getMessage()], 400);
-            }
-        }
-    }
-
-    public function hideShow(Request $request, Jadwal $jadwal)
-    {
-        if ($jadwal === null) {
-            return response()->json(['error' => 'Jadwal not found'], 404);
+        if ($valueak06) {
+            $dataak06 = $ujiKompController->indexAk06($idak06);
+            $datamodule->push(['nama' => 'ak06', 'data' => $dataak06]);
         }
 
-        $validator = Validator::make($request->all(), $this->getValidationRules(false));
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
-        } else {
-            DB::beginTransaction();
-            try {
+        // if ($valueia01){
+        //     $dataia01 = $ujiKompController->showIa01($idia01);
+        //     $datamodule->push(['nama' => 'ia01', 'data' => $dataia01]);
+        // }
 
-                $jadwal->visibility = $request->get('visibility');
-                $jadwal->save();
+        // if ($valueia02){
+        //     $dataia02 = $ujiKompController->showIa02($idia02);
+        //     $datamodule->push(['nama' => 'ia02', 'data' => $dataia02]);
+        // }
 
-                DB::commit();
-                return new MasterResource($jadwal);
-            } catch (\Exception $e) {
-                DB::rollback();
-                return response()->json(['message' => $e->getMessage()], 400);
-            }
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  UjiKomp $UjiKomp
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        try {
-            Jadwal::where('id',$id)->delete();
-            $apl01 = UjiKompApl1::where('id_jadwal', $id)->get();
-            for ($i = 0; $i < count($apl01); $i++) {
-                $foundUji = UjiKomp::where('id_apl_01',$apl01[$i]['id'])->first();
-                UjiKomp::where('id_apl_01', $apl01[$i]['id'])->delete();
-                UjiKompApl1::where('id', $foundUji->id_apl_01)->delete();
-                UjiKompApl2::where('id', $foundUji->id_apl_02)->delete();
-                UjiKompApl2Detail::where('id_apl_02', $foundUji->id_apl_02)->delete();
-                UjiKompAk01::where('id', $foundUji->id_ak_01)->delete();
-                UjiKompAk02::where('id', $foundUji->id_ak_02)->delete();
-                UjiKompAk02Detail::where('id_ak_02', $foundUji->id_ak_02)->delete();
-                UjiKompAk03::where('id', $foundUji->id_ak_03)->delete();
-                UjiKompAk03Detail::where('id_ak_03', $foundUji->id_ak_03)->delete();
-                UjiKompAk04::where('id', $foundUji->id_ak_04)->delete();
-                UjiKompAk05::where('id', $foundUji->id_ak_05)->delete();
-                UjiKompIa01::where('id', $foundUji->id_ia_01)->delete();
-                UjiKompIa01Detail::where('id_ia_01', $foundUji->id_ia_01)->delete();
-                UjiKompIa02::where('id', $foundUji->id_ia_02)->delete();
-                UjiKompIa03::where('id', $foundUji->id_ia_03)->delete();
-                UjiKompIa03Detail::where('id_ia_03', $foundUji->id_ia_03)->delete();
-                UjiKompIa05::where('id', $foundUji->id_ia_05)->delete();
-                UjiKompIa05Detail::where('id_ia_05', $foundUji->id_ia_05)->delete();
-                UjiKompIa06::where('id', $foundUji->id_ia_06)->delete();
-                UjiKompIa06Detail::where('id_ia_06', $foundUji->id_ia_06)->delete();
-                UjiKompIa11::where('id', $foundUji->id_ia_11)->delete();
-                UjiKompIa11Detail::where('id_ia_11', $foundUji->id_ia_11)->delete();
-            }
-            return response()->json(['message' => "Success Delete Jadwal"], 201);
-        } catch (\Exception $ex) {
-            return response()->json(['error' => $ex->getMessage()], 403);
+        if ($valueia03){
+            $dataia03 = $ujiKompController->showIa03($idia03);
+            $datamodule->push(['nama' => 'ia03', 'data' => $dataia03]);
         }
 
-    }
+        if ($valueia05){
+            $dataia05 = $ujiKompController->showIa03($idia05);
+            $datamodule->push(['nama' => 'ia05', 'data' => $dataia05]);
+        }
 
+        if ($valueia06){
+            $dataia06 = $ujiKompController->showIa06($idia06);
+            $datamodule->push(['nama' => 'ia06', 'data' => $dataia06]);
+        }
 
-    private function getValidationRules($isNew = true)
-    {
-        return [
-            'id_skema' => 'required',
-        ];
+        if ($valueia07){
+            $dataia07 = $ujiKompController->showIa06($idia07);
+            $datamodule->push(['nama' => 'ia07', 'data' => $dataia07]);
+        }
+
+        if ($valueia11){
+            $dataia11 = $ujiKompController->showIa11($idia11);
+            $datamodule->push(['nama' => 'ia11', 'data' => $dataia11]);
+        }
+
+        // return ['datamodule' => $datamodule, 'iduji' => $iduji];
+        // return view('print.masterprint', ['valueak04' => $valueak04, 'valueapl01' => $valueapl01]);
+        $pdf = PDF::loadview('print.masterprint', [
+            'datamodule' => $datamodule, 
+            'skemaunit' => $dataSkemaUnit, 
+            'skemasertifikasi' => $dataSkemaSertifikasi[0], 
+            'asesor' => $asesor,
+        ]);
+        $pdf->setPaper('A4','portrait');
+        return $pdf->download('module.pdf');
+        // return $pdf->stream();   
     }
+}
+    
+
 }

@@ -403,6 +403,7 @@ export default {
     async getAk06() {
       const { data } = await showAk06Resource.get(this.$route.params.id_ak_06);
       this.aspek = data[0]['aspek'];
+      console.log(this.aspek);
       this.aspek.forEach((element, index) => {
         if (index === 0) {
           element.validitas = element.validitas === 1;

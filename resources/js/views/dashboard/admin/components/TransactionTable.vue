@@ -87,9 +87,53 @@
         <template slot-scope="scope">
           <!-- <router-link :to="{ name: 'preview-page', params:{ id_uji: scope.row.id, asesor: scope.row.asesor, id_skema: scope.row.id_skema, id_apl_01: scope.row.id_apl_01, id_apl_02: scope.row.id_apl_02, id_mapa_02: scope.row.id_mapa_02, id_ak_01: scope.row.id_ak_01, id_ak_04: scope.row.id_ak_04, id_ia_01: scope.row.id_ia_01, id_ia_02: scope.row.id_ia_02, id_ia_03: scope.row.id_ia_03, id_ia_05: scope.row.id_ia_05, id_ia_06: scope.row.id_ia_06, id_ia_07: scope.row.id_ia_07, id_ia_11: scope.row.id_ia_11, id_ak_02: scope.row.id_ak_02, id_ak_03: scope.row.id_ak_03, id_ak_05: scope.row.id_ak_05, id_ak_06: scope.row.id_ak_06, va: scope.row.id.va }}"> -->
           <!-- <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor, idskema: scope.row.id_skema, apl01: scope.row.id_apl_01, apl02: scope.row.id_apl_02, mapa02: scope.row.id_mapa_02, ak01: scope.row.id_ak_01, ak04: scope.row.id_ak_04, ia01: scope.row.id_ia_01, ia02: scope.row.id_ia_02, ia03: scope.row.id_ia_03, ia05: scope.row.id_ia_05, id06: scope.row.id_ia_06, ia07: scope.row.id_ia_07, ia11: scope.row.id_ia_11, ak02: scope.row.id_ak_02, ak03: scope.row.id_ak_03, ak05: scope.row.id_ak_05, ak06: scope.row.id_ak_06, va: scope.row.va }}"> -->
-          <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor, apl01: scope.row.id_apl_01 }}">
+          <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor }}">
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
           </router-link>
+          <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
+          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor)">Print</el-button>
+          <el-dialog
+            title="Tips"
+            :visible.sync="dialogVisible"
+            width="50%"
+            :before-close="handleClose"
+          >
+            <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">Check all</el-checkbox>
+            <!-- <el-checkbox-group v-model="checkedDataUjiKomp" @change="handleCheckedCitiesChange"> -->
+            <!-- <el-checkbox v-for="ujiKomp in dataUjiKomp" :key="ujiKomp" :label="ujiKomp" style="">
+                <div style="font-weight: 400;">{{ ujiKomp }}</div>
+              </el-checkbox> -->
+            <table style="width: 100%;">
+              <tr style="width: 100%;">
+                <td style="width: 25%;">
+                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                    <!-- <el-checkbox v-if="ujiKomp.index < 5">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox> -->
+                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                  </div>
+                </td>
+                <td style="width: 25%;">
+                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                  </div>
+                </td>
+                <td style="width: 25%;">
+                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                  </div>
+                </td>
+                <td style="width: 25%;">
+                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <!-- </el-checkbox-group> -->
+            <span slot="footer" class="dialog-footer">
+              <!-- <el-button @click="dialogVisible = false">Cancel</el-button> -->
+              <el-button type="primary" @click="generateReport()">Confirm</el-button>
+            </span>
+          </el-dialog>
         </template>
       </el-table-column>
 
@@ -247,6 +291,11 @@ import Resource from '@/api/resource';
 const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
 const jadwalResource = new Resource('jadwal-get');
+const print = new Resource('print-semua-module');
+const preview = new Resource('detail/preview');
+// const print = new Resource('print-modules');
+// const skemaunit = new Resource('unit-kompetensi-get');
+const cityOptions = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen'];
 
 export default {
   components: { Pagination },
@@ -275,6 +324,7 @@ export default {
       listSkema: null,
       loading: true,
       dialog: false,
+      dialogVisible: false,
       query: {
         page: 1,
         limit: 5,
@@ -289,6 +339,33 @@ export default {
         { color: '#1989fa', percentage: 80 },
         { color: '#6f7ad3', percentage: 100 },
       ],
+      iduji: '',
+      asesor: '',
+      dataUjiKomp: [
+        { index: 1, name: 'APL 01', nameInDatabase: 'id_apl_01', idujikom: null, value: false },
+        { index: 2, name: 'APL 02', nameInDatabase: 'id_apl_02', idujikom: null, value: false },
+        { index: 3, name: 'MAPA 02', nameInDatabase: 'id_mapa_02', idujikom: null, value: false },
+        { index: 4, name: 'AK 01', nameInDatabase: 'id_ak_01', idujikom: null, value: false },
+        { index: 5, name: 'AK 04', nameInDatabase: 'id_ak_04', idujikom: null, value: false },
+        { index: 6, name: 'IA 01', nameInDatabase: 'id_ia_01', idujikom: null, value: false },
+        { index: 7, name: 'IA 02', nameInDatabase: 'id_ia_02', idujikom: null, value: false },
+        { index: 8, name: 'IA 03', nameInDatabase: 'id_ia_03', idujikom: null, value: false },
+        { index: 9, name: 'IA 05', nameInDatabase: 'id_ia_05', idujikom: null, value: false },
+        { index: 10, name: 'IA 06', nameInDatabase: 'id_ia_06', idujikom: null, value: false },
+        { index: 11, name: 'IA 07', nameInDatabase: 'id_ia_07', idujikom: null, value: false },
+        { index: 12, name: 'IA 11', nameInDatabase: 'id_ia_11', idujikom: null, value: false },
+        { index: 13, name: 'AK 02', nameInDatabase: 'id_ak_02', idujikom: null, value: false },
+        { index: 14, name: 'AK 03', nameInDatabase: 'id_ak_03', idujikom: null, value: false },
+        { index: 15, name: 'AK 05', nameInDatabase: 'id_ak_05', idujikom: null, value: false },
+        { index: 16, name: 'AK 06', nameInDatabase: 'id_ak_06', idujikom: null, value: false },
+        { index: 17, name: 'VA', nameInDatabase: 'id_va', idujikom: null, value: false },
+      ],
+      checkAll: false,
+      checkedCities: ['Shanghai', 'Beijing'],
+      checkedDataUjiKomp: [],
+      cities: cityOptions,
+      isIndeterminate: true,
+      regex: '',
     };
   },
   computed: {
@@ -309,6 +386,124 @@ export default {
     this.getListSkema();
   },
   methods: {
+    async showDialogPrint(id, asesor){
+      const data = await preview.get(id);
+      this.iduji = data.id;
+      this.asesor = asesor;
+      // const skema = await skemaunit.list({ id_skema: data.id_skema });
+      // console.log(skema);
+      this.dialogVisible = true;
+      let index = 0;
+      for (const property in data){
+        if (this.dataUjiKomp[index].nameInDatabase === property){
+          this.dataUjiKomp[index].idujikom = data[property];
+          index++;
+        }
+        console.log(property);
+        console.log(this.dataUjiKomp);
+      }
+      console.log(this.dataUjiKomp);
+      // if (!this.dialogVisible){
+      //   await print.download({ iduji: id }).then((response) => {
+      //     console.log(response);
+      //     const url = window.URL.createObjectURL(new Blob([response]));
+      //     const link = document.createElement('a');
+      //     link.href = url;
+      //     link.setAttribute('download', 'semua-module.pdf');
+      //     document.body.appendChild(link);
+      //     link.click();
+      //   });
+      // }
+      // console.log(this.dataUjiKomp);
+    },
+    handleCheckAllChange(val) {
+      // this.checkedCities = val ? cityOptions : [];
+      this.checkedDataUjiKomp = val ? this.dataUjiKomp : [];
+      // let index = 0;
+      for (const data in this.dataUjiKomp){
+        // this.dataUjiKomp[index].value = this.checkAll;
+        this.data.value = this.checkAll;
+        console.log(data);
+        // index++;
+      }
+      this.isIndeterminate = false;
+      console.log(val);
+      console.log(this.dataUjiKomp);
+    },
+    handleCheckedCitiesChange(value) {
+      const checkedCount = value.length;
+      this.checkAll = checkedCount === this.dataUjiKomp.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataUjiKomp.length;
+      console.log(value);
+    },
+    handleClose(done){
+      this.$confirm('Are you sure to close this dialog?')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
+    async generateReport() {
+      this.loading = true;
+      // console.log(id);
+      // await print.download(id);
+      // await print.list({ iduji: id });
+      // var result = await print.list({ iduji: id });
+      // console.log(result);
+      const ujikomp = {
+        iduji: this.iduji,
+        asesor: this.asesor,
+        idapl01: this.dataUjiKomp[0].idujikom,
+        idapl02: this.dataUjiKomp[1].idujikom,
+        idmapa02: this.dataUjiKomp[2].idujikom,
+        idak01: this.dataUjiKomp[3].idujikom,
+        idak04: this.dataUjiKomp[4].idujikom,
+        idia01: this.dataUjiKomp[5].idujikom,
+        idia02: this.dataUjiKomp[6].idujikom,
+        idia03: this.dataUjiKomp[7].idujikom,
+        idia05: this.dataUjiKomp[8].idujikom,
+        idia06: this.dataUjiKomp[9].idujikom,
+        idia07: this.dataUjiKomp[10].idujikom,
+        idia11: this.dataUjiKomp[11].idujikom,
+        idak02: this.dataUjiKomp[12].idujikom,
+        idak03: this.dataUjiKomp[13].idujikom,
+        idak05: this.dataUjiKomp[14].idujikom,
+        idak06: this.dataUjiKomp[15].idujikom,
+        idva: this.dataUjiKomp[16].idujikom,
+        valueapl01: this.dataUjiKomp[0].value,
+        valueapl02: this.dataUjiKomp[1].value,
+        valuemapa02: this.dataUjiKomp[2].value,
+        valueak01: this.dataUjiKomp[3].value,
+        valueak04: this.dataUjiKomp[4].value,
+        valueia01: this.dataUjiKomp[5].value,
+        valueia02: this.dataUjiKomp[6].value,
+        valueia03: this.dataUjiKomp[7].value,
+        valueia05: this.dataUjiKomp[8].value,
+        valueia06: this.dataUjiKomp[9].value,
+        valueia07: this.dataUjiKomp[10].value,
+        valueia11: this.dataUjiKomp[11].value,
+        valueak02: this.dataUjiKomp[12].value,
+        valueak03: this.dataUjiKomp[13].value,
+        valueak05: this.dataUjiKomp[14].value,
+        valueak06: this.dataUjiKomp[15].value,
+        valueva: this.dataUjiKomp[16].value,
+      };
+
+      console.log(ujikomp);
+      await print.download(ujikomp).then((response) => {
+        console.log(response);
+        const url = window.URL.createObjectURL(new Blob([response]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'semua-module.pdf');
+        document.body.appendChild(link);
+        link.click();
+      });
+      // await print.download({ iduji: id });
+      // console.log(this.dataUjiKomp);
+      this.dialogVisible = false;
+      this.loading = false;
+    },
     async getList() {
       this.query.role = this.roles[0];
       this.query.user_id = this.userId;

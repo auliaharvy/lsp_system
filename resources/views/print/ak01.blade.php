@@ -1,0 +1,162 @@
+<div class="container mt-10">
+	<h6>FR.AK.01. PERSETUJUAN ASESMEN DAN KERAHASIAAN</h6>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<table class="table table-bordered">
+				<tr>
+					<td class="bg-dark" colspan="5"></td>
+				</tr>
+				<tr>
+					<td colspan="5">
+						<div>Persetujuan Asesmen ini untuk menjamin bahwa Asesi telah diberi arahan secara rinci tentang perencanaan dan proses asesmen</div>
+					</td>
+				</tr>
+				<tr>
+					<td rowspan="2">
+						<div>Skema Sertifikasi (KKNI/Okupasi/Klaster)</div>
+					</td>
+					<td>
+						<div>Judul<div>
+					</td>
+					<td>
+						<div>:<div>
+					</td>
+					<td colspan="2">
+						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>Nomor</div>
+					</td>
+					<td>
+						<div>:<div>
+					</td>
+					<td colspan="2">
+						<div>{{ $skemaSertifikasi->kode_skema }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div>TUK</div>
+					</td>
+					<td>
+						<div>:<div>
+					</td>
+					<td colspan="2">
+						<div>{{ $data->tuk }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div>Nama Asesor</div>
+					</td>
+					<td>
+						<div>:<div>
+					</td>
+					<td colspan="2">
+						<div>{{ $data->nama_asesor }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div>Nama Asesi</div>
+					</td>
+					<td>
+						<div>:<div>
+					</td>
+					<td colspan="2">
+						<div>{{ $data->nama_asesi }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div>Bukti yang akan dikumpulkan</div>
+					</td>
+					<td>
+						<div>:<div>
+					</td>
+					<td colspan="2">
+						<div>
+							@if($data->verifikasi_portfolio == 1)
+								<span>Verifikasi portfolio, </span>
+							@endif
+							@if($data->observasi_langsung == 1)
+								<span>Obervasi langsung, </span>
+							@endif
+							@if($data->hasil_tes_tulis == 1)
+								<span>Hasil tes tulis, </span>
+							@endif
+							@if($data->hasil_tes_lisan == 1)
+								<span>Hasil tes lisan, </span>
+							@endif
+							@if($data->hasil_tes_wawancara == 1)
+								<span>Hasil tes wawancara, </span>
+							@endif
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td rowspan="3" colspan="2">
+						<div>Pelaksanaan asesmen disepakati pada</div>
+					</td>
+					<td>
+						<div>:<div>
+					</td>
+					<td>
+						<div>Hari / Tanggal</div>
+					</td>
+					<td>
+						<div>{{ $data->hari }}, {{ $data->tanggal }} {{ $data->bulan }} {{ $data->tahun }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>:<div>
+					</td>
+					<td>
+						<div>Waktu</div>
+					</td>
+					<td>
+						<div>{{ $skemaSertifikasi->mulai }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>:<div>
+					</td>
+					<td>
+						<div>TUK</div>
+					</td>
+					<td>
+						<div>{{ $data->tuk }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5">
+						<div>Asesi: </div>
+						<div>{{ $data->pernyataan_asesi }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5">
+						<div>Asesor: </div>
+						<div>{{ $data->pernyataan_asesor }}</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5">
+						<div><span>Tanda Tangan Asesor : </span><span>Tanggal : </span></div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5">
+						<div><span>Tanda Tangan Asesi : </span><span>Tanggal : </span></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
