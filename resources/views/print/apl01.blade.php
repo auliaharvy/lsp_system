@@ -7,7 +7,7 @@
 <div class="container">
  	<div class="row">
  		<div class="col-12">
-			<table class="table">
+			<table class="table table-bordered">
 				<tr>
 					<td class="bg-dark" colspan="3"></td>
 				</tr>
@@ -53,7 +53,7 @@
 				</tr>
 			</table>
 			<h6>b. Data Pekerjaan Sekarang</h6>
-			<table class="table">
+			<table class="table table-bordered">
 				<tr>
 					<td>Nama Institusi / Perusahaan</td>
 					<td>:</td>

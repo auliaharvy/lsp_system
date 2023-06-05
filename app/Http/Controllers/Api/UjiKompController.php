@@ -92,6 +92,7 @@ class UjiKompController extends BaseController
         $foundUser = User::where('id',$user_id)->first();
         $visibility = Arr::get($searchParams, 'visibility', 0);
         $skema = Arr::get($searchParams, 'id_skema', '');
+        $idapl01 = Arr::get($searchParams, 'idapl01', '');
 
         $query = UjiKomp::query();
         $query->join('trx_uji_komp_apl_01 as b', 'b.id', '=', 'trx_uji_komp.id_apl_01');
@@ -100,7 +101,7 @@ class UjiKompController extends BaseController
         $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk');
         $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
         ->orderBy('c.created_at', 'desc')
-        ->select('trx_uji_komp.*', 'b.nik', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
+        ->select('trx_uji_komp.*', 'b.nik', 'b.nama_lengkap', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
         'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor');
 
         if ($visibility === 0) {
@@ -119,6 +120,10 @@ class UjiKompController extends BaseController
         }
         if (!empty($skema)) {
             $query->where('b.id_skema', $skema);
+        }
+
+        if (!empty($idapl01)) {
+            $query->where('b.id', $idapl01);
         }
 
         if (!empty($keyword)) {
@@ -797,9 +802,10 @@ class UjiKompController extends BaseController
                 function($join){
                     $join->on('c.id', '=', 'd.id_elemen');
                 })
+            ->join('trx_uji_komp_apl_02 as e', 'trx_uji_komp_apl_02_detail.id_apl_02', '=', 'e.id')
             ->where('trx_uji_komp_apl_02_detail.id_apl_02',$idapl02)
             // ->where('b.id_elemen','=', 'd.id')
-            ->select('d.kuk', 'd.pertanyaan_kuk', 'c.nama_elemen', 'b.kode_unit', 'b.unit_kompetensi')
+            ->select('e.ttd_asesor', 'd.kuk', 'd.pertanyaan_kuk', 'c.nama_elemen', 'b.kode_unit', 'b.unit_kompetensi')
             ->groupBy('d.id')
             ->get();
 
@@ -815,8 +821,8 @@ class UjiKompController extends BaseController
         // ->get();
 
         // return MasterResource::collection($query->paginate($limit));
-        return $query;
-        // return MasterResource::collection($query);
+        // return $query;
+        return MasterResource::collection($query);
     } 
 
     public function indexIa02(Request $request)

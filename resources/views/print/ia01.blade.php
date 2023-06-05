@@ -89,7 +89,7 @@
 						<div><strong>Instruksi:</strong></div>
 						<ul>
 							<li>Baca setiap pertanyaan di kolom sebelah kiri.</li>
-							<li>Beri tanda centang (&radic;) pada kotak jika Anda yakin dapat melakukan tugas yang
+							<li>Beri tanda centang <input type="checkbox" checked aria-label="Checkbox for following text input"> pada kotak jika Anda yakin dapat melakukan tugas yang
 								dijelaskan.</li>
 							<li>Isi kolom di sebelah kanan dengan mendaftar bukti yang Anda miliki untuk menunjukkan
 								bahwa Anda melakukan tugas-tugas ini.</li>
@@ -149,7 +149,7 @@
 						<div>Benchmark (SOP / spesifikasi produk industri)</div>
 					</td>
 					<td colspan="2">
-						<div>Rekomendasi</div>
+						<div style="word-wrap: break-word">Rekomendasi</div>
 					</td>
 					<td rowspan="2">
 						<div>Penilaian Lanjut</div>

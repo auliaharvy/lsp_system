@@ -1,19 +1,4 @@
 <div class="container mt-10">
-	@php 
-		$collection = collect($data);
-	@endphp
-	@foreach ($collection as $key => $val)
-		<table class="table table-bordered">
-			@foreach($val as $item)
-				<tr>
-					<td>{{ $item }}</td>
-				</tr>
-				<tr>
-					<td></td>
-				</tr>
-			@endforeach
-		</table>
-	@endforeach
 	<h6>FR.APL.02. ASESMEN MANDIRI</h6>
 </div>
 <div class="container">
@@ -34,6 +19,7 @@
 						<div>:</div>
 					</td>
 					<td>
+						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -43,6 +29,7 @@
 						<div>:</div>
 					</td>
 					<td>
+						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
 			</table>
@@ -57,7 +44,7 @@
 						<div><strong>Instruksi:</strong></div>
 						<ul>
 							<li>Baca setiap pertanyaan di kolom sebelah kiri.</li>
-							<li>Beri tanda centang (&radic;) pada kotak jika Anda yakin dapat melakukan tugas yang dijelaskan.</li>
+							<li>Beri tanda centang <input type="checkbox" checked aria-label="Checkbox for following text input"> pada kotak jika Anda yakin dapat melakukan tugas yang dijelaskan.</li>
 							<li>Isi kolom di sebelah kanan dengan mendaftar bukti yang Anda miliki untuk menunjukkan bahwa Anda melakukan tugas-tugas ini.</li>
 						</ul>
 					</td>
@@ -107,33 +94,51 @@
 			</table>
 			<table border="1">
 				<tr>
-					<td>Nama Asesi:</td>
-					<td>Tanggal:</td>
-					<td>Tanda Tangan Asesi:</td>
+					<td><div>Nama Asesi : </div></td>
+					<td><div>Tanggal : </div></td>
+					<td><div>Tanda Tangan Asesi : </div></td>
 				</tr>
 				<tr>
-					<td>{{ $skemaSertifikasi->nama_peserta }}</td>
-					<td>{{ $skemaSertifikasi->mulai }}</td>
-					<td>Tanda Tangan Asesi</td>
+					<td><div>{{ $skemaSertifikasi->nama_peserta }}</div></td>
+					<td><div>{{ $skemaSertifikasi->mulai }}</div></td>
+					<td>
+						@if($data['ttd_asesor'] !== '')
+							<div>
+								<img class="img-fluid" src="{{ public_path('/uploads/users/signature/'. $data['ttd_asesor'])}}" alt="">
+							</div>
+						@else
+							<div><strong>Belum bertanda tangan</strong></div>
+						@endif
+						<div>{{ $skemaSertifikasi->mulai }}</div>
+					</td>
 				</tr>
 				<tr>
-					<td class="bg-dark text-white text-center" colspan="3">Ditinjau oleh Asesor:</td>
+					<td class="bg-dark text-white text-center" colspan="3"><div>Ditinjau oleh Asesor:</div></td>
 				</tr>
 				<tr>
-					<td>Nama Asesor:</td>
+					<td><div>Nama Asesor:</div></td>
 					<td>
 						<div><strong>Rekomendasi:</strong></div>
 						<div>Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
 					</td>
-					<td>Tanda Tangan dan Tanggal:</td>
+					<td><div>Tanda Tangan dan Tanggal:</div></td>
 				</tr>
 				<tr>
-					<td>{{ $skemaSertifikasi->nama_asesor }}</td>
+					<td><div>{{ $skemaSertifikasi->nama_asesor }}</div></td>
 					<td>
 						<div><strong>Rekomendasi:</strong></div>
 						<div>Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
 					</td>
-					<td>Tanda Tangan dan Tanggal:</td>
+					<td>
+						@if($data['ttd_asesor'] !== '')
+							<div>
+								<img class="img-fluid" src="{{ public_path('/uploads/users/signature/'. $data['ttd_asesor'])}}" alt="">
+							</div>
+						@else
+							<div><strong>Belum bertanda tangan</strong></div>
+						@endif
+						<div>{{ $skemaSertifikasi->mulai }}</div>
+					</td>
 				</tr>
 			</table>
 		</div>
