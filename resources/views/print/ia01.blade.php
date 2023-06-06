@@ -1,7 +1,7 @@
-<div class="container mt-10">
+<div class="pr-4 mt-10">
 	<h6>FR.IA.01. CEKLIS OBSERVASI AKTIVITAS DI TEMPAT KERJA ATAU TEMPAT KERJA SIMULASI</h6>
 </div>
-<div class="container">
+<div class="pr-4">
 	<div class="row">
 		<div class="col-12">
 			<table class="table table-bordered">
@@ -99,7 +99,7 @@
 			</table>
 			<table class="table table-bordered">
 				<tr>
-					<td class="bg-dark" colspan="6"></td>
+					<td class="bg-dark" colspan="7"></td>
 				</tr>
 				@php $a = 1; @endphp
 				@foreach($skemaUnit as $data)

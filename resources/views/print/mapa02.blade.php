@@ -1,12 +1,12 @@
- <div class="container mt-10">
+ <div class="pr-4 mt-10">
 	<h6>FR.MAPA.02- PETA INSTRUMEN ASESSMEN HASIL PENDEKATAN ASESMEN DAN PERENCANAAN ASESMEN</h6>
  </div>
- <div class="container">
+ <div class="pr-4">
 	<div class="row">
 		<div class="col-12">
 			<table class="table table-bordered" >
 				<tr>
-					<td class="bg-dark" colspan="5"></td>
+					<td class="bg-dark" colspan="7"></td>
 				</tr>
 				<tr>
 					<td rowspan="2">
@@ -18,7 +18,7 @@
 					<td>
 						<div>:</div>
 					</td>
-					<td colspan="2">
+					<td colspan="4">
 						<div>{{ $skemaSertifikasi->skema_sertifikasi }}</div>
 					</td>
 				</tr>
@@ -29,7 +29,7 @@
 					<td>
 						<div>:<div>
 					</td>
-					<td colspan="3">
+					<td colspan="4">
 						<div>{{ $skemaSertifikasi->kode_skema }}</div>
 					</td>
 				</tr>
@@ -51,7 +51,7 @@
 							<td>
 								<div>:</div>
 							</td>
-							<td colspan="2">
+							<td colspan="4">
 								<div>{{ $item->kode_unit }}</div>
 							</td>
 						</tr>
@@ -62,7 +62,7 @@
 							<td>
 								<div>:</div>
 							</td>
-							<td colspan="3">
+							<td colspan="4">
 								<div>{{ $item->unit_kompetensi }}</div>
 							</td>
 						</tr>

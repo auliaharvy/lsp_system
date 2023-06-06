@@ -11,13 +11,13 @@
 
 <body>
   @foreach ($datamodule as $module)
-  @include('print.' . $module['nama'],
-  [
-  'data' => $module['data'],
-  'skemaUnit' => $skemaunit,
-  'skemaSertifikasi' => $skemasertifikasi,
-  'asesor' => $asesor
-  ])
+    @include('print.' . $module['nama'],
+    [
+    'data' => $module['data'],
+    'skemaUnit' => $skemaunit,
+    'skemaSertifikasi' => $skemasertifikasi,
+    'asesor' => $asesor
+    ])
   <div style="page-break-after: always"></div>
   @endforeach
   {{-- {{ $datamodule }} --}}

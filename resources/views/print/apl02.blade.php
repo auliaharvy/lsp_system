@@ -1,7 +1,7 @@
-<div class="container mt-10">
+<div class="pr-4 mt-10">
 	<h6>FR.APL.02. ASESMEN MANDIRI</h6>
 </div>
-<div class="container">
+<div class="pr-4">
 	<div class="row">
 		<div class="col-12">
 			<table class="table table-bordered">
@@ -50,48 +50,48 @@
 					</td>
 				</tr>
 			</table>
-			<table border="1">
-				<tr>
-					<td>
-						<div><strong>Unit Kompetensi: 1</strong></div>
-					</td>
-					<td colspan="4">
-						<div>Mengikuti prosedur kesehatan, keselamatan dan keamanan keria</div>
-					</td>
-				</tr>
-				<tr>
-					<td class="bg-dark text-white text-center" colspan="2">
-						<div><strong>Dapatkah Saya ................?</strong></div>
-					</td>
-					<td class="bg-dark text-white text-center">
-						<div><strong>K</strong></div>
-					</td>
-					<td class="bg-dark text-white text-center">
-						<div><strong>BK</strong></div>
-					</td>
-					<td class="bg-dark text-white text-center">
-						<div><strong>Bukti yang relevan</strong></div>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<ol>
-							<li>Elemen: Mengikuti Prosedur-prosedur Kesehatan, Keselamatan dan Keamanan Kerja</li>
-						</ol>
-						<ul>
-							<li>Kriteria Unjuk Kerja:</li>
-						</ul>
-						<ol>
-							<li>Apakah anda dapat Menaati prosedur kesehatan, keselamatan dan keamanan sesuai dengan kebijakan organisasi, undang-undang&nbsp; terkait, persyaratan asuransi, serta <em>safety plan</em> yang tepat ?</li>
-							<li>Apakah anda dapat Mengidentifikasikan dan menginformasikan dengan segera prosedur kesehatan, keselamatan, dan keamanan kerja ?</li>
-							<li>Apakah anda dapat Melakukan pekerjaan dengan aman dan memastikan bahwa seluruh kegiatan berada dalam suatu kondisi yang aman dan tidak terdapat bahaya bagi pekerja maupun masyarakat ?</li>
-						</ol>
-					</td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-			</table>
+				<table border="1">
+					<tr>
+						<td>
+							<div><strong>Unit Kompetensi: 1</strong></div>
+						</td>
+						<td colspan="4">
+							<div>Mengikuti prosedur kesehatan, keselamatan dan keamanan keria</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="bg-dark text-white text-center" colspan="2">
+							<div><strong>Dapatkah Saya ................?</strong></div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div><strong>K</strong></div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div><strong>BK</strong></div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div><strong>Bukti yang relevan</strong></div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<ol>
+								<li>Elemen: Mengikuti Prosedur-prosedur Kesehatan, Keselamatan dan Keamanan Kerja</li>
+							</ol>
+							<ul>
+								<li>Kriteria Unjuk Kerja:</li>
+							</ul>
+							<ol>
+								<li>Apakah anda dapat Menaati prosedur kesehatan, keselamatan dan keamanan sesuai dengan kebijakan organisasi, undang-undang&nbsp; terkait, persyaratan asuransi, serta <em>safety plan</em> yang tepat ?</li>
+								<li>Apakah anda dapat Mengidentifikasikan dan menginformasikan dengan segera prosedur kesehatan, keselamatan, dan keamanan kerja ?</li>
+								<li>Apakah anda dapat Melakukan pekerjaan dengan aman dan memastikan bahwa seluruh kegiatan berada dalam suatu kondisi yang aman dan tidak terdapat bahaya bagi pekerja maupun masyarakat ?</li>
+							</ol>
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
 			<table border="1">
 				<tr>
 					<td><div>Nama Asesi : </div></td>
@@ -102,14 +102,7 @@
 					<td><div>{{ $skemaSertifikasi->nama_peserta }}</div></td>
 					<td><div>{{ $skemaSertifikasi->mulai }}</div></td>
 					<td>
-						@if($data['ttd_asesor'] !== '')
-							<div>
-								<img class="img-fluid" src="{{ public_path('/uploads/users/signature/'. $data['ttd_asesor'])}}" alt="">
-							</div>
-						@else
-							<div><strong>Belum bertanda tangan</strong></div>
-						@endif
-						<div>{{ $skemaSertifikasi->mulai }}</div>
+					<div>{{ $skemaSertifikasi->mulai }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -130,13 +123,6 @@
 						<div>Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
 					</td>
 					<td>
-						@if($data['ttd_asesor'] !== '')
-							<div>
-								<img class="img-fluid" src="{{ public_path('/uploads/users/signature/'. $data['ttd_asesor'])}}" alt="">
-							</div>
-						@else
-							<div><strong>Belum bertanda tangan</strong></div>
-						@endif
 						<div>{{ $skemaSertifikasi->mulai }}</div>
 					</td>
 				</tr>
