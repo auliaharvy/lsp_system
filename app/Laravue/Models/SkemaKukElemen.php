@@ -12,6 +12,7 @@ use App\Laravue\Acl;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Laravue\Models\UjiKompApl2Detail;
 
 /**
  * Class Skema Elemen
@@ -46,6 +47,8 @@ class SkemaKukElemen extends Model
             $data['jenis_bukti_id'] = $row->jenis_bukti_id;
             $data['nama_jenis_bukti'] = $row->nama_jenis_bukti;
             $data['bukti'] = $row->bukti;
+            $isKompeten =  ujikompapl2detail::getIsKompeten($row->id);
+            $data['is_kompeten'] = $isKompeten;
             $plunckData[] = $data;
 		endforeach;
 		return $plunckData;

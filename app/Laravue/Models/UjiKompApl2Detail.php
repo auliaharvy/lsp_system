@@ -31,4 +31,14 @@ class UjiKompApl2Detail extends Model
      */
     protected $table = "trx_uji_komp_apl_02_detail";
     protected $fillable = ['id_uji_komp' ,'id_apl_02', 'id_kuk_elemen', 'is_kompeten', 'bukti_pendukung_id'];
+
+    public static function getIsKompeten($id_kuk_elemen)
+    {
+        $isKompeten = UjiKompApl2Detail::where('id_kuk_elemen', $id_kuk_elemen)
+        ->select('trx_uji_komp_apl_02_detail.is_kompeten')
+        ->join('mst_skema_sertifikasi_kuk_elemen as a', 'trx_uji_komp_apl_02_detail.id_kuk_elemen', '=', 'a.id')
+        ->first();
+		return $isKompeten;
+    }
+
 }

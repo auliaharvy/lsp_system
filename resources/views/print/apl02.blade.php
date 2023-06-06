@@ -50,13 +50,17 @@
 					</td>
 				</tr>
 			</table>
-				<table border="1">
+			<table border="1">
+				@php 
+					$indexUnitKompetensi = 1; 
+				@endphp
+				@foreach($data as $row)
 					<tr>
 						<td>
-							<div><strong>Unit Kompetensi: 1</strong></div>
+							<div><strong>Unit Kompetensi: {{ $indexUnitKompetensi }}</strong></div>
 						</td>
 						<td colspan="4">
-							<div>Mengikuti prosedur kesehatan, keselamatan dan keamanan keria</div>
+							<div>{{ $row['unit_kompetensi'] }}</div>
 						</td>
 					</tr>
 					<tr>
@@ -73,25 +77,30 @@
 							<div><strong>Bukti yang relevan</strong></div>
 						</td>
 					</tr>
-					<tr>
-						<td colspan="2">
-							<ol>
-								<li>Elemen: Mengikuti Prosedur-prosedur Kesehatan, Keselamatan dan Keamanan Kerja</li>
-							</ol>
-							<ul>
-								<li>Kriteria Unjuk Kerja:</li>
-							</ul>
-							<ol>
-								<li>Apakah anda dapat Menaati prosedur kesehatan, keselamatan dan keamanan sesuai dengan kebijakan organisasi, undang-undang&nbsp; terkait, persyaratan asuransi, serta <em>safety plan</em> yang tepat ?</li>
-								<li>Apakah anda dapat Mengidentifikasikan dan menginformasikan dengan segera prosedur kesehatan, keselamatan, dan keamanan kerja ?</li>
-								<li>Apakah anda dapat Melakukan pekerjaan dengan aman dan memastikan bahwa seluruh kegiatan berada dalam suatu kondisi yang aman dan tidak terdapat bahaya bagi pekerja maupun masyarakat ?</li>
-							</ol>
-						</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-				</table>
+					@foreach($row['elemen'] as $item)
+						<tr>
+							<td colspan="2">
+								<ol>
+									<li>Elemen: {{ $item['nama_elemen'] }}</li>
+								</ol>
+								<ul>
+									<li>Kriteria Unjuk Kerja:</li>
+								</ul>
+									<ol>
+										@foreach($item['kuk'] as $atom)
+											<li>{{ $atom['kuk'] }}</li>
+										@endforeach
+									</ol>
+								</ul>
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					@endforeach
+				@php $indexUnitKompetensi++; @endphp
+				@endforeach
+			</table>
 			<table border="1">
 				<tr>
 					<td><div>Nama Asesi : </div></td>
