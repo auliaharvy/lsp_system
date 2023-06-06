@@ -32,7 +32,7 @@ class SkemaKukElemen extends Model
     protected $table = "mst_skema_sertifikasi_kuk_elemen";
     protected $fillable = ['id_elemen','kuk', 'pertanyaan_kuk', 'jumlah_bukti', 'jenis_bukti_id', 'bukti'];
 
-    public static function getSkemaKukElemen($unit_id)
+    public static function getSkemaKukElemen($unit_id, $id_apl_02)
     {
         $skemaUnit = SkemaKukElemen::where('id_elemen', $unit_id)
         ->select('mst_skema_sertifikasi_kuk_elemen.*', 'a.nama as nama_jenis_bukti')
@@ -47,7 +47,7 @@ class SkemaKukElemen extends Model
             $data['jenis_bukti_id'] = $row->jenis_bukti_id;
             $data['nama_jenis_bukti'] = $row->nama_jenis_bukti;
             $data['bukti'] = $row->bukti;
-            $isKompeten =  ujikompapl2detail::getIsKompeten($row->id);
+            $isKompeten =  ujikompapl2detail::getIsKompeten($row->id, $id_apl_02);
             $data['is_kompeten'] = $isKompeten;
             $plunckData[] = $data;
 		endforeach;

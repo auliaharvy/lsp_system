@@ -126,6 +126,7 @@ class PrintController extends BaseController
         $valueia01 = Arr::get($searchParams, 'valueia01');
         $valueia02 = Arr::get($searchParams, 'valueia02');
 
+
         $datamodule = collect([]);
 
         if($valueapl01 === 'true'){
@@ -135,18 +136,14 @@ class PrintController extends BaseController
 
         if ($valueapl02 === 'true'){
             $dataapl02 = array();
-            // $indexElemen = 0;
             foreach($dataSkemaUnit as $row){
-                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id);
+                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, $idapl02);
                 $data['kode_unit'] = $row->kode_unit;
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
-                // array_push($data['elemen'][$indexElemen], ['nama' => 'dzikri']);
                 $dataapl02[] = $data;
-                // $indexElemen++;
             }
             $datamodule->push(['nama' => 'apl02', 'data' => $dataapl02]);
         }
-
 
         if ($valuemapa02 === 'true'){
             $datamapa02 = $ujiKompController->showMapa02($iduji);
@@ -184,7 +181,16 @@ class PrintController extends BaseController
         }
 
         if ($valueia01 === 'true'){
-            $dataia01 = $ujiKompController->showIa01($idia01);
+            $dataia01 = array();
+            // $indexElemen = 0;
+            foreach($dataSkemaUnit as $row){
+                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id);
+                $data['kode_unit'] = $row->kode_unit;
+                $data['unit_kompetensi'] = $row->unit_kompetensi;
+                // array_push($data['elemen'][$indexElemen], ['nama' => 'dzikri']);
+                $dataia01[] = $data;
+                // $indexElemen++;
+            }
             $datamodule->push(['nama' => 'ia01', 'data' => $dataia01]);
         }
 

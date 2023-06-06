@@ -32,7 +32,7 @@ class SkemaElemenUnit extends Model
     protected $table = "mst_skema_sertifikasi_elemen_kompetensi";
     protected $fillable = ['id_unit','nama_elemen'];
 
-    public static function getSkemaElemen($unit_id)
+    public static function getSkemaElemen($unit_id, $id_apl_02)
     {
         $skemaElemenUnit = SkemaElemenUnit::where('id_unit', $unit_id)
         ->select('mst_skema_sertifikasi_elemen_kompetensi.*')
@@ -40,7 +40,7 @@ class SkemaElemenUnit extends Model
         
         $plunckData = array();
         foreach($skemaElemenUnit as $row):
-            $data['kuk'] = SkemaKukElemen::getSkemaKukElemen($row->id);
+            $data['kuk'] = SkemaKukElemen::getSkemaKukElemen($row->id, $id_apl_02);
             $data['id_elemen'] = $row->id;
             $data['nama_elemen'] = $row->nama_elemen;
             $data['benchmark'] = $row->benchmark;

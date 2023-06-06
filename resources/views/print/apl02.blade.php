@@ -50,9 +50,10 @@
 					</td>
 				</tr>
 			</table>
-			<table border="1">
+			<table class="table table-bordered">
 				@php 
 					$indexUnitKompetensi = 1; 
+					$indexElemen = 1; 
 				@endphp
 				@foreach($data as $row)
 					<tr>
@@ -80,9 +81,7 @@
 					@foreach($row['elemen'] as $item)
 						<tr>
 							<td colspan="2">
-								<ol>
-									<li>Elemen: {{ $item['nama_elemen'] }}</li>
-								</ol>
+								<div>{{ $indexElemen }}.   Elemen: {{ $item['nama_elemen'] }}</div>
 								<ul>
 									<li>Kriteria Unjuk Kerja:</li>
 								</ul>
@@ -97,8 +96,9 @@
 							<td></td>
 							<td></td>
 						</tr>
+						@php $indexElemen++; @endphp
 					@endforeach
-				@php $indexUnitKompetensi++; @endphp
+				@php $indexUnitKompetensi++; $indexElemen = 1; @endphp
 				@endforeach
 			</table>
 			<table border="1">
