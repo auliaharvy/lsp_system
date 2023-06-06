@@ -157,30 +157,30 @@ class PrintController extends BaseController
             $datamodule->push(['nama' => 'ak01', 'data' => $dataak01]);
         }
 
-        // if ($valueak02 === 'true'){
-        //     $dataak02 = $ujiKompController->showAk02($idak02);
-        //     $datamodule->push(['nama' => 'ak02', 'data' => $dataak02]);
-        // }
+        if ($valueak02 === 'true'){
+            $dataak02 = $ujiKompController->showAk02($idak02);
+            $datamodule->push(['nama' => 'ak02', 'data' => $dataak02]);
+        }
 
-        // if ($valueak03 === 'true'){
-        //     $dataak03 = $ujiKompController->showAk03($idak03);
-        //     $datamodule->push(['nama' => 'ak03', 'data' => $dataak03]);
-        // }
+        if ($valueak03 === 'true'){
+            $dataak03 = $ujiKompController->showAk03($idak03);
+            $datamodule->push(['nama' => 'ak03', 'data' => $dataak03]);
+        }
         
         if ($valueak04 === 'true') {
             $dataak04 = $ujiKompController->showAk04($idak04);
             $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
         }
 
-        // if ($valueak05 === 'true') {
-        //     $dataak05 = $ujikompcontroller->showak05($idak05);
-        //     $datamodule->push(['nama' => 'ak05', 'data' => $dataak05]);
-        // }
+        if ($valueak05 === 'true') {
+            $dataak05 = $ujiKompController->showak05($idak05);
+            $datamodule->push(['nama' => 'ak05', 'data' => $dataak05]);
+        }
 
-        // if ($valueak06 === 'true') {
-        //     $dataak06 = $ujiKompController->indexAk06($idak06);
-        //     $datamodule->push(['nama' => 'ak06', 'data' => $dataak06]);
-        // }
+        if ($valueak06 === 'true') {
+            $dataak06 = $ujiKompController->indexAk06($idak06);
+            $datamodule->push(['nama' => 'ak06', 'data' => $dataak06]);
+        }
 
         if ($valueia01 === 'true'){
             $dataia01 = $ujiKompController->showIa01($idia01);
@@ -192,30 +192,30 @@ class PrintController extends BaseController
             $datamodule->push(['nama' => 'ia02', 'data' => $dataia02]);
         }
 
-        // if ($valueia03 === 'true'){
-        //     $dataia03 = $ujiKompController->showIa03($idia03);
-        //     $datamodule->push(['nama' => 'ia03', 'data' => $dataia03]);
-        // }
+        if ($valueia03 === 'true'){
+            $dataia03 = $ujiKompController->showIa03($idia03);
+            $datamodule->push(['nama' => 'ia03', 'data' => $dataia03]);
+        }
 
-        // if ($valueia05 === 'true'){
-        //     $dataia05 = $ujiKompController->showIa03($idia05);
-        //     $datamodule->push(['nama' => 'ia05', 'data' => $dataia05]);
-        // }
+        if ($valueia05 === 'true'){
+            $dataia05 = $ujiKompController->showIa03($idia05);
+            $datamodule->push(['nama' => 'ia05', 'data' => $dataia05]);
+        }
 
-        // if ($valueia06 === 'true'){
-        //     $dataia06 = $ujiKompController->showIa06($idia06);
-        //     $datamodule->push(['nama' => 'ia06', 'data' => $dataia06]);
-        // }
+        if ($valueia06 === 'true'){
+            $dataia06 = $ujiKompController->showIa06($idia06);
+            $datamodule->push(['nama' => 'ia06', 'data' => $dataia06]);
+        }
 
-        // if ($valueia07 === 'true'){
-        //     $dataia07 = $ujiKompController->showIa06($idia07);
-        //     $datamodule->push(['nama' => 'ia07', 'data' => $dataia07]);
-        // }
+        if ($valueia07 === 'true'){
+            $dataia07 = $ujiKompController->showIa06($idia07);
+            $datamodule->push(['nama' => 'ia07', 'data' => $dataia07]);
+        }
 
-        // if ($valueia11 === 'true'){
-        //     $dataia11 = $ujiKompController->showIa11($idia11);
-        //     $datamodule->push(['nama' => 'ia11', 'data' => $dataia11]);
-        // }
+        if ($valueia11 === 'true'){
+            $dataia11 = $ujiKompController->showIa11($idia11);
+            $datamodule->push(['nama' => 'ia11', 'data' => $dataia11]);
+        }
 
         // return ['datamodule' => $datamodule, 'iduji' => $iduji];
         // return view('print.masterprint', ['valueak04' => $valueak04, 'valueapl01' => $valueapl01]);
