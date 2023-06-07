@@ -78,7 +78,7 @@
 					</td>
 				</tr>
 			</table>
-			<table class="table table-bordered">
+			<table class="table table-bordered" style="margin-bottom: 300px;">
 				<tr>
 					<td class="bg-dark text-white text-center">
 						<div><strong>PANDUAN ASESMEN MANDIRI</strong></div>
@@ -97,95 +97,119 @@
 					</td>
 				</tr>
 			</table>
-			<table class="table table-bordered" style="margin-top: 50px;">
-				<tr>
-					<td class="bg-dark" colspan="7"></td>
-				</tr>
-				@php $a = 1; @endphp
-				@foreach($skemaUnit as $unit)
-				<tr>
-					<td rowspan="2">
-						<div>Unit Kompetensi {{ $a }}</div>
-					</td>
-					<td>
-						<div>Kode Unit</div>
-					</td>
-					<td>
-						<div>:</div>
-					</td>
-					<td colspan="2">
-						<div>{{ $unit->kode_unit }}</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div>Judul Unit</div>
-					</td>
-					<td>
-						<div>:</div>
-					</td>
-					<td colspan="2">
-						<div>{{ $unit->unit_kompetensi }}</div>
-					</td>
-				</tr>
-				@php $a++; @endphp
-				@endforeach
-			</table>
-			<table class="table table-bordered">
-				@php 
-					$indexUnitKompetensi = 1; 
-				@endphp
-				@foreach($data as $row)
+			@php $a = 1; $b = 1;@endphp
+			@foreach($data['listDataKuk'] as $row)
+				<table class="table table-bordered">
+					<tr>
+						<td class="bg-dark" colspan="7"></td>
+					</tr>
+					<tr>
+						<td rowspan="2">
+							<div>Unit Kompetensi {{ $a }}</div>
+						</td>
+						<td>
+							<div>Kode Unit</div>
+						</td>
+						<td>
+							<div>:</div>
+						</td>
+						<td colspan="2">
+							<div>{{ $row['kode_unit']}}</div>
+						</td>
+					</tr>
 					<tr>
 						<td>
-							<div><strong>Unit Kompetensi: {{ $indexUnitKompetensi }}</strong></div>
+							<div>Judul Unit</div>
 						</td>
-						<td colspan="4">
-							<div>{{ $row['unit_kompetensi'] }}</div>
+						<td>
+							<div>:</div>
 						</td>
-					</tr>
-					<tr>
-						<td class="bg-dark text-white text-center" colspan="2">
-							<div><strong>Dapatkah Saya ................?</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center">
-							<div><strong>K</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center">
-							<div><strong>BK</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center">
-							<div><strong>Benchmark (SOP / spesifikasi produk industri)</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center">
-							<div><strong>Penilaian Lanjut</strong></div>
+						<td colspan="2">
+							<div>{{ $row['unit_kompetensi']}}</div>
 						</td>
 					</tr>
-					@foreach($row['elemen'] as $item)
-						<tr>
-							<td colspan="2">
-								<ol>
-									<li>Elemen: {{ $item['nama_elemen'] }}</li>
-								</ol>
-								<ul>
-									<li>Kriteria Unjuk Kerja:</li>
-								</ul>
-									<ol>
-										@foreach($item['kuk'] as $atom)
-											<li>{{ $atom['kuk'] }}</li>
-										@endforeach
-									</ol>
-								</ul>
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-					@endforeach
-				@php $indexUnitKompetensi++; @endphp
-				@endforeach
-			</table>
+				</table>
+				<table class="table table-bordered" style="margin-bottom: 50px;">
+				<table>
+<tr>
+<td rowspan="2">
+<div><strong>No.</strong></div>
+</td>
+<td rowspan="2">
+<div><strong>Elemen</strong></div>
+</td>
+<td rowspan="2">
+<div><strong>Kriteria Unjuk Kerja*</strong></div>
+</td>
+<td rowspan="2">
+<div><strong>Benchmark&nbsp;</strong></div>
+<div><strong>(SOP / spesifikasi produk industri)</strong></div>
+</td>
+<td colspan="2">
+<div><strong>Rekomendasi</strong></div>
+</td>
+<td>
+<div><strong>Penilaian Lanjut</strong></div>
+</td>
+</tr>
+<tr>
+<td>
+<div><strong>K</strong></div>
+</td>
+<td>
+<div><strong>BK</strong></div>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td rowspan="3">
+<div><span style="font-weight: 400;">1</span></div>
+</td>
+<td rowspan="3">
+<div><span style="font-weight: 400;">Mengintreprestasikan kebutuhan desain latar sesuai dengan rancangan kondisi lokasi, setting situasi/ suasana/ Budaya</span></div>
+</td>
+<td>
+<ul>
+<li><span style="font-weight: 400;">Mengidentifikasi konsep desain latar dan naskah&nbsp;</span></li>
+</ul>
+</td>
+<td rowspan="3">
+<div><span style="font-weight: 400;">SKKNI</span></div>
+</td>
+<td>
+<div><span style="font-weight: 400;">☐</span></div>
+</td>
+<td>
+<div><span style="font-weight: 400;">☐</span></div>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>
+<div><span style="font-weight: 400;">1.2 Memerlukan jenis dan bentuk standar desain latar yang diperlukan&nbsp;</span></div>
+</td>
+<td>
+<div><span style="font-weight: 400;">☐</span></div>
+</td>
+<td>
+<div><span style="font-weight: 400;">☐</span></div>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>
+<div><span style="font-weight: 400;">1.3 Merencanakan seluruh desain latar yang diperlukan dengan mempertimbangkan perbandingan ukuran, bentuk dan fungsi&nbsp;</span></div>
+</td>
+<td>
+<div><span style="font-weight: 400;">☐</span></div>
+</td>
+<td>
+<div><span style="font-weight: 400;">☐</span></div>
+</td>
+<td>&nbsp;</td>
+</tr>
+				</table>
+			@endforeach
 		</div>
 	</div>
 </div>
