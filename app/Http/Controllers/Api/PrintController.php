@@ -56,8 +56,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\App;
 use Validator;
-// use PDF;
-use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
+// use Barryvdh\DomPDF\Facade\Pdf;
 
 /**
  * Class UjiKompController
@@ -186,18 +186,15 @@ class PrintController extends BaseController
         if ($valueia01 === 'true'){
             $result = $ujiKompController->showIa01($idia01);
             $listDataKuk = array();
-            // $indexElemen = 0;
             foreach($dataSkemaUnit as $row){
                 $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, null, $idia01);
                 $data['kode_unit'] = $row->kode_unit;
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
-                // array_push($data['elemen'][$indexElemen], ['nama' => 'dzikri']);
                 $listDataKuk[] = $data;
-                // $indexElemen++;
             }
-            $dataapl02 = ['ttd_asesor' => $result['ia_01']->ttd_asesor, 'ttd_asesi' => $result['ia_01']->ttd_asesi];
+            $dataia01 = ['ttd_asesor' => $result['ia_01']->ttd_asesor, 'ttd_asesi' => $result['ia_01']->ttd_asesi];
 
-            $datamodule->push(['nama' => 'ia01', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataapl02]]);
+            $datamodule->push(['nama' => 'ia01', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataia01]]);
         }
 
         if ($valueia02 === 'true'){
@@ -239,7 +236,7 @@ class PrintController extends BaseController
             'asesor' => $asesor,
         ]);
         $pdf->setPaper('A4','portrait');
-        return $pdf->download('module.pdf');
+        return $pdf->download();
         // return $pdf->stream();   
     }
 }

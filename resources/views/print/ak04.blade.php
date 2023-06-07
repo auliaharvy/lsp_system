@@ -10,7 +10,7 @@
 				</tr>
 				<tr>
 					<td colspan="5">
-						<div><span>Nama Asesi</span><span> : </span><span>{{ $data['nama_asesi'] }}</span></div>
+						<div><span>Nama Asesi</span><span> : </span><span>{{ $data->nama_asesi }}</span></div>
 					</td>
 				</tr>
 				<tr>

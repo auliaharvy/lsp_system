@@ -85,19 +85,16 @@
 
       <el-table-column align="center" label="Action">
         <template slot-scope="scope">
-          <!-- <router-link :to="{ name: 'preview-page', params:{ id_uji: scope.row.id, asesor: scope.row.asesor, id_skema: scope.row.id_skema, id_apl_01: scope.row.id_apl_01, id_apl_02: scope.row.id_apl_02, id_mapa_02: scope.row.id_mapa_02, id_ak_01: scope.row.id_ak_01, id_ak_04: scope.row.id_ak_04, id_ia_01: scope.row.id_ia_01, id_ia_02: scope.row.id_ia_02, id_ia_03: scope.row.id_ia_03, id_ia_05: scope.row.id_ia_05, id_ia_06: scope.row.id_ia_06, id_ia_07: scope.row.id_ia_07, id_ia_11: scope.row.id_ia_11, id_ak_02: scope.row.id_ak_02, id_ak_03: scope.row.id_ak_03, id_ak_05: scope.row.id_ak_05, id_ak_06: scope.row.id_ak_06, va: scope.row.id.va }}"> -->
-          <!-- <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor, idskema: scope.row.id_skema, apl01: scope.row.id_apl_01, apl02: scope.row.id_apl_02, mapa02: scope.row.id_mapa_02, ak01: scope.row.id_ak_01, ak04: scope.row.id_ak_04, ia01: scope.row.id_ia_01, ia02: scope.row.id_ia_02, ia03: scope.row.id_ia_03, ia05: scope.row.id_ia_05, id06: scope.row.id_ia_06, ia07: scope.row.id_ia_07, ia11: scope.row.id_ia_11, ak02: scope.row.id_ak_02, ak03: scope.row.id_ak_03, ak05: scope.row.id_ak_05, ak06: scope.row.id_ak_06, va: scope.row.va }}"> -->
           <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor }}">
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
           </router-link>
           <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
-          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
+          <el-button v-if="scope.row.status === 1" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
           <el-dialog
             v-loading="loading"
             title="Download Data"
             :visible.sync="dialogVisible"
             width="50%"
-            :before-close="handleClose"
           >
             <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">Check all</el-checkbox>
             <!-- <el-checkbox-group v-model="checkedDataUjiKomp" @change="handleCheckedCitiesChange"> -->
@@ -440,8 +437,8 @@ export default {
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataUjiKomp.length;
       console.log(value);
     },
-    handleClose(done){
-      this.$confirm('Are you sure to close this dialog?')
+    handleErrorPrint(done){
+      this.$confirm('Mohon maaf saat ini belum bisa print module!')
         .then(_ => {
           done();
         })
@@ -502,6 +499,8 @@ export default {
         link.setAttribute('download', this.asesi + '.pdf');
         document.body.appendChild(link);
         link.click();
+      }).catch((error) => {
+        this.handleErrorPrint(error);
       });
       // await print.download({ iduji: id });
       // console.log(this.dataUjiKomp);
