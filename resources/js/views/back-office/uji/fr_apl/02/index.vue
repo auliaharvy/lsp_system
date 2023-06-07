@@ -628,6 +628,7 @@ export default {
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
+      console.log(this.listKuk);
       // this.insertDetailAPl02();
     },
     search(nameKey, myArray){

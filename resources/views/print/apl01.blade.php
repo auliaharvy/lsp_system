@@ -1,13 +1,13 @@
-<div class="container">
+<div class="pr-4">
 	<h6>FR.APL.01. PERMOHONAN SERTIFIKASI KOMPETENSI</h6>
 	<h6>Bagian 1 : Rincian Data Pemohon Sertifikasi</h6>
 	<p>Pada bagian ini, cantumlan data pribadi, data pendidikan formal serta data pekerjaan anda pada saat ini.</p>
 	<h6>a. Data Pribadi</h6>
 </div>
-<div class="container">
+<div class="pr-4">
  	<div class="row">
  		<div class="col-12">
-			<table class="table">
+			<table class="table table-bordered">
 				<tr>
 					<td class="bg-dark" colspan="3"></td>
 				</tr>
@@ -53,7 +53,7 @@
 				</tr>
 			</table>
 			<h6>b. Data Pekerjaan Sekarang</h6>
-			<table class="table">
+			<table class="table table-bordered">
 				<tr>
 					<td>Nama Institusi / Perusahaan</td>
 					<td>:</td>

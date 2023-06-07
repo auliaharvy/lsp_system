@@ -1,7 +1,7 @@
-<div class="container mt-10">
+<div class="pr-4 mt-10">
 	<h6>FR.AK.01. PERSETUJUAN ASESMEN DAN KERAHASIAAN</h6>
 </div>
-<div class="container">
+<div class="pr-4">
 	<div class="row">
 		<div class="col-12">
 			<table class="table table-bordered">
@@ -147,13 +147,35 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="5">
-						<div><span>Tanda Tangan Asesor : </span><span>Tanggal : </span></div>
+					<td colspan="2">
+						<div>Tanda Tangan Asesor : </div>
+						@if($data->tanda_tangan_asesor !== '')
+							<div>
+								<img class="img-fluid" src="{{ public_path('/uploads/users/signature/'. $data->tanda_tangan_asesor )}}" alt="">
+							</div>
+						@else
+							<div><strong>Belum bertanda tangan</strong></div>
+						@endif
+					</td>					
+					<td colspan="3">
+						<div>Tanggal : </div>
+						<div>{{ $data->hari }}, {{ $data->tanggal }} {{ $data->bulan }} {{ $data->tahun }}</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="5">
-						<div><span>Tanda Tangan Asesi : </span><span>Tanggal : </span></div>
+					<td colspan="2">
+						<div>Tanda Tangan Asesi : </div>
+						@if($data->tanda_tangan_asesi !== '')
+							<div>
+								<img class="img-fluid" src="{{ public_path('/uploads/users/signature/'. $data->tanda_tangan_asesi)}}" alt="">
+							</div>
+						@else
+							<div><strong>Belum bertanda tangan</strong></div>
+						@endif
+					</td>					
+					<td colspan="3">
+						<div>Tanggal : </div>
+						<div>{{ $data->hari }}, {{ $data->tanggal }} {{ $data->bulan }} {{ $data->tahun }}</div>
 					</td>
 				</tr>
 			</table>

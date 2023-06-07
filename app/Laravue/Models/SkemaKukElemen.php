@@ -12,6 +12,7 @@ use App\Laravue\Acl;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Laravue\Models\UjiKompApl2Detail;
 
 /**
  * Class Skema Elemen
@@ -31,7 +32,7 @@ class SkemaKukElemen extends Model
     protected $table = "mst_skema_sertifikasi_kuk_elemen";
     protected $fillable = ['id_elemen','kuk', 'pertanyaan_kuk', 'jumlah_bukti', 'jenis_bukti_id', 'bukti'];
 
-    public static function getSkemaKukElemen($unit_id)
+    public static function getSkemaKukElemen($unit_id, $id_apl_02, $id_ia_01)
     {
         $skemaUnit = SkemaKukElemen::where('id_elemen', $unit_id)
         ->select('mst_skema_sertifikasi_kuk_elemen.*', 'a.nama as nama_jenis_bukti')
@@ -46,6 +47,13 @@ class SkemaKukElemen extends Model
             $data['jenis_bukti_id'] = $row->jenis_bukti_id;
             $data['nama_jenis_bukti'] = $row->nama_jenis_bukti;
             $data['bukti'] = $row->bukti;
+            if($id_apl_02 !== null){
+                $data['is_kompeten_from_apl_02_detail'] = UjiKompApl2Detail::getIsKompeten($row->id, $id_apl_02);
+            }
+            if($id_ia_01 !== null){
+                $data['is_kompeten_from_ia_01_detail'] = UjiKompIa01Detail::getIsKompeten($row->id, $id_ia_01);
+                $data['penilaian_lanjut_from_ia_01_detail'] = UjiKompIa01Detail::getPenilaianLanjut($row->id, $id_ia_01);
+            }
             $plunckData[] = $data;
 		endforeach;
 		return $plunckData;

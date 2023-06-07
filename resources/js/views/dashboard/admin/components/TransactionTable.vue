@@ -91,9 +91,10 @@
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
           </router-link>
           <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
-          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor)">Print</el-button>
+          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
           <el-dialog
-            title="Tips"
+            v-loading="loading"
+            title="Download Data"
             :visible.sync="dialogVisible"
             width="50%"
             :before-close="handleClose"
@@ -103,7 +104,7 @@
             <!-- <el-checkbox v-for="ujiKomp in dataUjiKomp" :key="ujiKomp" :label="ujiKomp" style="">
                 <div style="font-weight: 400;">{{ ujiKomp }}</div>
               </el-checkbox> -->
-            <table style="width: 100%;">
+            <table v-loading="loading" style="width: 100%;">
               <tr style="width: 100%;">
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
@@ -341,6 +342,7 @@ export default {
       ],
       iduji: '',
       asesor: '',
+      asesi: '',
       dataUjiKomp: [
         { index: 1, name: 'APL 01', nameInDatabase: 'id_apl_01', idujikom: null, value: false },
         { index: 2, name: 'APL 02', nameInDatabase: 'id_apl_02', idujikom: null, value: false },
@@ -386,10 +388,11 @@ export default {
     this.getListSkema();
   },
   methods: {
-    async showDialogPrint(id, asesor){
+    async showDialogPrint(id, asesor, nama_peserta){
       const data = await preview.get(id);
       this.iduji = data.id;
       this.asesor = asesor;
+      this.asesi = nama_peserta;
       // const skema = await skemaunit.list({ id_skema: data.id_skema });
       // console.log(skema);
       this.dialogVisible = true;
@@ -419,12 +422,13 @@ export default {
     handleCheckAllChange(val) {
       // this.checkedCities = val ? cityOptions : [];
       this.checkedDataUjiKomp = val ? this.dataUjiKomp : [];
-      // let index = 0;
-      for (const data in this.dataUjiKomp){
-        // this.dataUjiKomp[index].value = this.checkAll;
-        this.data.value = this.checkAll;
-        console.log(data);
-        // index++;
+      let index = 0;
+      for (const item in this.dataUjiKomp){
+        this.dataUjiKomp[index].value = this.checkAll;
+        // this.data.value = this.checkAll;
+        console.log(item);
+        console.log(this.dataUjiKomp[index].index);
+        index++;
       }
       this.isIndeterminate = false;
       console.log(val);
@@ -495,7 +499,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'semua-module.pdf');
+        link.setAttribute('download', this.asesi + '.pdf');
         document.body.appendChild(link);
         link.click();
       });

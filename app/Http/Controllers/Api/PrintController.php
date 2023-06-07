@@ -38,6 +38,7 @@ use App\Laravue\Models\UjiKompIa11Detail;
 use App\Laravue\Models\JadwalAsesor;
 use App\Laravue\Models\Tuk;
 use App\Laravue\Models\Skema;
+use App\Laravue\Models\SkemaElemenUnit;
 use App\Laravue\Models\Asesor;
 use App\Laravue\Models\Perangkat;
 use App\Laravue\Models\User;
@@ -81,179 +82,150 @@ class PrintController extends BaseController
         $ujiKompController = App::make(UjiKompController::class);
         $skemaController = App::make(SkemaController::class);
 
-        $iduji = Arr::get($searchParams, 'iduji', '');
-        $asesor = Arr::get($searchParams, 'asesor', '');
+        $iduji = Arr::get($searchParams, 'iduji');
+        $asesor = Arr::get($searchParams, 'asesor');
 
         $dataUjiKomp = $ujiKompController->showPreview($iduji);
-        $dataSkemaSertifikasi = $ujiKompController->index(new Request(['idujikomp' => $dataUjiKomp->id]));
+        $dataSkemaSertifikasi = $ujiKompController->index(new Request(['idapl01' => $dataUjiKomp->id_apl_01]));
         $dataSkemaUnit = $skemaController->indexUnit(new Request(['id_skema' => $dataUjiKomp->id_skema]));
+        $dataSkema = $skemaController->index(new Request(['id_skema' => $dataUjiKomp->id_skema]));
 
-        $idapl01 = Arr::get($searchParams, 'idapl01', '');
-        $idapl02 = Arr::get($searchParams, 'idapl02', '');
-        $idmapa02 = Arr::get($searchParams, 'idmapa02', '');
-        $idak01 = Arr::get($searchParams, 'idak01', '');
-        $idak02 = Arr::get($searchParams, 'idak02', '');
-        $idak03 = Arr::get($searchParams, 'idak03', '');
-        $idak04 = Arr::get($searchParams, 'idak04', '');
-        $idak05 = Arr::get($searchParams, 'idak05', '');
-        $idak06 = Arr::get($searchParams, 'idak06', '');
-        $idia01 = Arr::get($searchParams, 'idia01', '');
-        $idia02 = Arr::get($searchParams, 'idak02', '');
-        $idia03 = Arr::get($searchParams, 'idia03', '');
-        $idia05 = Arr::get($searchParams, 'idia05', '');
-        $idia06 = Arr::get($searchParams, 'idia06', '');
-        $idia07 = Arr::get($searchParams, 'idia07', '');
-        $idia11 = Arr::get($searchParams, 'idia11', '');
+        $idapl01 = Arr::get($searchParams, 'idapl01');
+        $idapl02 = Arr::get($searchParams, 'idapl02');
+        $idmapa02 = Arr::get($searchParams, 'idmapa02');
+        $idak01 = Arr::get($searchParams, 'idak01');
+        $idak02 = Arr::get($searchParams, 'idak02');
+        $idak03 = Arr::get($searchParams, 'idak03');
+        $idak04 = Arr::get($searchParams, 'idak04');
+        $idak05 = Arr::get($searchParams, 'idak05');
+        $idak06 = Arr::get($searchParams, 'idak06');
+        $idia01 = Arr::get($searchParams, 'idia01');
+        $idia02 = Arr::get($searchParams, 'idak02');
+        $idia03 = Arr::get($searchParams, 'idia03');
+        $idia05 = Arr::get($searchParams, 'idia05');
+        $idia06 = Arr::get($searchParams, 'idia06');
+        $idia07 = Arr::get($searchParams, 'idia07');
+        $idia11 = Arr::get($searchParams, 'idia11');
         
-        $valueapl01 = Arr::get($searchParams, 'valueapl01', '');
-        $valueapl02 = Arr::get($searchParams, 'valueapl02', '');
-        $valuemapa02 = Arr::get($searchParams, 'valuemapa02', '');
-        $valueak01 = Arr::get($searchParams, 'valueak01', '');
-        $valueak02 = Arr::get($searchParams, 'valueak02', '');
-        $valueak03 = Arr::get($searchParams, 'valueak03', '');
-        $valueak04 = Arr::get($searchParams, 'valueak04', '');
-        $valueak05 = Arr::get($searchParams, 'valueak05', '');
-        $valueak06 = Arr::get($searchParams, 'valueak06', '');
-        $valueia01 = Arr::get($searchParams, 'valueia01', '');
-        $valueia02 = Arr::get($searchParams, 'valueia02', '');
-        $valueia03 = Arr::get($searchParams, 'valueia03', '');
-        $valueia05 = Arr::get($searchParams, 'valueia05', '');
-        $valueia06 = Arr::get($searchParams, 'valueia06', '');
-        $valueia07 = Arr::get($searchParams, 'valueia07', '');
-        $valueia11 = Arr::get($searchParams, 'valueia11', '');
+        $valueapl01 = Arr::get($searchParams, 'valueapl01');
+        $valueapl02 = Arr::get($searchParams, 'valueapl02');
+        $valuemapa02 = Arr::get($searchParams, 'valuemapa02');
+        $valueak01 = Arr::get($searchParams, 'valueak01');
+        $valueak02 = Arr::get($searchParams, 'valueak02');
+        $valueak03 = Arr::get($searchParams, 'valueak03');
+        $valueak04 = Arr::get($searchParams, 'valueak04');
+        $valueak05 = Arr::get($searchParams, 'valueak05');
+        $valueak06 = Arr::get($searchParams, 'valueak06');
+        $valueia01 = Arr::get($searchParams, 'valueia01');
+        $valueia02 = Arr::get($searchParams, 'valueia02');
+        $valueia03 = Arr::get($searchParams, 'valueia03');
+        $valueia05 = Arr::get($searchParams, 'valueia05');
+        $valueia06 = Arr::get($searchParams, 'valueia06');
+        $valueia07 = Arr::get($searchParams, 'valueia07');
+        $valueia11 = Arr::get($searchParams, 'valueia11');
+        $valueia01 = Arr::get($searchParams, 'valueia01');
+        $valueia02 = Arr::get($searchParams, 'valueia02');
 
-        $dataapl01 = '';
-        // $dataapl02 = null;
-        // $datamapa02 = null;
-        // $dataak01 = null;
-        $dataak04 = '';
-        // $dataia01 = null;
-        // $dataia02 = null;
 
         $datamodule = collect([]);
 
-        if ($valueapl01) {
-        $valueia01 = Arr::get($searchParams, 'valueia01', '');
-        $valueia02 = Arr::get($searchParams, 'valueia02', '');
+        if($valueapl01 === 'true'){
+            $dataapl01 = $ujiKompController->showApl01($idapl01);
+            $datamodule->push(['nama' => 'apl01', 'data' => $dataapl01]);
+        }
 
-        $datamodule = collect([]);
+        if ($valueapl02 === 'true'){
+            $result = $ujiKompController->showApl02($idapl02);
+            $listDataKuk = array();
+            foreach($dataSkemaUnit as $row){
+                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, $idapl02, null);
+                $data['kode_unit'] = $row->kode_unit;
+                $data['unit_kompetensi'] = $row->unit_kompetensi;
+                $listDataKuk[] = $data;
+            }
+            $dataapl02 = ['ttd_asesor' => $result['apl_02']->ttd_asesor];
 
-        // if($valueapl01){
-        //     $dataapl01 = $ujiKompController->showApl01($idapl01);
-        //     $datamodule->push(['nama' => 'apl01', 'data' => $dataapl01]);
-        // }
+            $datamodule->push(['nama' => 'apl02', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataapl02]]);
+        }
 
-        // if ($valueapl02){
-        //     $dataapl02 = $ujiKompController->showApl02($idapl02);
-        //     $datamodule->push(['nama' => 'apl02', 'data' => $dataapl02]);
-        // }
+        if ($valuemapa02 === 'true'){
+            $datamapa02 = $ujiKompController->showMapa02($iduji);
+            $datamodule->push(['nama' => 'mapa02', 'data' => $datamapa02]);
+        }
 
-        // if ($valuemapa02){
-        //     $datamapa02 = $ujiKompController->showMapa02($iduji);
-        //     $datamodule->push(['nama' => 'mapa02', 'data' => $datamapa02]);
-        // }
+        if ($valueak01 === 'true'){
+            $dataak01 = $ujiKompController->showAk01($idak01);
+            $datamodule->push(['nama' => 'ak01', 'data' => $dataak01]);
+        }
 
-        // if ($valueak01){
-        //     $dataak01 = $ujiKompController->showAk01($idak01);
-        //     $datamodule->push(['nama' => 'ak01', 'data' => $dataak01]);
-        // }
-
-        if ($valueak02){
+        if ($valueak02 === 'true'){
             $dataak02 = $ujiKompController->showAk02($idak02);
             $datamodule->push(['nama' => 'ak02', 'data' => $dataak02]);
         }
 
-        if ($valueak03){
+        if ($valueak03 === 'true'){
             $dataak03 = $ujiKompController->showAk03($idak03);
             $datamodule->push(['nama' => 'ak03', 'data' => $dataak03]);
         }
         
-        // if ($valueapl02){
-        //     // $dataapl02 = $ujiKompController->showApl02($idapl02);
-        //     $dataapl02 = $ujiKompController->indexApl02(new Request(['idapl02' => $idapl02]));
-        //     $collection = collect();
-        //     $tempKodeUnit;
-        //     $tempNamaElemen;
-        //     $tempKuk;
-        //     $tempPertanyaanKuk;
+        if ($valueak04 === 'true') {
+            $dataak04 = $ujiKompController->showAk04($idak04);
+            $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
+        }
 
-        //     for($a = 1; $a < 7; $a++){
-        //         foreach($dataapl02 as $kodeUnit){
-        //             if($collection->isEmpty() || $kodeUnit->kode_unit !== $collection->last()['kode_unit']){
-        //                 $tempKodeUnit = $kodeUnit->kode_unit;
-        //                 $collection->push(['kode_unit' => $tempKodeUnit]);
-        //             }
-        //         }
-        //         foreach($dataapl02 as $namaElemen){
-        //             if($collection->isEmpty() || $namaElemen->nama_elemen !== $collection->last()['nama_elemen']){
-        //                 $tempNamaElemen = $namaElemen->nama_elemen;
-        //                 $collection->push(['nama_elemen' => $tempNamaElemen]);
-        //             }
-        //         }
-        //         foreach($dataapl02 as $kuk){
-        //             if($collection->isEmpty() || $kuk->kuk!== $collection->last()['kuk']){
-        //                 $tempKuk = $kuk->kuk;
-        //                 $collection->push(['kuk' => $tempKuk]);
-        //             }
-        //         }
-        //         foreach($dataapl02 as $pertanyaanKuk){
-        //             if($collection->isEmpty() || $pertanyaanKuk->pertanyaan_kuk !== $collection->last()['pertanyaan_kuk']){
-        //                 $collection->push(['pertanyaan_kuk' => $tempPertanyaanKuk]);
-        //             }
-        //         }
-
-        //         // $collection->push(['kode_unit' => $tempKodeUnit, 'nama_elemen' => $tempNamaElemen, 'kuk' => $tempKuk, 'pertanyaan_kuk' => $tempPertanyaanKuk]);
-        //     }
-        //     $collection->push(['kode_unit' => $tempKodeUnit, 'nama_elemen' => $tempNamaElemen]);
-        //     $datamodule->push(['nama' => 'apl02', 'data' => $collection]);
-        // }
-
-        // if ($valueak04) {
-        //     $dataak04 = $ujiKompController->showAk04($idak04);
-        //     $datamodule->push(['nama' => 'ak04', 'data' => $dataak04]);
-        // }
-
-        if ($valueak05) {
-            $dataak05 = $ujiKompController->showAk05($idak05);
+        if ($valueak05 === 'true') {
+            $dataak05 = $ujiKompController->showak05($idak05);
             $datamodule->push(['nama' => 'ak05', 'data' => $dataak05]);
         }
 
-        if ($valueak06) {
+        if ($valueak06 === 'true') {
             $dataak06 = $ujiKompController->indexAk06($idak06);
             $datamodule->push(['nama' => 'ak06', 'data' => $dataak06]);
         }
 
-        // if ($valueia01){
-        //     $dataia01 = $ujiKompController->showIa01($idia01);
-        //     $datamodule->push(['nama' => 'ia01', 'data' => $dataia01]);
-        // }
+        if ($valueia01 === 'true'){
+            $result = $ujiKompController->showIa01($idia01);
+            $listDataKuk = array();
+            // $indexElemen = 0;
+            foreach($dataSkemaUnit as $row){
+                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, null, $idia01);
+                $data['kode_unit'] = $row->kode_unit;
+                $data['unit_kompetensi'] = $row->unit_kompetensi;
+                // array_push($data['elemen'][$indexElemen], ['nama' => 'dzikri']);
+                $listDataKuk[] = $data;
+                // $indexElemen++;
+            }
+            $dataapl02 = ['ttd_asesor' => $result['ia_01']->ttd_asesor, 'ttd_asesi' => $result['ia_01']->ttd_asesi];
 
-        // if ($valueia02){
-        //     $dataia02 = $ujiKompController->showIa02($idia02);
-        //     $datamodule->push(['nama' => 'ia02', 'data' => $dataia02]);
-        // }
+            $datamodule->push(['nama' => 'ia01', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataapl02]]);
+        }
 
-        if ($valueia03){
+        if ($valueia02 === 'true'){
+            $dataia02 = $ujiKompController->showIa02($idia02);
+            $datamodule->push(['nama' => 'ia02', 'data' => $dataia02]);
+        }
+
+        if ($valueia03 === 'true'){
             $dataia03 = $ujiKompController->showIa03($idia03);
             $datamodule->push(['nama' => 'ia03', 'data' => $dataia03]);
         }
 
-        if ($valueia05){
+        if ($valueia05 === 'true'){
             $dataia05 = $ujiKompController->showIa03($idia05);
             $datamodule->push(['nama' => 'ia05', 'data' => $dataia05]);
         }
 
-        if ($valueia06){
+        if ($valueia06 === 'true'){
             $dataia06 = $ujiKompController->showIa06($idia06);
             $datamodule->push(['nama' => 'ia06', 'data' => $dataia06]);
         }
 
-        if ($valueia07){
+        if ($valueia07 === 'true'){
             $dataia07 = $ujiKompController->showIa06($idia07);
             $datamodule->push(['nama' => 'ia07', 'data' => $dataia07]);
         }
 
-        if ($valueia11){
+        if ($valueia11 === 'true'){
             $dataia11 = $ujiKompController->showIa11($idia11);
             $datamodule->push(['nama' => 'ia11', 'data' => $dataia11]);
         }
@@ -270,7 +242,4 @@ class PrintController extends BaseController
         return $pdf->download('module.pdf');
         // return $pdf->stream();   
     }
-}
-    
-
 }
