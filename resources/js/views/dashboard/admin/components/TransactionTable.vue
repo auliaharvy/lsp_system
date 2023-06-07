@@ -422,12 +422,13 @@ export default {
     handleCheckAllChange(val) {
       // this.checkedCities = val ? cityOptions : [];
       this.checkedDataUjiKomp = val ? this.dataUjiKomp : [];
-      // let index = 0;
-      for (const data in this.dataUjiKomp){
-        // this.dataUjiKomp[index].value = this.checkAll;
-        this.data.value = this.checkAll;
-        console.log(data);
-        // index++;
+      let index = 0;
+      for (const item in this.dataUjiKomp){
+        this.dataUjiKomp[index].value = this.checkAll;
+        // this.data.value = this.checkAll;
+        console.log(item);
+        console.log(this.dataUjiKomp[index].index);
+        index++;
       }
       this.isIndeterminate = false;
       console.log(val);

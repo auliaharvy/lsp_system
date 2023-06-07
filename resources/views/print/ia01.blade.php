@@ -97,12 +97,12 @@
 					</td>
 				</tr>
 			</table>
-			<table class="table table-bordered">
+			<table class="table table-bordered" style="margin-top: 50px;">
 				<tr>
 					<td class="bg-dark" colspan="7"></td>
 				</tr>
 				@php $a = 1; @endphp
-				@foreach($skemaUnit as $data)
+				@foreach($skemaUnit as $unit)
 				<tr>
 					<td rowspan="2">
 						<div>Unit Kompetensi {{ $a }}</div>
@@ -114,7 +114,7 @@
 						<div>:</div>
 					</td>
 					<td colspan="2">
-						<div>{{ $data->kode_unit }}</div>
+						<div>{{ $unit->kode_unit }}</div>
 					</td>
 				</tr>
 				<tr>
@@ -125,44 +125,66 @@
 						<div>:</div>
 					</td>
 					<td colspan="2">
-						<div>{{ $data->unit_kompetensi }}</div>
+						<div>{{ $unit->unit_kompetensi }}</div>
 					</td>
 				</tr>
 				@php $a++; @endphp
 				@endforeach
 			</table>
 			<table class="table table-bordered">
-				<tr>
-					<td class="bg-dark" colspan="7"></td>
-				</tr>
-				<tr>
-					<td rowspan="2">
-						<div>No.</div>
-					</td>
-					<td rowspan="2">
-						<div>Elemen</div>
-					</td>
-					<td rowspan="2">
-						<div>Kriteria Untuk Kerja*</div>
-					</td>
-					<td rowspan="2">
-						<div>Benchmark (SOP / spesifikasi produk industri)</div>
-					</td>
-					<td colspan="2">
-						<div style="word-wrap: break-word">Rekomendasi</div>
-					</td>
-					<td rowspan="2">
-						<div>Penilaian Lanjut</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<span>K</span>
-					</td>
-					<td>
-						<span>BK</span>
-					</td>
-				</tr>
+				@php 
+					$indexUnitKompetensi = 1; 
+				@endphp
+				@foreach($data as $row)
+					<tr>
+						<td>
+							<div><strong>Unit Kompetensi: {{ $indexUnitKompetensi }}</strong></div>
+						</td>
+						<td colspan="4">
+							<div>{{ $row['unit_kompetensi'] }}</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="bg-dark text-white text-center" colspan="2">
+							<div><strong>Dapatkah Saya ................?</strong></div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div><strong>K</strong></div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div><strong>BK</strong></div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div><strong>Benchmark (SOP / spesifikasi produk industri)</strong></div>
+						</td>
+						<td class="bg-dark text-white text-center">
+							<div><strong>Penilaian Lanjut</strong></div>
+						</td>
+					</tr>
+					@foreach($row['elemen'] as $item)
+						<tr>
+							<td colspan="2">
+								<ol>
+									<li>Elemen: {{ $item['nama_elemen'] }}</li>
+								</ol>
+								<ul>
+									<li>Kriteria Unjuk Kerja:</li>
+								</ul>
+									<ol>
+										@foreach($item['kuk'] as $atom)
+											<li>{{ $atom['kuk'] }}</li>
+										@endforeach
+									</ol>
+								</ul>
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					@endforeach
+				@php $indexUnitKompetensi++; @endphp
+				@endforeach
 			</table>
 		</div>
 	</div>
