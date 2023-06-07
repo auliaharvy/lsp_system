@@ -55,7 +55,7 @@
 					$indexUnitKompetensi = 1; 
 					$indexElemen = 1; 
 				@endphp
-				@foreach($data as $row)
+				@foreach($data['listDataKuk'] as $row)
 					<tr>
 						<td>
 							<div><strong>Unit Kompetensi: {{ $indexUnitKompetensi }}</strong></div>
@@ -85,16 +85,66 @@
 								<ul>
 									<li>Kriteria Unjuk Kerja:</li>
 								</ul>
-									<ol>
-										@foreach($item['kuk'] as $atom)
-											<li>{{ $atom['kuk'] }}</li>
-										@endforeach
-									</ol>
-								</ul>
+								<ol>
+									@foreach($item['kuk'] as $listkuk)
+										<li>{{ $listkuk['kuk'] }}</li>
+									@endforeach
+								</ol>
 							</td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td class="pl-4">
+								@php
+									$kompeten = 0;
+									$belumKompeten = 0;
+								@endphp
+								@foreach($item['kuk'] as $iskompeten)
+									@if($iskompeten['is_kompeten_from_apl_02_detail']->is_kompeten == 0)
+										@php $belumKompeten += 1; @endphp
+									@endif
+									@if($iskompeten['is_kompeten_from_apl_02_detail']->is_kompeten == 1)
+										@php $kompeten += 1; @endphp
+									@endif
+								@endforeach
+								@if($kompeten > $belumKompeten)
+									<input type="checkbox" checked aria-label="Checkbox for following text input">
+								@endif
+								@php
+									$kompeten = 0;
+									$belumKompeten = 0;
+								@endphp
+							</td>
+							<td class="pl-4">
+								@php
+									$kompeten = 0;
+									$belumKompeten = 0;
+									$bukti = array();
+								@endphp
+								@foreach($item['kuk'] as $iskompeten)
+									@if($iskompeten['is_kompeten_from_apl_02_detail']->is_kompeten == 0)
+										@php $belumKompeten += 1; @endphp
+									@endif
+									@if($iskompeten['is_kompeten_from_apl_02_detail']->is_kompeten == 1)
+										@php $kompeten += 1; @endphp
+									@endif
+									@php $bukti[] = $iskompeten['bukti']; @endphp
+								@endforeach
+								@if($kompeten < $belumKompeten)
+									<input type="checkbox" checked aria-label="Checkbox for following text input">
+								@endif
+								@php
+									$kompeten = 0;
+									$belumKompeten = 0;
+								@endphp
+							</td>
+							<td>
+								@php $temp = array(); @endphp
+								@foreach($bukti as $itembukti)
+									@php $temp[] = $itembukti @endphp
+								@endforeach
+								@php $buktiYangRelevan = collect($temp)->unique(); @endphp
+								@foreach($buktiYangRelevan as $itemBuktiYangRelevan)
+									{{ $itemBuktiYangRelevan }}
+								@endforeach
+							</td>
 						</tr>
 						@php $indexElemen++; @endphp
 					@endforeach
@@ -103,36 +153,44 @@
 			</table>
 			<table border="1">
 				<tr>
-					<td><div>Nama Asesi : </div></td>
-					<td><div>Tanggal : </div></td>
-					<td><div>Tanda Tangan Asesi : </div></td>
+					<td><div class="p-2">Nama Asesi : </div></td>
+					<td><div class="p-2">Tanggal : </div></td>
+					<td><div class="p-2">Tanda Tangan Asesi : </div></td>
 				</tr>
 				<tr>
-					<td><div>{{ $skemaSertifikasi->nama_peserta }}</div></td>
-					<td><div>{{ $skemaSertifikasi->mulai }}</div></td>
+					<td><div class="p-2">{{ $skemaSertifikasi->nama_peserta }}</div></td>
+					<td><div class="p-2">{{ $skemaSertifikasi->mulai }}</div></td>
 					<td>
-					<div>{{ $skemaSertifikasi->mulai }}</div>
+						<div class="p-2"><strong>Belum bertanda tangan</strong></div>
+						<div class="p-2">{{ $skemaSertifikasi->mulai }}</div>
 					</td>
 				</tr>
 				<tr>
 					<td class="bg-dark text-white text-center" colspan="3"><div>Ditinjau oleh Asesor:</div></td>
 				</tr>
 				<tr>
-					<td><div>Nama Asesor:</div></td>
+					<td><div class="p-2">Nama Asesor:</div></td>
 					<td>
-						<div><strong>Rekomendasi:</strong></div>
-						<div>Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
+						<div class="p-2"><strong>Rekomendasi:</strong></div>
+						<div class="p-2">Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
 					</td>
-					<td><div>Tanda Tangan dan Tanggal:</div></td>
+					<td><div class="p-2">Tanda Tangan dan Tanggal:</div></td>
 				</tr>
 				<tr>
-					<td><div>{{ $skemaSertifikasi->nama_asesor }}</div></td>
+					<td><div class="p-2">{{ $skemaSertifikasi->nama_asesor }}</div></td>
 					<td>
-						<div><strong>Rekomendasi:</strong></div>
-						<div>Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
+						<div class="p-2"><strong>Rekomendasi:</strong></div>
+						<div class="p-2">Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
 					</td>
 					<td>
-						<div>{{ $skemaSertifikasi->mulai }}</div>
+						@if($data['data']['ttd_asesor'] !== '')
+							<div>
+								<img class="img-fluid" src="{{ public_path('/uploads/users/signature/'. $data['data']['ttd_asesor'])}}" alt="">
+							</div>
+						@else
+							<div><strong>Belum bertanda tangan</strong></div>
+						@endif
+						<div class="p-2">{{ $skemaSertifikasi->mulai }}</div>
 					</td>
 				</tr>
 			</table>

@@ -135,14 +135,17 @@ class PrintController extends BaseController
         }
 
         if ($valueapl02 === 'true'){
-            $dataapl02 = array();
+            $result = $ujiKompController->showApl02($idapl02);
+            $listDataKuk = array();
             foreach($dataSkemaUnit as $row){
-                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, $idapl02);
+                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, $idapl02, null);
                 $data['kode_unit'] = $row->kode_unit;
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
-                $dataapl02[] = $data;
+                $listDataKuk[] = $data;
             }
-            $datamodule->push(['nama' => 'apl02', 'data' => $dataapl02]);
+            $dataapl02 = ['ttd_asesor' => $result['apl_02']->ttd_asesor];
+
+            $datamodule->push(['nama' => 'apl02', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataapl02]]);
         }
 
         if ($valuemapa02 === 'true'){
@@ -181,17 +184,20 @@ class PrintController extends BaseController
         }
 
         if ($valueia01 === 'true'){
-            $dataia01 = array();
+            $result = $ujiKompController->showIa01($idia01);
+            $listDataKuk = array();
             // $indexElemen = 0;
             foreach($dataSkemaUnit as $row){
-                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id);
+                $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, null, $idia01);
                 $data['kode_unit'] = $row->kode_unit;
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
                 // array_push($data['elemen'][$indexElemen], ['nama' => 'dzikri']);
-                $dataia01[] = $data;
+                $listDataKuk[] = $data;
                 // $indexElemen++;
             }
-            $datamodule->push(['nama' => 'ia01', 'data' => $dataia01]);
+            $dataapl02 = ['ttd_asesor' => $result['ia_01']->ttd_asesor, 'ttd_asesi' => $result['ia_01']->ttd_asesi];
+
+            $datamodule->push(['nama' => 'ia01', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataapl02]]);
         }
 
         if ($valueia02 === 'true'){
