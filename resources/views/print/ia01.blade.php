@@ -101,11 +101,6 @@
 			@foreach($data['listDataKuk'] as $row)
 				<table class="table table-bordered">
 					<tr>
-						<td class="bg-dark" colspan="6">
-							<div></div>
-						</td>
-					</tr>
-					<tr>
 						<td rowspan="2" colspan="6">
 							<div>Unit Kompetensi {{ $noUnitKompetensi }}</div>
 						</td>
@@ -134,52 +129,44 @@
 				@foreach($row['elemen'] as $item)
 				<table class="table table-bordered" style="margin-bottom: 50px;">
 					<tr>
-						<td class="bg-dark text-white text-center" rowspan="2">
-							<div><strong>Elemen {{ $noElemen }} : {{ $item['nama_elemen'] }}</strong></div>
-						</td>
+						<td class="bg-dark text-white" colspan="6">Elemen {{ $noElemen }} : {{ $item['nama_elemen'] }}</td>
 					</tr>
 					<tr>
-						<td class="bg-dark text-white text-center" rowspan="2">
-							<div><strong>No.</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center" rowspan="2">
-							<div><strong>Kriteria Untuk Kerja*</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center" rowspan="2">
-							<div><strong>Benchmark (SOP / spesifikasi produk industri)</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center" colspan="2">
-							<div><strong>Rekomendasi</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center" rowspan="2">
-							<div><strong>Penilaian Lanjut</strong></div>
-						</td>
+						<td class="bg-dark text-white text-center" rowspan="2">No.</td>
+						<td class="bg-dark text-white text-center" rowspan="2">Kriteria Untuk Kerja*</td>
+						<td class="bg-dark text-white text-center" rowspan="2">Benchmark (SOP / spesifikasi produk industri)</td>
+						<td class="bg-dark text-white text-center" colspan="2">Rekomendasi</td>
+						<td class="bg-dark text-white text-center" rowspan="2">Penilaian Lanjut</td>
 					</tr>
 					<tr>
-						<td class="bg-dark text-white text-center">
-							<div><strong>K</strong></div>
-						</td>
-						<td class="bg-dark text-white text-center">
-							<div><strong>BK</strong></div>
-						</td>
+						<td class="bg-dark text-white text-center">K</td>
+						<td class="bg-dark text-white text-center">BK</td>
 					</tr>
 					@foreach($item['kuk'] as $listkuk)
-					<tr>
-						<td>{{ $noKuk }}</td>
-						<td>{{ $listkuk['kuk'] }}</td>
-						<td>{{ $item['benchmark'] }}</td>
-						<td>
-							@if($listkuk['is_kompeten_from_ia_01_detail']['is_kompeten'] == 1)
-								<input type="checkbox" checked aria-label="Checkbox for following text input">
-							@endif
-						</td>
-						<td>
-							@if($listkuk['is_kompeten_from_ia_01_detail']['is_kompeten'] == 0)
-								<input type="checkbox" checked aria-label="Checkbox for following text input">
-							@endif
-						</td>
-						<td>{{ $listkuk['penilaian_lanjut_from_ia_01_detail']['penilaian_lanjut'] }}</td>
-					</tr>
+						<tr>
+							<td>
+								{{ $noKuk }}
+							</td>
+							<td>
+								{{ $listkuk['kuk'] }}
+							</td>
+							<td>
+								{{ $item['benchmark'] }}
+							</td>
+							<td>
+								@if($listkuk['is_kompeten_from_ia_01_detail']->is_kompeten == 1)
+									<input type="checkbox" checked aria-label="Checkbox for following text input">
+								@endif
+							</td>
+							<td>
+								@if($listkuk['is_kompeten_from_ia_01_detail']->is_kompeten == 0)
+									<input type="checkbox" checked aria-label="Checkbox for following text input">
+								@endif
+							</td>
+							<td>
+								{{ $listkuk['penilaian_lanjut_from_ia_01_detail']->penilaian_lanjut }}
+							</td>
+						</tr>
 					@php $noKuk++; @endphp
 					@endforeach
 					@php $noKuk = 1; @endphp

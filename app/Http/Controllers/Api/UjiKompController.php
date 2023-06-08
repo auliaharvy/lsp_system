@@ -532,10 +532,12 @@ class UjiKompController extends BaseController
         $queryAk02 = UjiKompAk02::where('trx_uji_komp_ak_02.id',$id)->first();
         $queryDetailAk02 = UjiKompAk02Detail::query()->join('mst_perangkat_ia_03 as b', 'b.id', '=', 'trx_uji_komp_ak_02_detail.id_unit')
         ->where('trx_uji_komp_ak_02_detail.id_ak_02',$id)->get();
+        $queryDetailAk02Preview = UjiKompAk02Detail::where('trx_uji_komp_ak_02_detail.id_ak_02',$id)->get();
        
         $data = [
             'ak_02' => $queryAk02,
             'detail' => $queryDetailAk02,
+            'detail_for_preview' => $queryDetailAk02Preview,
         ];
         return $data;
     }

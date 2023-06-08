@@ -57,10 +57,10 @@
 				@endphp
 				@foreach($data['listDataKuk'] as $row)
 					<tr>
-						<td>
+						<td class="bg-dark text-white" >
 							<div><strong>Unit Kompetensi: {{ $indexUnitKompetensi }}</strong></div>
 						</td>
-						<td colspan="4">
+						<td class="bg-dark text-white" colspan="4">
 							<div>{{ $row['unit_kompetensi'] }}</div>
 						</td>
 					</tr>

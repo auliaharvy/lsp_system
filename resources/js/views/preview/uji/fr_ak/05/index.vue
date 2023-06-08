@@ -125,7 +125,7 @@
         >
           <el-form-item label="Nama Asesi" prop="namaAsesi">
             <!-- <el-input v-model="dataTrx.namaAsesi" placeholder="nama asesi" /> -->
-            <span>{{ dataTrx.namaAsesi }}</span>
+            <span>: {{ dataTrx.namaAsesi }}</span>
           </el-form-item>
 
           <el-form-item label="Rekomendasi" prop="rekomendasi">
@@ -133,27 +133,27 @@
               <el-option label="Kompeten" value="kompeten" />
               <el-option label="Belum Kompeten" value="belum kompeten" />
             </el-select> -->
-            <span>{{ dataTrx.rekomendasi }}</span>
+            <span>: {{ dataTrx.rekomendasi }}</span>
           </el-form-item>
 
           <el-form-item label="Keterangan" prop="keterangan">
             <!-- <el-input v-model="dataTrx.keterangan" type="textarea" :rows="3" placeholder="Isi Keterangan" /> -->
-            <span>{{ dataTrx.keterangan }}</span>
+            <span>: {{ dataTrx.keterangan }}</span>
           </el-form-item>
 
           <el-form-item label="Aspek Negatif dan Positif Dalam Asesmen" prop="aspek">
             <!-- <el-input v-model="dataTrx.aspek" type="textarea" :rows="3" placeholder="Isi Aspek Negatif dan Positif Dalam Asesmen" /> -->
-            <span>{{ dataTrx.aspek }}</span>
+            <span>: {{ dataTrx.aspek }}</span>
           </el-form-item>
 
           <el-form-item label="Pencatatan Penolakan Hasil Asesmen" prop="aspek">
             <!-- <el-input v-model="dataTrx.catatanPenolakan" type="textarea" :rows="3" placeholder="Isi Pencatatan Penolakan Hasil Asesmen" /> -->
-            <span>{{ dataTrx.catatanPenolakan }}</span>
+            <span>: {{ dataTrx.catatanPenolakan }}</span>
           </el-form-item>
 
           <el-form-item label="Saran Perbaikan (Asesor / personil terkait)" prop="saran">
             <!-- <el-input v-model="dataTrx.saranPerbaikan" type="textarea" :rows="3" placeholder="Isi Saran Perbaikan (Asesor / personil terkait)" /> -->
-            <span>{{ dataTrx.saranPerbaikan }}</span>
+            <span>: {{ dataTrx.saranPerbaikan }}</span>
           </el-form-item>
         </el-form>
         <br>

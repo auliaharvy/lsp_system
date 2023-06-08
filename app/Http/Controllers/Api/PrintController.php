@@ -229,12 +229,13 @@ class PrintController extends BaseController
 
         // return ['datamodule' => $datamodule, 'iduji' => $iduji];
         // return view('print.masterprint', ['valueak04' => $valueak04, 'valueapl01' => $valueapl01]);
-        $pdf = PDF::loadview('print.masterprint', [
+        $data = array(
             'datamodule' => $datamodule, 
             'skemaunit' => $dataSkemaUnit, 
             'skemasertifikasi' => $dataSkemaSertifikasi[0], 
-            'asesor' => $asesor,
-        ]);
+            'asesor' => $asesor
+        );
+        $pdf = \PDF::loadView('print.masterprint', compact('data'));
         $pdf->setPaper('A4','portrait');
         return $pdf->download();
         // return $pdf->stream();   

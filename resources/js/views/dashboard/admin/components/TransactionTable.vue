@@ -105,23 +105,23 @@
               <tr style="width: 100%;">
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <!-- <el-checkbox v-if="ujiKomp.index < 5">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox> -->
-                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                    <!-- <el-checkbox v-if="ujiKomp.index < 5">{{ ujiKomp.name }})</el-checkbox> -->
+                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
               </tr>
@@ -390,6 +390,14 @@ export default {
       this.iduji = data.id;
       this.asesor = asesor;
       this.asesi = nama_peserta;
+      this.isIndeterminate = true;
+      let i = 0;
+      for (const item in this.dataUjiKomp){
+        this.dataUjiKomp[i].value = false;
+        // this.data.value = this.checkAll;
+        console.log(item);
+        i++;
+      }
       // const skema = await skemaunit.list({ id_skema: data.id_skema });
       // console.log(skema);
       this.dialogVisible = true;
@@ -399,26 +407,12 @@ export default {
           this.dataUjiKomp[index].idujikom = data[property];
           index++;
         }
-        console.log(property);
-        console.log(this.dataUjiKomp);
       }
-      console.log(this.dataUjiKomp);
-      // if (!this.dialogVisible){
-      //   await print.download({ iduji: id }).then((response) => {
-      //     console.log(response);
-      //     const url = window.URL.createObjectURL(new Blob([response]));
-      //     const link = document.createElement('a');
-      //     link.href = url;
-      //     link.setAttribute('download', 'semua-module.pdf');
-      //     document.body.appendChild(link);
-      //     link.click();
-      //   });
-      // }
-      // console.log(this.dataUjiKomp);
     },
     handleCheckAllChange(val) {
       // this.checkedCities = val ? cityOptions : [];
       this.checkedDataUjiKomp = val ? this.dataUjiKomp : [];
+      console.log(this.checkedDataUjiKomp);
       let index = 0;
       for (const item in this.dataUjiKomp){
         this.dataUjiKomp[index].value = this.checkAll;
@@ -446,11 +440,6 @@ export default {
     },
     async generateReport() {
       this.loading = true;
-      // console.log(id);
-      // await print.download(id);
-      // await print.list({ iduji: id });
-      // var result = await print.list({ iduji: id });
-      // console.log(result);
       const ujikomp = {
         iduji: this.iduji,
         asesor: this.asesor,
@@ -499,11 +488,10 @@ export default {
         link.setAttribute('download', this.asesi + '.pdf');
         document.body.appendChild(link);
         link.click();
-      }).catch((error) => {
-        this.handleErrorPrint(error);
+      }).catch((err) => {
+        console.log(err);
+        this.handleErrorPrint(err);
       });
-      // await print.download({ iduji: id });
-      // console.log(this.dataUjiKomp);
       this.dialogVisible = false;
       this.loading = false;
     },
