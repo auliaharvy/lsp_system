@@ -106,30 +106,30 @@
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
                     <!-- <el-checkbox v-if="ujiKomp.index < 5">{{ ujiKomp.name }})</el-checkbox> -->
-                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value">{{ ujiKomp.name }}</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value">{{ ujiKomp.name }}</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value">{{ ujiKomp.name }}</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value">{{ ujiKomp.name }}</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
               </tr>
             </table>
             <!-- </el-checkbox-group> -->
-            <span slot="footer" class="dialog-footer">
+            <span v-if="showButtonPrint" slot="footer" class="dialog-footer">
               <!-- <el-button @click="dialogVisible = false">Cancel</el-button> -->
-              <el-button type="primary" @click="generateReport()">Confirm</el-button>
+              <el-button type="primary" @click="generateReport()">Print</el-button>
             </span>
           </el-dialog>
         </template>
@@ -364,7 +364,7 @@ export default {
       checkedDataUjiKomp: [],
       cities: cityOptions,
       isIndeterminate: true,
-      regex: '',
+      showButtonPrint: false,
     };
   },
   computed: {
@@ -394,6 +394,7 @@ export default {
       let i = 0;
       for (const item in this.dataUjiKomp){
         this.dataUjiKomp[i].value = false;
+        this.showButtonPrint = false;
         // this.data.value = this.checkAll;
         console.log(item);
         i++;
@@ -409,9 +410,9 @@ export default {
         }
       }
     },
-    handleCheckAllChange(val) {
+    handleCheckAllChange(value) {
       // this.checkedCities = val ? cityOptions : [];
-      this.checkedDataUjiKomp = val ? this.dataUjiKomp : [];
+      this.checkedDataUjiKomp = value ? this.dataUjiKomp : [];
       console.log(this.checkedDataUjiKomp);
       let index = 0;
       for (const item in this.dataUjiKomp){
@@ -422,14 +423,22 @@ export default {
         index++;
       }
       this.isIndeterminate = false;
-      console.log(val);
-      console.log(this.dataUjiKomp);
+      if (value){
+        this.showButtonPrint = true;
+      } else {
+        this.showButtonPrint = false;
+      }
     },
     handleCheckedCitiesChange(value) {
-      const checkedCount = value.length;
-      this.checkAll = checkedCount === this.dataUjiKomp.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataUjiKomp.length;
-      console.log(value);
+      // const checkedCount = value.length;
+      // this.checkAll = checkedCount === this.dataUjiKomp.length;
+      // this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataUjiKomp.length;
+      // console.log(value);
+      if (value){
+        this.showButtonPrint = true;
+      } else {
+        this.showButtonPrint = false;
+      }
     },
     handleErrorPrint(done){
       this.$confirm('Mohon maaf saat ini belum bisa print module!')

@@ -143,7 +143,7 @@ class PrintController extends BaseController
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
                 $listDataKuk[] = $data;
             }
-            $dataapl02 = ['ttd_asesor' => $result['apl_02']->ttd_asesor];
+            $dataapl02 = ['ttd_asesor' => $result['apl_02']->ttd_asesor, 'status' => $result['apl_02']->status];
 
             $datamodule->push(['nama' => 'apl02', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataapl02]]);
         }

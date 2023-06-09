@@ -173,7 +173,8 @@
 				</table>
 				@php $noElemen++; @endphp
 				@endforeach
-				@php $noUnitKompetensi++; @endphp
+				@php $noUnitKompetensi++; $noElemen = 1; @endphp
+  				<div style="page-break-after: always"></div>
 			@endforeach
 		</div>
 	</div>

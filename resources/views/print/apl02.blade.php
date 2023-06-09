@@ -153,9 +153,9 @@
 			</table>
 			<table border="1">
 				<tr>
-					<td><div class="p-2">Nama Asesi : </div></td>
-					<td><div class="p-2">Tanggal : </div></td>
-					<td><div class="p-2">Tanda Tangan Asesi : </div></td>
+					<td><div class="p-2"><strong>Nama Asesi : </strong></div></td>
+					<td><div class="p-2"><strong>Tanggal : </strong></div></td>
+					<td><div class="p-2"><strong>Tanda Tangan Asesi : </strong></div></td>
 				</tr>
 				<tr>
 					<td><div class="p-2">{{ $skemaSertifikasi->nama_peserta }}</div></td>
@@ -165,22 +165,27 @@
 						<div class="p-2">{{ $skemaSertifikasi->mulai }}</div>
 					</td>
 				</tr>
-				<tr>
+				<tr> 
 					<td class="bg-dark text-white text-center" colspan="3"><div>Ditinjau oleh Asesor:</div></td>
 				</tr>
 				<tr>
-					<td><div class="p-2">Nama Asesor:</div></td>
+					<td><div class="p-2"><strong>Nama Asesor:</strong></div></td>
 					<td>
 						<div class="p-2"><strong>Rekomendasi:</strong></div>
-						<div class="p-2">Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
 					</td>
-					<td><div class="p-2">Tanda Tangan dan Tanggal:</div></td>
+					<td><div class="p-2"><strong>Tanda Tangan dan Tanggal:</strong></div></td>
 				</tr>
 				<tr>
 					<td><div class="p-2">{{ $skemaSertifikasi->nama_asesor }}</div></td>
 					<td>
-						<div class="p-2"><strong>Rekomendasi:</strong></div>
-						<div class="p-2">Asesmen dapat dilanjutkan/ tidak dapat dilanjutkan</div>
+						<div class="p-2">
+							@if($data['data']['status'] == 1)
+								<s>Asesmen dapat dilanjutkan</s>/ Tidak dapat dilanjutkan
+							@endif
+							@if($data['data']['status'] == 0)
+								Asesmen dapat dilanjutkan/ <s>Tidak dapat dilanjutkan</s>
+							@endif
+						</div>
 					</td>
 					<td>
 						@if($data['data']['ttd_asesor'] !== '')
