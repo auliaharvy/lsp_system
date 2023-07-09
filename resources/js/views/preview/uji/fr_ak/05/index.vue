@@ -134,7 +134,6 @@
           </el-form-item>
 
           <el-form-item label="No Reg" prop="noReg">
-            <!-- <el-input v-model="dataTrx.namaAsesi" placeholder="nama asesi" /> -->
             <span>: {{ dataTrx.reg ? dataTrx.reg : 'Tidak ada' }}</span>
           </el-form-item>
 
