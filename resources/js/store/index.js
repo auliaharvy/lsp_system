@@ -21,6 +21,17 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 const store = new Vuex.Store({
   modules,
   getters,
+  plugins: [
+    (store) => {
+      store.subscribeAction({
+        before: (action, state) => {
+          if (action.payload && action.payload.timeout) {
+            action.payload.timeout = 30000; // Set timeout value to 30,000 milliseconds (30 seconds)
+          }
+        },
+      });
+    },
+  ],
 });
 
 export default store;

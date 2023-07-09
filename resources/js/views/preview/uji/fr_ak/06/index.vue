@@ -248,6 +248,7 @@
           <el-table-column align="center" label="Tanda Tangan Asesor">
             <template slot-scope="scope">
               <el-image
+                v-if="scope.row.ttd"
                 style="width: 200px; height: 100px"
                 :src="scope.row.ttd"
                 fit="contain"
@@ -450,58 +451,64 @@ export default {
       }
     },
     async getAk06() {
-      const { data } = await showAk06Resource.get(this.dataPreview.id_ak_06);
-      console.log(data);
-      this.aspek = data[0]['aspek'];
-      console.log(this.aspek);
-      // this.aspek.forEach((element, index) => {
-      //   if (index === 0) {
-      //     element.validitas = element.validitas === 1;
-      //     element.reliabel = element.reliabel === 1;
-      //     element.fleksibel = element.fleksibel === 1;
-      //     element.adil = element.adil === 1;
-      //   } else if (index === 1){
-      //     element.validitas = element.validitas === 1;
-      //     element.reliabel = element.reliabel === 1;
-      //     element.fleksibel = element.fleksibel === 1;
-      //     element.adil = element.adil === 1;
-      //   } else if (index === 2){
-      //     element.validitas = element.validitas === 1;
-      //     element.reliabel = element.reliabel === 1;
-      //     element.fleksibel = element.fleksibel === 1;
-      //     element.adil = element.adil === 1;
-      //   } else if (index === 3){
-      //     element.validitas = element.validitas === 1;
-      //     element.reliabel = element.reliabel === 1;
-      //     element.fleksibel = element.fleksibel === 1;
-      //     element.adil = element.adil === 1;
-      //   } else if (index === 4){
-      //     element.validitas = element.validitas === 1;
-      //     element.reliabel = element.reliabel === 1;
-      //     element.fleksibel = element.fleksibel === 1;
-      //     element.adil = element.adil === 1;
-      //   } else if (index === 5){
-      //     element.validitas = element.validitas === 1;
-      //     element.reliabel = element.reliabel === 1;
-      //     element.fleksibel = element.fleksibel === 1;
-      //     element.adil = element.adil === 1;
-      //   }
-      // });
-      this.aspekPemenuhan[0].item = data[0].aspekPemenuhan.item;
-      this.aspekPemenuhan[0].taskSkill = data[0].aspekPemenuhan.taskSkill;
-      this.aspekPemenuhan[0].taskManagementSkill = data[0].aspekPemenuhan.taskManagementSkill;
-      this.aspekPemenuhan[0].contigency = data[0].aspekPemenuhan.contigency;
-      this.aspekPemenuhan[0].jobRole = data[0].aspekPemenuhan.jobRole;
-      this.aspekPemenuhan[0].transferSkill = data[0].aspekPemenuhan.transferSkill;
-      this.rekomendasi[0].item = data[0].rekomendasi.item;
-      this.rekomendasi[0].rekomendasi = data[0].rekomendasi.rekomendasi;
-      this.rekomendasiPemenuhan[0].item = data[0].rekomendasiPemenuhan.item;
-      this.rekomendasiPemenuhan[0].rekomendasi = data[0].rekomendasiPemenuhan.rekomendasi;
-      this.ttdTable[0].nama = data[0].ttdTable.nama;
-      this.ttdTable[0].tanggal = data[0].ttdTable.tanggal;
-      this.ttdTable[0].ttd = '/uploads/users/signature/' + data[0].ttdTable.ttd;
-      this.ttdTable[0].komentar = data[0].ttdTable.komentar;
-      // console.log(this.ttdTable[0].ttd);
+      if (this.dataPreview.id_ak_06 != null){
+        const { data } = await showAk06Resource.get(this.dataPreview.id_ak_06);
+        this.aspek = data[0]['aspek'];
+        // this.aspek.forEach((element, index) => {
+        //   if (index === 0) {
+        //     element.validitas = element.validitas === 1;
+        //     element.reliabel = element.reliabel === 1;
+        //     element.fleksibel = element.fleksibel === 1;
+        //     element.adil = element.adil === 1;
+        //   } else if (index === 1){
+        //     element.validitas = element.validitas === 1;
+        //     element.reliabel = element.reliabel === 1;
+        //     element.fleksibel = element.fleksibel === 1;
+        //     element.adil = element.adil === 1;
+        //   } else if (index === 2){
+        //     element.validitas = element.validitas === 1;
+        //     element.reliabel = element.reliabel === 1;
+        //     element.fleksibel = element.fleksibel === 1;
+        //     element.adil = element.adil === 1;
+        //   } else if (index === 3){
+        //     element.validitas = element.validitas === 1;
+        //     element.reliabel = element.reliabel === 1;
+        //     element.fleksibel = element.fleksibel === 1;
+        //     element.adil = element.adil === 1;
+        //   } else if (index === 4){
+        //     element.validitas = element.validitas === 1;
+        //     element.reliabel = element.reliabel === 1;
+        //     element.fleksibel = element.fleksibel === 1;
+        //     element.adil = element.adil === 1;
+        //   } else if (index === 5){
+        //     element.validitas = element.validitas === 1;
+        //     element.reliabel = element.reliabel === 1;
+        //     element.fleksibel = element.fleksibel === 1;
+        //     element.adil = element.adil === 1;
+        //   }
+        // });
+        this.aspekPemenuhan[0].item = data[0].aspekPemenuhan.item;
+        this.aspekPemenuhan[0].taskSkill = data[0].aspekPemenuhan.taskSkill;
+        this.aspekPemenuhan[0].taskManagementSkill = data[0].aspekPemenuhan.taskManagementSkill;
+        this.aspekPemenuhan[0].contigency = data[0].aspekPemenuhan.contigency;
+        this.aspekPemenuhan[0].jobRole = data[0].aspekPemenuhan.jobRole;
+        this.aspekPemenuhan[0].transferSkill = data[0].aspekPemenuhan.transferSkill;
+        this.rekomendasi[0].item = data[0].rekomendasi.item;
+        this.rekomendasi[0].rekomendasi = data[0].rekomendasi.rekomendasi;
+        this.rekomendasiPemenuhan[0].item = data[0].rekomendasiPemenuhan.item;
+        this.rekomendasiPemenuhan[0].rekomendasi = data[0].rekomendasiPemenuhan.rekomendasi;
+        this.ttdTable[0].nama = data[0].ttdTable.nama;
+        this.ttdTable[0].tanggal = data[0].ttdTable.tanggal;
+        // this.ttdTable[0].ttd = '/uploads/users/signature/' + data[0].ttdTable.ttd;
+        // this.ttdTable[0].ttd = '/uploads/users/signature/wkwk.png';
+        this.ttdTable[0].komentar = data[0].ttdTable.komentar;
+
+        if (data[0].ttdTable.ttd){
+          this.ttdTable[0].ttd = '/uploads/users/signature/' + data[0].ttdTable.ttd;
+        } else {
+          this.ttdTable[0].ttd = null;
+        }
+      }
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -583,7 +590,6 @@ export default {
         'rekomendasiPemenuhan': this.rekomendasiPemenuhan,
         'ttdTable': this.ttdTable,
       };
-      console.log(data);
       ak06Resource.store(data)
         .then(response => {
           this.$message({

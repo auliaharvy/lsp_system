@@ -238,6 +238,22 @@ export default {
           title: 'Nomor Skema',
           content: 'TUK BDP',
         },
+        {
+          title: 'TUK',
+          content: '',
+        },
+        {
+          title: 'Nama Asesor',
+          content: '',
+        },
+        {
+          title: 'Nama Asesi',
+          content: '',
+        },
+        {
+          title: 'Tanggal',
+          content: '',
+        },
       ],
       keterangan: [
         'Hasil pelatihan dan / atau pendidikan, dimana Kurikulum dan fasilitas praktek mampu telusur terhadap standar kompetensi.',
@@ -304,9 +320,7 @@ export default {
         const { data } = await mapa2Resource.list();
         const result = await mapa02Detail.get(this.dataPreview.id);
         this.dataMapa02 = result;
-        console.log(this.dataMapa02);
         this.listMuk = data;
-        console.log(this.listMuk);
         // var a = 0;
         this.listMuk.forEach((element, index) => {
           element['index'] = index + 1;
@@ -314,6 +328,7 @@ export default {
           element['potensi_asesi_2'] = this.dataMapa02.data[index].potensi_asesi_2;
           element['potensi_asesi_3'] = this.dataMapa02.data[index].potensi_asesi_3;
           element['potensi_asesi_4'] = this.dataMapa02.data[index].potensi_asesi_4;
+          element['potensi_asesi_5'] = this.dataMapa02.data[index].potensi_asesi_5;
         });
         this.loading = false;
       }
@@ -345,9 +360,10 @@ export default {
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.kode_skema;
-      // this.headerTable[2].content = ujiDetail.nama_asesor;
-      // this.headerTable[3].content = ujiDetail.nama_peserta;
-      // this.headerTable[4].content = ujiDetail.mulai;
+      this.headerTable[2].content = ujiDetail.nama_tuk;
+      this.headerTable[3].content = ujiDetail.asesor;
+      this.headerTable[4].content = ujiDetail.nama_peserta;
+      this.headerTable[5].content = ujiDetail.mulai;
       this.loading = false;
     },
     onJadwalSelect() {

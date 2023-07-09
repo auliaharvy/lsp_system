@@ -148,7 +148,7 @@
             <input type="file" @change="handleUploadSuccess">
           </el-form-item>
           <el-form-item v-if="role !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <span>{{ dataTrx.rekomendasi_asesor }}</span>
+            <span>: {{ dataTrx.rekomendasi_asesor }}</span>
             <!-- <el-radio v-model="dataTrx.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="dataTrx.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio> -->
           </el-form-item>
@@ -268,7 +268,6 @@ export default {
       this.loading = true;
       const data = await preview.get(this.$route.params.iduji);
       this.dataPreview = data;
-      console.log(this.dataPreview);
       this.loading = false;
     },
     async getIa02() {
@@ -277,7 +276,7 @@ export default {
         this.loading = true;
         const data = await ia02Detail.get(this.dataPreview.id_ia_02);
         this.detail = data;
-        // this.dataTrx.rekomendasi_asesor = data.rekomendasi_asesor;
+        this.dataTrx.rekomendasi_asesor = data.rekomendasi_asesor;
         this.loading = false;
       }
     },
@@ -291,13 +290,14 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      const { data } = await mstIa02Resource.list({ id_skema: this.dataPreview.id_skema });
-      this.listSoal = data;
-      this.dataSoal = data[0].file;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
-      console.log(this.listSoal);
+      if (this.dataPreview.id_ia_02 !== null) {
+        const { data } = await mstIa02Resource.list({ id_skema: this.dataPreview.id_skema });
+        this.listSoal = data;
+        this.dataSoal = data[0].file;
+        this.listSoal.forEach((element, index) => {
+          element['index'] = index + 1;
+        });
+      }
       this.loading = false;
     },
     async getListSkema() {
@@ -346,7 +346,6 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -364,7 +363,6 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;

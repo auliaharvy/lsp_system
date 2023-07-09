@@ -150,9 +150,17 @@ class UserController extends BaseController
      * @param  User $user
      * @return UserResource|\Illuminate\Http\JsonResponse
      */
-    public function show(User $user)
+    // public function show(User $user)
+    // {
+    //     return new UserResource($user);
+    // }
+
+    public function show($nameAsesor)
     {
-        return new UserResource($user);
+        // function ini dibuat untuk ambil data signature di module ia 11 
+        $userQuery = User::where('name',$nameAsesor)->first();
+       
+        return $userQuery;
     }
 
     /**

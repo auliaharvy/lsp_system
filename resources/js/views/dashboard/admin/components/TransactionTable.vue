@@ -83,13 +83,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Action">
+      <el-table-column v-if="checkRole(['admin'])" align="center" label="Action">
         <template slot-scope="scope">
           <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor }}">
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
           </router-link>
           <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
-          <el-button v-if="scope.row.status === 1" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
+          <!-- <el-button v-if="scope.row.status === 1" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button> -->
+          <el-button v-if="scope.row.persentase > 99" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
           <el-dialog
             v-loading="loading"
             title="Download Data"
@@ -127,7 +128,7 @@
               </tr>
             </table>
             <!-- </el-checkbox-group> -->
-            <span v-if="showButtonPrint" slot="footer" class="dialog-footer">
+            <span v-if="allUnchecked" slot="footer" class="dialog-footer">
               <!-- <el-button @click="dialogVisible = false">Cancel</el-button> -->
               <el-button type="primary" @click="generateReport()">Print</el-button>
             </span>
@@ -285,6 +286,7 @@ import { mapGetters } from 'vuex';
 import Pagination from '@/components/Pagination';
 import { fetchList } from '@/api/order';
 import Resource from '@/api/resource';
+import checkRole from '@/utils/role';
 
 const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
@@ -374,6 +376,16 @@ export default {
       'roles',
       'user',
     ]),
+    allUnchecked() {
+      return !this.dataUjiKomp.every(item => !item.value);
+    },
+  },
+  watch: {
+    'dataUjiKomp': function(newVal, oldVal){
+      if (newVal.includes(true)) {
+        this.showButtonPrint = true;
+      }
+    },
   },
   mounted() {
     this.getList();
@@ -385,6 +397,7 @@ export default {
     this.getListSkema();
   },
   methods: {
+    checkRole,
     async showDialogPrint(id, asesor, nama_peserta){
       const data = await preview.get(id);
       this.iduji = data.id;
@@ -394,7 +407,6 @@ export default {
       let i = 0;
       for (const item in this.dataUjiKomp){
         this.dataUjiKomp[i].value = false;
-        this.showButtonPrint = false;
         // this.data.value = this.checkAll;
         console.log(item);
         i++;
@@ -441,7 +453,7 @@ export default {
       }
     },
     handleErrorPrint(done){
-      this.$confirm('Mohon maaf saat ini belum bisa print module!')
+      this.$confirm('Gagal, silahkan coba lagi!')
         .then(_ => {
           done();
         })
@@ -501,6 +513,7 @@ export default {
         console.log(err);
         this.handleErrorPrint(err);
       });
+
       this.dialogVisible = false;
       this.loading = false;
     },
@@ -511,6 +524,8 @@ export default {
       this.loading = true;
       const { data, meta } = await listResource.list(this.query);
       this.list = data;
+      console.log('bwah gual ist');
+      console.log(this.list);
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });

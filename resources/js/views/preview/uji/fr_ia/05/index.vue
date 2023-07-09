@@ -126,13 +126,15 @@
               <span>{{ scope.row.jawaban }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkRole(['asesor'])" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['asesor', 'admin'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <!-- <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
                 <el-option key="belum kompeten" label="Belum Kompeten" value="belum kompeten" />
               </el-select> -->
-              <span>{{ scope.row.is_kompeten }}</span>
+              <span v-if="scope.row.rekomendasi == 'kompeten'">Kompeten</span>
+              <span v-else-if="scope.row.rekomendasi == 'belum kompeten'">Belum Kompeten</span>
+              <span v-else>Belum Penilaian</span>
             </template>
           </el-table-column>
         </el-table>
@@ -147,8 +149,8 @@
             <!-- <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio> -->
             <span v-if="rekomendasi_asesor == 'Kompeten'">: Kompeten</span>
-            <span v-if="rekomendasi_asesor == 'Belum Kompeten'">: Belum Kompeten</span>
-            <span v-if="rekomendasi_asesor == 'belum penilaian'">: Belum Penilaian</span>
+            <span v-else-if="rekomendasi_asesor == 'Belum Kompeten'">: Belum Kompeten</span>
+            <span v-else>: Belum Penilaian</span>
           </el-form-item>
         </el-form>
         <br>
@@ -292,6 +294,7 @@ export default {
         this.listSoal.forEach((element, index) => {
           element['index'] = index + 1;
           element['jawaban'] = result.detail[index].jawaban;
+          element['rekomendasi'] = result.detail[index].rekomendasi;
         });
         this.rekomendasi_asesor = result.ia_05.rekomendasi_asesor;
         this.loading = false;

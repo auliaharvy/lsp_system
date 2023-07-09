@@ -311,10 +311,12 @@ export default {
       this.loading = false;
     },
     async getAk02(){
-      const data = await ak02Detail.get(this.dataPreview.id_ak_02);
-      this.dataSend.rekomendasi_asesor = data.ak_02.rekomendasi_asesor;
-      this.dataSend.tindak_lanjut = data.ak_02.tindak_lanjut;
-      this.dataSend.komentar_observasi = data.ak_02.komentar;
+      if (this.dataPreview.id_ak_02 !== null) {
+        const data = await ak02Detail.get(this.dataPreview.id_ak_02);
+        this.dataSend.rekomendasi_asesor = data.ak_02.rekomendasi_asesor;
+        this.dataSend.tindak_lanjut = data.ak_02.tindak_lanjut;
+        this.dataSend.komentar_observasi = data.ak_02.komentar;
+      }
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -358,38 +360,40 @@ export default {
     async getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      const dataak02 = await ak02Detail.get(this.dataPreview.id_ak_02);
-      console.log(dataak02);
-      var kuk = [];
-      unitKomp.forEach((element, index) => {
-        element['type'] = 'unitKomp';
-        element['index'] = number++;
-        element['observasi_demonstrasi'] = dataak02.detail_for_preview[index].observasi_demonstrasi;
-        element['portofolio'] = dataak02.detail_for_preview[index].portofolio;
-        element['pernyataan_pihak_3'] = dataak02.detail_for_preview[index].pernyataan_pihak_3;
-        element['pernyataan_lisan'] = dataak02.detail_for_preview[index].pernyataan_lisan;
-        element['pernyataan_tertulis'] = dataak02.detail_for_preview[index].pernyataan_tertulis;
-        element['proyek_kerja'] = dataak02.detail_for_preview[index].proyek_kerja;
-        element['lainnya'] = dataak02.detail_for_preview[index].lainnya;
-        kuk.push(element);
-        this.unitKompetensiTable[0].col3.push(element['kode_unit']);
-        this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
-        // this.headerTable[3].content.push(element['unit_kompetensi']);
-        this.listJudulUnit.push(element);
-        element.elemen.forEach((element, index) => {
-          element['type'] = 'elemen';
+      if (this.dataPreview.id_ak_02 !== null) {
+        const dataak02 = await ak02Detail.get(this.dataPreview.id_ak_02);
+        console.log(dataak02);
+        var kuk = [];
+        unitKomp.forEach((element, index) => {
+          element['type'] = 'unitKomp';
+          element['index'] = number++;
+          element['observasi_demonstrasi'] = dataak02.detail_for_preview[index].observasi_demonstrasi;
+          element['portofolio'] = dataak02.detail_for_preview[index].portofolio;
+          element['pernyataan_pihak_3'] = dataak02.detail_for_preview[index].pernyataan_pihak_3;
+          element['pernyataan_lisan'] = dataak02.detail_for_preview[index].pernyataan_lisan;
+          element['pernyataan_tertulis'] = dataak02.detail_for_preview[index].pernyataan_tertulis;
+          element['proyek_kerja'] = dataak02.detail_for_preview[index].proyek_kerja;
+          element['lainnya'] = dataak02.detail_for_preview[index].lainnya;
           kuk.push(element);
-          element.kuk.forEach((element, index) => {
-            element['type'] = 'kuk';
-            element['bukti_pendukung'] = 'raport';
+          this.unitKompetensiTable[0].col3.push(element['kode_unit']);
+          this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
+          // this.headerTable[3].content.push(element['unit_kompetensi']);
+          this.listJudulUnit.push(element);
+          element.elemen.forEach((element, index) => {
+            element['type'] = 'elemen';
             kuk.push(element);
+            element.kuk.forEach((element, index) => {
+              element['type'] = 'kuk';
+              element['bukti_pendukung'] = 'raport';
+              kuk.push(element);
+            });
           });
         });
-      });
-      console.log(this.listJudulUnit);
-      // var elemen = unitKomp.elemen;
-      // var kuk = elemen.kuk;
-      this.listKuk = kuk;
+        console.log(this.listJudulUnit);
+        // var elemen = unitKomp.elemen;
+        // var kuk = elemen.kuk;
+        this.listKuk = kuk;
+      }
     },
     onSubmit() {
       this.loading = true;

@@ -57,6 +57,7 @@ Route::namespace('Api')->group(function() {
     Route::get('preview/ak-04/{id}', 'UjiKompController@previewAk04');
 
     //detail FR
+    Route::get('detail/signature', 'UjiKompController@showSignature');
     Route::get('detail/preview/{id}', 'UjiKompController@showPreview');
     Route::get('detail/indexPreview/{id}', 'UjiKompController@indexPreview');
     Route::get('detail/apl-01/{id}', 'UjiKompController@showApl01');
@@ -73,7 +74,8 @@ Route::namespace('Api')->group(function() {
     Route::get('detail/ak-02/{id}', 'UjiKompController@showAk02');
     Route::get('detail/ak-03/{id}', 'UjiKompController@showAk03');
     Route::get('detail/ak-04/{id}', 'UjiKompController@showAk04');
-    Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
+    // Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
+    Route::get('detail/ak-05', 'UjiKompController@showAk05');
     Route::get('detail/va/{id}', 'UjiKompController@showVa');
     Route::get('ak-06/{id}', 'UjiKompController@showAk06');
     Route::get('trx-mapa-02/{id}', 'UjiKompController@showMapa02');

@@ -217,7 +217,17 @@
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Asesi :
                 <br>
-                <img v-if="ttdAsesi" :src="'/uploads/users/signature/' + ttdAsesi" class="sidebar-logo">
+                <div v-if="ttdAsesi">
+                  <el-image
+                    style="width: 200px; height: 100px"
+                    :src="ttdAsesi"
+                    fit="contain"
+                  />
+                </div>
+                <div v-else>
+                  <h3>FR.APL 01 belum di tanda tangan</h3>
+                </div>
+                <!-- <img v-if="ttdAsesi" :src="'/uploads/users/signature/' + ttdAsesi" class="sidebar-logo"> -->
               </template>
               <span>{{ scope.row.title }}</span>
             </template>
@@ -239,14 +249,24 @@
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Admin LSP :
                 <br>
-                <div v-if="!ttdAdmin">
+                <div v-if="ttdAdmin">
+                  <el-image
+                    style="width: 200px; height: 100px"
+                    :src="ttdAdmin"
+                    fit="contain"
+                  />
+                </div>
+                <div v-else>
+                  <h3>FR.APL 01 belum di tanda tangan</h3>
+                </div>
+                <!-- <div v-if="!ttdAdmin">
                   <h2>FR.APL 01 belum di tanda tangan</h2>
                 </div>
                 <div v-else>
                   {{ namaAdmin }}
                   <br>
                   <img :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
-                </div>
+                </div> -->
               </template>
             </template>
           </el-table-column>
@@ -436,7 +456,7 @@ export default {
       this.loading = true;
       const data = await preview.get(this.$route.params.iduji);
       this.dataPreview = data;
-      console.log(this.dataPreview);
+      // console.log(this.dataPreview);
       this.loading = false;
     },
     clear() {
@@ -469,9 +489,11 @@ export default {
     async getApl01() {
       this.loading = true;
       this.dataTrx.id_apl_01 = this.dataPreview.id_apl_01;
-      console.log(this.dataPreview.id_apl_01);
-      const data = await apl01Resource.get(this.dataPreview.id_apl_01);
-      // console.log(data);
+      // console.log(this.dataPreview.id_apl_01);
+      const result = await apl01Resource.get(this.dataPreview.id_apl_01);
+      console.log(result);
+      const data = result.apl_01;
+      console.log(data);
       const ttl = data.tempat_lahir + ' / ' + moment(data.tanggal_lahir).format('DD-MM-YYYY');
       const pendidikan = data.nama_sekolah + ' (' + data.tingkatan + ')';
       this.fileName = 'APL.01 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
@@ -491,10 +513,21 @@ export default {
       } if (data.status === 2) {
         this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi';
       }
-      this.dataAsesi.sign = '/uploads/users/signature/' + data.signature;
-      this.ttdAsesi = data.signature;
-      this.ttdAdmin = data.ttd_admin;
-      this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;
+      // this.dataAsesi.sign = '/uploads/users/signature/' + data.signature;
+      // this.ttdAsesi = data.signature;
+      // this.ttdAdmin = data.ttd_admin;
+      // this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;
+      if (result.signature){
+        this.ttdAsesi = '/uploads/users/signature/' + result.signature; // DATA TTD ASESI SESUDAH DIBENARKAN
+      } else {
+        this.ttdAsesi = null;
+      }
+      if (data.ttd_admin){
+        this.ttdAdmin = '/uploads/users/signature/' + data.ttd_admin; // DATA TTD ASESI SESUDAH DIBENARKAN
+      } else {
+        this.ttdAdmin = null;
+      }
+
       this.namaAdmin = data.nama_admin;
       this.dataAsesi.nama = data.nama_lengkap;
       this.dataAsesi.status = data.status;

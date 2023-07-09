@@ -121,41 +121,98 @@
               <span>{{ scope.row.jawaban }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Kunci Jawaban">
             <template slot-scope="scope">
               <span>{{ scope.row.kunci_jawaban }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['assesor', 'admin'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
+              <div v-if="scope.row.is_kompeten === 'kompeten'">Kompeten</div>
+              <div v-else-if="scope.row.is_kompeten === 'belum kompeten'">Belum Kompeten</div>
+              <div v-else>Belum Penilaian</div>
+              <!-- <div v-if="scope.row.is_kompeten === 'belum penilaian'">Belum Penilaian</div> -->
+              <!-- <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
                 <el-option key="belum kompeten" label="Belum Kompeten" value="belum kompeten" />
                 <el-option key="belum penilaian" label="Belum Penilaian" value="belum penilaian" />
-              </el-select>
+              </el-select> -->
             </template>
           </el-table-column>
         </el-table>
         <br>
         <br>
-        <el-form
-          v-if="checkRole(['assesor'])"
-          ref="form"
-          :model="form"
-          label-width="250px"
-          label-position="left"
+        <el-table
+          v-if="ttdTable1"
+          v-loading="loading"
+          :data="ttdTable1"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <el-radio-group v-model="form.rekomendasi_asesor">
-              <el-radio label="Kompeten">Kompeten</el-radio>
-              <el-radio label="Belum Kompeten">Belum Kompeten</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="Umpan balik untuk asesi" prop="feedback">
-            <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
-          </el-form-item>
-        </el-form>
+          <el-table-column align="center" label="Nama Asesi">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Umpan balik untuk asesi">
+            <template slot-scope="scope">
+              <span>{{ scope.row.umpan_balik ? scope.row.umpan_balik : 'Belum Penilaian' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan Asesi">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>FR.IA 06 belum di tanda tangan</h3>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
         <br>
+        <el-table
+          v-if="ttdTable2"
+          v-loading="loading"
+          :data="ttdTable2"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Nama Asesor">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Rekomendasi Asesor">
+            <template slot-scope="scope">
+              <span v-if="scope.row.rekomendasi_asesor === 'Kompeten'">Kompeten</span>
+              <span v-else-if="scope.row.rekomendasi_asesor === 'Belum Kompeten'">Belum Kompeten</span>
+              <span v-else>Belum Penilaian</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan Asesor">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>FR.IA 06 belum di tanda tangan</h3>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </el-main>
   </el-container>
@@ -175,6 +232,7 @@ const postResource = new Resource('uji-komp-ia-06');
 const ia06Detail = new Resource('detail/ia-06');
 const ia06NilaiResource = new Resource('uji-komp-ia-06-nilai');
 const preview = new Resource('detail/preview');
+const signature = new Resource('detail/signature');
 
 export default {
   components: {},
@@ -233,6 +291,20 @@ export default {
         {
           title: 'Tanggal',
           content: '-',
+        },
+      ],
+      ttdTable1: [
+        {
+          nama: 'Nama Asesi',
+          umpan_balik: '',
+          ttd: '',
+        },
+      ],
+      ttdTable2: [
+        {
+          nama: 'Nama Asesor',
+          rekomendasi_asesor: '',
+          ttd: '',
         },
       ],
       panduan: [
@@ -317,15 +389,35 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      const { data } = await mstResource.list({ id_skema: this.dataPreview.id_skema });
-      // console.log(data);
-      const dataia06 = await ia06Detail.get(this.dataPreview.id_ia_06);
-      this.listSoal = data;
-      this.ia06 = dataia06;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-        element['jawaban'] = this.ia06.detail[index].jawaban;
-      });
+      if (this.dataPreview.id_ia_06 !== null) {
+        const { data } = await mstResource.list({ id_skema: this.dataPreview.id_skema });
+        // console.log(data);
+        const dataia06 = await ia06Detail.get(this.dataPreview.id_ia_06);
+        this.listSoal = data;
+        this.ia06 = dataia06;
+        console.log(dataia06);
+        this.listSoal.forEach((element, index) => {
+          element['index'] = index + 1;
+          element['jawaban'] = this.ia06.detail[index].jawaban;
+          this.listSoal[index].is_kompeten = this.ia06.detail[index].rekomendasi;
+        });
+
+        const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: this.dataPreview.nama_peserta });
+
+        if (signatures.asesi){
+          this.ttdTable1[0].ttd = '/uploads/users/signature/' + signatures.asesi;
+        } else {
+          this.ttdTable1[0].ttd = null;
+        }
+        if (signatures.asesor){
+          this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatures.asesor;
+        } else {
+          this.ttdTable2[0].ttd = null;
+        }
+
+        this.ttdTable1[0].umpan_balik = dataia06.ia_06.umpan_balik;
+        this.ttdTable2[0].rekomendasi_asesor = dataia06.ia_06.rekomendasi_asesor;
+      }
       this.loading = false;
     },
     // getIa06() {
@@ -363,8 +455,9 @@ export default {
       this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
-      this.dataTrx.nama_asesor = ujiDetail.asesor;
-      this.dataTrx.nama_asesi = ujiDetail.nama_peserta;
+
+      this.ttdTable1[0].nama = ujiDetail.nama_peserta;
+      this.ttdTable2[0].nama = ujiDetail.asesor;
       this.loading = false;
     },
     onJadwalSelect() {
