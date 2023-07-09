@@ -174,7 +174,7 @@
           </el-table-column>
           <el-table-column align="center" min-width="80px" label="Komentar">
             <template slot-scope="scope">
-              <span>{{ scope.row.komentar }}</span>
+              <span>{{ scope.row.komentar ? scope.row.komentar : 'Belum ada komentar' }}</span>
               <!-- <el-input v-model="scope.row.komentar" type="textarea" :rows="3" placeholder="Isi Komentar" /> -->
             </template>
           </el-table-column>
@@ -199,6 +199,16 @@
             <div>: {{ dataTrx.komentar }}</div>
             <!-- <el-input v-model="dataTrx.komentar" type="textarea" :rows="3" placeholder="Isi Komentar" label="Komentar" /> -->
           </el-form-item>
+          <el-form-item label="Tanda Tangan Peninjau" prop="feedback">
+            <el-image
+              v-if="dataTrx.ttd_peninjau"
+              style="width: 200px; height: 100px"
+              :src="dataTrx.ttd_peninjau"
+              fit="contain"
+            />
+            <div v-else>: Belum di tanda tangan</div>
+            <!-- <el-input v-model="dataTrx.komentar" type="textarea" :rows="3" placeholder="Isi Komentar" label="Komentar" /> -->
+          </el-form-item>
         </el-form>
       </div>
       <br>
@@ -217,6 +227,7 @@ const mstIa11Resource = new Resource('mst-ia-11-get');
 const ia11Resource = new Resource('uji-komp-ia-11');
 const ia11Detail = new Resource('detail/ia-11');
 const preview = new Resource('detail/preview');
+const users = new Resource('users');
 
 export default {
   components: {},
@@ -398,7 +409,7 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    getUjiKompDetail() {
+    async getUjiKompDetail() {
       var id_uji = this.dataPreview.id;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
@@ -410,6 +421,14 @@ export default {
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
 
+      const signature = await users.get(this.$route.params.asesor).then((res) => {
+        return res.signature;
+      });
+      if (signature){
+        this.dataTrx.ttd_peninjau = '/uploads/users/signature/' + signature;
+      } else {
+        this.dataTrx.ttd_peninjau = null;
+      }
       this.dataTrx.nama_peninjau = ujiDetail.asesor;
       this.dataTrx.tanggal = ujiDetail.mulai;
     },

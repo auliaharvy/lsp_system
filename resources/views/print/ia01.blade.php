@@ -97,15 +97,12 @@
 					</td>
 				</tr>
 			</table>
-			@php $a = 1; $b = 1;@endphp
+			@php $noUnitKompetensi = 1; $noKuk = 1; $noElemen = 1; @endphp
 			@foreach($data['listDataKuk'] as $row)
 				<table class="table table-bordered">
 					<tr>
-						<td class="bg-dark" colspan="7"></td>
-					</tr>
-					<tr>
-						<td rowspan="2">
-							<div>Unit Kompetensi {{ $a }}</div>
+						<td rowspan="2" colspan="6">
+							<div>Unit Kompetensi {{ $noUnitKompetensi }}</div>
 						</td>
 						<td>
 							<div>Kode Unit</div>
@@ -129,86 +126,55 @@
 						</td>
 					</tr>
 				</table>
+				@foreach($row['elemen'] as $item)
 				<table class="table table-bordered" style="margin-bottom: 50px;">
-				<table>
-<tr>
-<td rowspan="2">
-<div><strong>No.</strong></div>
-</td>
-<td rowspan="2">
-<div><strong>Elemen</strong></div>
-</td>
-<td rowspan="2">
-<div><strong>Kriteria Unjuk Kerja*</strong></div>
-</td>
-<td rowspan="2">
-<div><strong>Benchmark&nbsp;</strong></div>
-<div><strong>(SOP / spesifikasi produk industri)</strong></div>
-</td>
-<td colspan="2">
-<div><strong>Rekomendasi</strong></div>
-</td>
-<td>
-<div><strong>Penilaian Lanjut</strong></div>
-</td>
-</tr>
-<tr>
-<td>
-<div><strong>K</strong></div>
-</td>
-<td>
-<div><strong>BK</strong></div>
-</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td rowspan="3">
-<div><span style="font-weight: 400;">1</span></div>
-</td>
-<td rowspan="3">
-<div><span style="font-weight: 400;">Mengintreprestasikan kebutuhan desain latar sesuai dengan rancangan kondisi lokasi, setting situasi/ suasana/ Budaya</span></div>
-</td>
-<td>
-<ul>
-<li><span style="font-weight: 400;">Mengidentifikasi konsep desain latar dan naskah&nbsp;</span></li>
-</ul>
-</td>
-<td rowspan="3">
-<div><span style="font-weight: 400;">SKKNI</span></div>
-</td>
-<td>
-<div><span style="font-weight: 400;">☐</span></div>
-</td>
-<td>
-<div><span style="font-weight: 400;">☐</span></div>
-</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td>
-<div><span style="font-weight: 400;">1.2 Memerlukan jenis dan bentuk standar desain latar yang diperlukan&nbsp;</span></div>
-</td>
-<td>
-<div><span style="font-weight: 400;">☐</span></div>
-</td>
-<td>
-<div><span style="font-weight: 400;">☐</span></div>
-</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td>
-<div><span style="font-weight: 400;">1.3 Merencanakan seluruh desain latar yang diperlukan dengan mempertimbangkan perbandingan ukuran, bentuk dan fungsi&nbsp;</span></div>
-</td>
-<td>
-<div><span style="font-weight: 400;">☐</span></div>
-</td>
-<td>
-<div><span style="font-weight: 400;">☐</span></div>
-</td>
-<td>&nbsp;</td>
-</tr>
+					<tr>
+						<td class="bg-dark text-white" colspan="6">Elemen {{ $noElemen }} : {{ $item['nama_elemen'] }}</td>
+					</tr>
+					<tr>
+						<td class="bg-dark text-white text-center" rowspan="2">No.</td>
+						<td class="bg-dark text-white text-center" rowspan="2">Kriteria Untuk Kerja*</td>
+						<td class="bg-dark text-white text-center" rowspan="2">Benchmark (SOP / spesifikasi produk industri)</td>
+						<td class="bg-dark text-white text-center" colspan="2">Rekomendasi</td>
+						<td class="bg-dark text-white text-center" rowspan="2">Penilaian Lanjut</td>
+					</tr>
+					<tr>
+						<td class="bg-dark text-white text-center">K</td>
+						<td class="bg-dark text-white text-center">BK</td>
+					</tr>
+					@foreach($item['kuk'] as $listkuk)
+						<tr>
+							<td>
+								{{ $noKuk }}
+							</td>
+							<td>
+								{{ $listkuk['kuk'] }}
+							</td>
+							<td>
+								{{ $item['benchmark'] }}
+							</td>
+							<td>
+								@if($listkuk['is_kompeten_from_ia_01_detail']->is_kompeten == 1)
+									<input type="checkbox" checked aria-label="Checkbox for following text input">
+								@endif
+							</td>
+							<td>
+								@if($listkuk['is_kompeten_from_ia_01_detail']->is_kompeten == 0)
+									<input type="checkbox" checked aria-label="Checkbox for following text input">
+								@endif
+							</td>
+							<td>
+								{{ $listkuk['penilaian_lanjut_from_ia_01_detail']->penilaian_lanjut }}
+							</td>
+						</tr>
+					@php $noKuk++; @endphp
+					@endforeach
+					@php $noKuk = 1; @endphp
 				</table>
+				@php $noElemen++; @endphp
+				@endforeach
+				@php $noUnitKompetensi++; $noElemen = 1; @endphp
+  				<div style="page-break-after: always"></div>
 			@endforeach
 		</div>
 	</div>

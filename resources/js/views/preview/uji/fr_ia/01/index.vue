@@ -203,35 +203,39 @@
             </el-select> -->
             <!-- <div v-else> -->
             <div>
-              <span v-if="ia01.status === 0">Kompeten</span>
-              <span v-if="ia01.status === 1">Belum Kompeten</span>
+              <span v-if="ia01.status === 0">: Kompeten</span>
+              <span v-if="ia01.status === 1">: Belum Kompeten</span>
             </div>
           </el-form-item>
           <el-form-item label="Umpan Balik untuk Asesi" prop="umpanBalik">
-            <el-input v-if="dataPreview.id_ia_01 === null" placeholder="Isi umpan balik untuk asesi" />
-            <span v-else>{{ ia01.note }}</span>
+            <el-input v-if="dataPreview.note === null" placeholder="Isi umpan balik untuk asesi" />
+            <span v-else>: {{ ia01.note }}</span>
           </el-form-item>
           <el-form-item label="Tanda Tangan Asesor">
-            <div v-if="dataPreview.id_ia_01 === null">
-              <h3>FR.IA 01 belum ditanda tangani</h3>
+            <div v-if="ttdAsesor">
+              <el-image
+                style="width: 200px; height: 100px"
+                :src="ttdAsesor"
+                fit="contain"
+              />
+              <!-- <img :src="ttdAsesor" class="sidebar-logo"> -->
             </div>
-            <el-image
-              v-else
-              style="width: 200px; height: 100px"
-              :src="ttdAsesor"
-              fit="contain"
-            />
+            <div v-else>
+              <h3>: FR.IA 01 belum ditanda tangani</h3>
+            </div>
           </el-form-item>
           <el-form-item label="Tanda Tangan Asesi">
-            <div v-if="dataPreview.id_ia_01 === null">
-              <h3>FR.IA 01 belum ditanda tangani</h3>
+            <div v-if="ttdAsesi">
+              <el-image
+                style="width: 200px; height: 100px"
+                :src="ttdAsesi"
+                fit="contain"
+              />
+              <!-- <img :src="ttdAsesi" class="sidebar-logo"> -->
             </div>
-            <el-image
-              v-else
-              style="width: 200px; height: 100px"
-              :src="ttdAsesi"
-              fit="contain"
-            />
+            <div v-else>
+              <h3>: FR.IA 01 belum ditanda tangani</h3>
+            </div>
           </el-form-item>
         </el-form>
         <br>
@@ -350,7 +354,6 @@ export default {
       this.loading = true;
       const data = await preview.get(this.$route.params.iduji);
       this.dataPreview = data;
-      // console.log(this.dataPreview);
       this.loading = false;
     },
     clear() {
@@ -365,9 +368,20 @@ export default {
         const data = await ia01Detail.get(this.dataPreview.id_ia_01);
         this.listDetailIa01 = data.detail;
         this.ia01 = data.ia_01;
-        console.log(this.ia01);
-        this.ttdAsesor = '/uploads/users/signature/' + this.ia01.ttd_asesor;
-        this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi;
+        // this.ttdAsesor = '/uploads/users/signature/' + this.ia01.ttd_asesor;
+        // this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi;
+        if (this.ia01.ttd_asesor){
+          this.ttdAsesor = '/uploads/users/signature/' + this.ia01.ttd_asesor; // DATA TTD ASESI SESUDAH DIBENARKAN
+        } else {
+          this.ttdAsesor = null;
+        }
+        if (this.ia01.ttd_asesi){
+          this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi; // DATA TTD ASESI SESUDAH DIBENARKAN
+        } else {
+          this.ttdAsesi = null;
+        }
+        this.loading = false;
+
         this.listKuk.forEach((element, index) => {
           if (element['type'] === 'kuk') {
             var foundIndex = data.detail.findIndex(x => x.id_kuk_elemen === element['id']);
@@ -392,7 +406,6 @@ export default {
       // this.$refs.html2Pdf.generatePdf();
       // await print.download({ idJadwal: 11 });
       await print.download({ idJadwal: 11 }).then((response) => {
-        console.log(response);
         const url = window.URL.createObjectURL(new Blob([response]));
         const link = document.createElement('a');
         link.href = url;

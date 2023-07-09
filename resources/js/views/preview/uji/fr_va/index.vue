@@ -343,7 +343,7 @@
                 <el-table-column label="Prinsip Asesmen">
                   <el-table-column align="left" min-width="10px" label="V">
                     <template slot-scope="scope">
-                      <span v-if="scope.row.aturan_v == 1"><i class="el-icon-success ceklist-icon" /></span>
+                      <span v-if="scope.row.prinsip_v == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                   <el-table-column align="left" min-width="10px" label="R">
@@ -577,8 +577,6 @@ export default {
       this.dataPreview = data;
 
       this.loading = false;
-
-      console.log(this.dataPreview);
     },
     async getVa(){
       this.loading = true;
@@ -619,7 +617,6 @@ export default {
         this.listTemuanValidasi = data.temuan;
         this.listRencanaImplementasi = data.rencana;
         this.masterData.aspekAspekKegiatan = data.aspek;
-        console.log(data);
       }
       this.loading = false;
     },

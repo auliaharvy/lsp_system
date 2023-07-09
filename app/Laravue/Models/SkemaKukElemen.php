@@ -13,6 +13,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Laravue\Models\UjiKompApl2Detail;
+use App\Laravue\Models\UjiKompIa01Detail;
 
 /**
  * Class Skema Elemen
@@ -32,7 +33,7 @@ class SkemaKukElemen extends Model
     protected $table = "mst_skema_sertifikasi_kuk_elemen";
     protected $fillable = ['id_elemen','kuk', 'pertanyaan_kuk', 'jumlah_bukti', 'jenis_bukti_id', 'bukti'];
 
-    public static function getSkemaKukElemen($unit_id, $id_apl_02, $id_ia_01)
+    public static function getSkemaKukElemen($unit_id, $id_apl_02 = null, $id_ia_01 = null)
     {
         $skemaUnit = SkemaKukElemen::where('id_elemen', $unit_id)
         ->select('mst_skema_sertifikasi_kuk_elemen.*', 'a.nama as nama_jenis_bukti')

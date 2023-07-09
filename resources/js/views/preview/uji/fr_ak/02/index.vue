@@ -177,9 +177,14 @@ const ak02Detail = new Resource('detail/ak-02');
 const preview = new Resource('detail/preview');
 
 export default {
+  components: {},
   data() {
     return {
-      dataSend: {},
+      dataSend: {
+        rekomendasi_asesor: '',
+        tindak_lanjut: '',
+        komentar: '',
+      },
       umpanBalikAsesi: '',
       checkList: [],
       kompeten: null,
@@ -266,6 +271,7 @@ export default {
   created() {
     this.getDataPreview().then((value) => {
       this.getListPertanyaan();
+      this.getAk02();
     });
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
@@ -274,35 +280,11 @@ export default {
       this.getUjiKompDetail();
     });
     // this.getListPertanyaan();
-    // this.getDate();
   },
   methods: {
-    getDate() {
-      var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-      var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-      var date = new Date();
-      // var millisecond = date.getMilliseconds();
-      // var detik = date.getSeconds();
-      var menit = date.getMinutes();
-      var jam = date.getHours();
-      var hari = date.getDay();
-      var tanggal = date.getDate();
-      var bulan = date.getMonth();
-      var tahun = date.getFullYear();
-      this.dataTrx.jam = jam;
-      this.dataTrx.menit = menit;
-      this.dataTrx.tanggal = tanggal;
-      this.dataTrx.bulan = arrbulan[bulan];
-      this.dataTrx.tahun = tahun;
-      this.dataTrx.hari = arrHari[hari];
-      this.headerTable[4].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
-      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
-    },
     async getDataPreview(){
-      this.loading = true;
       const data = await preview.get(this.$route.params.iduji);
       this.dataPreview = data;
-      this.loading = false;
     },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
@@ -315,24 +297,26 @@ export default {
     async getListPertanyaan() {
       this.loading = true;
       const { data } = await mstIa03Resource.list({ id_skema: this.dataPreview.id_skema });
-      if (this.dataPreview.id_ak_02 !== null){
-        const result = await ak02Detail.get(this.dataPreview.id_ak_02);
-        this.listSoal = data;
-        // this.listSoal.forEach((element, index) => {
-        //   element['index'] = index + 1;
-        //   element['observasi_demonstrasi'] = result.detail[index].observasi_demonstrasi;
-        //   element['portofolio'] = result.detail[index].portofolio;
-        //   element['pernyataan_pihak_3'] = result.detail[index].pernyataan_pihak_3;
-        //   element['pernyataan_lisan'] = result.detail[index].pernyataan_lisan;
-        //   element['pernyataan_tertulis'] = result.detail[index].pernyataan_tertulis;
-        //   element['proyek_kerja'] = result.detail[index].proyek_kerja;
-        //   element['lainnya'] = result.detail[index].lainnya;
-        // });
-        this.dataSend.rekomendasi_asesor = result.ak_02.rekomendasi_asesor;
-        this.dataSend.tindak_lanjut = result.ak_02.tindak_lanjut;
-        this.dataSend.komentar_observasi = result.ak_02.komentar;
-      }
+      this.listSoal = data;
+      this.listSoal.forEach((element, index) => {
+        element['index'] = index + 1;
+        element['observasi_demonstrasi'] = true;
+        element['portofolio'] = false;
+        element['pernyataan_pihak_3'] = true;
+        element['pernyataan_lisan'] = false;
+        element['pernyataan_tertulis'] = false;
+        element['proyek_kerja'] = false;
+        element['lainnya'] = false;
+      });
       this.loading = false;
+    },
+    async getAk02(){
+      if (this.dataPreview.id_ak_02 !== null) {
+        const data = await ak02Detail.get(this.dataPreview.id_ak_02);
+        this.dataSend.rekomendasi_asesor = data.ak_02.rekomendasi_asesor;
+        this.dataSend.tindak_lanjut = data.ak_02.tindak_lanjut;
+        this.dataSend.komentar_observasi = data.ak_02.komentar;
+      }
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -352,7 +336,6 @@ export default {
     },
     getUjiKompDetail() {
       var id_uji = this.dataPreview.id;
-      console.log(id_uji);
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
@@ -360,8 +343,8 @@ export default {
       this.headerTable[2].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.asesor;
       this.headerTable[0].content = ujiDetail.nama_peserta;
-      this.headerTable[4].content = ujiDetail.selesai;
       this.headerTable[3].content = ujiDetail.mulai;
+      this.headerTable[4].content = ujiDetail.selesai;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
@@ -369,49 +352,48 @@ export default {
       var skemaId = this.listSkema.find((x) => x.id === id_skema);
       this.selectedSkema = skemaId;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      this.dataTrx.id_skema = skemaId.id;
+      // this.dataTrx.id_skema = skemaId.id;
+      this.dataTrx.id_skema = this.dataPreview.id_skema;
       // this.dataTrx.id_tuk = tukId.id;
       this.getKuk();
     },
     async getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
-      const result = await ak02Detail.get(this.dataPreview.id_ak_02);
-      console.log(result);
-      // console.log(result.detail[0].observasi_demonstrasi);
-      // console.log(unitKomp);
-      var kuk = [];
-      unitKomp.forEach((element, index) => {
-        element['type'] = 'unitKomp';
-        element['index'] = number++;
-        element['observasi_demonstrasi'] = result.detail[index].observasi_demonstrasi;
-        element['portofolio'] = result.detail[index].portofolio;
-        element['pernyataan_pihak_3'] = result.detail[index].pernyataan_pihak_3;
-        element['pernyataan_lisan'] = result.detail[index].pernyataan_lisan;
-        element['pernyataan_tertulis'] = result.detail[index].pernyataan_tertulis;
-        element['proyek_kerja'] = result.detail[index].proyek_kerja;
-        element['lainnya'] = result.detail[index].lainnya;
-        kuk.push(element);
-        this.unitKompetensiTable[0].col3.push(element['kode_unit']);
-        // this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
-        this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
-        // this.headerTable[3].content.push(element['unit_kompetensi']);
-        this.listJudulUnit.push(element);
-        element.elemen.forEach((element, index) => {
-          element['type'] = 'elemen';
+      if (this.dataPreview.id_ak_02 !== null) {
+        const dataak02 = await ak02Detail.get(this.dataPreview.id_ak_02);
+        console.log(dataak02);
+        var kuk = [];
+        unitKomp.forEach((element, index) => {
+          element['type'] = 'unitKomp';
+          element['index'] = number++;
+          element['observasi_demonstrasi'] = dataak02.detail_for_preview[index].observasi_demonstrasi;
+          element['portofolio'] = dataak02.detail_for_preview[index].portofolio;
+          element['pernyataan_pihak_3'] = dataak02.detail_for_preview[index].pernyataan_pihak_3;
+          element['pernyataan_lisan'] = dataak02.detail_for_preview[index].pernyataan_lisan;
+          element['pernyataan_tertulis'] = dataak02.detail_for_preview[index].pernyataan_tertulis;
+          element['proyek_kerja'] = dataak02.detail_for_preview[index].proyek_kerja;
+          element['lainnya'] = dataak02.detail_for_preview[index].lainnya;
           kuk.push(element);
-          element.kuk.forEach((element, index) => {
-            element['type'] = 'kuk';
-            element['bukti_pendukung'] = 'raport';
+          this.unitKompetensiTable[0].col3.push(element['kode_unit']);
+          this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
+          // this.headerTable[3].content.push(element['unit_kompetensi']);
+          this.listJudulUnit.push(element);
+          element.elemen.forEach((element, index) => {
+            element['type'] = 'elemen';
             kuk.push(element);
+            element.kuk.forEach((element, index) => {
+              element['type'] = 'kuk';
+              element['bukti_pendukung'] = 'raport';
+              kuk.push(element);
+            });
           });
         });
-      });
-      // console.log(this.listKodeUnit);
-      // var elemen = unitKomp.elemen;
-      // var kuk = elemen.kuk;
-      this.listKuk = kuk;
+        console.log(this.listJudulUnit);
+        // var elemen = unitKomp.elemen;
+        // var kuk = elemen.kuk;
+        this.listKuk = kuk;
+      }
     },
     onSubmit() {
       this.loading = true;
@@ -422,7 +404,7 @@ export default {
       this.dataTrx.nama_asesi = this.headerTable[0].content;
       this.dataTrx.nama_asesor = this.headerTable[1].content;
       this.dataTrx.detail = this.listSoal;
-      // console.log(this.dataTrx.detail);
+      console.log(this.dataTrx.detail);
       this.dataTrx.userId = this.userId;
       ak02Resource
         .store(this.dataTrx)

@@ -82,18 +82,28 @@
 						<div>
 							@if($data->verifikasi_portfolio == 1)
 								<span>Verifikasi portfolio, </span>
+							@else
+								<span><s>Verifikasi portfolio</s>, </span>
 							@endif
 							@if($data->observasi_langsung == 1)
 								<span>Obervasi langsung, </span>
+							@else
+								<span><s>Obervasi langsung</s>, </span>
 							@endif
 							@if($data->hasil_tes_tulis == 1)
 								<span>Hasil tes tulis, </span>
+							@else
+								<span><s>Hasil tes tulis</s>, </span>
 							@endif
 							@if($data->hasil_tes_lisan == 1)
 								<span>Hasil tes lisan, </span>
+							@else
+								<span><s>Hasil tes lisan</s>, </span>
 							@endif
 							@if($data->hasil_tes_wawancara == 1)
-								<span>Hasil tes wawancara, </span>
+								<span>Hasil tes wawancara</span>
+							@else
+								<span><s>Hasil tes wawancara</s></span>
 							@endif
 						</div>
 					</td>

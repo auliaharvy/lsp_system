@@ -55,9 +55,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\App;
+use GuzzleHttp\Client;
 use Validator;
-// use PDF;
-use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
+// use Barryvdh\DomPDF\Facade\Pdf;
 
 /**
  * Class UjiKompController
@@ -106,6 +107,7 @@ class PrintController extends BaseController
         $idia06 = Arr::get($searchParams, 'idia06');
         $idia07 = Arr::get($searchParams, 'idia07');
         $idia11 = Arr::get($searchParams, 'idia11');
+        $idva = Arr::get($searchParams, 'idva');
         
         $valueapl01 = Arr::get($searchParams, 'valueapl01');
         $valueapl02 = Arr::get($searchParams, 'valueapl02');
@@ -125,13 +127,14 @@ class PrintController extends BaseController
         $valueia11 = Arr::get($searchParams, 'valueia11');
         $valueia01 = Arr::get($searchParams, 'valueia01');
         $valueia02 = Arr::get($searchParams, 'valueia02');
+        $valueva = Arr::get($searchParams, 'valueva');
 
 
         $datamodule = collect([]);
 
         if($valueapl01 === 'true'){
             $dataapl01 = $ujiKompController->showApl01($idapl01);
-            $datamodule->push(['nama' => 'apl01', 'data' => $dataapl01]);
+            $datamodule->push(['nama' => 'apl01', 'data' => $dataapl01['apl_01']]);
         }
 
         if ($valueapl02 === 'true'){
@@ -143,7 +146,7 @@ class PrintController extends BaseController
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
                 $listDataKuk[] = $data;
             }
-            $dataapl02 = ['ttd_asesor' => $result['apl_02']->ttd_asesor];
+            $dataapl02 = ['ttd_asesor' => $result['apl_02']->ttd_asesor, 'status' => $result['apl_02']->status];
 
             $datamodule->push(['nama' => 'apl02', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataapl02]]);
         }
@@ -174,7 +177,7 @@ class PrintController extends BaseController
         }
 
         if ($valueak05 === 'true') {
-            $dataak05 = $ujiKompController->showak05($idak05);
+            $dataak05 = $ujiKompController->showAk05(new Request(['id' => $idak05, 'asesor' => $asesor]));
             $datamodule->push(['nama' => 'ak05', 'data' => $dataak05]);
         }
 
@@ -186,18 +189,15 @@ class PrintController extends BaseController
         if ($valueia01 === 'true'){
             $result = $ujiKompController->showIa01($idia01);
             $listDataKuk = array();
-            // $indexElemen = 0;
             foreach($dataSkemaUnit as $row){
                 $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, null, $idia01);
                 $data['kode_unit'] = $row->kode_unit;
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
-                // array_push($data['elemen'][$indexElemen], ['nama' => 'dzikri']);
                 $listDataKuk[] = $data;
-                // $indexElemen++;
             }
-            $dataapl02 = ['ttd_asesor' => $result['ia_01']->ttd_asesor, 'ttd_asesi' => $result['ia_01']->ttd_asesi];
+            $dataia01 = ['ttd_asesor' => $result['ia_01']->ttd_asesor, 'ttd_asesi' => $result['ia_01']->ttd_asesi];
 
-            $datamodule->push(['nama' => 'ia01', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataapl02]]);
+            $datamodule->push(['nama' => 'ia01', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataia01]]);
         }
 
         if ($valueia02 === 'true'){
@@ -211,7 +211,7 @@ class PrintController extends BaseController
         }
 
         if ($valueia05 === 'true'){
-            $dataia05 = $ujiKompController->showIa03($idia05);
+            $dataia05 = $ujiKompController->showIa05($idia05);
             $datamodule->push(['nama' => 'ia05', 'data' => $dataia05]);
         }
 
@@ -221,7 +221,7 @@ class PrintController extends BaseController
         }
 
         if ($valueia07 === 'true'){
-            $dataia07 = $ujiKompController->showIa06($idia07);
+            $dataia07 = $ujiKompController->showIa07($idia07);
             $datamodule->push(['nama' => 'ia07', 'data' => $dataia07]);
         }
 
@@ -230,16 +230,26 @@ class PrintController extends BaseController
             $datamodule->push(['nama' => 'ia11', 'data' => $dataia11]);
         }
 
+        if ($valueva === 'true'){
+            $datava = $ujiKompController->showVa($idva);
+            $datamodule->push(['nama' => 'va', 'data' => $datava]);
+        }
+
         // return ['datamodule' => $datamodule, 'iduji' => $iduji];
         // return view('print.masterprint', ['valueak04' => $valueak04, 'valueapl01' => $valueapl01]);
-        $pdf = PDF::loadview('print.masterprint', [
+        $data = array(
             'datamodule' => $datamodule, 
             'skemaunit' => $dataSkemaUnit, 
             'skemasertifikasi' => $dataSkemaSertifikasi[0], 
-            'asesor' => $asesor,
-        ]);
+            'asesor' => $asesor
+        );
+
+        // $client = new Client(['timeout' => 30]);
+        // $pdf = new PDF(['httpClient' => $client]);
+        // $pdf::loadView('print.masterprint', compact('data'));
+        $pdf = \PDF::loadView('print.masterprint', compact('data'));
         $pdf->setPaper('A4','portrait');
-        return $pdf->download('module.pdf');
+        return $pdf->download();
         // return $pdf->stream();   
     }
 }

@@ -137,7 +137,7 @@
               </template>
             </template>
           </el-table-column>
-
+          <p>{{ initStatus }}</p>
         </el-table>
         <br>
         <el-table
@@ -160,11 +160,17 @@
           </el-table-column>
           <el-table-column align="center" label="Tanda Tangan Asesi">
             <template slot-scope="scope">
-              <el-image
-                style="width: 200px; height: 100px"
-                :src="scope.row.ttd"
-                fit="contain"
-              />
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+                <!-- <img :src="scope.row.ttd" class="sidebar-logo"> -->
+              </div>
+              <div v-else>
+                <h3>FR.APL 02 belum di tanda tangan</h3>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -185,7 +191,7 @@
           </el-table-column>
           <el-table-column align="center" label="Rekomendasi Asesor">
             <template slot-scope="scope">
-              <template v-if="initStatus === 0">
+              <!-- <template v-if="initStatus === 0">
                 <el-select v-model="scope.row.status" class="filter-item" placeholder="T/TT" value-key="status">
                   <el-option :key="0" label="Belum di cek" :value="0" />
                   <el-option :key="1" label="Asesmen dapat dilanjutkan" :value="1" />
@@ -193,19 +199,23 @@
                 </el-select>
               </template>
               <span v-else-if="initStatus === 1"> Asesmen dapat dilanjutkan</span>
-              <span v-else-if="initStatus === 2"> Asesmen tidak dapat dilanjutkan</span>
+              <span v-else-if="initStatus === 2"> Asesmen tidak dapat dilanjutkan</span> -->
+              <span v-if="scope.row.rekomendasi_asesor === 1">Asesmen dapat dilanjutkan</span>
+              <span v-else-if="scope.row.rekomendasi_asesor === 2">Asesmen tidak dapat dilanjutkan</span>
+              <span v-else>Belum di cek</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="Tanda Tangan Asesor">
-            <div v-if="initStatus === 0">
-              <h2>FR.APL 02 belum di tanda tangan</h2>
+            <div v-if="ttdAsesor">
+              <el-image
+                style="width: 200px; height: 100px"
+                :src="ttdAsesor"
+                fit="contain"
+              />
             </div>
-            <el-image
-              v-else
-              style="width: 200px; height: 100px"
-              :src="ttdAsesor"
-              fit="contain"
-            />
+            <div v-else>
+              <h3>FR.APL 02 belum di tanda tangan</h3>
+            </div>
           </el-table-column>
         </el-table>
       </div>
@@ -222,6 +232,7 @@ const apl02Resource = new Resource('detail/apl-02');
 const apl02UpdateResource = new Resource('uji-komp-apl-02');
 const skemaResource = new Resource('skema-get');
 const preview = new Resource('detail/preview');
+const signature = new Resource('detail/signature');
 
 export default {
   data() {
@@ -428,7 +439,6 @@ export default {
       this.loading = true;
       const data = await preview.get(this.$route.params.iduji);
       this.dataPreview = data;
-      console.log(this.dataPreview);
       this.loading = false;
     },
     clear() {
@@ -463,10 +473,29 @@ export default {
     async getApl01() {
       this.loading = true;
       const data = await apl01Resource.get(this.dataPreview.id_apl_01);
-      this.fileName = 'APL.02 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
-      this.ttdTable1[0].nama = data.nama_lengkap;
-      this.ttdTable1[0].tanggal = moment(data.created_at).format('DD-MM-YYYY');
-      this.ttdTable1[0].ttd = '/uploads/users/signature/' + data.signature;
+      this.fileName = 'APL.02 - ' + data.apl_01.nama_lengkap + ' - ' + data.apl_01.kode_skema;
+      this.ttdTable1[0].nama = data.apl_01.nama_lengkap;
+      this.ttdTable1[0].tanggal = moment(data.apl_01.created_at).format('DD-MM-YYYY');
+      // DATA TTD ASESI SEBELUM DI UBAH
+      // this.ttdTable1[0].ttd = '/uploads/users/signature/' + data.signature
+      // DATA TTD ASESI SETELAH DI UBAH
+      // if (data.signature){
+      //   this.ttdTable1[0].ttd = '/uploads/users/signature/' + data.signature; // DATA TTD ASESI SESUDAH DIBENARKAN
+      // } else {
+      //   this.ttdTable1[0].ttd = null;
+      // }
+
+      const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: data.apl_01.nama_lengkap });
+      if (signatures.asesi){
+        this.ttdTable1[0].ttd = '/uploads/users/signature/' + signatures.asesi; // DATA TTD ASESI SESUDAH DIBENARKAN
+      } else {
+        this.ttdTable1[0].ttd = null;
+      }
+      if (signatures.asesor){
+        this.ttdAsesor = '/uploads/users/signature/' + signatures.asesor;
+      } else {
+        this.ttdAsesor = null;
+      }
 
       // this.ttdTable2.push(this.$route.params.asesor);
       this.ttdTable2[0].nama = this.$route.params.asesor;
@@ -475,18 +504,20 @@ export default {
       this.loading = true;
       const data = await apl02Resource.get(this.dataPreview.id_apl_02);
       this.listDetailApl02 = data;
-      this.initStatus = this.listDetailApl02.status;
-      this.ttdTable2[0].status = this.listDetailApl02.status;
-      this.initStatus = this.listDetailApl02.status;
-      console.log(this.listDetailApl02);
-      this.ttdAsesor = '/uploads/users/signature/' + this.listDetailApl02.ttd_asesor;
-      console.log(this.ttdAsesor);
+      this.initStatus = this.listDetailApl02.apl_02.status;
+      this.ttdTable2[0].status = this.listDetailApl02.apl_02.status;
+      // if (this.listDetailApl02.apl_02.ttd_asesor){
+      //   this.ttdAsesor = '/uploads/users/signature/' + this.listDetailApl02.apl_02.ttd_asesor;
+      // } else {
+      //   this.ttdAsesor = null;
+      // }
       this.listKuk.forEach((element, index) => {
         if (element['type'] === 'kuk') {
           var foundIndex = data.detail.findIndex(x => x.id_kuk_elemen === element['id']);
           element['is_kompeten'] = data.detail[foundIndex].is_kompeten;
         }
       });
+
       this.loading = false;
     },
     async insertDetailAPl02() {

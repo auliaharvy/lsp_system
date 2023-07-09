@@ -63,32 +63,32 @@
         <tr>
           <td>Nama Asesi</td>
           <td>:</td>
-          <td>{{ $data->nama_asesi }}</td>
+          <td>{{ $data['ak_05']->nama_asesi }}</td>
         </tr>
         <tr>
           <td>Rekomendasi</td>
           <td>:</td>
-          <td>{{ $data->rekomendasi }}</td>
+          <td>{{ $data['ak_05']->rekomendasi }}</td>
         </tr>
         <tr>
           <td>Keterangan</td>
           <td>:</td>
-          <td>{{ $data->keterangan }}</td>
+          <td>{{ $data['ak_05']->keterangan }}</td>
         </tr>
         <tr>
           <td>Aspek Negatif dan Positif Dalam Asesmen</td>
           <td>:</td>
-          <td>{{ $data->aspek}}</td>
+          <td>{{ $data['ak_05']->aspek}}</td>
         </tr>
         <tr>
           <td>Pencatatan Penolakan Hasil Asesmen</td>
           <td>:</td>
-          <td>{{ $data->pencatatan_penolakan }}</td>
+          <td>{{ $data['ak_05']->pencatatan_penolakan }}</td>
         </tr>
         <tr>
           <td>Saran Perbaikan (Asesor / Personil Terkait)</td>
           <td>:</td>
-          <td>{{ $data->saran_perbaikan }}</td>
+          <td>{{ $data['ak_05']->saran_perbaikan }}</td>
         </tr>
       </table>
     </div>

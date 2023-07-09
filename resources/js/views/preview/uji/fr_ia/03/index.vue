@@ -182,20 +182,91 @@
         <br>
         <br>
 
-        <el-form
+        <!-- <el-form
           ref="form"
           :model="form"
           label-width="250px"
           label-position="left"
         >
           <el-form-item v-if="roles[0] !== 'user'" label="Rekomendasi Assesor">
-            <div>{{ ia03.ia_03.rekomendasi_asesor == 'belum penilaian' ? 'belum penilaian' : ia03.ia_03.rekomendasi_asesor }}</div>
+            <div>: {{ ia03.ia_03.rekomendasi_asesor == 'belum penilaian' ? 'belum penilaian' : ia03.ia_03.rekomendasi_asesor }}</div>
           </el-form-item>
           <el-form-item v-if="roles[0] !== 'user'" label="Umpan balik untuk asesi">
-            <div>{{ ia03.ia_03.umpan_balik == 'belum penilaian' ? 'belum penilaian' : ia03.ia_03.umpan_balik }}</div>
+            <div>: {{ ia03.ia_03.umpan_balik == 'belum penilaian' ? 'belum penilaian' : ia03.ia_03.umpan_balik }}</div>
           </el-form-item>
-        </el-form>
+        </el-form> -->
         <br>
+        <el-table
+          v-if="ttdTable1"
+          v-loading="loading"
+          :data="ttdTable1"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Nama Asesi">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Umpan balik untuk asesi">
+            <template slot-scope="scope">
+              <span>{{ scope.row.umpan_balik ? scope.row.umpan_balik : 'Belum Penilaian' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan Asesi">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>FR.IA 03 belum di tanda tangan</h3>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <br>
+        <el-table
+          v-if="ttdTable2"
+          v-loading="loading"
+          :data="ttdTable2"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Nama Asesor">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Rekomendasi Asesor">
+            <template slot-scope="scope">
+              <span v-if="scope.row.rekomendasi_asesor === 1">Asesmen dapat dilanjutkan</span>
+              <span v-else-if="scope.row.rekomendasi_asesor === 2">Asesmen tidak dapat dilanjutkan</span>
+              <span v-else>Belum di cek</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan Asesor">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>FR.IA 03 belum di tanda tangan</h3>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </el-main>
   </el-container>
@@ -213,6 +284,7 @@ const ia03Resource = new Resource('uji-komp-ia-03');
 const ia03NilaiResource = new Resource('uji-komp-ia-03-nilai');
 const ia03Detail = new Resource('detail/ia-03');
 const preview = new Resource('detail/preview');
+const signature = new Resource('detail/signature');
 
 export default {
   data() {
@@ -266,6 +338,20 @@ export default {
           content: '20 - 12 -2022',
         },
       ],
+      ttdTable1: [
+        {
+          nama: 'Nama Asesi',
+          umpan_balik: '',
+          ttd: '',
+        },
+      ],
+      ttdTable2: [
+        {
+          nama: 'Nama Asesor',
+          rekomendasi_asesor: '',
+          ttd: '',
+        },
+      ],
       panduan: [
         'Lengkapi nama unit kompetensi, elemen, kriteria unjuk kerja sesuai kolom dalam tabel.',
         'Istilah Acuan Pembanding dengan SOP / spesifikasi produk dari industri / orginasi dari tempat kerja atau simulasi tempat kerja',
@@ -295,7 +381,7 @@ export default {
   created() {
     this.getDataPreview().then((value) => {
       this.getListPertanyaan().then((value) => {
-        this.getIa03();
+        // this.getIa03();
       });
     });
     this.getListSkema().then((value) => {
@@ -328,7 +414,6 @@ export default {
       const { data } = await mstIa03Resource.list({ id_skema: this.dataPreview.id_skema });
       if (this.dataPreview.id_ia_03 !== null) {
         const dataia03 = await ia03Detail.get(this.dataPreview.id_ia_03);
-        // console.log(dataia03);
         this.ia03 = dataia03;
         this.listSoal = data;
 
@@ -337,19 +422,28 @@ export default {
           element['tanggapan'] = this.ia03.detail[index].tanggapan;
           element['rekomendasi'] = this.ia03.detail[index].rekomendasi;
         });
+
+        const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: this.dataPreview.nama_peserta });
+
+        this.ttdTable1[0].umpan_balik = dataia03.ia_03.umpan_balik;
+        this.ttdTable2[0].rekomendasi_asesor = dataia03.ia_03.rekomendasi_asesor;
+        if (signatures.asesi){
+          this.ttdTable1[0].ttd = '/uploads/users/signature/' + signatures.asesi;
+        } else {
+          this.ttdTable1[0].ttd = null;
+        }
+        if (signatures.asesor){
+          this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatures.asesor;
+        } else {
+          this.ttdTable2[0].ttd = null;
+        }
       }
       this.loading = false;
     },
-    // getIa03() {
+    // async getIa03() {
     //   if (this.dataPreview.id_ia_03 !== null) {
-    //     this.loading = true;
-    //     this.listSoal.forEach((element, index) => {
-    //       // var foundIndex = this.ia03.detail.findIndex(x => x.id_perangkat_ia_03 === element['id']);
-    //       // element['tanggapan'] = this.ia03.detail[foundIndex].tanggapan;
-    //       element['tanggapan'] = this.ia03.detail[index].tanggapan;
-    //       element['rekomendasi'] = this.ia03.detail[index].rekomedasi;
-    //     });
-    //     this.loading = false;
+    //     const data = await ia03Detail.get(this.dataPreview.id_ia_03);
+    //     // console.log(data);
     //   }
     // },
     async getListSkema() {
@@ -379,6 +473,9 @@ export default {
       this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
+
+      this.ttdTable1[0].nama = ujiDetail.nama_peserta;
+      this.ttdTable2[0].nama = ujiDetail.asesor;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;

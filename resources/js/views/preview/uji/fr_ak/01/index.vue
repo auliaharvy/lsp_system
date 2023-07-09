@@ -93,9 +93,20 @@
                   <span>{{ hasil_tes_wawancara ? ' Hasil Tes Wawancara,' : '' }}</span>
                 </template>
                 <template v-else-if="scope.row.no === 11">
-                  <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
+                  <!-- <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo"> -->
+                  <div v-if="scope.row.content">
+                    <el-image
+                      style="width: 200px; height: 100px"
+                      :src="scope.row.content"
+                      fit="contain"
+                    />
+                    <!-- <img :src="scope.row.ttd" class="sidebar-logo"> -->
+                  </div>
+                  <div v-else>
+                    <h3>FR.AK 01 belum di tanda tangan</h3>
+                  </div>
                   <!-- <div v-else>
-                    <vueSignature
+                    <vueSignature;
                       ref="signature"
                       :sig-option="option"
                       :w="'300px'"
@@ -107,7 +118,18 @@
                   </div> -->
                 </template>
                 <template v-else-if="scope.row.no === 12">
-                  <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
+                  <!-- <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo"> -->
+                  <div v-if="scope.row.content">
+                    <el-image
+                      style="width: 200px; height: 100px"
+                      :src="scope.row.content"
+                      fit="contain"
+                    />
+                    <!-- <img :src="scope.row.ttd" class="sidebar-logo"> -->
+                  </div>
+                  <div v-else>
+                    <h3>FR.AK 01 belum di tanda tangan</h3>
+                  </div>
                   <!-- <div v-else>
                     <vueSignature
                       ref="signature1"
@@ -357,8 +379,21 @@ export default {
         this.bulan = data.bulan;
         this.tahun = data.tahun;
         this.jam = data.jam;
-        this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
-        this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
+        if (data.tanda_tangan_asesor){
+          this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
+        } else {
+          this.headerTable[10].content = null;
+        }
+        if (data.tanda_tangan_asesi){
+          this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
+        } else {
+          this.headerTable[11].content = null;
+        }
+
+        // this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
+        // this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
+        // console.log(this.headerTable[10].content);
+        // console.log(this.headerTable[11].content);
         this.loading = false;
       } else {
         this.loading = true;
@@ -391,15 +426,12 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
-      console.log(ujiDetail);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.kode_skema;
       this.headerTable[2].content = ujiDetail.nama_tuk;
       this.headerTable[3].content = ujiDetail.asesor;
       this.headerTable[4].content = ujiDetail.nama_peserta;
-      console.log(this.headerTable);
-      console.log(this.ak01Preview);
       this.dataTrx.tuk = ujiDetail.nama_tuk;
       this.dataTrx.nama_asesor = ujiDetail.asesor;
       this.dataTrx.tanda_tangan_asesor = ujiDetail.ttd_asesor;

@@ -10,7 +10,7 @@
 				</tr>
 				<tr>
 					<td colspan="5">
-						<div><span>Nama Asesi</span><span> : </span><span>{{ $data['nama_asesi'] }}</span></div>
+						<div><span>Nama Asesi</span><span> : </span><span>{{ $data->nama_asesi }}</span></div>
 					</td>
 				</tr>
 				<tr>
@@ -98,7 +98,7 @@
 				<tr>
 					<td colspan="5">
 						<div class="mb-2">Banding ini diajukan atas Keputusan Asesmen yang dibuat terhadap Skema
-							Sertifikasi (Kualifikasi/Klaster/Okupasi) berikut</div>
+							Sertifikasi (Kualifikasi/<s>Klaster</s>/<s>Okupasi</s>) berikut</div>
 						<div><strong>Skema Sertifikasi : </strong></div>
 						<div class="mb-2">{{ $data->skema }}</div>
 						<div><strong>No. Skema Sertifikasi</strong></div>

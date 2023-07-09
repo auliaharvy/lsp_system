@@ -13,6 +13,7 @@ use App\Http\Resources\UjiKompResource;
 use App\Http\Resources\Mapa2Resource;
 use App\Http\Resources\Ak06Resource;
 use App\Laravue\JsonResponse;
+use App\Laravue\Models\Assesor;
 use App\Laravue\Models\UjiKomp;
 use App\Laravue\Models\UjiKompApl1;
 use App\Laravue\Models\UjiKompApl2;
@@ -457,6 +458,21 @@ class UjiKompController extends BaseController
      * @param  UjiKomp $UjiKomp
      * @return MasterResource|\Illuminate\Http\JsonResponse
      */
+
+    public function showSignature(Request $request)
+    {
+        $searchParams = $request->all();
+
+        $asesor = Arr::get($searchParams, 'asesor');
+        $asesi = Arr::get($searchParams, 'asesi');
+
+        $queryAsesor = User::where('name',$asesor)->first();
+        $queryAsesi = User::where('name',$asesi)->first();
+       
+        $data = ['asesor' => $queryAsesor->signature, 'asesi' => $queryAsesi->signature ];
+        return $data;
+    }
+
     public function showPreview($id)
     {
        
@@ -491,8 +507,9 @@ class UjiKompController extends BaseController
     public function showApl01($id)
     {
         $queryApl01 = UjiKompApl1::where('trx_uji_komp_apl_01.id',$id)->first();
+        $users = User::where('nik',$queryApl01->nik)->first();
        
-        return $queryApl01;
+        return ['apl_01' => $queryApl01, 'signature' => $users->signature ];
     }
 
     public function showApl02($id)
@@ -532,10 +549,12 @@ class UjiKompController extends BaseController
         $queryAk02 = UjiKompAk02::where('trx_uji_komp_ak_02.id',$id)->first();
         $queryDetailAk02 = UjiKompAk02Detail::query()->join('mst_perangkat_ia_03 as b', 'b.id', '=', 'trx_uji_komp_ak_02_detail.id_unit')
         ->where('trx_uji_komp_ak_02_detail.id_ak_02',$id)->get();
+        $queryDetailAk02Preview = UjiKompAk02Detail::where('trx_uji_komp_ak_02_detail.id_ak_02',$id)->get();
        
         $data = [
             'ak_02' => $queryAk02,
             'detail' => $queryDetailAk02,
+            'detail_for_preview' => $queryDetailAk02Preview,
         ];
         return $data;
     }
@@ -562,12 +581,25 @@ class UjiKompController extends BaseController
         return $query;
     }
 
-    public function showAk05($id)
+    public function showAk05(Request $request)
     {
-       
+        $searchParams = $request->all();
+
+        $id = Arr::get($searchParams, 'id');
+        $asesor = Arr::get($searchParams, 'asesor');
+
         $query = UjiKompAk05::where('trx_uji_komp_ak_05.id',$id)->first();
+        $queryAssesor = DB::table('mst_asesor as a')
+        ->select(DB::raw('a.*'))
+        ->where('a.nama', '=', $asesor) 
+        ->first();
        
-        return $query;
+        $data = [
+            'ak_05' => $query, 
+            'reg' => $queryAssesor->no_reg,
+        ];
+
+        return $data;
     }
 
     public function showAk06($id)
@@ -711,16 +743,19 @@ class UjiKompController extends BaseController
         $aspek = DB::table('trx_uji_komp_va_aspek_aspek as a')
         ->select(DB::raw('a.*'))
         ->where('a.id_uji_komp', '=', $dataVa[0]->id_uji_komp_for_va) 
+        // ->where('a.id_trx_va', '=', $id) 
         ->get();
 
         $temuan = DB::table('trx_uji_komp_va_temuan as a')
         ->select(DB::raw('a.*'))
         ->where('a.id_uji_komp', '=', $dataVa[0]->id_uji_komp_for_va)
+        // ->where('a.id_trx_va', '=', $id)
         ->get();
 
         $rencana = DB::table('trx_uji_komp_va_rencana_implementasi as a')
         ->select(DB::raw('a.*'))
         ->where('a.id_uji_komp', '=', $dataVa[0]->id_uji_komp_for_va)
+        // ->where('a.id_trx_va', '=', $kd)
         ->get();
 
         return [

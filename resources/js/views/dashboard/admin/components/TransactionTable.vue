@@ -83,21 +83,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Action">
+      <el-table-column v-if="checkRole(['admin'])" align="center" label="Action">
         <template slot-scope="scope">
-          <!-- <router-link :to="{ name: 'preview-page', params:{ id_uji: scope.row.id, asesor: scope.row.asesor, id_skema: scope.row.id_skema, id_apl_01: scope.row.id_apl_01, id_apl_02: scope.row.id_apl_02, id_mapa_02: scope.row.id_mapa_02, id_ak_01: scope.row.id_ak_01, id_ak_04: scope.row.id_ak_04, id_ia_01: scope.row.id_ia_01, id_ia_02: scope.row.id_ia_02, id_ia_03: scope.row.id_ia_03, id_ia_05: scope.row.id_ia_05, id_ia_06: scope.row.id_ia_06, id_ia_07: scope.row.id_ia_07, id_ia_11: scope.row.id_ia_11, id_ak_02: scope.row.id_ak_02, id_ak_03: scope.row.id_ak_03, id_ak_05: scope.row.id_ak_05, id_ak_06: scope.row.id_ak_06, va: scope.row.id.va }}"> -->
-          <!-- <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor, idskema: scope.row.id_skema, apl01: scope.row.id_apl_01, apl02: scope.row.id_apl_02, mapa02: scope.row.id_mapa_02, ak01: scope.row.id_ak_01, ak04: scope.row.id_ak_04, ia01: scope.row.id_ia_01, ia02: scope.row.id_ia_02, ia03: scope.row.id_ia_03, ia05: scope.row.id_ia_05, id06: scope.row.id_ia_06, ia07: scope.row.id_ia_07, ia11: scope.row.id_ia_11, ak02: scope.row.id_ak_02, ak03: scope.row.id_ak_03, ak05: scope.row.id_ak_05, ak06: scope.row.id_ak_06, va: scope.row.va }}"> -->
           <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor }}">
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
           </router-link>
           <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
-          <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
+          <!-- <el-button v-if="scope.row.status === 1" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button> -->
+          <el-button v-if="scope.row.persentase > 99" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
           <el-dialog
             v-loading="loading"
             title="Download Data"
             :visible.sync="dialogVisible"
             width="50%"
-            :before-close="handleClose"
           >
             <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">Check all</el-checkbox>
             <!-- <el-checkbox-group v-model="checkedDataUjiKomp" @change="handleCheckedCitiesChange"> -->
@@ -108,31 +106,31 @@
               <tr style="width: 100%;">
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <!-- <el-checkbox v-if="ujiKomp.index < 5">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox> -->
-                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                    <!-- <el-checkbox v-if="ujiKomp.index < 5">{{ ujiKomp.name }})</el-checkbox> -->
+                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
                   <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value">{{ ujiKomp.name }} ({{ ujiKomp.idujikom }})</el-checkbox>
+                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
                   </div>
                 </td>
               </tr>
             </table>
             <!-- </el-checkbox-group> -->
-            <span slot="footer" class="dialog-footer">
+            <span v-if="allUnchecked" slot="footer" class="dialog-footer">
               <!-- <el-button @click="dialogVisible = false">Cancel</el-button> -->
-              <el-button type="primary" @click="generateReport()">Confirm</el-button>
+              <el-button type="primary" @click="generateReport()">Print</el-button>
             </span>
           </el-dialog>
         </template>
@@ -288,6 +286,7 @@ import { mapGetters } from 'vuex';
 import Pagination from '@/components/Pagination';
 import { fetchList } from '@/api/order';
 import Resource from '@/api/resource';
+import checkRole from '@/utils/role';
 
 const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
@@ -367,7 +366,7 @@ export default {
       checkedDataUjiKomp: [],
       cities: cityOptions,
       isIndeterminate: true,
-      regex: '',
+      showButtonPrint: false,
     };
   },
   computed: {
@@ -377,6 +376,16 @@ export default {
       'roles',
       'user',
     ]),
+    allUnchecked() {
+      return !this.dataUjiKomp.every(item => !item.value);
+    },
+  },
+  watch: {
+    'dataUjiKomp': function(newVal, oldVal){
+      if (newVal.includes(true)) {
+        this.showButtonPrint = true;
+      }
+    },
   },
   mounted() {
     this.getList();
@@ -388,11 +397,20 @@ export default {
     this.getListSkema();
   },
   methods: {
+    checkRole,
     async showDialogPrint(id, asesor, nama_peserta){
       const data = await preview.get(id);
       this.iduji = data.id;
       this.asesor = asesor;
       this.asesi = nama_peserta;
+      this.isIndeterminate = true;
+      let i = 0;
+      for (const item in this.dataUjiKomp){
+        this.dataUjiKomp[i].value = false;
+        // this.data.value = this.checkAll;
+        console.log(item);
+        i++;
+      }
       // const skema = await skemaunit.list({ id_skema: data.id_skema });
       // console.log(skema);
       this.dialogVisible = true;
@@ -402,26 +420,12 @@ export default {
           this.dataUjiKomp[index].idujikom = data[property];
           index++;
         }
-        console.log(property);
-        console.log(this.dataUjiKomp);
       }
-      console.log(this.dataUjiKomp);
-      // if (!this.dialogVisible){
-      //   await print.download({ iduji: id }).then((response) => {
-      //     console.log(response);
-      //     const url = window.URL.createObjectURL(new Blob([response]));
-      //     const link = document.createElement('a');
-      //     link.href = url;
-      //     link.setAttribute('download', 'semua-module.pdf');
-      //     document.body.appendChild(link);
-      //     link.click();
-      //   });
-      // }
-      // console.log(this.dataUjiKomp);
     },
-    handleCheckAllChange(val) {
+    handleCheckAllChange(value) {
       // this.checkedCities = val ? cityOptions : [];
-      this.checkedDataUjiKomp = val ? this.dataUjiKomp : [];
+      this.checkedDataUjiKomp = value ? this.dataUjiKomp : [];
+      console.log(this.checkedDataUjiKomp);
       let index = 0;
       for (const item in this.dataUjiKomp){
         this.dataUjiKomp[index].value = this.checkAll;
@@ -431,17 +435,25 @@ export default {
         index++;
       }
       this.isIndeterminate = false;
-      console.log(val);
-      console.log(this.dataUjiKomp);
+      if (value){
+        this.showButtonPrint = true;
+      } else {
+        this.showButtonPrint = false;
+      }
     },
     handleCheckedCitiesChange(value) {
-      const checkedCount = value.length;
-      this.checkAll = checkedCount === this.dataUjiKomp.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataUjiKomp.length;
-      console.log(value);
+      // const checkedCount = value.length;
+      // this.checkAll = checkedCount === this.dataUjiKomp.length;
+      // this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataUjiKomp.length;
+      // console.log(value);
+      if (value){
+        this.showButtonPrint = true;
+      } else {
+        this.showButtonPrint = false;
+      }
     },
-    handleClose(done){
-      this.$confirm('Are you sure to close this dialog?')
+    handleErrorPrint(done){
+      this.$confirm('Gagal, silahkan coba lagi!')
         .then(_ => {
           done();
         })
@@ -449,11 +461,6 @@ export default {
     },
     async generateReport() {
       this.loading = true;
-      // console.log(id);
-      // await print.download(id);
-      // await print.list({ iduji: id });
-      // var result = await print.list({ iduji: id });
-      // console.log(result);
       const ujikomp = {
         iduji: this.iduji,
         asesor: this.asesor,
@@ -502,9 +509,11 @@ export default {
         link.setAttribute('download', this.asesi + '.pdf');
         document.body.appendChild(link);
         link.click();
+      }).catch((err) => {
+        console.log(err);
+        this.handleErrorPrint(err);
       });
-      // await print.download({ iduji: id });
-      // console.log(this.dataUjiKomp);
+
       this.dialogVisible = false;
       this.loading = false;
     },
@@ -515,6 +524,8 @@ export default {
       this.loading = true;
       const { data, meta } = await listResource.list(this.query);
       this.list = data;
+      console.log('bwah gual ist');
+      console.log(this.list);
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
