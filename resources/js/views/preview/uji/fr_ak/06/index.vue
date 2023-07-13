@@ -235,7 +235,7 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column align="center" label="Nama Asesor">
+          <el-table-column align="center" label="Nama Peninjau">
             <template slot-scope="scope">
               <span>{{ scope.row.nama }}</span>
             </template>
@@ -245,7 +245,7 @@
               <span>{{ scope.row.tanggal }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="Tanda Tangan Asesor">
+          <el-table-column align="center" label="Tanda Tangan Peninjau">
             <template slot-scope="scope">
               <el-image
                 v-if="scope.row.ttd"
@@ -303,11 +303,7 @@ export default {
       dataTrx: [],
       headerTable: [
         {
-          title: 'Nama Asesi',
-          content: '',
-        },
-        {
-          title: 'Nama Asesor',
+          title: 'Skema Sertifikasi',
           content: '',
         },
         {
@@ -315,7 +311,7 @@ export default {
           content: '',
         },
         {
-          title: 'Skema Sertifikasi',
+          title: 'Nama Asesor',
           content: '',
         },
         {
@@ -452,41 +448,10 @@ export default {
     },
     async getAk06() {
       if (this.dataPreview.id_ak_06 != null){
+        console.log(this.dataPreview.id_ak_06);
         const { data } = await showAk06Resource.get(this.dataPreview.id_ak_06);
+        console.log(await showAk06Resource.get(this.dataPreview.id_ak_06));
         this.aspek = data[0]['aspek'];
-        // this.aspek.forEach((element, index) => {
-        //   if (index === 0) {
-        //     element.validitas = element.validitas === 1;
-        //     element.reliabel = element.reliabel === 1;
-        //     element.fleksibel = element.fleksibel === 1;
-        //     element.adil = element.adil === 1;
-        //   } else if (index === 1){
-        //     element.validitas = element.validitas === 1;
-        //     element.reliabel = element.reliabel === 1;
-        //     element.fleksibel = element.fleksibel === 1;
-        //     element.adil = element.adil === 1;
-        //   } else if (index === 2){
-        //     element.validitas = element.validitas === 1;
-        //     element.reliabel = element.reliabel === 1;
-        //     element.fleksibel = element.fleksibel === 1;
-        //     element.adil = element.adil === 1;
-        //   } else if (index === 3){
-        //     element.validitas = element.validitas === 1;
-        //     element.reliabel = element.reliabel === 1;
-        //     element.fleksibel = element.fleksibel === 1;
-        //     element.adil = element.adil === 1;
-        //   } else if (index === 4){
-        //     element.validitas = element.validitas === 1;
-        //     element.reliabel = element.reliabel === 1;
-        //     element.fleksibel = element.fleksibel === 1;
-        //     element.adil = element.adil === 1;
-        //   } else if (index === 5){
-        //     element.validitas = element.validitas === 1;
-        //     element.reliabel = element.reliabel === 1;
-        //     element.fleksibel = element.fleksibel === 1;
-        //     element.adil = element.adil === 1;
-        //   }
-        // });
         this.aspekPemenuhan[0].item = data[0].aspekPemenuhan.item;
         this.aspekPemenuhan[0].taskSkill = data[0].aspekPemenuhan.taskSkill;
         this.aspekPemenuhan[0].taskManagementSkill = data[0].aspekPemenuhan.taskManagementSkill;
@@ -532,11 +497,10 @@ export default {
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      this.headerTable[0].content = ujiDetail.nama_peserta;
-      this.headerTable[1].content = ujiDetail.asesor;
-      this.headerTable[2].content = ujiDetail.nama_tuk;
-      this.headerTable[3].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[4].content = ujiDetail.mulai;
+      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
+      this.headerTable[1].content = ujiDetail.nama_tuk;
+      this.headerTable[2].content = ujiDetail.asesor;
+      this.headerTable[3].content = ujiDetail.mulai;
       this.ttdTable[0].nama = ujiDetail.asesor;
       this.ttdTable[0].tanggal = ujiDetail.mulai;
     },

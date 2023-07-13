@@ -147,7 +147,7 @@
               <template v-else>
                 Tanggal dan Waktu :
                 <template v-if="$route.params.id_ak_01 !== null">
-                  {{ hari + ', ' + tanggal + '-' + bulan + '-' + tahun }}
+                  {{ waktu }}
                 </template>
                 <template v-else>
                   <el-form
@@ -220,6 +220,7 @@ export default {
       tahun: null,
       jam: null,
       menit: null,
+      waktu: '',
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -374,11 +375,21 @@ export default {
         } else {
           this.hasil_tes_wawancara = true;
         }
-        this.hari = data.hari;
-        this.tanggal = data.tanggal;
-        this.bulan = data.bulan;
-        this.tahun = data.tahun;
-        this.jam = data.jam;
+        // this.hari = data.hari;
+        // this.tanggal = data.tanggal;
+        // this.bulan = data.bulan;
+        // this.tahun = data.tahun;
+        // this.jam = data.jam;
+        const dt = new Date(data.created_at);
+        this.dataTrx.date = dt.toLocaleDateString('id-ID', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+        });
+        this.waktu = this.dataTrx.date;
         if (data.tanda_tangan_asesor){
           this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
         } else {

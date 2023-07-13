@@ -368,6 +368,7 @@ export default {
         const data = await ia01Detail.get(this.dataPreview.id_ia_01);
         this.listDetailIa01 = data.detail;
         this.ia01 = data.ia_01;
+        console.log(this.ia01);
         // this.ttdAsesor = '/uploads/users/signature/' + this.ia01.ttd_asesor;
         // this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi;
         if (this.ia01.ttd_asesor){

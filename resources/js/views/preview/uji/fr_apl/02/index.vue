@@ -137,6 +137,12 @@
               </template>
             </template>
           </el-table-column>
+          <el-table-column align="center" label="Bukti Yang Relevan" min-width="80px">
+            <!-- <template slot-scope="scope">
+              <div v-if="scope" style="text-align: center;">Test Bukti</div>
+            </template> -->
+          </el-table-column>
+
           <p>{{ initStatus }}</p>
         </el-table>
         <br>
@@ -206,16 +212,21 @@
             </template>
           </el-table-column>
           <el-table-column align="center" label="Tanda Tangan Asesor">
-            <div v-if="ttdAsesor">
-              <el-image
-                style="width: 200px; height: 100px"
-                :src="ttdAsesor"
-                fit="contain"
-              />
-            </div>
-            <div v-else>
-              <h3>FR.APL 02 belum di tanda tangan</h3>
-            </div>
+            <template slot-scope="scope">
+              <div v-if="ttdAsesor">
+                <div>
+                  <el-image
+                    style="width: 200px; height: 100px"
+                    :src="ttdAsesor"
+                    fit="contain"
+                  />
+                </div>
+                <span>{{ scope.row.tanggal }}</span>
+              </div>
+              <div v-else>
+                <h3>FR.APL 02 belum di tanda tangan</h3>
+              </div>
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -476,6 +487,8 @@ export default {
       this.fileName = 'APL.02 - ' + data.apl_01.nama_lengkap + ' - ' + data.apl_01.kode_skema;
       this.ttdTable1[0].nama = data.apl_01.nama_lengkap;
       this.ttdTable1[0].tanggal = moment(data.apl_01.created_at).format('DD-MM-YYYY');
+      this.ttdTable2[0].tanggal = moment(data.apl_01.created_at).format('DD-MM-YYYY');
+      console.log(this.ttdTable2[0].tanggal);
       // DATA TTD ASESI SEBELUM DI UBAH
       // this.ttdTable1[0].ttd = '/uploads/users/signature/' + data.signature
       // DATA TTD ASESI SETELAH DI UBAH

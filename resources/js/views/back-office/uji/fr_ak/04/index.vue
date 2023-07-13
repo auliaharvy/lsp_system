@@ -15,25 +15,21 @@
           <el-form-item label="Nama Asesi" prop="namaAsesi">
             <el-input v-model="dataSend.nama_asesi" placeholder="nama asesi" />
           </el-form-item>
-
           <el-form-item label="Nama Asesor" prop="namaAsesor">
             <el-input v-model="dataSend.nama_asesor" placeholder="nama asesor" />
           </el-form-item>
-
           <el-form-item label="Apakah proses banding telah dijelaskan kepada anda?" prop="proses">
             <el-select v-model="dataSend.penjelasan" class="filter-item" placeholder="ya/tidak">
               <el-option label="Ya" :value="0" />
               <el-option label="Tidak" :value="1" />
             </el-select>
           </el-form-item>
-
           <el-form-item label="Apakah anda telah mendiskusikan banding dengan asesor?" prop="diskusi">
             <el-select v-model="dataSend.diskusi" class="filter-item" placeholder="ya/tidak">
               <el-option label="Ya" :value="0" />
               <el-option label="Tidak" :value="1" />
             </el-select>
           </el-form-item>
-
           <el-form-item label="Apakah anda mau melibatkan 'Orang Lain' membantu anda dalam proses banding?" prop="bantuBanding">
             <el-select v-model="dataSend.melibatkan" class="filter-item" placeholder="ya/tidak">
               <el-option label="Ya" :value="0" />
@@ -55,7 +51,8 @@
         </el-form>
         <br>
 
-        <el-button @click="onSubmit">Submit Asesor</el-button>
+        <el-button v-if="$route.params.id_ak_04 === null" @click="onSubmit">Submit Asesor</el-button>
+        <el-button v-else>Print</el-button>
       </div>
     </el-main>
   </el-container>
@@ -131,7 +128,7 @@ export default {
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getListPertanyaan();
+    // this.getListPertanyaan();
   },
   methods: {
     allKompeten() {
@@ -184,6 +181,8 @@ export default {
       this.dataSend.penjelasan = 0;
       this.dataSend.diskusi = 0;
       this.dataSend.melibatkan = 0;
+      console.log(this.dataSend.alasan_banding);
+      console.log(asesor[0].nama_asesor);
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -198,7 +197,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -218,7 +217,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -226,7 +225,7 @@ export default {
     onSubmit() {
       this.loading = true;
       this.dataSend.id_uji_komp = this.$route.params.id_uji;
-      console.log(this.dataSend);
+      // console.log(this.dataSend);
       ak04Resource
         .store(this.dataSend)
         .then(response => {
