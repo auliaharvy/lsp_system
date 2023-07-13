@@ -468,8 +468,9 @@ class UjiKompController extends BaseController
 
         $queryAsesor = User::where('name',$asesor)->first();
         $queryAsesi = User::where('name',$asesi)->first();
+        $no_reg = Assesor::where('nama', $queryAsesor->name)->first()->no_reg;
        
-        $data = ['asesor' => $queryAsesor->signature, 'asesi' => $queryAsesi->signature ];
+        $data = ['asesor' => $queryAsesor->signature, 'asesi' => $queryAsesi->signature, 'no_reg'=> $no_reg];
         return $data;
     }
 
@@ -508,8 +509,8 @@ class UjiKompController extends BaseController
     {
         $queryApl01 = UjiKompApl1::where('trx_uji_komp_apl_01.id',$id)->first();
         $users = User::where('nik',$queryApl01->nik)->first();
-       
-        return ['apl_01' => $queryApl01, 'signature' => $users->signature ];
+
+        return ['apl_01' => $queryApl01, 'signature' => $users->signature];
     }
 
     public function showApl02($id)

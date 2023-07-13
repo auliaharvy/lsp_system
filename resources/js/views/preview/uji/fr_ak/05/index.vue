@@ -128,31 +128,6 @@
             <span>: {{ dataTrx.namaAsesi ? dataTrx.namaAsesi : 'Belum Penilaian' }}</span>
           </el-form-item>
 
-          <el-form-item label="Nama Asesor" prop="namaAsesor">
-            <!-- <el-input v-model="dataTrx.namaAsesi" placeholder="nama asesi" /> -->
-            <span>: {{ dataTrx.namaAsesor ? dataTrx.namaAsesor : 'Belum Penilaian' }}</span>
-          </el-form-item>
-
-          <el-form-item label="No Reg" prop="noReg">
-            <!-- <el-input v-model="dataTrx.namaAsesi" placeholder="nama asesi" /> -->
-            <span>: {{ dataTrx.reg ? dataTrx.reg : 'Tidak ada' }}</span>
-          </el-form-item>
-
-          <el-form-item label="Tanda Tangan Asesor" prop="tandaTanganAsesor">
-            <!-- <el-input v-model="dataTrx.namaAsesi" placeholder="nama asesi" /> -->
-            <div v-if="ttdAsesor">
-              <el-image
-                style="width: 200px; height: 100px"
-                :src="ttdAsesor"
-                fit="contain"
-              />
-            </div>
-            <div v-else>
-              <p>: FR.AK 05 belum di tanda tangan</p>
-            </div>
-
-          </el-form-item>
-
           <el-form-item label="Rekomendasi" prop="rekomendasi">
             <!-- <el-select v-model="dataTrx.rekomendasi" class="filter-item" placeholder="K / BK">
               <el-option label="Kompeten" value="kompeten" />
@@ -179,6 +154,28 @@
           <el-form-item label="Saran Perbaikan (Asesor / personil terkait)" prop="saran">
             <!-- <el-input v-model="dataTrx.saranPerbaikan" type="textarea" :rows="3" placeholder="Isi Saran Perbaikan (Asesor / personil terkait)" /> -->
             <span>: {{ dataTrx.saranPerbaikan ? dataTrx.saranPerbaikan : 'Belum Penilaian' }}</span>
+          </el-form-item>
+          <el-form-item label="Nama Asesor" prop="namaAsesor">
+            <!-- <el-input v-model="dataTrx.namaAsesi" placeholder="nama asesi" /> -->
+            <span>: {{ dataTrx.namaAsesor ? dataTrx.namaAsesor : 'Belum Penilaian' }}</span>
+          </el-form-item>
+
+          <el-form-item label="No Reg" prop="noReg">
+            <span>: {{ dataTrx.reg ? dataTrx.reg : 'Tidak ada' }}</span>
+          </el-form-item>
+
+          <el-form-item label="Tanda Tangan Asesor" prop="tandaTanganAsesor">
+            <!-- <el-input v-model="dataTrx.namaAsesi" placeholder="nama asesi" /> -->
+            <div v-if="ttdAsesor">
+              <el-image
+                style="width: 200px; height: 100px"
+                :src="ttdAsesor"
+                fit="contain"
+              />
+            </div>
+            <div v-else>
+              <p>: FR.AK 05 belum di tanda tangan</p>
+            </div>
           </el-form-item>
         </el-form>
         <br>
@@ -239,11 +236,11 @@ export default {
           content: '',
         },
         {
-          title: 'Nama Asesor',
+          title: 'TUK',
           content: '',
         },
         {
-          title: 'TUK',
+          title: 'Nama Asesor',
           content: '',
         },
         {
@@ -363,7 +360,11 @@ export default {
       this.dataTrx.bulan = arrbulan[bulan];
       this.dataTrx.tahun = tahun;
       this.dataTrx.hari = arrHari[hari];
-      this.headerTable[3].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
+      if (menit < 10){
+        this.headerTable[3].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun + ' pukul ' + jam + ':0' + menit;
+      } else {
+        this.headerTable[3].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun + ' pukul ' + jam + ':' + menit;
+      }
       // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
     },
     async getListSkema() {
@@ -389,8 +390,8 @@ export default {
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.asesor;
-      this.headerTable[2].content = ujiDetail.nama_tuk;
+      this.headerTable[1].content = ujiDetail.nama_tuk;
+      this.headerTable[2].content = ujiDetail.asesor;
       this.dataTrx.namaAsesi = ujiDetail.nama_peserta;
     },
     onJadwalSelect() {

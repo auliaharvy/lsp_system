@@ -40,6 +40,7 @@ class SkemaUnit extends Model
         
         $plunckData = array();
         foreach($skemaUnit as $row):
+            $data['id'] = $row->id;
             $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, null, null);
             $data['kode_unit'] = $row->kode_unit;
             $data['unit_kompetensi'] = $row->unit_kompetensi;

@@ -171,6 +171,9 @@
               <span>{{ scope.row.unit_kompetensi }}</span>
             </template>
           </el-table-column>
+          <el-table-column align="left" label="Jenis Standar (Standar Khusus/Standar Internasional/SKKNI)">
+            <div style="text-align: center;">SKKNI</div>
+          </el-table-column>
         </el-table>
 
         <br>
@@ -206,13 +209,23 @@
         <br>
         <el-table
           v-loading="loading"
-          :data="ttdTable"
+          :data="ttdTable1"
           fit
           border
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'display': 'none' }"
         >
-          <el-table-column align="left">
+          <el-table-column align="center" label="Nama Asesi">
+            <template slot-scope="scope">
+              <span>{{ scope.row.title }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.content ? scope.row.content: 'Belum Penilaian' }}</span>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column align="left">
             <template slot-scope="scope">
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Asesi :
@@ -227,7 +240,6 @@
                 <div v-else>
                   <h3>FR.APL 01 belum di tanda tangan</h3>
                 </div>
-                <!-- <img v-if="ttdAsesi" :src="'/uploads/users/signature/' + ttdAsesi" class="sidebar-logo"> -->
               </template>
               <span>{{ scope.row.title }}</span>
             </template>
@@ -238,14 +250,8 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <template v-if="scope.row.no === 1">
-                <!--<el-select v-model="pilihanTerima" class="filter-item" placeholder="T/TT" value-key="status" :disabled="!ttdAdmin">
-                  <el-option :key="0" label="Terima / Tidak Terima" :value="0" />
-                  <el-option :key="1" label="Terima" :value="1" />
-                  <el-option :key="2" label="Tidak Terima" :value="2" />
-                </el-select>-->
                 <span>{{ scope.row.status === 1 ? 'Terima' : 'Tidak Terima' }}</span>
               </template>
-
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Admin LSP :
                 <br>
@@ -259,15 +265,70 @@
                 <div v-else>
                   <h3>FR.APL 01 belum di tanda tangan</h3>
                 </div>
-                <!-- <div v-if="!ttdAdmin">
-                  <h2>FR.APL 01 belum di tanda tangan</h2>
-                </div>
-                <div v-else>
-                  {{ namaAdmin }}
-                  <br>
-                  <img :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
-                </div> -->
               </template>
+            </template>
+          </el-table-column>
+        </el-table> -->
+        </el-table>
+        <el-table
+          v-loading="loading"
+          :data="ttdTable2"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Nama Asesi">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan Asesi">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <div>
+                  <el-image
+                    style="width: 200px; height: 100px"
+                    :src="scope.row.ttd"
+                    fit="contain"
+                  />
+                </div>
+                <span>{{ scope.row.tanggal }}</span>
+              </div>
+              <div v-else>
+                <h3>FR.APL 01 belum di tanda tangan</h3>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-table
+          v-loading="loading"
+          :data="ttdTable3"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Admin LSP">
+            <template slot-scope="scope">
+              <div style="padding-bottom: 3px;">{{ scope.row.nama }}</div>
+              <div style="font-weight:bold ;">No. Reg {{ scope.row.no_reg }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan Admin LSP">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <div>
+                  <el-image
+                    style="width: 200px; height: 100px"
+                    :src="scope.row.ttd"
+                    fit="contain"
+                  />
+                </div>
+              </div>
+              <div v-else>
+                <h3>FR.APL 01 belum di tanda tangan</h3>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -284,6 +345,7 @@ const apl01Resource = new Resource('detail/apl-01');
 const apl01UpdateResource = new Resource('uji-komp-apl-01');
 const skemaResource = new Resource('skema-get');
 const preview = new Resource('detail/preview');
+const signature = new Resource('detail/signature');
 
 export default {
   data() {
@@ -403,16 +465,39 @@ export default {
           content: '',
         },
       ],
-      ttdTable: [
+      // ttdTable: [
+      //   {
+      //     no: 1,
+      //     title: 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima/ Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai',
+      //     content: 'Catatan',
+      //   },
+      //   {
+      //     no: 2,
+      //     title: '',
+      //     content: '',
+      //   },
+      // ],
+      ttdTable1: [
         {
-          no: 1,
           title: 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima/ Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai',
           content: 'Catatan',
         },
+      ],
+      ttdTable2: [
         {
-          no: 2,
-          title: '',
-          content: '',
+          title: 'Nama Asesi',
+          nama: 'Nama Asesi',
+          ttd: '',
+          tanggal: '',
+        },
+      ],
+      ttdTable3: [
+        {
+          title: 'Nama Asesor',
+          nama: 'Nama Asesor',
+          ttd: '',
+          no_reg: '',
+          tanggal: '',
         },
       ],
       unitKompetensiTable: [],
@@ -491,9 +576,7 @@ export default {
       this.dataTrx.id_apl_01 = this.dataPreview.id_apl_01;
       // console.log(this.dataPreview.id_apl_01);
       const result = await apl01Resource.get(this.dataPreview.id_apl_01);
-      console.log(result);
       const data = result.apl_01;
-      console.log(data);
       const ttl = data.tempat_lahir + ' / ' + moment(data.tanggal_lahir).format('DD-MM-YYYY');
       const pendidikan = data.nama_sekolah + ' (' + data.tingkatan + ')';
       this.fileName = 'APL.01 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
@@ -507,25 +590,44 @@ export default {
       this.headerTable[7].content = pendidikan;
 
       if (data.status === 0) {
-        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima / Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai';
+        this.ttdTable1[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima / Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai';
+        this.ttdTable1[0].content = 'Tidak diterima';
       } if (data.status === 1) {
-        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima sebagai peserta  sertifikasi';
+        this.ttdTable1[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima sebagai peserta  sertifikasi';
+        this.ttdTable1[0].content = 'Diterima';
       } if (data.status === 2) {
-        this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi';
+        this.ttdTabler[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi';
+        this.ttdTable1[0].content = 'Ditolak';
       }
       // this.dataAsesi.sign = '/uploads/users/signature/' + data.signature;
       // this.ttdAsesi = data.signature;
       // this.ttdAdmin = data.ttd_admin;
       // this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;
+      this.ttdTable2[0].nama = data.nama_lengkap;
+      this.ttdTable3[0].nama = this.$route.params.asesor;
+      const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: data.nama_lengkap });
+      this.ttdTable3[0].no_reg = signatures.no_reg;
+
+      const dt = new Date(data.created_at);
+      const resultDt = dt.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+
+      console.log(signatures);
       if (result.signature){
-        this.ttdAsesi = '/uploads/users/signature/' + result.signature; // DATA TTD ASESI SESUDAH DIBENARKAN
+        this.ttdTable2[0].ttd = '/uploads/users/signature/' + result.signature; // DATA TTD ASESI SESUDAH DIBENARKAN
+        this.ttdTable2[0].tanggal = resultDt;
       } else {
-        this.ttdAsesi = null;
+        this.ttdTable2[0].ttd = null;
       }
       if (data.ttd_admin){
-        this.ttdAdmin = '/uploads/users/signature/' + data.ttd_admin; // DATA TTD ASESI SESUDAH DIBENARKAN
+        this.ttdTable3[0].ttd = '/uploads/users/signature/' + data.ttd_admin; // DATA TTD ASESI SESUDAH DIBENARKAN
+        this.ttdTable2[0].tanggal = resultDt;
       } else {
-        this.ttdAdmin = null;
+        this.ttdTable3[0].ttd = null;
       }
 
       this.namaAdmin = data.nama_admin;

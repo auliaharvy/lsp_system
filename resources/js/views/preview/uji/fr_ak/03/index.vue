@@ -107,7 +107,7 @@
           </el-table-column>
           <el-table-column align="center" min-width="30px" label="Hasil">
             <template slot-scope="scope">
-              <span>{{ scope.row.hasil == 1 ? 'Ya' : 'Tidak' }}</span>
+              <span>{{ scope.row.hasil == 1 ? 'Tidak' : 'Ya' }}</span>
               <!-- <el-select v-model="scope.row.hasil" placeholder="Select">
                 <el-option label="Ya" value="ya" />
                 <el-option label="Tidak" value="tidak" />
@@ -290,7 +290,11 @@ export default {
       this.dataTrx.bulan = arrbulan[bulan];
       this.dataTrx.tahun = tahun;
       this.dataTrx.hari = arrHari[hari];
-      this.headerTable[3].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun;
+      if (menit < 10){
+        this.headerTable[3].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun + ' pukul ' + jam + ':0' + menit;
+      } else {
+        this.headerTable[3].content = arrHari[hari] + ', ' + tanggal + '-' + arrbulan[bulan] + '-' + tahun + ' pukul ' + jam + ':' + menit;
+      }
       // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
     },
     getUjiKompDetail() {

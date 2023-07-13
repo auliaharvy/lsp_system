@@ -120,6 +120,7 @@ export default {
   data() {
     return {
       dataSend: {},
+      dataCheckbox: [],
       umpanBalikAsesi: '',
       checkList: [],
       kompeten: null,
@@ -224,16 +225,16 @@ export default {
       this.loading = true;
       const { data } = await mstIa03Resource.list({ id_skema: this.$route.params.id_skema });
       this.listSoal = data;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-        element['observasi_demonstrasi'] = true;
-        element['portofolio'] = false;
-        element['pernyataan_pihak_3'] = true;
-        element['pernyataan_lisan'] = false;
-        element['pernyataan_tertulis'] = false;
-        element['proyek_kerja'] = false;
-        element['lainnya'] = false;
-      });
+      // this.listSoal.forEach((element, index) => {
+      //   element['index'] = index + 1;
+      //   element['observasi_demonstrasi'] = true;
+      //   element['portofolio'] = true;
+      //   element['pernyataan_pihak_3'] = true;
+      //   element['pernyataan_lisan'] = true;
+      //   element['pernyataan_tertulis'] = true;
+      //   element['proyek_kerja'] = true;
+      //   element['lainnya'] = true;
+      // });
       this.loading = false;
     },
     async getListSkema() {
@@ -261,7 +262,8 @@ export default {
       this.headerTable[2].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.asesor;
       this.headerTable[0].content = ujiDetail.nama_peserta;
-      this.headerTable[4].content = ujiDetail.mulai;
+      this.headerTable[3].content = ujiDetail.mulai;
+      this.headerTable[4].content = ujiDetail.selesai;
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;
@@ -279,12 +281,12 @@ export default {
       console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
+        console.log(element);
         element['type'] = 'unitKomp';
         element['index'] = number++;
         kuk.push(element);
         this.unitKompetensiTable[0].col3.push(element['kode_unit']);
         this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
-        // this.headerTable[3].content.push(element['unit_kompetensi']);
         this.listJudulUnit.push(element);
         element.elemen.forEach((element, index) => {
           element['type'] = 'elemen';
@@ -296,7 +298,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      console.log(this.listJudulUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -309,8 +311,21 @@ export default {
       this.dataTrx.rekomendasi_asesor = this.dataSend.status;
       this.dataTrx.nama_asesi = this.headerTable[0].content;
       this.dataTrx.nama_asesor = this.headerTable[1].content;
-      this.dataTrx.detail = this.listSoal;
-      console.log(this.dataTrx.detail);
+      // this.dataTrx.detail = this.listSoal;
+
+      this.listJudulUnit.forEach((element, index) => {
+        element['index'] = index + 1;
+        element['id'];
+        element['observasi_demonstrasi'] = element['observasi_demonstrasi'] ? 1 : 0;
+        element['portofolio'] = element['portofolio'] ? 1 : 0;
+        element['pernyataan_pihak_3'] = element['pernyataan_pihak_3'] ? 1 : 0;
+        element['pernyataan_lisan'] = element['pernyataan_lisan'] ? 1 : 0;
+        element['pernyataan_tertulis'] = element['pernyataan_tertulis'] ? 1 : 0;
+        element['proyek_kerja'] = element['proyek_kerja'] ? 1 : 0;
+        element['lainnya'] = element['lainnya'] ? 1 : 0;
+      });
+
+      this.dataTrx.detail = this.listJudulUnit;
       this.dataTrx.userId = this.userId;
       ak02Resource
         .store(this.dataTrx)

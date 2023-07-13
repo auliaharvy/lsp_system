@@ -247,8 +247,8 @@
           </el-table-column>
           <el-table-column align="center" label="Rekomendasi Asesor">
             <template slot-scope="scope">
-              <span v-if="scope.row.rekomendasi_asesor === 1">Asesmen dapat dilanjutkan</span>
-              <span v-else-if="scope.row.rekomendasi_asesor === 2">Asesmen tidak dapat dilanjutkan</span>
+              <span v-if="scope.row.rekomendasi_asesor === 'Kompeten'">Asesmen dapat dilanjutkan</span>
+              <span v-else-if="scope.row.rekomendasi_asesor === 'Belum Kompeten'">Asesmen tidak dapat dilanjutkan</span>
               <span v-else>Belum di cek</span>
             </template>
           </el-table-column>

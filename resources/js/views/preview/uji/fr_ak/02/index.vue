@@ -88,9 +88,11 @@
             </template>
           </el-table-column>
         </el-table>
-
         <br>
-
+        <br>
+        <span>Beri tanda centang (√) di kolom yang sesuai untuk mencerminkan bukti yang diperoleh untuk menentukan Kompetensi asesi untuk setiap Unit Kompetensi.</span>
+        <br>
+        <br>
         <el-table
           v-loading="loading"
           :data="listJudulUnit"
@@ -158,6 +160,65 @@
             <div>: {{ dataSend.komentar_observasi }}</div>
           </el-form-item>
         </el-form>
+        <el-table
+          v-if="ttdTable1"
+          v-loading="loading"
+          :data="ttdTable1"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Tanda Tangan Asesi">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>FR.AK 02 belum di tanda tangan</h3>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanggal">
+            <template slot-scope="scope">
+              <span>{{ scope.row.tanggal }}</span>
+            </template>
+          </el-table-column>
+
+        </el-table>
+        <el-table
+          v-if="ttdTable2"
+          v-loading="loading"
+          :data="ttdTable2"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Tanda Tangan Asesor">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>FR.AK 02 belum di tanda tangan</h3>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanggal">
+            <template slot-scope="scope">
+              <span>{{ scope.row.tanggal }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
         <br>
       </div>
     </el-main>
@@ -175,6 +236,7 @@ const mstIa03Resource = new Resource('mst-ia03-get');
 const ak02Resource = new Resource('uji-komp-ak-02');
 const ak02Detail = new Resource('detail/ak-02');
 const preview = new Resource('detail/preview');
+const signature = new Resource('detail/signature');
 
 export default {
   components: {},
@@ -250,6 +312,18 @@ export default {
         resource: '',
         desc: '',
       },
+      ttdTable1: [
+        {
+          ttd: '',
+          tanggal: '',
+        },
+      ],
+      ttdTable2: [
+        {
+          ttd: '',
+          tanggal: '',
+        },
+      ],
       active: 0,
       isWide: true,
       labelPosition: 'left',
@@ -334,17 +408,33 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    getUjiKompDetail() {
+    async getUjiKompDetail() {
       var id_uji = this.dataPreview.id;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      console.log(ujiDetail);
       this.headerTable[2].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.asesor;
       this.headerTable[0].content = ujiDetail.nama_peserta;
       this.headerTable[3].content = ujiDetail.mulai;
       this.headerTable[4].content = ujiDetail.selesai;
+
+      this.ttdTable1[0].tanggal = ujiDetail.selesai;
+      this.ttdTable2[0].tanggal = ujiDetail.selesai;
+
+      const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: ujiDetail.nama_peserta });
+      if (signatures.asesi){
+        this.ttdTable1[0].ttd = '/uploads/users/signature/' + signatures.asesi;
+      } else {
+        this.ttdTable1[0].ttd = null;
+      }
+      if (signatures.asesor){
+        this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatures.asesor;
+      } else {
+        this.ttdTable2[0].ttd = null;
+      }
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
