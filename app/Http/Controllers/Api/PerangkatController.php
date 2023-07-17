@@ -103,8 +103,10 @@ class PerangkatController extends BaseController
         $query = MstFrIa05::query();
         $query->where('mst_perangkat_ia_05.id_skema', $id_skema)
         ->join('mst_skema_sertifikasi_unit_kompetensi as a', 'a.id', '=', 'mst_perangkat_ia_05.id_unit_komp')
-        ->leftJoin('mst_perangkat_ia_05_a as b', 'b.id', '=', 'mst_perangkat_ia_05.kunci_jawaban')
-        ->select('mst_perangkat_ia_05.*', 'a.kode_unit', 'a.unit_kompetensi', 'b.no_jawaban as no_kunci_jawaban', 'b.jawaban as isi_kunci_jawaban');
+        // ->leftJoin('mst_perangkat_ia_05_a as b', 'b.id', '=', 'mst_perangkat_ia_05.kunci_jawaban')
+        ->leftJoin('mst_perangkat_ia_05_a as b', 'b.id_mst_ia_05', '=', 'mst_perangkat_ia_05.id')
+        ->select('mst_perangkat_ia_05.*', 'a.kode_unit', 'a.unit_kompetensi', 'b.no_jawaban as no_kunci_jawaban', 'b.jawaban as isi_kunci_jawaban')
+        ->groupBy('mst_perangkat_ia_05.pertanyaan');
 
         return MstIa05Resource::collection($query->paginate(100));
     }

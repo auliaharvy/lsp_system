@@ -60,7 +60,7 @@
               <el-input v-model="scope.row.jawaban" type="textarea" />
             </template>
           </el-table-column>
-          <el-table-column v-if="checkRole(['asesor'])" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="roles[0] !== 'user'" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
@@ -69,29 +69,26 @@
             </template>
           </el-table-column>
         </el-table>
-
         <br>
         <br>
-
         <el-form
-          v-if="checkRole(['asesor'])"
           ref="form"
           :model="form"
           label-width="250px"
           label-position="left"
         >
-          <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
+          <el-form-item v-if="roles[0] !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor">
             <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
-          <el-form-item label="Umpan balik untuk asesi" prop="feedback">
+          <el-form-item v-if="roles[0] !== 'user'" label="Umpan balik untuk asesi" prop="feedback">
             <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
           </el-form-item>
         </el-form>
         <br>
 
-        <el-button @click="onSubmit">Submit</el-button>
-        <el-button v-if="checkRole(['asesor'])" @click="onSubmit">Submit</el-button>
+        <el-button v-if="!$route.params.id_ia_07" @click="onSubmit">Submit</el-button>
+        <el-button v-if="$route.params.id_ia_07 && roles[0] !== 'user'" @click="nilai">Submit Asesor</el-button>
       </div>
     </el-main>
   </el-container>
@@ -180,6 +177,7 @@ export default {
   computed: {
     ...mapGetters([
       'userId',
+      'roles',
     ]),
   },
   beforeDestroy() {
@@ -200,6 +198,7 @@ export default {
       this.getIa07();
     });
     this.getDate();
+    this.getIa07();
   },
   methods: {
     checkRole,
@@ -236,6 +235,7 @@ export default {
       this.loading = true;
       const { data } = await mstResource.list({ id_skema: this.$route.params.id_skema });
       this.listSoal = data;
+      console.log(this.listSoal);
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
@@ -244,11 +244,22 @@ export default {
       this.loading = false;
     },
     getIa07() {
+      console.log(this.$route.params.id_ia_07);
       if (this.$route.params.id_ia_07 !== null) {
         this.loading = true;
+        console.log(this.ia07);
         this.listSoal.forEach((element, index) => {
-          var foundIndex = this.ia06.detail.findIndex(x => x.id_perangkat_ia_07 === element['id']);
+          var foundIndex = this.ia07.detail.findIndex(x => x.id_perangkat_ia_07 === element['id']);
           element['jawaban'] = this.ia07.detail[foundIndex].jawaban;
+          element['id'] = this.ia07.detail[foundIndex].id;
+
+          // if (this.ia07.detail[foundIndex]){
+          //   element['jawaban'] = this.ia07.detail[foundIndex].jawaban;
+          //   element['id'] = this.ia07.detail[foundIndex].id;
+          // } else {
+          //   element['jawaban'];
+          //   element['id'];
+          // }
         });
         this.loading = false;
       }
@@ -319,13 +330,17 @@ export default {
     },
     onSubmit() {
       this.loading = true;
-      this.form.detail_ia_03 = this.listSoal;
+      this.form.detail_ia_07 = this.listSoal;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
+      this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
+      this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
+
       postResource
         .store(this.form)
         .then(response => {
+          console.log(response);
           this.$message({
             message: 'FR IA 07 has been created successfully.',
             type: 'success',
@@ -348,6 +363,11 @@ export default {
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_ia_07 = this.$route.params.id_ia_07;
       this.form.id_skema = this.$route.params.id_skema;
+      this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
+      this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
+
+      console.log(this.form);
+
       ia07NilaiResource
         .store(this.form)
         .then(response => {

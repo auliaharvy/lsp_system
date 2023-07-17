@@ -98,7 +98,9 @@
         </el-form>
         <br>
 
-        <el-button @click="onSubmit">Submit</el-button>
+        <!-- <el-button @click="onSubmit">Submit</el-button> -->
+        <el-button v-if="$route.params.id_ak_02 !== null" @click="generateReport">Print</el-button>
+        <el-button v-else @click="onSubmit">Submit</el-button>
 
       </div>
     </el-main>
