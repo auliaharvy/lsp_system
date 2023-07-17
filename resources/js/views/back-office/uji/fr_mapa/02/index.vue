@@ -123,8 +123,8 @@
         </el-table-column>
       </el-table>
       <br>
-      <!-- <el-button v-if="!$route.params.id_mapa_02" @click="onSubmit">Submit</el-button> -->
-      <el-button @click="onSubmit">Submit</el-button>
+      <el-button v-if="!$route.params.id_mapa_02" @click="onSubmit">Submit</el-button>
+      <!-- <el-button @click="onSubmit">Submit</el-button> -->
     </el-main>
   </el-container>
 </template>

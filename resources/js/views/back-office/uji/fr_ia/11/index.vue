@@ -136,7 +136,8 @@
         </el-form>
       </div>
       <br>
-      <el-button @click="onSubmit">Submit</el-button>
+      <el-button v-if="$route.params.id_ia_11 !== null" @click="generateReport">Print</el-button>
+      <el-button v-else @click="onSubmit">Submit</el-button>
     </el-main>
   </el-container>
 </template>
