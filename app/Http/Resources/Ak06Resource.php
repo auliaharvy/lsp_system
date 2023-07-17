@@ -104,11 +104,10 @@ class Ak06Resource extends JsonResource
             ],'ttdTable'=> [
                 'ttd'=> $this->ttd_asesor,
                 'nama'=> $this->nama_asesor,
-                'tanggal'=> $this->tahun . '-' . $this->bulan . '-' . $this->tanggal,
+                // 'tanggal'=> $this->tahun . '-' . $this->bulan . '-' . $this->tanggal,
+                'waktu'=> $this->created_at,
                 'komentar'=> $this->komentar,
             ],
         ];
-                
-                
     }
 }

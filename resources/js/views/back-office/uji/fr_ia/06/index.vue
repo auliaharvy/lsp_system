@@ -59,12 +59,12 @@
               <el-input v-model="scope.row.jawaban" type="textarea" />
             </template>
           </el-table-column>
-          <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Kunci Jawaban">
             <template slot-scope="scope">
               <span>{{ scope.row.kunci_jawaban }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkRole(['assesor'])" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['assesor', 'admin'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
@@ -79,7 +79,7 @@
         <br>
 
         <el-form
-          v-if="checkRole(['assesor'])"
+          v-if="checkRole(['assesor', 'admin'])"
           ref="form"
           :model="form"
           label-width="250px"
@@ -97,8 +97,11 @@
         </el-form>
         <br>
 
-        <el-button v-if="checkRole(['assesor'])" @click="nilai">Submit</el-button>
-        <el-button v-else @click="onSubmit">Submit</el-button>
+        <el-button v-if="!$route.params.id_ia_06" @click="onSubmit">Submit</el-button>
+        <el-button v-if="$route.params.id_ia_06 && roles[0] !== 'user'" @click="nilai">Submit Asesor</el-button>
+
+        <!-- <el-button v-if="checkRole(['assesor'])" @click="nilai">Submit Asesor</el-button>
+        <el-button v-else @click="onSubmit">Submit</el-button> -->
       </div>
     </el-main>
   </el-container>
@@ -192,6 +195,7 @@ export default {
   computed: {
     ...mapGetters([
       'userId',
+      'roles',
     ]),
   },
   beforeDestroy() {
@@ -263,6 +267,7 @@ export default {
         this.listSoal.forEach((element, index) => {
           var foundIndex = this.ia06.detail.findIndex(x => x.id_perangkat_ia_06 === element['id']);
           element['jawaban'] = this.ia06.detail[foundIndex].jawaban;
+          element['id'] = this.ia06.detail[foundIndex].id;
         });
         this.loading = false;
       }
@@ -325,10 +330,20 @@ export default {
     },
     onSubmit() {
       this.loading = true;
+      console.log(this.listSoal);
+      this.listSoal.forEach((element, index) => {
+        element['is_kompeten'];
+      });
+
       this.form.detail_ia_06 = this.listSoal;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
+      this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
+      this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
+
+      console.log(this.form.detail_ia_06);
+
       postResource
         .store(this.form)
         .then(response => {
@@ -357,6 +372,9 @@ export default {
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_ia_06 = this.$route.params.id_ia_06;
       this.form.id_skema = this.$route.params.id_skema;
+      this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
+      this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
+
       ia06NilaiResource
         .store(this.form)
         .then(response => {

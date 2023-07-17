@@ -142,8 +142,6 @@
               <div v-if="scope" style="text-align: center;">Test Bukti</div>
             </template> -->
           </el-table-column>
-
-          <p>{{ initStatus }}</p>
         </el-table>
         <br>
         <el-table
@@ -206,22 +204,22 @@
               </template>
               <span v-else-if="initStatus === 1"> Asesmen dapat dilanjutkan</span>
               <span v-else-if="initStatus === 2"> Asesmen tidak dapat dilanjutkan</span> -->
-              <span v-if="scope.row.rekomendasi_asesor === 1">Asesmen dapat dilanjutkan</span>
-              <span v-else-if="scope.row.rekomendasi_asesor === 2">Asesmen tidak dapat dilanjutkan</span>
+              <span v-if="scope.row.status === 1">Asesmen dapat dilanjutkan</span>
+              <span v-else-if="scope.row.status === 2">Asesmen tidak dapat dilanjutkan</span>
               <span v-else>Belum di cek</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="Tanda Tangan Asesor">
             <template slot-scope="scope">
-              <div v-if="ttdAsesor">
+              <div v-if="scope.row.ttd">
                 <div>
                   <el-image
                     style="width: 200px; height: 100px"
-                    :src="ttdAsesor"
+                    :src="scope.row.ttd"
                     fit="contain"
                   />
                 </div>
-                <span>{{ scope.row.tanggal }}</span>
+                <!-- <span>{{ scope.row.tanggal }}</span> -->
               </div>
               <div v-else>
                 <h3>FR.APL 02 belum di tanda tangan</h3>
@@ -378,6 +376,7 @@ export default {
           status: 0,
           tanggal: 'Catatan',
           ttd: '',
+          rekomendasi_asesor: '',
         },
       ],
       unitKompetensiTable: [],
@@ -519,6 +518,11 @@ export default {
       this.listDetailApl02 = data;
       this.initStatus = this.listDetailApl02.apl_02.status;
       this.ttdTable2[0].status = this.listDetailApl02.apl_02.status;
+      if (this.listDetailApl02.apl_02.ttd_asesor){
+        this.ttdTable2[0].ttd = '/uploads/users/signature/' + this.listDetailApl02.apl_02.ttd_asesor;
+      } else {
+        this.ttdTable2[0].ttd = null;
+      }
       // if (this.listDetailApl02.apl_02.ttd_asesor){
       //   this.ttdAsesor = '/uploads/users/signature/' + this.listDetailApl02.apl_02.ttd_asesor;
       // } else {

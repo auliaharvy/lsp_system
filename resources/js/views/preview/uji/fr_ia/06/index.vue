@@ -446,7 +446,8 @@ export default {
         this.listSoal.forEach((element, index) => {
           element['index'] = index + 1;
           element['jawaban'] = this.ia06.detail[index].jawaban;
-          this.listSoal[index].is_kompeten = this.ia06.detail[index].rekomendasi;
+          element['is_kompeten'] = this.ia06.detail[index].rekomendasi;
+          // this.listSoal[index].is_kompeten = this.ia06.detail[index].rekomendasi;
         });
 
         const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: this.dataPreview.nama_peserta });
