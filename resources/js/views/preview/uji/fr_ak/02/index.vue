@@ -237,7 +237,6 @@ const ak02Resource = new Resource('uji-komp-ak-02');
 const ak02Detail = new Resource('detail/ak-02');
 const preview = new Resource('detail/preview');
 const signature = new Resource('detail/signature');
-const signatureAsesor = new Resource('detail/asesor');
 
 export default {
   components: {},
@@ -415,6 +414,7 @@ export default {
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      console.log(ujiDetail);
       this.headerTable[2].content = ujiDetail.skema_sertifikasi;
       this.headerTable[1].content = ujiDetail.asesor;
       this.headerTable[0].content = ujiDetail.nama_peserta;
@@ -425,16 +425,13 @@ export default {
       this.ttdTable2[0].tanggal = ujiDetail.selesai;
 
       const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: ujiDetail.nama_peserta });
-      const ttdAsesor = await signatureAsesor.list({ asesor: this.$route.params.asesor });
-      console.log(signatures);
-      console.log(ttdAsesor);
       if (signatures.asesi){
         this.ttdTable1[0].ttd = '/uploads/users/signature/' + signatures.asesi;
       } else {
         this.ttdTable1[0].ttd = null;
       }
-      if (ttdAsesor.signature){
-        this.ttdTable2[0].ttd = '/uploads/users/signature/' + ttdAsesor.signature;
+      if (signatures.asesor){
+        this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatures.asesor;
       } else {
         this.ttdTable2[0].ttd = null;
       }
@@ -455,6 +452,7 @@ export default {
       var unitKomp = this.selectedSkema.children;
       if (this.dataPreview.id_ak_02 !== null) {
         const dataak02 = await ak02Detail.get(this.dataPreview.id_ak_02);
+        console.log(dataak02);
         var kuk = [];
         unitKomp.forEach((element, index) => {
           element['type'] = 'unitKomp';
@@ -481,6 +479,7 @@ export default {
             });
           });
         });
+        console.log(this.listJudulUnit);
         // var elemen = unitKomp.elemen;
         // var kuk = elemen.kuk;
         this.listKuk = kuk;
@@ -495,6 +494,7 @@ export default {
       this.dataTrx.nama_asesi = this.headerTable[0].content;
       this.dataTrx.nama_asesor = this.headerTable[1].content;
       this.dataTrx.detail = this.listSoal;
+      console.log(this.dataTrx.detail);
       this.dataTrx.userId = this.userId;
       ak02Resource
         .store(this.dataTrx)

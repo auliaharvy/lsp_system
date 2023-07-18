@@ -85,15 +85,15 @@
           </el-form-item>
 
           <el-form-item label="Apakah proses banding telah dijelaskan kepada anda?" prop="proses">
-            <div>: {{ dataSend.penjelasan == 0 ? 'Ya' : 'Tidak' }}</div>
+            <div>: {{ dataSend.penjelasan == 1 ? 'Ya' : 'Tidak' }}</div>
           </el-form-item>
 
           <el-form-item label="Apakah anda telah mendiskusikan banding dengan asesor?" prop="diskusi">
-            <div>: {{ dataSend.diskusi == 0 ? 'Ya' : 'Tidak' }}</div>
+            <div>: {{ dataSend.diskusi == 1 ? 'Ya' : 'Tidak' }}</div>
           </el-form-item>
 
           <el-form-item label="Apakah anda mau melibatkan 'Orang Lain' membantu anda dalam proses banding?" prop="bantuBanding">
-            <div>: {{ dataSend.melibatkan == 0 ? 'Ya' : 'Tidak' }}</div>
+            <div>: {{ dataSend.melibatkan == 1 ? 'Ya' : 'Tidak' }}</div>
           </el-form-item>
 
           <el-form-item label="Skema Sertifikasi" prop="skema">

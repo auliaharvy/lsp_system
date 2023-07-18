@@ -95,10 +95,7 @@
         </el-form>
         <br>
 
-        <!-- <el-button @click="onSubmit">Submit</el-button> -->
-
-        <el-button v-if="$route.params.id_ak_05 !== null" @click="generateReport">Print</el-button>
-        <el-button v-else @click="onSubmit">Submit</el-button>
+        <el-button @click="onSubmit">Submit</el-button>
 
         <br>
         <br>
@@ -207,11 +204,7 @@ export default {
     async getAk05() {
       if (this.$route.params.id_ak_05 !== null) {
         this.loading = true;
-        const params = {
-          id: this.dataPreview.id_ak_05,
-          asesor: this.$route.params.asesor,
-        };
-        const data = await ak05Detail.list(params);
+        const data = await ak05Detail.get(this.$route.params.id_ak_05);
         console.log(data);
         this.dataTrx.namaAsesi = data.nama_asesi;
         this.dataTrx.rekomendasi = data.rekomendasi;
