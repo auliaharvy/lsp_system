@@ -280,10 +280,10 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
-        console.log(element);
+        // console.log(element);
         element['type'] = 'unitKomp';
         element['index'] = number++;
         kuk.push(element);
@@ -300,7 +300,7 @@ export default {
           });
         });
       });
-      console.log(this.listJudulUnit);
+      // console.log(this.listJudulUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;

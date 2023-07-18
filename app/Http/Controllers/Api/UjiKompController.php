@@ -1,6 +1,6 @@
 <?php
 /**
- * File UjiKompController.php
+ * File UjiKompController.phpp
  *
  * @author Aulia Harvy (auliaharvy@gmail.com)
  * @package LSP_System

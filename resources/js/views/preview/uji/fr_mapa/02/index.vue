@@ -373,7 +373,7 @@ export default {
       this.selectedSkema = skemaId;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
-      // this.dataTrx.id_tuk = tukId.id;
+      // this.dataTrx.id_tuk = tukId.id;;
       this.getKuk();
     },
     getKuk(){

@@ -334,7 +334,7 @@ export default {
         this.loading = true;
         const { data } = await mstIa05Resource.list({ id_skema: this.dataPreview.id_skema });
         const result = await ia05Detail.get(this.dataPreview.id_ia_05);
-        console.log(result);
+        // console.log(result);
         this.listSoal = data;
         // console.log(data);
         this.listSoal.forEach((element, index) => {
@@ -418,12 +418,12 @@ export default {
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
       this.form.id_skema = this.$route.params.id_skema;
-      console.log(this.form.detail_ia_05);
+      // console.log(this.form.detail_ia_05);
       if (jenis === 0) {
         ia05Resource
           .store(this.form)
           .then(response => {
-            console.log(response);
+            // console.log(response);
             this.$message({
               message: 'FR IA 05 has been created successfully.',
               type: 'success',

@@ -56,7 +56,7 @@ Route::namespace('Api')->group(function() {
     Route::get('preview/ak-03/{id}', 'UjiKompController@previewAk03');
     Route::get('preview/ak-04/{id}', 'UjiKompController@previewAk04');
 
-    //detail FR
+    //detail FR;
     Route::get('detail/asesor', 'UjiKompController@showAsesor');
     Route::get('detail/signature', 'UjiKompController@showSignature');
     Route::get('detail/preview/{id}', 'UjiKompController@showPreview');
@@ -251,6 +251,7 @@ Route::get('/articles', function () {
 });
 
 Route::get('articles/{id}', function ($id) {
+    // get article
     $article = [
         'id' => $id,
         'display_time' => Faker::randomDateTime()->format('Y-m-d H:i:s'),

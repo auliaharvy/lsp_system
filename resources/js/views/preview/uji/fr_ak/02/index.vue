@@ -426,8 +426,8 @@ export default {
 
       const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: ujiDetail.nama_peserta });
       const ttdAsesor = await signatureAsesor.list({ asesor: this.$route.params.asesor });
-      console.log(signatures);
-      console.log(ttdAsesor);
+      // console.log(signatures);
+      // console.log(ttdAsesor);
       if (signatures.asesi){
         this.ttdTable1[0].ttd = '/uploads/users/signature/' + signatures.asesi;
       } else {

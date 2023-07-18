@@ -406,10 +406,10 @@ export default {
     async getAk06() {
       const { data } = await showAk06Resource.get(this.$route.params.id_ak_06);
       this.ttdTable[0].komentar = data[0].ttdTable.komentar;
-      console.log(data[0].ttdTable.komentar);
-      console.log(data);
+      // console.log(data[0].ttdTable.komentar);
+      // console.log(data);
       this.aspek = data[0]['aspek'];
-      console.log(this.aspek);
+      // console.log(this.aspek);
       this.aspek.forEach((element, index) => {
         if (index === 0) {
           element.validitas = element.validitas === 1;
@@ -513,7 +513,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -530,7 +530,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -550,7 +550,7 @@ export default {
         'rekomendasiPemenuhan': this.rekomendasiPemenuhan,
         'ttdTable': this.ttdTable,
       };
-      console.log(data);
+      // console.log(data);
       ak06Resource.store(data)
         .then(response => {
           this.$message({

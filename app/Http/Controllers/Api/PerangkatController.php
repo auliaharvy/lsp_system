@@ -1,6 +1,6 @@
 <?php
 /**
- * File PerangkatController.php
+ * File PerangkatController.phpp
  *
  * @author Aulia Harvy (auliaharvy@gmail.com)
  * @package LSP_System

@@ -430,7 +430,7 @@ export default {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
         if (kuk.type === 'kuk'){
-          // kuk.is_kompeten = this.kompeten;
+          // kuk.is_kompeten = this.kompeten;;
         }
       }
     },
@@ -442,7 +442,7 @@ export default {
         const dataia06 = await ia06Detail.get(this.dataPreview.id_ia_06);
         this.listSoal = data;
         this.ia06 = dataia06;
-        console.log(dataia06);
+        // console.log(dataia06);
         this.listSoal.forEach((element, index) => {
           element['index'] = index + 1;
           element['jawaban'] = this.ia06.detail[index].jawaban;

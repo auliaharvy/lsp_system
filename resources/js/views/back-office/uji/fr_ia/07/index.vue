@@ -235,7 +235,8 @@ export default {
       this.loading = true;
       const { data } = await mstResource.list({ id_skema: this.$route.params.id_skema });
       this.listSoal = data;
-      console.log(this.listSoal);
+      // console.log(this.listSoal);
+      console.log(this.listKuk);
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
@@ -244,10 +245,10 @@ export default {
       this.loading = false;
     },
     getIa07() {
-      console.log(this.$route.params.id_ia_07);
+      // console.log(this.$route.params.id_ia_07);
       if (this.$route.params.id_ia_07 !== null) {
         this.loading = true;
-        console.log(this.ia07);
+        // console.log(this.ia07);
         this.listSoal.forEach((element, index) => {
           var foundIndex = this.ia07.detail.findIndex(x => x.id_perangkat_ia_07 === element['id']);
           element['jawaban'] = this.ia07.detail[foundIndex].jawaban;
@@ -305,7 +306,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -323,7 +324,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -340,7 +341,7 @@ export default {
       postResource
         .store(this.form)
         .then(response => {
-          console.log(response);
+          // console.log(response);
           this.$message({
             message: 'FR IA 07 has been created successfully.',
             type: 'success',
@@ -366,7 +367,7 @@ export default {
       this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
       this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
 
-      console.log(this.form);
+      // console.log(this.form);
 
       ia07NilaiResource
         .store(this.form)

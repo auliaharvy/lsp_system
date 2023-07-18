@@ -386,7 +386,7 @@ export default {
         const dataia07 = await ia07Detail.get(this.dataPreview.id_ia_07);
         this.ia07 = dataia07;
         this.listSoal = data;
-        console.log(this.ia07);
+        // console.log(this.ia07);
         this.listSoal.forEach((element, index) => {
           element['index'] = index + 1;
           element['jawaban'] = this.ia07.detail[index].jawaban;
@@ -520,7 +520,7 @@ export default {
     nilai() {
       this.loading = true;
       this.form.detail_ia_07 = this.listSoal;
-      console.log(this.form.detail_ia_07);
+      // console.log(this.form.detail_ia_07);
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_ia_07 = this.$route.params.id_ia_07;

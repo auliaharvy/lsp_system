@@ -487,7 +487,7 @@ export default {
       this.ttdTable1[0].nama = data.apl_01.nama_lengkap;
       this.ttdTable1[0].tanggal = moment(data.apl_01.created_at).format('DD-MM-YYYY');
       this.ttdTable2[0].tanggal = moment(data.apl_01.created_at).format('DD-MM-YYYY');
-      console.log(this.ttdTable2[0].tanggal);
+      // console.log(this.ttdTable2[0].tanggal);
       // DATA TTD ASESI SEBELUM DI UBAH
       // this.ttdTable1[0].ttd = '/uploads/users/signature/' + data.signature
       // DATA TTD ASESI SETELAH DI UBAH

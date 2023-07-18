@@ -384,7 +384,7 @@ export default {
     },
     getUjiKompDetail() {
       var id_uji = this.dataPreview.id;
-      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);;
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);

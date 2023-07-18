@@ -172,8 +172,8 @@ export default {
       this.selectedUji = ujiDetail;
       var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      console.log(ujiDetail);
-      console.log(asesor);
+      // console.log(ujiDetail);
+      // console.log(asesor);
       this.dataSend.skema = ujiDetail.skema_sertifikasi;
       // this.dataSend.nama_asesor = asesor[0].nama_asesor;
       this.dataSend.nama_asesor = asesor;
@@ -181,7 +181,7 @@ export default {
       this.dataSend.nama_asesi = ujiDetail.nama_peserta;
       this.dataSend.no_skema = ujiDetail.kode_skema;
       this.dataSend.tanggal_asesmen = ujiDetail.mulai;
-      console.log(this.$route.params.id_ak_04);
+      // console.log(this.$route.params.id_ak_04);
       if (this.$route.params.id_ak_04){
         this.ak04Detail = await ak04Preview.get(this.$route.params.id_ak_04);
         // console.log(this.ak04Detail);

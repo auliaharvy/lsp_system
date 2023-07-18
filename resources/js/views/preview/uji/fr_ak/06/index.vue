@@ -448,9 +448,9 @@ export default {
     },
     async getAk06() {
       if (this.dataPreview.id_ak_06 != null){
-        console.log(this.dataPreview.id_ak_06);
+        // console.log(this.dataPreview.id_ak_06);
         const { data } = await showAk06Resource.get(this.dataPreview.id_ak_06);
-        console.log(await showAk06Resource.get(this.dataPreview.id_ak_06));
+        // console.log(await showAk06Resource.get(this.dataPreview.id_ak_06));
         this.aspek = data[0]['aspek'];
         this.aspekPemenuhan[0].item = data[0].aspekPemenuhan.item;
         this.aspekPemenuhan[0].taskSkill = data[0].aspekPemenuhan.taskSkill;

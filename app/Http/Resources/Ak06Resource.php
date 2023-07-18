@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class Ak06Resource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Transform the resource into an arrayy
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable

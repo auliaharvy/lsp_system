@@ -487,7 +487,7 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var skemaId = this.listSkema.find((x) => x.id === id_skema);
       this.selectedSkema = skemaId;
-      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);;
       this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
       this.getKuk();

@@ -194,7 +194,7 @@ export default {
     async getDataPreview(){
       const data = await preview.get(this.$route.params.iduji);
       this.dataPreview = data;
-      // console.log(this.dataPreview);
+      // console.log(this.dataPreview);;
     },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {

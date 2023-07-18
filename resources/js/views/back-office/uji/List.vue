@@ -432,7 +432,7 @@ export default {
       this.query.user_id = this.userId;
       const { limit, page } = this.query;
       this.loading = true;
-      // get data skema
+      // get data skema;
       const dataSkema = await skemaResource.list({ limit: 1000 });
       this.listSkema = dataSkema.data;
       // get data perangkat / list table

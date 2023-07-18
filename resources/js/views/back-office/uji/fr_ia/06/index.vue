@@ -308,7 +308,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -330,7 +330,7 @@ export default {
     },
     onSubmit() {
       this.loading = true;
-      console.log(this.listSoal);
+      // console.log(this.listSoal);
       this.listSoal.forEach((element, index) => {
         element['is_kompeten'];
       });
@@ -342,7 +342,7 @@ export default {
       this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
       this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
 
-      console.log(this.form.detail_ia_06);
+      // console.log(this.form.detail_ia_06);
 
       postResource
         .store(this.form)

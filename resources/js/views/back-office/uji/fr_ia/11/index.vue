@@ -251,7 +251,7 @@ export default {
         this.dataTrx.komentar = this.ia11.komentar;
         this.listSoal.forEach((element, index) => {
           var foundIndex = data.detail.findIndex(x => x.id_perangkat_ia_11 === element['id']);
-          console.log(foundIndex);
+          // console.log(foundIndex);
           element['jawaban'] = data.detail[foundIndex].tanggapan;
           element['komentar'] = data.detail[foundIndex].komentar;
         });
@@ -319,7 +319,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -337,7 +337,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;

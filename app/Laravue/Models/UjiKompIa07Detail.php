@@ -1,6 +1,6 @@
 <?php
 /**
- * File UjiKompIa06Detail.php
+ * File UjiKompIa06Detail.phpp
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System

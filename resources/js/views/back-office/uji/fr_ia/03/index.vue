@@ -270,7 +270,7 @@ export default {
           element['tanggapan'] = this.ia03.detail[foundIndex].tanggapan;
           element['id'] = this.ia03.detail[foundIndex].id;
         });
-        console.log(this.listSoal);
+        // console.log(this.listSoal);
         this.loading = false;
       }
     },
@@ -349,7 +349,7 @@ export default {
       this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
       this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
 
-      console.log(this.form.detail_ia_03);
+      // console.log(this.form.detail_ia_03);
       ia03Resource
         .store(this.form)
         .then(response => {
@@ -370,7 +370,7 @@ export default {
     },
     nilai() {
       this.loading = true;
-      console.log(this.listSoal);
+      // console.log(this.listSoal);
       this.form.detail_ia_03 = this.listSoal;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;

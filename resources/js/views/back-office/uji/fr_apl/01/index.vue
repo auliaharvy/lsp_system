@@ -602,7 +602,6 @@ export default {
       this.onJadwalSelect();
     });
     this.getApl01();
-    console.log(this.$route.params.id_apl_01);
   },
   methods: {
     checkRole,
@@ -657,13 +656,11 @@ export default {
         this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi';
       }
       const signatures = await signature.list({ asesor: data.apl_01.nama_asesor, asesi: data.apl_01.nama_lengkap });
-      console.log(signatures);
       if (signatures.asesi){
         this.ttdAsesi = '/uploads/users/signature/' + signatures.asesi;
       } else {
         this.ttdAsesi = null;
       }
-      console.log(this.ttdAsesi);
       // this.ttdAsesi = data.apl_01.signature;
       this.ttdAdmin = data.apl_01.ttd_admin;
       this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;

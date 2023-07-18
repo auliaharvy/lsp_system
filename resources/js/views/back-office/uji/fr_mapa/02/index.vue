@@ -244,7 +244,7 @@ export default {
       } else {
         this.loading = true;
         const { data } = await mukMapa02Resource.list();
-        console.log(data);
+        // console.log(data);
         this.listMuk = data;
         this.listMuk.forEach((element, index) => {
           element['index'] = index + 1;
@@ -289,7 +289,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -307,7 +307,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -316,7 +316,7 @@ export default {
       var dataKirim = {
         'listMuk': this.listMuk,
       };
-      console.log('listMuk');
+      // console.log('listMuk');
       this.loading = true;
       ujiMapa02Resource
         .store(dataKirim)

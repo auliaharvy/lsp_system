@@ -212,14 +212,14 @@ export default {
           asesor: this.$route.params.asesor,
         };
         const data = await ak05Detail.list(params);
-        console.log(data);
+        // console.log(data);
         this.dataTrx.namaAsesi = data.nama_asesi;
         this.dataTrx.rekomendasi = data.rekomendasi;
         this.dataTrx.keterangan = data.keterangan;
         this.dataTrx.aspek = data.aspek;
         this.dataTrx.catatanPenolakan = data.pencatatan_penolakan;
         this.dataTrx.saranPerbaikan = data.saran_perbaikan;
-        console.log(this.dataTrx);
+        // console.log(this.dataTrx);
         this.loading = false;
       }
     },
@@ -301,7 +301,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -321,7 +321,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -329,7 +329,7 @@ export default {
     onSubmit() {
       this.loading = true;
       this.dataTrx.id_uji_komp = this.$route.params.id_uji;
-      console.log(this.dataTrx);
+      // console.log(this.dataTrx);
       ak05Resource
         .store(this.dataTrx)
         .then(response => {

@@ -480,7 +480,7 @@ export default {
           });
         });
       });
-      // console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);;
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;

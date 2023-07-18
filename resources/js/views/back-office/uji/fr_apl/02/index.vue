@@ -561,7 +561,6 @@ export default {
     async getApl01() {
       this.loading = true;
       const data = await apl01Resource.get(this.$route.params.id_apl_01);
-      console.log(data);
       this.fileName = 'APL.02 - ' + data.apl_01.nama_lengkap + ' - ' + data.apl_01.kode_skema;
       this.ttdTable1[0].nama = data.apl_01.nama_lengkap;
       this.ttdTable1[0].tanggal = moment(data.apl_01.created_at).format('DD-MM-YYYY');
@@ -578,9 +577,7 @@ export default {
       this.initStatus = this.listDetailApl02.apl_02.status;
       this.ttdTable2[0].status = this.listDetailApl02.apl_02.status;
       this.initStatus = this.listDetailApl02.apl_02.status;
-      console.log(this.listDetailApl02);
       this.ttdAsesor = '/uploads/users/signature/' + this.listDetailApl02.apl_02.ttd_asesor;
-      console.log(this.ttdAsesor);
       this.listKuk.forEach((element, index) => {
         if (element['type'] === 'kuk') {
           var foundIndex = data.detail.findIndex(x => x.id_kuk_elemen === element['id']);
@@ -635,7 +632,7 @@ export default {
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
-      console.log(this.listKuk);
+      // console.log(this.listKuk);
       // this.insertDetailAPl02();
     },
     search(nameKey, myArray){

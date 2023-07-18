@@ -574,7 +574,7 @@ export default {
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
-      // console.log(this.selectedSkema);
+      // console.log(this.selectedSkema);;
       this.getKuk();
     },
     getKuk(){

@@ -88,9 +88,7 @@
         </el-form>
         <br>
 
-        <!-- peserta -->
         <el-button v-if="!$route.params.id_ia_05" @click="onSubmit(0)">Submit</el-button>
-        <!-- asesor -->
         <el-button v-if="$route.params.id_ia_05 && roles[0] !== 'user'" @click="onSubmit(1)">Submit Asesor</el-button>
       </div>
     </el-main>
