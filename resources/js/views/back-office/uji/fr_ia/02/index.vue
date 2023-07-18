@@ -81,7 +81,7 @@
           label-width="250px"
           label-position="left"
         >
-          <el-form-item v-if="!$route.params.id_ia_02" label="Upload File Jawaban" prop="file">
+          <el-form-item v-if="!$route.params.id_ia_02 && role !== 'assesor'" label="Upload File Jawaban" prop="file">
             <input type="file" @change="handleUploadSuccess">
           </el-form-item>
           <el-form-item v-if="role !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor">
@@ -332,7 +332,9 @@ export default {
       uploadData.append('id_ia_02', this.$route.params.id_ia_02);
       uploadData.append('id_uji_komp', this.$route.params.id_uji);
       uploadData.append('user_id', this.userId);
-      uploadData.append('rekomendasi_asesor', this.dataTrx.rekomendasi_asesor);
+
+      const rekomendasiAsesor = this.dataTrx.rekomendasi_asesor ? this.dataTrx.rekomendasi_asesor : 'Belum Penilaian';
+      uploadData.append('rekomendasi_asesor', rekomendasiAsesor);
 
       ia02NilaiResource
         .store(uploadData)

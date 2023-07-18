@@ -1182,7 +1182,7 @@ class UjiKompController extends BaseController
                 $file = 'uploads/ia-02/jawaban/'.$nama_file;
 
                 $ia02 = UjiKompIa02::create([
-                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
+                    'rekomendasi_asesor' => 'Belum Penilaian',
                     'file' =>  $file,
                     'submit_by' => $params['user_id'],
                 ]);

@@ -220,8 +220,8 @@ export default {
       const dataia05 = await ia05Detail.get(this.$route.params.id_ia_05);
       this.ia05 = dataia05;
 
-      console.log(this.ia05.detail);
-      console.log(this.listSoal);
+      // console.log(this.ia05.detail);
+      // console.log(this.listSoal);
       this.loading = false;
     },
     getIa05() {
@@ -232,8 +232,8 @@ export default {
           element['jawaban'] = this.ia05.detail[foundIndex].jawaban;
           element['id'] = this.ia05.detail[foundIndex].id;
         });
-        console.log(this.listSoal);
-        console.log(this.ia05.detail);
+        // console.log(this.listSoal);
+        // console.log(this.ia05.detail);
         this.loading = false;
       }
     },
@@ -278,7 +278,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -296,7 +296,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -309,7 +309,7 @@ export default {
       this.form.id_skema = this.$route.params.id_skema;
       this.form.id_ia_05 = this.$route.params.id_ia_05;
       this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
-      console.log(this.form);
+      // console.log(this.form);
       if (jenis === 0) {
         ia05Resource
           .store(this.form)
@@ -332,7 +332,7 @@ export default {
         nilaiIa05Resource
           .store(this.form)
           .then(response => {
-            console.log(response);
+            // console.log(response);
             this.$message({
               message: 'FR IA 05 has been created successfully.',
               type: 'success',
