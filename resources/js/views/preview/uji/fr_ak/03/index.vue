@@ -277,7 +277,7 @@ export default {
       var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
       var date = new Date();
       // var millisecond = date.getMilliseconds();
-      // var detik = date.getSeconds();
+      // var detik = date.getSeconds();;
       var menit = date.getMinutes();
       var jam = date.getHours();
       var hari = date.getDay();
@@ -327,7 +327,7 @@ export default {
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
-      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);;
       var skemaId = this.listSkema.find((x) => x.id === id_skema);
       this.selectedSkema = skemaId;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);

@@ -225,7 +225,7 @@ export default {
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
       });
-      console.log(this.listSoal);
+      // console.log(this.listSoal);
       this.loading = false;
     },
     async getListSkema() {
@@ -274,7 +274,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -292,7 +292,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;

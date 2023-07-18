@@ -56,7 +56,8 @@ Route::namespace('Api')->group(function() {
     Route::get('preview/ak-03/{id}', 'UjiKompController@previewAk03');
     Route::get('preview/ak-04/{id}', 'UjiKompController@previewAk04');
 
-    //detail FR
+    //detail FR;
+    Route::get('detail/asesor', 'UjiKompController@showAsesor');
     Route::get('detail/signature', 'UjiKompController@showSignature');
     Route::get('detail/preview/{id}', 'UjiKompController@showPreview');
     Route::get('detail/indexPreview/{id}', 'UjiKompController@indexPreview');
@@ -74,8 +75,8 @@ Route::namespace('Api')->group(function() {
     Route::get('detail/ak-02/{id}', 'UjiKompController@showAk02');
     Route::get('detail/ak-03/{id}', 'UjiKompController@showAk03');
     Route::get('detail/ak-04/{id}', 'UjiKompController@showAk04');
-    // Route::get('detail/ak-05/{id}', 'UjiKompController@showAk05');
     Route::get('detail/ak-05', 'UjiKompController@showAk05');
+    // Route::get('detail/ak-05', 'UjiKompController@showAk05');
     Route::get('detail/va/{id}', 'UjiKompController@showVa');
     Route::get('ak-06/{id}', 'UjiKompController@showAk06');
     Route::get('trx-mapa-02/{id}', 'UjiKompController@showMapa02');
@@ -113,6 +114,8 @@ Route::namespace('Api')->group(function() {
         Route::post('uji-komp-ia-05-nilai', 'UjiKompController@penilaianIa05');
         Route::post('uji-komp-ia-06', 'UjiKompController@storeIa06');
         Route::post('uji-komp-ia-06-nilai', 'UjiKompController@penilaianIa06');
+        Route::post('uji-komp-ia-07', 'UjiKompController@storeIa07');
+        Route::post('uji-komp-ia-07-nilai', 'UjiKompController@penilaianIa07');
         Route::post('uji-komp-ia-11', 'UjiKompController@storeIa11');
         Route::post('uji-komp-ak-01', 'UjiKompController@storeAk01');
         Route::post('uji-komp-ak-01-asesi', 'UjiKompController@storeAk01Asesi');
@@ -248,6 +251,7 @@ Route::get('/articles', function () {
 });
 
 Route::get('articles/{id}', function ($id) {
+    // get article
     $article = [
         'id' => $id,
         'display_time' => Faker::randomDateTime()->format('Y-m-d H:i:s'),

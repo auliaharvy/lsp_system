@@ -365,7 +365,7 @@ export default {
     //       element['jawaban'] = data.detail[foundIndex].tanggapan;
     //       element['komentar'] = data.detail[foundIndex].komentar;
     //     });
-    //     this.loading = false;
+    //     this.loading = false;;
     //   }
     // },
     allKompeten() {

@@ -1,6 +1,6 @@
 <?php
 /**
- * File UjiKompController.php
+ * File UjiKompController.phpp
  *
  * @author Aulia Harvy (auliaharvy@gmail.com)
  * @package LSP_System
@@ -46,6 +46,7 @@ use App\Laravue\Models\UjiKompVaRencana;
 use App\Laravue\Models\UjiKompVaTemuan;
 use App\Laravue\Models\Tuk;
 use App\Laravue\Models\JadwalAsesor;
+use Illuminate\Support\Collection\Paginate;
 use App\Laravue\Models\Skema;
 use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
@@ -459,18 +460,39 @@ class UjiKompController extends BaseController
      * @return MasterResource|\Illuminate\Http\JsonResponse
      */
 
+    public function showAsesor(Request $request)
+    {
+        $searchParams = $request->all();
+
+        $asesor = Arr::get($searchParams, 'asesor');
+
+        $queryAsesor = User::where('name',$asesor)->first();
+       
+        $data = [
+            'signature' => $queryAsesor->signature, 
+        ];
+        return $data;
+    }
+
     public function showSignature(Request $request)
     {
         $searchParams = $request->all();
 
         $asesor = Arr::get($searchParams, 'asesor');
         $asesi = Arr::get($searchParams, 'asesi');
+        $admin = Arr::get($searchParams, 'admin');
 
-        $queryAsesor = User::where('name',$asesor)->first();
+        // $queryAsesor = User::where('name',$asesor)->first();
         $queryAsesi = User::where('name',$asesi)->first();
-        $no_reg = Assesor::where('nama', $queryAsesor->name)->first()->no_reg;
+        // $queryAdmin = User::where('name',$admin)->first();
+        $no_reg = Assesor::where('nama', $asesor)->first();
        
-        $data = ['asesor' => $queryAsesor->signature, 'asesi' => $queryAsesi->signature, 'no_reg'=> $no_reg];
+        $data = [
+            'asesi' => $queryAsesi->signature, 
+            // 'asesor' => $queryAsesor->signature, 
+            'no_reg'=> $no_reg
+        ];
+        // $data = ['asesi' => $queryAsesi->signature, 'no_reg'=> $no_reg];
         return $data;
     }
 
@@ -508,9 +530,10 @@ class UjiKompController extends BaseController
     public function showApl01($id)
     {
         $queryApl01 = UjiKompApl1::where('trx_uji_komp_apl_01.id',$id)->first();
-        $users = User::where('nik',$queryApl01->nik)->first();
+        // $users = User::where('nik',$queryApl01->nik)->first();
 
-        return ['apl_01' => $queryApl01, 'signature' => $users->signature];
+        // return ['apl_01' => $queryApl01, 'signature' => $users->signature];
+        return ['apl_01' => $queryApl01 ];
     }
 
     public function showApl02($id)
@@ -605,14 +628,22 @@ class UjiKompController extends BaseController
 
     public function showAk06($id)
     {
-       
-        $query = UjiKompAk06::query();
-        $query->join('trx_uji_komp as a', 'a.id_ak_06', '=', 'trx_uji_komp_ak_06.id');
-        $query->join('trx_uji_komp_ak_01 as b', 'b.id', '=', 'a.id_ak_01');
-        $query->where('trx_uji_komp_ak_06.id',$id)->get();
+        $queryUjiKomp = UjiKomp::where('trx_uji_komp.id_ak_06', $id)->first();
 
-       
-        return Ak06Resource::collection($query->get());
+        // $queryAk01 = UjiKompAk01::where('trx_uji_komp_ak_01.id', $queryUjiKomp->id_ak_01)
+        // ->select('trx_uji_komp_ak_01.tanggal', 'trx_uji_komp_ak_01.bulan', 'trx_uji_komp_ak_01.tahun', 'trx_uji_komp_ak_01.nama_asesor')
+        // ->first();
+        
+        $queryAk06 = UjiKompAk06::query();
+        $queryAk06->where('trx_uji_komp_ak_06.id',$id)
+        ->select('trx_uji_komp_ak_06.*')
+        ->get();
+
+
+        return [
+            'data' => Ak06Resource::collection($queryAk06->paginate(static::ITEM_PER_PAGE)),
+            // 'ak01' => $queryAk01
+        ];
     }
 
     public function showIa01($id)
@@ -641,7 +672,9 @@ class UjiKompController extends BaseController
     {
        
         $queryIa03 = UjiKompIa03::where('trx_uji_komp_ia_03.id',$id)->first();
-        $queryDetailIa03 = UjiKompIa03Detail::query()->join('mst_perangkat_ia_03 as a','a.id', '=', 'trx_uji_komp_ia_03_detail.id_perangkat_ia_03')->where('trx_uji_komp_ia_03_detail.id_ia_03',$id)->get();
+        $queryDetailIa03 = UjiKompIa03Detail::select('trx_uji_komp_ia_03_detail.*')
+        ->join('mst_perangkat_ia_03 as a','a.id', '=', 'trx_uji_komp_ia_03_detail.id_perangkat_ia_03')
+        ->where('trx_uji_komp_ia_03_detail.id_ia_03',$id)->get();
        
         $data = [
             'ia_03' => $queryIa03,
@@ -656,8 +689,17 @@ class UjiKompController extends BaseController
     {
 
         $queryIa05 = UjiKompIa05::where('trx_uji_komp_ia_05.id',$id)->first();
-        $queryDetailIa05 = UjiKompIa05Detail::query()->join('mst_perangkat_ia_05 as a','a.id', '=', 'trx_uji_komp_ia_05_detail.id_perangkat_ia_05')->join('mst_skema_sertifikasi_unit_kompetensi as b', 'a.id_unit_komp', '=', 'b.id')
+        $queryDetailIa05 = UjiKompIa05Detail::select('trx_uji_komp_ia_05_detail.*')
+        ->join('mst_perangkat_ia_05 as a','a.id', '=', 'trx_uji_komp_ia_05_detail.id_perangkat_ia_05')
+        ->join('mst_skema_sertifikasi_unit_kompetensi as b', 'a.id_unit_komp', '=', 'b.id')
         ->where('trx_uji_komp_ia_05_detail.id_ia_05',$id)->get();
+        $queryJawaban = DB::table('mst_perangkat_ia_05_a as a')
+        ->join('trx_uji_komp_ia_05_detail as b','a.id', '=', 'b.id_perangkat_ia_05')
+        ->join('mst_perangkat_ia_05 as c','b.id_perangkat_ia_05', '=', 'c.id')
+        ->select(DB::raw('a.*'))
+        // ->where('a.id_trx_va', '=', $id) 
+        ->get();
+
        
         $data = [
             'ia_05' => $queryIa05,
@@ -671,7 +713,8 @@ class UjiKompController extends BaseController
     {
        
         $queryIa06 = UjiKompIa06::where('trx_uji_komp_ia_06.id',$id)->first();
-        $queryDetailIa06 = UjiKompIa06Detail::query()->join('mst_perangkat_ia_06 as a','a.id', '=', 'trx_uji_komp_ia_06_detail.id_perangkat_ia_06')->join('mst_skema_sertifikasi_unit_kompetensi as b', 'a.id_unit_komp', '=', 'b.id')
+        $queryDetailIa06 = UjiKompIa06Detail::select('trx_uji_komp_ia_06_detail.*')
+        ->join('mst_perangkat_ia_06 as a','a.id', '=', 'trx_uji_komp_ia_06_detail.id_perangkat_ia_06')->join('mst_skema_sertifikasi_unit_kompetensi as b', 'a.id_unit_komp', '=', 'b.id')
         ->where('trx_uji_komp_ia_06_detail.id_ia_06',$id)->get();
        
         $data = [
@@ -686,7 +729,9 @@ class UjiKompController extends BaseController
     public function showIa07($id)
     {
         $queryIa07 = UjiKompIa07::where('trx_uji_komp_ia_07.id',$id)->first();
-        $queryDetailIa07 = UjiKompIa07Detail::query()->join('mst_perangkat_ia_07 as a','a.id', '=', 'trx_uji_komp_ia_07_detail.id_perangkat_ia_07')->join('mst_skema_sertifikasi_unit_kompetensi as b', 'a.id_unit_komp', '=', 'b.id')
+        $queryDetailIa07 = UjiKompIa07Detail::select('trx_uji_komp_ia_07_detail.*')
+        ->join('mst_perangkat_ia_07 as a','a.id', '=', 'trx_uji_komp_ia_07_detail.id_perangkat_ia_07')
+        ->join('mst_skema_sertifikasi_unit_kompetensi as b', 'a.id_unit_komp', '=', 'b.id')
         ->where('trx_uji_komp_ia_07_detail.id_ia_07',$id)->get();
        
         $data = [
@@ -1137,7 +1182,7 @@ class UjiKompController extends BaseController
                 $file = 'uploads/ia-02/jawaban/'.$nama_file;
 
                 $ia02 = UjiKompIa02::create([
-                    'rekomendasi_asesor' => 'belum penilaian',
+                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
                     'file' =>  $file,
                     'submit_by' => $params['user_id'],
                 ]);
@@ -1211,8 +1256,10 @@ class UjiKompController extends BaseController
             try {
                 $params = $request->all();
                 $ia03 = UjiKompIa03::create([
-                    'rekomendasi_asesor' => 'belum penilaian',
-                    'umpan_balik' => 'belum penilaian',
+                    // 'rekomendasi_asesor' => 'belum penilaian',
+                    // 'umpan_balik' => 'belum penilaian',
+                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
+                    'umpan_balik' => $params['umpanBalikAsesi'],
                     'submit_by' => $params['user_id'],
                 ]);
 
@@ -1228,7 +1275,8 @@ class UjiKompController extends BaseController
                         'id_ia_03' => $ia03->id,
                         'id_perangkat_ia_03' => $elemen[$i]['id'],
                         'tanggapan' => $elemen[$i]['tanggapan'],
-                        'rekomendasi' => 'belum penilaian',
+                        // 'rekomendasi' => 'belum penilaian',
+                        // 'rekomendasi' => $elemen[$i]['is_kompeten'],
                     ]);
                 }
 
@@ -1303,7 +1351,7 @@ class UjiKompController extends BaseController
             try {
                 $params = $request->all();
                 $ia05 = UjiKompIa05::create([
-                    'rekomendasi_asesor' => 'belum penilaian',
+                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
                     'submit_by' => $params['user_id'],
                 ]);
 
@@ -1314,12 +1362,12 @@ class UjiKompController extends BaseController
 
                 $elemen = $params['detail_ia_05'];
                 for ($i = 0; $i < count($elemen); $i++) {
-                    $ia05Detail = UjiKompIa03Detail::create([
+                    $ia05Detail = UjiKompIa05Detail::create([
                         'id_uji_komp' => $foundUjiKomp->id,
                         'id_ia_05' => $ia05->id,
                         'id_perangkat_ia_05' => $elemen[$i]['id_perangkat'],
                         'jawaban' => $elemen[$i]['jawaban'],
-                        'rekomendasi' => 'belum penilaian',
+                        // 'rekomendasi' => 'belum penilaian',
                         // 'rekomendasi' => $elemen[$i]['is_kompeten'],
                     ]);
                 }
@@ -1348,11 +1396,9 @@ class UjiKompController extends BaseController
             $id_uji_komp = $request->get('id_uji_komp');
             $id_ia_05 = $request->get('id_ia_05');
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
-            $foundIa05 = UjiKomp::where('id', $id_ia_05)->first();
+            $foundIa05 = UjiKompIa05::where('id', $id_ia_05)->first();
             try {
                 $params = $request->all();
-                
-
                 $foundIa05->rekomendasi_asesor = $params['rekomendasi_asesor'];
                 $foundIa05->updated_by = $params['user_id'];
                 $foundIa05->save();
@@ -1360,12 +1406,13 @@ class UjiKompController extends BaseController
                 $elemen = $params['detail_ia_05'];
                 for ($i = 0; $i < count($elemen); $i++) {
                     $foundIa05Detail = UjiKompIa05Detail::where('id', $elemen[$i]['id'])->first();
-                    $foundIa05Detail->rekomendasi_asesor = $elemen[$i]['is_kompeten'];
+                    // $foundIa05Detail->rekomendasi_asesor = $elemen[$i]['is_kompeten'];
+                    $foundIa05Detail->rekomendasi = $elemen[$i]['is_kompeten'];
                     $foundIa05Detail->save();
                 }
 
                 DB::commit();
-                return response()->json(['message' => "Sukses menilai FR IA 05"], 200);
+                return response()->json(['message' => "Sukses membuat FR IA 05"], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
@@ -1396,8 +1443,10 @@ class UjiKompController extends BaseController
             try {
                 $params = $request->all();
                 $ia06 = UjiKompIa06::create([
-                    'rekomendasi_asesor' => 'belum penilaian',
-                    'umpan_balik' => 'belum penilaian',
+                    // 'rekomendasi_asesor' => 'belum penilaian',
+                    // 'umpan_balik' => 'belum penilaian',
+                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
+                    'umpan_balik' => $params['umpanBalikAsesi'],
                     'submit_by' => $params['user_id'],
                 ]);
 
@@ -1413,7 +1462,8 @@ class UjiKompController extends BaseController
                         'id_ia_06' => $ia06->id,
                         'id_perangkat_ia_06' => $elemen[$i]['id'],
                         'jawaban' => $elemen[$i]['jawaban'],
-                        'rekomendasi' => 'belum penilaian',
+                        // 'rekomendasi' => 'belum penilaian',
+                        // 'rekomendasi' => $elemen[$i]['is_kompeten'],
                     ]);
                 }
 
@@ -1490,8 +1540,8 @@ class UjiKompController extends BaseController
             try {
                 $params = $request->all();
                 $ia07 = UjiKompIa07::create([
-                    'rekomendasi_asesor' => 'belum penilaian',
-                    'umpan_balik' => 'belum penilaian',
+                    'rekomendasi_asesor' => $params['rekomendasi_asesor'],
+                    'umpan_balik' => $params['umpanBalikAsesi'],
                     'submit_by' => $params['user_id'],
                 ]);
 
@@ -1507,12 +1557,12 @@ class UjiKompController extends BaseController
                         'id_ia_07' => $ia07->id,
                         'id_perangkat_ia_07' => $elemen[$i]['id'],
                         'jawaban' => $elemen[$i]['jawaban'],
-                        'rekomendasi' => 'belum penilaian',
                     ]);
                 }
 
                 DB::commit();
-                return response()->json(['message' => "Sukses membuat FR IA 07"], 200);
+                return response()->json(['ia07' => $ia07, 'ia07detail' => $ia07Detail], 200);
+                // return response()->json(['message' => "Sukses membuat FR IA 07"], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
@@ -1532,21 +1582,22 @@ class UjiKompController extends BaseController
             return response()->json(['errors' => $validator->errors()], 403);
         } else {
             DB::beginTransaction();
-            $id_uji_komp = $request->get('id_uji_komp');
-            $id_ia_07 = $request->get('id_ia_07');
+            $params = $request->all();
+
+            $id_uji_komp = $params['id_uji_komp'];
+            $id_ia_07 = $params['id_ia_07'];
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
             $foundIa07 = UjiKompIa07::where('id', $id_ia_07)->first();
             try {
-                $params = $request->all();
-                $foundIa06->rekomendasi_asesor = $params['rekomendasi_asesor'];
-                $foundIa06->umpan_balik = $params['umpan_balik'];
-                $foundIa06->updated_by = $params['user_id'];
-                $foundIa06->save();
+                $foundIa07->rekomendasi_asesor = $params['rekomendasi_asesor'];
+                $foundIa07->umpan_balik = $params['umpanBalikAsesi'];
+                $foundIa07->updated_by = $params['user_id'];
+                $foundIa07->save();
 
                 $elemen = $params['detail_ia_07'];
                 for ($i = 0; $i < count($elemen); $i++) {
                     $foundIa07Detail = UjiKompIa07Detail::where('id', $elemen[$i]['id'])->first();
-                    $foundIa07Detail->rekomendasi = $elemen[$i]['rekomendasi'];
+                    $foundIa07Detail->rekomendasi = $elemen[$i]['is_kompeten'];
                     $foundIa07Detail->save();
                 }
 

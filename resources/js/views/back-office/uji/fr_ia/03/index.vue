@@ -268,7 +268,9 @@ export default {
         this.listSoal.forEach((element, index) => {
           var foundIndex = this.ia03.detail.findIndex(x => x.id_perangkat_ia_03 === element['id']);
           element['tanggapan'] = this.ia03.detail[foundIndex].tanggapan;
+          element['id'] = this.ia03.detail[foundIndex].id;
         });
+        // console.log(this.listSoal);
         this.loading = false;
       }
     },
@@ -336,10 +338,18 @@ export default {
     },
     onSubmit() {
       this.loading = true;
+      this.listSoal.forEach((element, index) => {
+        // element['is_kompeten'] = element['is_kompeten'] ? element['is_kompeten'] : 'belum penilaian';
+        element['is_kompeten'];
+      });
       this.form.detail_ia_03 = this.listSoal;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
+      this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
+      this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
+
+      // console.log(this.form.detail_ia_03);
       ia03Resource
         .store(this.form)
         .then(response => {
@@ -360,11 +370,15 @@ export default {
     },
     nilai() {
       this.loading = true;
+      // console.log(this.listSoal);
       this.form.detail_ia_03 = this.listSoal;
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
       this.form.id_ia_03 = this.$route.params.id_ia_03;
+      this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
+      this.form.umpanBalikAsesi = this.form.umpanBalikAsesi ? this.form.umpanBalikAsesi : 'belum penilaian';
+
       ia03NilaiResource
         .store(this.form)
         .then(response => {

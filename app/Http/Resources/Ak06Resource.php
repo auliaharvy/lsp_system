@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class Ak06Resource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Transform the resource into an arrayy
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
@@ -104,11 +104,10 @@ class Ak06Resource extends JsonResource
             ],'ttdTable'=> [
                 'ttd'=> $this->ttd_asesor,
                 'nama'=> $this->nama_asesor,
-                'tanggal'=> $this->tahun . '-' . $this->bulan . '-' . $this->tanggal,
+                // 'tanggal'=> $this->tahun . '-' . $this->bulan . '-' . $this->tanggal,
+                'waktu'=> $this->created_at,
                 'komentar'=> $this->komentar,
             ],
         ];
-                
-                
     }
 }

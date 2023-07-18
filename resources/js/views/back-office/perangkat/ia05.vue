@@ -312,7 +312,7 @@ export default {
               this.creating = false;
             });
         } else {
-          console.log('error submit!!');
+          // console.log('error submit!!');
           return false;
         }
       });
@@ -344,7 +344,7 @@ export default {
               this.creating = false;
             });
         } else {
-          console.log('error submit!!');
+          // console.log('error submit!!');
           return false;
         }
       });
@@ -352,7 +352,7 @@ export default {
     handleUpdate(skema) {
       this.editedSkema = skema;
       this.dialogFormUpdateVisible = true;
-      console.log(this.editedSkema);
+      // console.log(this.editedSkema);
     },
     updateData() {
       this.loading = true;

@@ -74,7 +74,11 @@
             </el-table-column>
             <el-table-column align="center" label="Fleksibel">
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.fleksibel" />
+                <el-checkbox v-if="scope.row.item === '- Umpan Balik Asesmen'" v-model="scope.row.fleksibel" :disabled="true" />
+                <el-checkbox v-else-if="scope.row.item === '- Keputusan Asesmen'" v-model="scope.row.fleksibel" :disabled="true" />
+                <el-checkbox v-else v-model="scope.row.fleksibel" />
+
+                <!-- <el-checkbox v-model="scope.row.fleksibel" /> -->
               </template>
             </el-table-column>
             <el-table-column align="center" label="Adil">
@@ -178,7 +182,7 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column align="center" label="Nama Asesor">
+          <el-table-column align="center" label="Nama Peninjau">
             <template slot-scope="scope">
               <span>{{ scope.row.nama }}</span>
             </template>
@@ -188,7 +192,7 @@
               <span>{{ scope.row.tanggal }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="Tanda Tangan Asesor">
+          <el-table-column align="center" label="Tanda Tangan Peninjau">
             <template slot-scope="scope">
               <div v-if="!$route.params.id_ak_06">
                 <vueSignature
@@ -216,7 +220,9 @@
           </el-table-column>
         </el-table>
         <br>
-        <el-button v-if="!$route.params.id_ak_06" @click="onSubmit">Submit</el-button>
+        <!-- <el-button v-if="!$route.params.id_ak_06" @click="onSubmit">Submit</el-button> -->
+        <el-button v-if="$route.params.id_ak_06 !== null" @click="generateReport">Print</el-button>
+        <el-button v-else @click="onSubmit">Submit</el-button>
       </div>
     </el-main>
   </el-container>
@@ -261,11 +267,7 @@ export default {
       dataTrx: [],
       headerTable: [
         {
-          title: 'Nama Asesi',
-          content: '',
-        },
-        {
-          title: 'Nama Asesor',
+          title: 'Skema Sertifikasi',
           content: '',
         },
         {
@@ -273,9 +275,10 @@ export default {
           content: '',
         },
         {
-          title: 'Skema Sertifikasi',
+          title: 'Nama Asesor',
           content: '',
         },
+
         {
           title: 'Tanggal',
           content: '',
@@ -402,8 +405,11 @@ export default {
     },
     async getAk06() {
       const { data } = await showAk06Resource.get(this.$route.params.id_ak_06);
+      this.ttdTable[0].komentar = data[0].ttdTable.komentar;
+      // console.log(data[0].ttdTable.komentar);
+      // console.log(data);
       this.aspek = data[0]['aspek'];
-      console.log(this.aspek);
+      // console.log(this.aspek);
       this.aspek.forEach((element, index) => {
         if (index === 0) {
           element.validitas = element.validitas === 1;
@@ -447,11 +453,23 @@ export default {
       this.rekomendasi[0].rekomendasi = data[0].rekomendasi.rekomendasi;
       this.rekomendasiPemenuhan[0].item = data[0].rekomendasiPemenuhan.item;
       this.rekomendasiPemenuhan[0].rekomendasi = data[0].rekomendasiPemenuhan.rekomendasi;
-      this.ttdTable[0].nama = data[0].ttdTable.nama;
-      this.ttdTable[0].tanggal = data[0].ttdTable.tanggal;
-      this.ttdTable[0].ttd = '/uploads/users/signature/' + data[0].ttdTable.ttd;
-      this.ttdTable[0].komentar = data[0].ttdTable.komentar;
-      console.log(this.ttdTable[0].ttd);
+      const dt = new Date(data[0].ttdTable.waktu);
+      const date = dt.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        // hour: 'numeric',
+        // minute: 'numeric',
+      });
+      this.ttdTable[0].tanggal = date;
+      if (data[0].ttdTable.ttd){
+        this.ttdTable[0].ttd = '/uploads/users/signature/' + data[0].ttdTable.ttd;
+      } else {
+        this.ttdTable[0].ttd = null;
+      }
+
+      // this.ttdTable[0].ttd = '/uploads/users/signature/' + data[0].ttdTable.ttd;
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -475,11 +493,10 @@ export default {
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      this.headerTable[0].content = ujiDetail.nama_peserta;
-      this.headerTable[1].content = ujiDetail.asesor;
-      this.headerTable[2].content = ujiDetail.nama_tuk;
-      this.headerTable[3].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[4].content = ujiDetail.mulai;
+      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
+      this.headerTable[1].content = ujiDetail.nama_tuk;
+      this.headerTable[2].content = ujiDetail.asesor;
+      this.headerTable[3].content = ujiDetail.mulai;
       this.ttdTable[0].nama = ujiDetail.asesor;
       this.ttdTable[0].tanggal = ujiDetail.mulai;
     },
@@ -496,7 +513,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -513,7 +530,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -533,7 +550,7 @@ export default {
         'rekomendasiPemenuhan': this.rekomendasiPemenuhan,
         'ttdTable': this.ttdTable,
       };
-      console.log(data);
+      // console.log(data);
       ak06Resource.store(data)
         .then(response => {
           this.$message({

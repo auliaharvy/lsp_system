@@ -252,7 +252,11 @@
               </template>
             </template>
           </el-table-column>
-
+          <el-table-column align="center" label="Bukti Yang Relevan" min-width="80px">
+            <!-- <template slot-scope="scope">
+              <div v-if="scope" style="text-align: center;">Test Bukti</div>
+            </template> -->
+          </el-table-column>
         </el-table>
         <br>
         <el-table
@@ -348,6 +352,7 @@ const apl01Resource = new Resource('detail/apl-01');
 const apl02Resource = new Resource('detail/apl-02');
 const apl02UpdateResource = new Resource('uji-komp-apl-02');
 const skemaResource = new Resource('skema-get');
+const signature = new Resource('detail/signature');
 
 export default {
   components: {
@@ -556,10 +561,11 @@ export default {
     async getApl01() {
       this.loading = true;
       const data = await apl01Resource.get(this.$route.params.id_apl_01);
-      this.fileName = 'APL.02 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
-      this.ttdTable1[0].nama = data.nama_lengkap;
-      this.ttdTable1[0].tanggal = moment(data.created_at).format('DD-MM-YYYY');
-      this.ttdTable1[0].ttd = '/uploads/users/signature/' + data.signature;
+      this.fileName = 'APL.02 - ' + data.apl_01.nama_lengkap + ' - ' + data.apl_01.kode_skema;
+      this.ttdTable1[0].nama = data.apl_01.nama_lengkap;
+      this.ttdTable1[0].tanggal = moment(data.apl_01.created_at).format('DD-MM-YYYY');
+      const signatures = await signature.list({ asesi: data.apl_01.nama_lengkap });
+      this.ttdTable1[0].ttd = '/uploads/users/signature/' + signatures.asesi;
 
       // this.ttdTable2.push(this.$route.params.asesor);
       this.ttdTable2[0].nama = this.$route.params.asesor;
@@ -568,12 +574,10 @@ export default {
       this.loading = true;
       const data = await apl02Resource.get(this.$route.params.id_apl_02);
       this.listDetailApl02 = data;
-      this.initStatus = this.listDetailApl02.status;
-      this.ttdTable2[0].status = this.listDetailApl02.status;
-      this.initStatus = this.listDetailApl02.status;
-      console.log(this.listDetailApl02);
-      this.ttdAsesor = '/uploads/users/signature/' + this.listDetailApl02.ttd_asesor;
-      console.log(this.ttdAsesor);
+      this.initStatus = this.listDetailApl02.apl_02.status;
+      this.ttdTable2[0].status = this.listDetailApl02.apl_02.status;
+      this.initStatus = this.listDetailApl02.apl_02.status;
+      this.ttdAsesor = '/uploads/users/signature/' + this.listDetailApl02.apl_02.ttd_asesor;
       this.listKuk.forEach((element, index) => {
         if (element['type'] === 'kuk') {
           var foundIndex = data.detail.findIndex(x => x.id_kuk_elemen === element['id']);
@@ -628,7 +632,7 @@ export default {
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
-      console.log(this.listKuk);
+      // console.log(this.listKuk);
       // this.insertDetailAPl02();
     },
     search(nameKey, myArray){

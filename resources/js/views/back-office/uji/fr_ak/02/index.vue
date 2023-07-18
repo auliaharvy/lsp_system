@@ -98,7 +98,9 @@
         </el-form>
         <br>
 
-        <el-button @click="onSubmit">Submit</el-button>
+        <!-- <el-button @click="onSubmit">Submit</el-button> -->
+        <el-button v-if="$route.params.id_ak_02 !== null" @click="generateReport">Print</el-button>
+        <el-button v-else @click="onSubmit">Submit</el-button>
 
       </div>
     </el-main>
@@ -278,10 +280,10 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
-        console.log(element);
+        // console.log(element);
         element['type'] = 'unitKomp';
         element['index'] = number++;
         kuk.push(element);
@@ -298,7 +300,7 @@ export default {
           });
         });
       });
-      console.log(this.listJudulUnit);
+      // console.log(this.listJudulUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;

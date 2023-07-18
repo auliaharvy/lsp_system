@@ -480,7 +480,7 @@ export default {
           });
         });
       });
-      // console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);;
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -613,7 +613,7 @@ export default {
       this.dataTrx.bulan = arrbulan[bulan];
       this.dataTrx.tahun = tahun;
       this.dataTrx.hari = arrHari[hari];
-      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
+      // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);;
     },
     handleFotoSuccess(res, file) {
       this.dataTrx.foto = URL.createObjectURL(file.raw);

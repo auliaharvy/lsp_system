@@ -358,7 +358,17 @@
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Asesi :
                 <br>
-                <img v-if="ttdAsesi" :src="'/uploads/users/signature/' + ttdAsesi" class="sidebar-logo">
+                <!-- <img v-if="ttdAsesi" :src="'/uploads/users/signature/' + ttdAsesi" class="sidebar-logo"> -->
+                <div v-if="ttdAsesi">
+                  <div>
+                    <el-image
+                      style="width: 200px; height: 100px"
+                      :src="ttdAsesi"
+                      fit="contain"
+                    />
+                  </div>
+                  <span>{{ scope.row.tanggal }}</span>
+                </div>
               </template>
               <span>{{ scope.row.title }}</span>
             </template>
@@ -379,7 +389,7 @@
               <template v-if="scope.row.no === 2">
                 Tanda Tangan Admin LSP :
                 <br>
-                <div v-if="!ttdAdmin">
+                <div v-if="checkRole(['admin']) && !ttdAdmin">
                   <vueSignature
                     ref="signature"
                     :sig-option="option"
@@ -402,8 +412,15 @@
 
       </div>
     </el-main>
-    <el-button v-if="dataAsesi.status === 0" @click="onSubmit">Submit</el-button>
-    <el-button v-else @click="generateReport">Print</el-button>
+    <!-- <el-button v-if="dataAsesi.status === 0" @click="onSubmit">Submit</el-button> -->
+    <!-- asesor -->
+    <!-- <el-button v-if="$route.params.id_apl_01 && roles[0] !== 'user'" @click="onSubmit()">Submit Asesor</el-button>
+    <el-button v-else @click="generateReport">Print</el-button> -->
+    <el-button v-if="$route.params.id_apl_01 && roles[0] === 'admin'" @click="onSubmit">Submit</el-button>
+    <!-- <el-button v-if="$route.params.id_apl_01 && roles[0] === 'assesor'" @click="generateReport">Print</el-button> -->
+    <!-- <el-button v-else @click="onSubmit">Submit</el-button> -->
+    <!-- <el-button v-if="!$route.params.id_ia_03" @click="onSubmit">Submit</el-button> -->
+
   </el-container>
 </template>
 
@@ -413,9 +430,11 @@ import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 import VueHtml2pdf from 'vue-html2pdf';
 import moment from 'moment';
+import checkRole from '@/utils/role';
 const apl01Resource = new Resource('detail/apl-01');
 const apl01UpdateResource = new Resource('uji-komp-apl-01');
 const skemaResource = new Resource('skema-get');
+const signature = new Resource('detail/signature');
 
 export default {
   components: {
@@ -568,6 +587,7 @@ export default {
   computed: {
     ...mapGetters([
       'userId',
+      'roles',
     ]),
   },
   beforeDestroy() {
@@ -582,9 +602,9 @@ export default {
       this.onJadwalSelect();
     });
     this.getApl01();
-    console.log(this.$route.params.id_apl_01);
   },
   methods: {
+    checkRole,
     clear() {
       this.$refs.signature.clear();
     },
@@ -616,44 +636,48 @@ export default {
       this.loading = true;
       this.dataTrx.id_apl_01 = this.$route.params.id_apl_01;
       const data = await apl01Resource.get(this.$route.params.id_apl_01);
-      const ttl = data.tempat_lahir + ' / ' + moment(data.tanggal_lahir).format('DD-MM-YYYY');
-      const pendidikan = data.nama_sekolah + ' (' + data.tingkatan + ')';
-      this.fileName = 'APL.01 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
-      this.headerTable[0].content = data.nama_lengkap;
-      this.headerTable[1].content = data.nik;
+      const ttl = data.apl_01.tempat_lahir + ' / ' + moment(data.apl_01.tanggal_lahir).format('DD-MM-YYYY');
+      const pendidikan = data.apl_01.nama_sekolah + ' (' + data.apl_01.tingkatan + ')';
+      this.fileName = 'APL.01 - ' + data.apl_01.nama_lengkap + ' - ' + data.apl_01.kode_skema;
+      this.headerTable[0].content = data.apl_01.nama_lengkap;
+      this.headerTable[1].content = data.apl_01.nik;
       this.headerTable[2].content = ttl;
-      this.headerTable[3].content = data.jenis_kelamin;
-      this.headerTable[4].content = data.alamat;
-      this.headerTable[5].content = data.no_hp;
-      this.headerTable[6].content = data.email;
+      this.headerTable[3].content = data.apl_01.jenis_kelamin;
+      this.headerTable[4].content = data.apl_01.alamat;
+      this.headerTable[5].content = data.apl_01.no_hp;
+      this.headerTable[6].content = data.apl_01.email;
       this.headerTable[7].content = pendidikan;
 
-      if (data.status === 0) {
+      if (data.apl_01.status === 0) {
         this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima / Tidak diterima *) sebagai peserta  sertifikasi coret yang tidak sesuai';
-      } if (data.status === 1) {
+      } if (data.apl_01.status === 1) {
         this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Diterima sebagai peserta  sertifikasi';
-      } if (data.status === 2) {
+      } if (data.apl_01.status === 2) {
         this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi';
       }
-      this.dataAsesi.sign = '/uploads/users/signature/' + data.signature;
-      this.ttdAsesi = data.signature;
-      this.ttdAdmin = data.ttd_admin;
+      const signatures = await signature.list({ asesor: data.apl_01.nama_asesor, asesi: data.apl_01.nama_lengkap });
+      if (signatures.asesi){
+        this.ttdAsesi = '/uploads/users/signature/' + signatures.asesi;
+      } else {
+        this.ttdAsesi = null;
+      }
+      // this.ttdAsesi = data.apl_01.signature;
+      this.ttdAdmin = data.apl_01.ttd_admin;
       this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;
-      this.namaAdmin = data.nama_admin;
-      this.dataAsesi.nama = data.nama_lengkap;
-      this.dataAsesi.status = data.status;
-      this.pilihanTerima = data.status;
-      console.log(data);
-      if (data.foto !== ''){
+      this.namaAdmin = data.apl_01.nama_admin;
+      this.dataAsesi.nama = data.apl_01.nama_lengkap;
+      this.dataAsesi.status = data.apl_01.status;
+      this.pilihanTerima = data.apl_01.status;
+      if (data.apl_01.foto !== ''){
         this.buktiKelengkapanTable[0].content = '/uploads/users/foto/' + data.foto;
       }
-      if (data.sertifikat !== ''){
+      if (data.apl_01.sertifikat !== ''){
         this.buktiKelengkapanTable[1].content = '/uploads/users/sertifikat/' + data.sertifikat;
       }
-      if (data.identitas !== ''){
+      if (data.apl_01.identitas !== ''){
         this.buktiKelengkapanTable[2].content = '/uploads/users/identitas/' + data.identitas;
       }
-      if (data.raport !== ''){
+      if (data.apl_01.raport !== ''){
         this.buktiKelengkapanTable[3].content = '/uploads/users/raport/' + data.raport;
       }
       this.loading = false;

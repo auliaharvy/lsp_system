@@ -312,7 +312,7 @@
           <el-table-column align="center" label="Admin LSP">
             <template slot-scope="scope">
               <div style="padding-bottom: 3px;">{{ scope.row.nama }}</div>
-              <div style="font-weight:bold ;">No. Reg {{ scope.row.no_reg }}</div>
+              <!-- <div style="font-weight:bold ;">No. Reg {{ scope.row.no_reg }}</div> -->
             </template>
           </el-table-column>
           <el-table-column align="center" label="Tanda Tangan Admin LSP">
@@ -541,7 +541,6 @@ export default {
       this.loading = true;
       const data = await preview.get(this.$route.params.iduji);
       this.dataPreview = data;
-      // console.log(this.dataPreview);
       this.loading = false;
     },
     clear() {
@@ -574,7 +573,6 @@ export default {
     async getApl01() {
       this.loading = true;
       this.dataTrx.id_apl_01 = this.dataPreview.id_apl_01;
-      // console.log(this.dataPreview.id_apl_01);
       const result = await apl01Resource.get(this.dataPreview.id_apl_01);
       const data = result.apl_01;
       const ttl = data.tempat_lahir + ' / ' + moment(data.tanggal_lahir).format('DD-MM-YYYY');
@@ -604,9 +602,9 @@ export default {
       // this.ttdAdmin = data.ttd_admin;
       // this.dataAsesi.ttd_admin = '/uploads/users/signature/' + data.ttd_admin;
       this.ttdTable2[0].nama = data.nama_lengkap;
-      this.ttdTable3[0].nama = this.$route.params.asesor;
-      const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: data.nama_lengkap });
-      this.ttdTable3[0].no_reg = signatures.no_reg;
+      this.ttdTable3[0].nama = 'Aulia Harvy';
+      const signatures = await signature.list({ admin: data.nama_admin, asesi: data.nama_lengkap });
+      // this.ttdTable3[0].no_reg = signatures.no_reg;
 
       const dt = new Date(data.created_at);
       const resultDt = dt.toLocaleDateString('id-ID', {
@@ -616,9 +614,8 @@ export default {
         year: 'numeric',
       });
 
-      console.log(signatures);
-      if (result.signature){
-        this.ttdTable2[0].ttd = '/uploads/users/signature/' + result.signature; // DATA TTD ASESI SESUDAH DIBENARKAN
+      if (signatures.asesi){
+        this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatures.asesi; // DATA TTD ASESI SESUDAH DIBENARKAN
         this.ttdTable2[0].tanggal = resultDt;
       } else {
         this.ttdTable2[0].ttd = null;

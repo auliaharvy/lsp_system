@@ -69,7 +69,9 @@
         </el-form>
         <br>
 
-        <el-button @click="onSubmit">Submit</el-button>
+        <!-- <el-button @click="onSubmit">Submit</el-button> -->
+        <el-button v-if="$route.params.id_ak_03 !== null" @click="generateReport">Print</el-button>
+        <el-button v-else @click="onSubmit">Submit</el-button>
 
         <br>
         <br>
@@ -220,7 +222,7 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
-      console.log(ujiDetail);
+      // console.log(ujiDetail);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.nama_peserta;
       this.headerTable[1].content = ujiDetail.asesor;
@@ -257,7 +259,7 @@ export default {
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
-      console.log(unitKomp);
+      // console.log(unitKomp);
       var kuk = [];
       unitKomp.forEach((element, index) => {
         element['type'] = 'unitKomp';
@@ -277,7 +279,7 @@ export default {
           });
         });
       });
-      console.log(this.listKodeUnit);
+      // console.log(this.listKodeUnit);
       // var elemen = unitKomp.elemen;
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
@@ -289,7 +291,7 @@ export default {
       this.dataTrx.nama_asesi = this.headerTable[0].content;
       this.dataTrx.nama_asesor = this.headerTable[1].content;
       this.dataTrx.detail = this.listSoal;
-      console.log(this.dataTrx);
+      // console.log(this.dataTrx);
       ak03Resource
         .store(this.dataTrx)
         .then(response => {

@@ -432,7 +432,7 @@ export default {
       this.query.user_id = this.userId;
       const { limit, page } = this.query;
       this.loading = true;
-      // get data skema
+      // get data skema;
       const dataSkema = await skemaResource.list({ limit: 1000 });
       this.listSkema = dataSkema.data;
       // get data perangkat / list table
@@ -470,7 +470,7 @@ export default {
         } if (this.aksesForm.fr === 'ia06') {
           this.$router.push({ name: 'form-ia-06', params: { id_ia_06: this.aksesForm.id_ia_06, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
         } if (this.aksesForm.fr === 'ia07') {
-          this.$router.push({ name: 'form-ia-07', params: { id_ia_07: this.aksesForm.id_ia_06, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
+          this.$router.push({ name: 'form-ia-07', params: { id_ia_07: this.aksesForm.id_ia_07, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
         }
       }
       // this.aksesForm.fr = form;

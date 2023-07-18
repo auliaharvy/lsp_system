@@ -197,7 +197,8 @@ const mstAk03Resource = new Resource('mst-ak-03-get');
 const ak05Resource = new Resource('uji-komp-ak-05');
 const ak05Detail = new Resource('detail/ak-05');
 const preview = new Resource('detail/preview');
-const signature = new Resource('detail/signature');
+// const signature = new Resource('detail/signature');
+const signatureAsesor = new Resource('detail/asesor');
 
 export default {
   components: {},
@@ -312,15 +313,13 @@ export default {
         this.dataTrx.saranPerbaikan = data.ak_05.saran_perbaikan;
         this.dataTrx.reg = data.reg;
 
-        const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: data.ak_05.nama_asesi });
-        console.log(signatures);
-        if (signatures.asesor){
-          this.ttdAsesor = '/uploads/users/signature/' + signatures.asesor;
+        // const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: data.ak_05.nama_asesi });
+        const ttdAsesor = await signatureAsesor.list({ asesor: this.$route.params.asesor });
+        if (ttdAsesor.signature){
+          this.ttdAsesor = '/uploads/users/signature/' + ttdAsesor.signature;
         } else {
           this.ttdAsesor = null;
         }
-
-        console.log(this.ttdAsesor);
 
         this.loading = false;
       }
@@ -385,7 +384,7 @@ export default {
     },
     getUjiKompDetail() {
       var id_uji = this.dataPreview.id;
-      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);;
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
