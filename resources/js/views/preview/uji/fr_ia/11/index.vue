@@ -318,6 +318,7 @@ export default {
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
       // this.getIa11();
+      // this.getIa11();
     });
     // this.getListPertanyaan();
     // this.getDate();

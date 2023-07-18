@@ -222,6 +222,7 @@ export default {
       var date = new Date();
       // var millisecond = date.getMilliseconds();
       // var detik = date.getSeconds();
+      // var detik = date.getSeconds();
       var menit = date.getMinutes();
       var jam = date.getHours();
       var hari = date.getDay();

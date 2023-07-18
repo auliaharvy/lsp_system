@@ -154,6 +154,40 @@
           </el-form-item>
         </el-form>
         <br>
+        <el-table
+          v-if="ttdTable"
+          v-loading="loading"
+          :data="ttdTable"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Nama">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Jabatan">
+            <template slot-scope="scope">
+              <span>{{ scope.row.jabatan }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>Belum di tanda tangani</h3>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </el-main>
   </el-container>
@@ -225,6 +259,18 @@ export default {
         {
           title: 'Tanggal',
           content: '20 - 12 -2022',
+        },
+      ],
+      ttdTable: [
+        {
+          nama: '',
+          jabatan: 'Penyusun',
+          ttd: '',
+        },
+        {
+          nama: '',
+          jabatan: 'Validator',
+          ttd: '',
         },
       ],
       panduan: [
