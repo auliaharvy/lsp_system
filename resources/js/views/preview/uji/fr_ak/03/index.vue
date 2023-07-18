@@ -277,7 +277,7 @@ export default {
       var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
       var date = new Date();
       // var millisecond = date.getMilliseconds();
-      // var detik = date.getSeconds();;
+      // var detik = date.getSeconds();
       var menit = date.getMinutes();
       var jam = date.getHours();
       var hari = date.getDay();

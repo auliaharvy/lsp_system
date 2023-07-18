@@ -126,7 +126,7 @@
               <span>{{ scope.row.jawaban }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkRole(['assesor', 'admin'])" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['asesor', 'admin'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <!-- <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
@@ -150,10 +150,44 @@
             <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio> -->
             <span v-if="rekomendasi_asesor == 'Kompeten'">: Kompeten</span>
             <span v-else-if="rekomendasi_asesor == 'Belum Kompeten'">: Belum Kompeten</span>
-            <span v-else>: Belum Penilaan</span>
+            <span v-else>: Belum Penilaian</span>
           </el-form-item>
         </el-form>
         <br>
+        <el-table
+          v-if="ttdTable"
+          v-loading="loading"
+          :data="ttdTable"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Nama">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Jabatan">
+            <template slot-scope="scope">
+              <span>{{ scope.row.jabatan }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>Belum di tanda tangani</h3>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </el-main>
   </el-container>
@@ -225,6 +259,18 @@ export default {
         {
           title: 'Tanggal',
           content: '20 - 12 -2022',
+        },
+      ],
+      ttdTable: [
+        {
+          nama: '',
+          jabatan: 'Penyusun',
+          ttd: '',
+        },
+        {
+          nama: '',
+          jabatan: 'Validator',
+          ttd: '',
         },
       ],
       panduan: [
@@ -371,13 +417,10 @@ export default {
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
-      this.form.id_skema = this.$route.params.id_skema;
-      console.log(this.form.detail_ia_05);
       if (jenis === 0) {
         ia05Resource
           .store(this.form)
           .then(response => {
-            console.log(response);
             this.$message({
               message: 'FR IA 05 has been created successfully.',
               type: 'success',

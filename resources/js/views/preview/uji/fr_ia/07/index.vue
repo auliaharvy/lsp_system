@@ -228,7 +228,6 @@ const ia07Detail = new Resource('detail/ia-07');
 const ia07NilaiResource = new Resource('uji-komp-ia-07-nilai');
 const preview = new Resource('detail/preview');
 const signature = new Resource('detail/signature');
-const signatureAsesor = new Resource('detail/asesor');
 
 export default {
   components: {},
@@ -386,7 +385,7 @@ export default {
         const dataia07 = await ia07Detail.get(this.dataPreview.id_ia_07);
         this.ia07 = dataia07;
         this.listSoal = data;
-        console.log(this.ia07);
+        // console.log(this.ia07);
         this.listSoal.forEach((element, index) => {
           element['index'] = index + 1;
           element['jawaban'] = this.ia07.detail[index].jawaban;
@@ -394,7 +393,6 @@ export default {
         });
 
         const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: this.dataPreview.nama_peserta });
-        const ttdAsesor = await signatureAsesor.list({ asesor: this.$route.params.asesor });
 
         this.ttdTable1[0].umpan_balik = this.ia07.ia_07.umpan_balik;
         this.ttdTable2[0].rekomendasi_asesor = this.ia07.ia_07.rekomendasi_asesor;
@@ -403,8 +401,8 @@ export default {
         } else {
           this.ttdTable1[0].ttd = null;
         }
-        if (ttdAsesor.signature){
-          this.ttdTable2[0].ttd = '/uploads/users/signature/' + ttdAsesor.signature;
+        if (signatures.asesor){
+          this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatures.asesor;
         } else {
           this.ttdTable2[0].ttd = null;
         }
@@ -520,7 +518,6 @@ export default {
     nilai() {
       this.loading = true;
       this.form.detail_ia_07 = this.listSoal;
-      console.log(this.form.detail_ia_07);
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_ia_07 = this.$route.params.id_ia_07;

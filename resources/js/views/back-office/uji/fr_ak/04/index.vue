@@ -51,7 +51,7 @@
         </el-form>
         <br>
 
-        <el-button v-if="$route.params.id_ak_04 === null" @click="onSubmit">Submit</el-button>
+        <el-button v-if="$route.params.id_ak_04 === null" @click="onSubmit">Submit Asesor</el-button>
         <el-button v-else>Print</el-button>
       </div>
     </el-main>
@@ -66,7 +66,6 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstAk03Resource = new Resource('mst-ak-03-get');
 const ak04Resource = new Resource('uji-komp-ak-04');
-const ak04Preview = new Resource('detail/ak-04');
 
 export default {
   components: {},
@@ -108,7 +107,7 @@ export default {
         membantuBanding: '',
         skema: '',
         noSkema: '',
-        alasan_banding: '',
+        alasanBanding: '',
       },
       active: 0,
       isWide: true,
@@ -165,7 +164,7 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    async getUjiKompDetail() {
+    getUjiKompDetail() {
       var id_uji = this.$route.params.id_uji;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
@@ -173,28 +172,17 @@ export default {
       var asesor = ujiDetail.asesor;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       console.log(ujiDetail);
-      console.log(asesor);
       this.dataSend.skema = ujiDetail.skema_sertifikasi;
-      // this.dataSend.nama_asesor = asesor[0].nama_asesor;
-      this.dataSend.nama_asesor = asesor;
+      this.dataSend.nama_asesor = asesor[0].nama_asesor;
       this.dataSend.email_asesi = ujiDetail.email_peserta;
       this.dataSend.nama_asesi = ujiDetail.nama_peserta;
       this.dataSend.no_skema = ujiDetail.kode_skema;
       this.dataSend.tanggal_asesmen = ujiDetail.mulai;
-      console.log(this.$route.params.id_ak_04);
-      if (this.$route.params.id_ak_04){
-        this.ak04Detail = await ak04Preview.get(this.$route.params.id_ak_04);
-        // console.log(this.ak04Detail);
-        this.dataSend.penjelasan = this.ak04Detail.penjelasan;
-        this.dataSend.diskusi = this.ak04Detail.diskusi;
-        this.dataSend.melibatkan = this.ak04Detail.melibatkan;
-        this.dataSend.alasan_banding = this.ak04Detail.alasan_banding;
-      } else {
-        this.dataSend.alasan_banding = '-----------';
-        this.dataSend.penjelasan = 0;
-        this.dataSend.diskusi = 0;
-        this.dataSend.melibatkan = 0;
-      }
+      this.dataSend.penjelasan = 0;
+      this.dataSend.diskusi = 0;
+      this.dataSend.melibatkan = 0;
+      console.log(this.dataSend.alasan_banding);
+      console.log(asesor[0].nama_asesor);
     },
     onJadwalSelect() {
       var id_skema = this.$route.params.id_skema;

@@ -377,7 +377,7 @@ export default {
           this.ttdAsesor = null;
         }
         if (this.ia01.ttd_asesi){
-          this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi; // DATA TTD ASESI SESUDAH DIBENARKANN
+          this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi; // DATA TTD ASESI SESUDAH DIBENARKAN
         } else {
           this.ttdAsesi = null;
         }

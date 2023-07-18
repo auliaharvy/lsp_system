@@ -462,18 +462,8 @@ export default {
         this.rekomendasi[0].rekomendasi = data[0].rekomendasi.rekomendasi;
         this.rekomendasiPemenuhan[0].item = data[0].rekomendasiPemenuhan.item;
         this.rekomendasiPemenuhan[0].rekomendasi = data[0].rekomendasiPemenuhan.rekomendasi;
-        // this.ttdTable[0].nama = data[0].ttdTable.nama;
-        this.ttdTable[0].nama = this.$route.params.asesor;
-        const dt = new Date(data[0].ttdTable.waktu);
-        const date = dt.toLocaleDateString('id-ID', {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-          // hour: 'numeric',
-          // minute: 'numeric',
-        });
-        this.ttdTable[0].tanggal = date;
+        this.ttdTable[0].nama = data[0].ttdTable.nama;
+        this.ttdTable[0].tanggal = data[0].ttdTable.tanggal;
         // this.ttdTable[0].ttd = '/uploads/users/signature/' + data[0].ttdTable.ttd;
         // this.ttdTable[0].ttd = '/uploads/users/signature/wkwk.png';
         this.ttdTable[0].komentar = data[0].ttdTable.komentar;

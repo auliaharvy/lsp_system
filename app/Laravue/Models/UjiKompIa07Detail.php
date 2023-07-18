@@ -30,5 +30,5 @@ class UjiKompIa07Detail extends Model
      * @return Builder
      */
     protected $table = "trx_uji_komp_ia_07_detail";
-    protected $fillable = ['id_uji_komp','id_ia_07', 'id_perangkat_ia_07', 'rekomendasi', 'jawaban'];
+    protected $fillable = ['id_uji_komp','id_ia_06', 'id_perangkat_ia_06', 'rekomendasi', 'jawaban'];
 }

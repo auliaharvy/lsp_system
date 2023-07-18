@@ -1,6 +1,6 @@
 <?php
 /**
- * File Skema.phpp
+ * File Skema.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System

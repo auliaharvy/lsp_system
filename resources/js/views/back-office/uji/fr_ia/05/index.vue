@@ -57,12 +57,12 @@
           </el-table-column>
           <el-table-column align="center" min-width="100px" label="Jawaban">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.jawaban" placeholder="Silakan pilih jawaban">
-                <el-option v-for="item in scope.row.list_jawaban" :key="item.id" :label="item.jawaban" :value="item.jawaban" />
+              <el-select v-model="scope.row.jawaban" class="filter-item" placeholder="Silakan pilih jawaban">
+                <el-option v-for="item in scope.row.list_jawaban" :key="item.id" :label="item.jawaban" :value="item.id" />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column v-if="roles[0] !== 'user'" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column v-if="checkRole(['asesor'])" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
               <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
@@ -76,12 +76,13 @@
         <br>
 
         <el-form
+          v-if="checkRole(['asesor'])"
           ref="form"
           :model="form"
           label-width="250px"
           label-position="left"
         >
-          <el-form-item v-if="roles[0] !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor">
+          <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
             <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
@@ -89,9 +90,9 @@
         <br>
 
         <!-- peserta -->
-        <el-button v-if="!$route.params.id_ia_05" @click="onSubmit(0)">Submit</el-button>
+        <el-button @click="onSubmit(0)">Submit</el-button>
         <!-- asesor -->
-        <el-button v-if="$route.params.id_ia_05 && roles[0] !== 'user'" @click="onSubmit(1)">Submit Asesor</el-button>
+        <el-button v-if="checkRole(['asesor'])" @click="onSubmit(1)">Submit Asesor</el-button>
       </div>
     </el-main>
   </el-container>
@@ -108,8 +109,7 @@ const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const mstIa05Resource = new Resource('mst-ia05-get');
 const ia05Resource = new Resource('uji-komp-ia-05');
-const nilaiIa05Resource = new Resource('uji-komp-ia-05-nilai');
-const ia05Detail = new Resource('detail/ia-05');
+const nilaiIa05Resource = new Resource('uji-komp-ia-05');
 
 export default {
   components: {},
@@ -127,7 +127,6 @@ export default {
       listJudulUnit: [],
       listKuk: [],
       listUji: [],
-      ia05: null,
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
@@ -197,9 +196,7 @@ export default {
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
     });
-    this.getListPertanyaan().then((value) => {
-      this.getIa05();
-    });
+    this.getListPertanyaan();
   },
   methods: {
     checkRole,
@@ -217,27 +214,9 @@ export default {
       this.listSoal = data;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
-        element['id'] = index + 1;
+        element['jawaban'] = null;
       });
-      const dataia05 = await ia05Detail.get(this.$route.params.id_ia_05);
-      this.ia05 = dataia05;
-
-      console.log(this.ia05.detail);
-      console.log(this.listSoal);
       this.loading = false;
-    },
-    getIa05() {
-      if (this.$route.params.id_ia_05 !== null) {
-        this.loading = true;
-        this.listSoal.forEach((element, index) => {
-          var foundIndex = this.ia05.detail.findIndex(x => x.id_perangkat_ia_05 === element['id_perangkat']);
-          element['jawaban'] = this.ia05.detail[foundIndex].jawaban;
-          element['id'] = this.ia05.detail[foundIndex].id;
-        });
-        console.log(this.listSoal);
-        console.log(this.ia05.detail);
-        this.loading = false;
-      }
     },
     async getListSkema() {
       const { data } = await skemaResource.list();
@@ -309,9 +288,6 @@ export default {
       this.form.user_id = this.userId;
       this.form.id_uji_komp = this.$route.params.id_uji;
       this.form.id_skema = this.$route.params.id_skema;
-      this.form.id_ia_05 = this.$route.params.id_ia_05;
-      this.form.rekomendasi_asesor = this.form.rekomendasi_asesor ? this.form.rekomendasi_asesor : 'belum penilaian';
-      console.log(this.form);
       if (jenis === 0) {
         ia05Resource
           .store(this.form)
@@ -334,7 +310,6 @@ export default {
         nilaiIa05Resource
           .store(this.form)
           .then(response => {
-            console.log(response);
             this.$message({
               message: 'FR IA 05 has been created successfully.',
               type: 'success',

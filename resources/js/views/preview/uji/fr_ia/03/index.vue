@@ -170,14 +170,11 @@
           </el-table-column>
           <el-table-column v-if="roles[0] !== 'user'" align="center" min-width="80px" label="Rekomendasi">
             <template slot-scope="scope">
-              <!-- <span>{{ scope.row.rekomendasi }}</span> -->
+              <span>{{ scope.row.rekomendasi }}</span>
               <!-- <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK" :disabled="true">
                 <el-option key="kompeten" label="Kompeten" value="kompeten" />
                 <el-option key="belum kompeten" label="Belum Kompeten" value="belum kompeten" />
               </el-select> -->
-              <span v-if="scope.row.rekomendasi == 'kompeten'">Kompeten</span>
-              <span v-else-if="scope.row.rekomendasi == 'belum kompeten'">Belum Kompeten</span>
-              <span v-else>Belum Penilaian</span>
             </template>
           </el-table-column>
         </el-table>
@@ -288,7 +285,6 @@ const ia03NilaiResource = new Resource('uji-komp-ia-03-nilai');
 const ia03Detail = new Resource('detail/ia-03');
 const preview = new Resource('detail/preview');
 const signature = new Resource('detail/signature');
-const showAsesor = new Resource('detail/asesor');
 
 export default {
   data() {
@@ -428,7 +424,6 @@ export default {
         });
 
         const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: this.dataPreview.nama_peserta });
-        const signatureAsesor = await showAsesor.list({ asesor: this.$route.params.asesor });
 
         this.ttdTable1[0].umpan_balik = dataia03.ia_03.umpan_balik;
         this.ttdTable2[0].rekomendasi_asesor = dataia03.ia_03.rekomendasi_asesor;
@@ -437,8 +432,8 @@ export default {
         } else {
           this.ttdTable1[0].ttd = null;
         }
-        if (signatureAsesor.signature){
-          this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatureAsesor.signature;
+        if (signatures.asesor){
+          this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatures.asesor;
         } else {
           this.ttdTable2[0].ttd = null;
         }

@@ -527,10 +527,7 @@
         </el-row>
       </div>
     </el-main>
-    <!-- <el-button @click="onSubmit">Submit</el-button> -->
-    <el-button v-if="$route.params.id_va !== null" @click="generateReport">Print</el-button>
-    <el-button v-else @click="onSubmit">Submit</el-button>
-
+    <el-button @click="onSubmit">Submit</el-button>
   </el-container>
 </template>
 
