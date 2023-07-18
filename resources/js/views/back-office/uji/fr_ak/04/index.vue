@@ -51,14 +51,18 @@
         </el-form>
         <br>
 
-        <el-button v-if="$route.params.id_ak_04 === null" @click="onSubmit">Submit</el-button>
-        <el-button v-else>Print</el-button>
+        <!-- <el-button v-if="$route.params.id_ak_04 === null" @click="onSubmit">Submit</el-button> -->
+        <!-- <el-button v-else>Print</el-button> -->
+
+        <el-button v-if="!$route.params.id_ak_04 && roles[0] === 'user'" @click="onSubmit">Submit</el-button>
+        <!-- <el-button v-if="$route.params.id_ia_03 && roles[0] !== 'user'" @click="nilai">Submit Asesor</el-button> -->
       </div>
     </el-main>
   </el-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Resource from '@/api/resource';
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
@@ -114,6 +118,12 @@ export default {
       isWide: true,
       labelPosition: 'left',
     };
+  },
+  computed: {
+    ...mapGetters([
+      'userId',
+      'roles',
+    ]),
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);

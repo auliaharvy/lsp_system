@@ -140,20 +140,56 @@
         </el-table>
         <br>
         <br>
-        <el-form
+        <!-- <el-form
           ref="form"
           label-width="250px"
           label-position="left"
         >
           <el-form-item label="Rekomendasi Assesor" prop="rekomendasi_asesor">
-            <!-- <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
-            <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio> -->
+            <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
+            <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
             <span v-if="rekomendasi_asesor == 'Kompeten'">: Kompeten</span>
             <span v-else-if="rekomendasi_asesor == 'Belum Kompeten'">: Belum Kompeten</span>
             <span v-else>: Belum Penilaan</span>
           </el-form-item>
-        </el-form>
+        </el-form> -->
         <br>
+        <el-table
+          v-if="ttdTable2"
+          v-loading="loading"
+          :data="ttdTable2"
+          fit
+          border
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center' }"
+        >
+          <el-table-column align="center" label="Nama Asesor">
+            <template slot-scope="scope">
+              <span>{{ scope.row.nama }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Rekomendasi Asesor">
+            <template slot-scope="scope">
+              <span v-if="scope.row.rekomendasi_asesor === 'Kompeten'">Kompeten</span>
+              <span v-else-if="scope.row.rekomendasi_asesor === 'Belum Kompeten'">Belum Kompeten</span>
+              <span v-else>Belum Penilaian</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="Tanda Tangan Asesor">
+            <template slot-scope="scope">
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <h3>FR.IA 05 belum di tanda tangan</h3>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
         <el-table
           v-if="ttdTable"
           v-loading="loading"
@@ -207,6 +243,7 @@ const ia05Resource = new Resource('uji-komp-ia-05');
 const ia05Detail = new Resource('detail/ia-05');
 const nilaiIa05Resource = new Resource('uji-komp-ia-05');
 const preview = new Resource('detail/preview');
+const signatureAsesor = new Resource('detail/asesor');
 
 export default {
   components: {},
@@ -273,6 +310,13 @@ export default {
           ttd: '',
         },
       ],
+      ttdTable2: [
+        {
+          nama: 'Nama Asesor',
+          rekomendasi_asesor: '',
+          ttd: '',
+        },
+      ],
       panduan: [
         'Lengkapi nama unit kompetensi, elemen, kriteria unjuk kerja sesuai kolom dalam tabel.',
         'Istilah Acuan Pembanding dengan SOP / spesifikasi produk dari industri / orginasi dari tempat kerja atau simulasi tempat kerja',
@@ -334,6 +378,7 @@ export default {
         this.loading = true;
         const { data } = await mstIa05Resource.list({ id_skema: this.dataPreview.id_skema });
         const result = await ia05Detail.get(this.dataPreview.id_ia_05);
+        const ttdAsesor = await signatureAsesor.list({ asesor: this.$route.params.asesor });
         // console.log(result);
         this.listSoal = data;
         // console.log(data);
@@ -342,7 +387,15 @@ export default {
           element['jawaban'] = result.detail[index].jawaban;
           element['rekomendasi'] = result.detail[index].rekomendasi;
         });
-        this.rekomendasi_asesor = result.ia_05.rekomendasi_asesor;
+
+        if (ttdAsesor.signature){
+          this.ttdTable2[0].ttd = '/uploads/users/signature/' + ttdAsesor.signature;
+        } else {
+          this.ttdTable2[0].ttd = null;
+        }
+
+        // this.rekomendasi_asesor = result.ia_05.rekomendasi_asesor;
+        this.ttdTable2[0].rekomendasi_asesor = result.ia_05.rekomendasi_asesor;
         this.loading = false;
       }
     },
@@ -373,6 +426,8 @@ export default {
       this.headerTable[2].content = ujiDetail.asesor;
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
+
+      this.ttdTable2[0].nama = ujiDetail.asesor;
     },
     onJadwalSelect() {
       // console.log(this.dataPreview);

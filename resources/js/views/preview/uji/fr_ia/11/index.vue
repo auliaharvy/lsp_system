@@ -430,6 +430,7 @@ export default {
       } else {
         this.dataTrx.ttd_peninjau = null;
       }
+      // di localhost jalan, di deploy belum bisa
       this.dataTrx.nama_peninjau = ujiDetail.asesor;
       this.dataTrx.tanggal = ujiDetail.mulai;
     },
