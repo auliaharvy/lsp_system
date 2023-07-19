@@ -188,11 +188,11 @@
           label-position="left"
         >
           <el-form-item label="Nama Peninjau" prop="feedback">
-            <div>: {{ dataTrx.nama_peninjau }}</div>
+            <div>: {{ namaPeninjau }}</div>
             <!-- <el-input v-model="dataTrx.nama_peninjau" placeholder="Isi nama peninjau" label="Nama Peninjau" /> -->
           </el-form-item>
           <el-form-item label="Tanggal" prop="feedback">
-            <div>: {{ dataTrx.tanggal }}</div>
+            <div>: {{ tanggal }}</div>
             <!-- <el-input v-model="dataTrx.tanggal" placeholder="Isi Tanggal" label="Tanggal" /> -->
           </el-form-item>
           <el-form-item label="Komentar" prop="feedback">
@@ -233,6 +233,8 @@ export default {
   components: {},
   data() {
     return {
+      namaPeninjau: '',
+      tanggal: '',
       umpanBalikAsesi: '',
       kompeten: null,
       loading: false,
@@ -431,8 +433,10 @@ export default {
         this.dataTrx.ttd_peninjau = null;
       }
       // di localhost jalan, di deploy belum bisa
-      this.dataTrx.nama_peninjau = ujiDetail.asesor;
-      this.dataTrx.tanggal = ujiDetail.mulai;
+      // this.dataTrx.nama_peninjau = ujiDetail.asesor;
+      // this.dataTrx.tanggal = ujiDetail.mulai;
+      this.namaPeninjau = ujiDetail.asesor;
+      this.tanggal = ujiDetail.mulai;
     },
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
