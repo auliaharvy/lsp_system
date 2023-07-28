@@ -1,5 +1,5 @@
 <template>
-  <el-menu background-color="#fff" :mode="mode" router>
+  <el-menu background-color="#fff" :mode="mode" router class="navbar-mobile">
     <el-menu-item v-if="mode === 'horizontal'" index="/login"><img :src="logo" class="logo"></el-menu-item>
     <el-menu-item index="/login">Home</el-menu-item>
     <el-submenu index="2">
@@ -128,6 +128,9 @@ export default {
   line-height: 80%;
   text-align: left;
   overflow: hidden;
+}
+.navbar-mobile{
+  z-index: 99;
 }
 .navbar {
   height: 50px;

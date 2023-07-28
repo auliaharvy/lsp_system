@@ -24,6 +24,7 @@ class SkemaResource extends JsonResource
             'skema_sertifikasi' => $this->skema_sertifikasi,
             'nama_kategori' => $this->nama_kategori,
             'jumlah_unit_count' => $this->jumlah_unit_count,
+            'jumlah_sertifikasi' => $this->jumlah_sertifikasi,
             'kblui' => $this->kblui,
             'kbji' => $this->kbji,
             'jenjang' => $this->jenjang,
