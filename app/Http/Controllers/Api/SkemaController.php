@@ -48,6 +48,7 @@ class SkemaController extends BaseController
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
         $id_skema = Arr::get($searchParams, 'id_skema', '');
+        $kategori = Arr::get($searchParams, 'kategori', '');
 
         $skemaQuery = Skema::query();
         $skemaQuery->join('mst_skema_sertifikasi_kategori as a', 'a.id', '=', 'mst_skema_sertifikasi.kategori_id');
@@ -63,6 +64,11 @@ class SkemaController extends BaseController
         if (!empty($id_skema)) {
             $skemaQuery->where('mst_skema_sertifikasi.id', 'LIKE', '%' . $id_skema. '%');
         }
+
+        if (!empty($kategori)) {
+            $skemaQuery->where('a.nama', 'LIKE', '%' . $kategori. '%');
+        }
+
 
         // return SkemaResource::collection($skemaQuery->paginate($limit));
         return SkemaResource::collection($skemaQuery->paginate($limit));
@@ -135,6 +141,15 @@ class SkemaController extends BaseController
         $skemaQuery = Skema::where('id',$id)->first();
        
         return $skemaQuery;
+    }
+
+    public function countSkema(Request $request){
+        $countQuery = Skema::query();
+        $countQuery->select(DB::raw('COUNT(mst_skema_sertifikasi.id) as jumlah_sertifikasi'));
+
+        $resultCountQuery = $countQuery->first();
+
+        return $resultCountQuery->jumlah_sertifikasi;
     }
 
     /**

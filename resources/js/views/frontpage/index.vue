@@ -5,7 +5,8 @@
         <navigation mode="horizontal" style="position: -webkit-sticky" />
       </div>
       <el-collapse v-else>
-        <el-collapse-item title="Menu">
+        <el-collapse-item :class="{'fixed-header': true }">
+          <div slot="title" class="custom-title">Menu</div>
           <navigation mode="vertical" />
         </el-collapse-item>
       </el-collapse>
@@ -76,7 +77,22 @@ export default {
     z-index: 9;
     width: 100%;
     transition: width 0.28s;
+    background-color: #fff;
   }
+  .custom-title,
+  .custom-arrow
+  {
+    padding-left: 20px; /* Tambahkan padding ke kiri */
+    padding-right: 20px; /* Tambahkan padding ke kanan */
+  }
+  .el-icon-arrow-right{
+    padding-right: 20px;
+  }
+
+  .el-collapse-item__arrow {
+    padding-right: 20px; /* Tambahkan padding ke kanan untuk ikon collapse */
+  }
+
 .navbar {
   height: 50px;
   overflow: hidden;
