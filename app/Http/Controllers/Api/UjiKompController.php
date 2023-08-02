@@ -482,17 +482,23 @@ class UjiKompController extends BaseController
         $asesi = Arr::get($searchParams, 'asesi');
         $admin = Arr::get($searchParams, 'admin');
 
-        // $queryAsesor = User::where('name',$asesor)->first();
         $queryAsesi = User::where('name',$asesi)->first();
-        // $queryAdmin = User::where('name',$admin)->first();
         $no_reg = Assesor::where('nama', $asesor)->first();
-       
-        $data = [
-            'asesi' => $queryAsesi->signature, 
-            // 'asesor' => $queryAsesor->signature, 
-            'no_reg'=> $no_reg
-        ];
-        // $data = ['asesi' => $queryAsesi->signature, 'no_reg'=> $no_reg];
+
+        $data = [];
+        $queryAsesiIsObject = is_object($queryAsesi);
+
+        if($queryAsesiIsObject){
+            $data = [
+                'asesi' => $queryAsesi->signature, 
+                'no_reg'=> $no_reg
+            ];
+        }else{
+            $data = [
+                'asesi' => null,
+                'no_reg' => $no_reg
+            ];
+        }
         return $data;
     }
 

@@ -656,7 +656,7 @@ export default {
         this.ttdTable[0].title = 'Rekomendasi (diisi oleh LSP): Berdasarkan ketentuan persyaratan dasar, maka pemohon: Ditolak sebagai peserta  sertifikasi';
       }
       const signatures = await signature.list({ asesor: data.apl_01.nama_asesor, asesi: data.apl_01.nama_lengkap });
-      if (signatures.asesi){
+      if (signatures.asesi !== null){
         this.ttdAsesi = '/uploads/users/signature/' + signatures.asesi;
       } else {
         this.ttdAsesi = null;
