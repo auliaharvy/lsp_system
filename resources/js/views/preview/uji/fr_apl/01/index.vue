@@ -309,13 +309,13 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column align="center" label="Admin LSP">
+          <el-table-column align="center" label="Admin Jurusan">
             <template slot-scope="scope">
               <div style="padding-bottom: 3px;">{{ scope.row.nama }}</div>
               <!-- <div style="font-weight:bold ;">No. Reg {{ scope.row.no_reg }}</div> -->
             </template>
           </el-table-column>
-          <el-table-column align="center" label="Tanda Tangan Admin LSP">
+          <el-table-column align="center" label="Tanda Tangan Admin Jurusan">
             <template slot-scope="scope">
               <div v-if="scope.row.ttd">
                 <div>

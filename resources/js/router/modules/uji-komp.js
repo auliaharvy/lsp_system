@@ -219,6 +219,7 @@ const ujiRoutes = {
         icon: 'list',
         permissions: ['manage user'],
       },
+      hidden: true,
     },
     {
       path: 'preview-apl-01/:iduji/:asesor',
@@ -230,6 +231,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         nextPage: 'preview-apl-02',
       },
+      hidden: true,
     },
     {
       path: 'preview-apl-02/:iduji/:asesor',
@@ -242,6 +244,7 @@ const ujiRoutes = {
         previousPage: 'preview-apl-01',
         nextPage: 'preview-mapa-02',
       },
+      hidden: true,
     },
     {
       path: 'preview-mapa-02/:iduji/:asesor',
@@ -254,6 +257,7 @@ const ujiRoutes = {
         previousPage: 'preview-apl-02',
         nextPage: 'preview-ak-01',
       },
+      hidden: true,
     },
     {
       path: 'preview-ak-01/:iduji/:asesor',
@@ -266,6 +270,7 @@ const ujiRoutes = {
         previousPage: 'preview-mapa-02',
         nextPage: 'preview-ak-04',
       },
+      hidden: true,
     },
     {
       path: 'preview-ak-04/:iduji/:asesor',
@@ -278,6 +283,7 @@ const ujiRoutes = {
         previousPage: 'preview-ak-01',
         nextPage: 'preview-ia-01',
       },
+      hidden: true,
     },
     {
       path: 'preview-ia-01/:iduji/:asesor',
@@ -290,6 +296,7 @@ const ujiRoutes = {
         previousPage: 'preview-ak-04',
         nextPage: 'preview-ia-02',
       },
+      hidden: true,
     },
     {
       path: 'preview-ia-02/:iduji/:asesor',
@@ -302,6 +309,7 @@ const ujiRoutes = {
         previousPage: 'preview-ia-01',
         nextPage: 'preview-ia-03',
       },
+      hidden: true,
     },
     {
       path: 'preview-ia-03/:iduji/:asesor',
@@ -313,6 +321,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ia-02',
       },
+      hidden: true,
     },
     {
       path: 'preview-ia-05/:iduji/:asesor',
@@ -324,6 +333,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ia-05',
       },
+      hidden: true,
     },
     {
       path: 'preview-ia-06/:iduji/:asesor',
@@ -335,6 +345,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ia-06',
       },
+      hidden: true,
     },
     {
       path: 'preview-ia-07/:iduji/:asesor',
@@ -346,6 +357,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ia-07',
       },
+      hidden: true,
     },
     {
       path: 'preview-ia-11/:iduji/:asesor',
@@ -357,6 +369,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ia-11',
       },
+      hidden: true,
     },
     {
       path: 'preview-ak-02/:iduji/:asesor',
@@ -368,6 +381,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ak-02',
       },
+      hidden: true,
     },
     {
       path: 'preview-ak-03/:iduji/:asesor',
@@ -379,6 +393,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ak-03',
       },
+      hidden: true,
     },
     {
       path: 'preview-ak-05/:iduji/:asesor',
@@ -390,6 +405,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ak-05',
       },
+      hidden: true,
     },
     {
       path: 'preview-ak-06/:iduji/:asesor',
@@ -401,6 +417,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-ak-06',
       },
+      hidden: true,
     },
     {
       path: 'preview-va/:iduji/:asesor',
@@ -412,6 +429,7 @@ const ujiRoutes = {
         permissions: ['manage user'],
         previousPage: 'preview-va',
       },
+      hidden: true,
     },
   ],
 };

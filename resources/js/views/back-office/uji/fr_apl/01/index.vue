@@ -191,7 +191,7 @@
                 <el-table-column align="left">
                   <template slot-scope="scope">
                     <template v-if="scope.row.no === 2">
-                      Tanda Tangan Admin LSP :
+                      Tanda Tangan Admin Jurusan:
                       <br>
                       <img v-if="ttdAdmin" :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
                     </template>
@@ -387,7 +387,7 @@
               </template>
 
               <template v-if="scope.row.no === 2">
-                Tanda Tangan Admin LSP :
+                Tanda Tangan Admin Jurusan:
                 <br>
                 <div v-if="checkRole(['admin']) && !ttdAdmin">
                   <vueSignature

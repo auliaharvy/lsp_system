@@ -11,6 +11,7 @@ const previewRoutes = {
     icon: 'documentation',
     permissions: ['view menu administrator'],
   },
+  hidden: true,
   children: [
     // {
     //   path: 'preview-page',
