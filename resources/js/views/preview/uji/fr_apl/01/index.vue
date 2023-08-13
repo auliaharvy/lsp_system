@@ -556,7 +556,7 @@ export default {
     },
     generateReport() {
       this.loading = true;
-      this.$refs.html2Pdf.generatePdf();
+      this.$refs.html2Pdf.generatePdf(); // pdf
       this.loading = false;
     },
     async beforeDownload({ html2pdf, options, pdfContent }) {

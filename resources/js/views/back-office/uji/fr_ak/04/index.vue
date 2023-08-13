@@ -54,7 +54,7 @@
         <!-- <el-button v-if="$route.params.id_ak_04 === null" @click="onSubmit">Submit</el-button> -->
         <!-- <el-button v-else>Print</el-button> -->
 
-        <el-button v-if="!$route.params.id_ak_04 && roles[0] === 'asesor'" @click="onSubmit">Submit</el-button>
+        <el-button v-if="!$route.params.id_ak_04 && roles[0] === ''" @click="onSubmit">Submit</el-button>
         <!-- <el-button v-if="$route.params.id_ia_03 && roles[0] !== 'user'" @click="nilai">Submit Asesor</el-button> -->
       </div>
     </el-main>
@@ -137,7 +137,7 @@ export default {
       this.onJadwalSelect();
     });
     this.getListUji().then((value) => {
-      this.getUjiKompDetail();
+      this.getUjiKompDetail(); // listUjiKompDetail
     });
     // this.getListPertanyaan();
   },
