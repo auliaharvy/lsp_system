@@ -644,11 +644,11 @@ export default {
     this.onResize();
   },
   created() {
-    this.getListSkema().then((value) => {
-      this.onJadwalSelect();
-    });
+    // this.getListSkema().then((value) => {
+    this.onJadwalSelect();
+    // });
+    this.getUjiKompDetail();
     this.getListUji().then((value) => {
-      this.getUjiKompDetail();
       this.getListAsesor();
       this.getListTuk();
       this.getListJadwal();
@@ -677,14 +677,16 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    getUjiKompDetail() {
-      var id_uji = this.$route.params.id_uji;
+    async getUjiKompDetail() {
+      // var id_uji = this.$route.params.id_uji;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
-      this.selectedUji = ujiDetail;
-      this.dataTrx.tempat = this.selectedUji.nama_tuk;
-      this.dataTrx.namaSkema = this.selectedUji.skema_sertifikasi;
-      this.dataTrx.noSkema = this.selectedUji.kode_skema;
+      var id_apl_01 = this.$route.params.id_apl_01;
+      this.listUji = await ujiKomResource.list({ idapl01: id_apl_01 });
+      // var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      // this.selectedUji = ujiDetail;
+      this.dataTrx.tempat = this.listUji.data[0].nama_tuk;
+      this.dataTrx.namaSkema = this.listUji.data[0].skema_sertifikasi;
+      this.dataTrx.noSkema = this.listUji.data[0].kode_skema;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
     },
     getDate() {
@@ -729,11 +731,22 @@ export default {
       const data = await apl01Resource.get(this.$route.params.id_apl_01);
       this.fileName = 'APL.01 - ' + data.nama_lengkap + ' - ' + data.kode_skema;
     },
-    onJadwalSelect() {
-      var id_skema = this.$route.params.id_skema;
+    async onJadwalSelect() {
+      // var id_skema = this.$route.params.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      var skemaId = this.listSkema.find((x) => x.id === id_skema);
-      this.selectedSkema = skemaId;
+      // var skemaId = this.listSkema.find((x) => x.id === id_skema);
+      // this.selectedSkema = skemaId;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      // this.dataTrx.id_skema = skemaId.id;
+      // this.dataTrx.id_tuk = tukId.id;
+      // this.getKuk();
+
+      var idSkema = this.$route.params.id_skema;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      // var skemaId = this.listSkema.find((x) => x.id === id_skema);
+      var skemaId = await skemaResource.list({ id_skema: idSkema });
+      this.selectedSkema = skemaId.data[0];
+      console.log(skemaId);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;

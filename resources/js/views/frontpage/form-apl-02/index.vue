@@ -630,19 +630,42 @@ export default {
       formData.append('confirmPassowrd', this.dataTrx.confirmPassowrd);
       formData.append('signature', this.dataTrx.signature);
       console.log(formData);
-      newUserResource
-        .store(formData)
-        .then((response) => {
-          this.sendData();
-          // this.dialogNewUser = false;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-        })
-        .finally(() => {
-          this.loading = false;
+      // newUserResource
+      //   .store(formData)
+      //   .then((response) => {
+      //     this.sendData();
+      //     // this.dialogNewUser = false;
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //     this.loading = false;
+      //   })
+      //   .finally(() => {
+      //     this.loading = false;
+      //   });
+      if (this.$refs.signature.isEmpty()){
+        this.$message({
+          message:
+            'Tanda tangan tidak boleh kosong!',
+          type: 'error',
+          duration: 5 * 1000,
         });
+        this.loading = false;
+      } else {
+        newUserResource
+          .store(formData)
+          .then((response) => {
+            this.sendData();
+            // this.dialogNewUser = false;
+          })
+          .catch((error) => {
+            console.log(error);
+            this.loading = false;
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
     },
     checkUser() {
       this.loading = true;

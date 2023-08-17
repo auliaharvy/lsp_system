@@ -137,7 +137,7 @@ export default {
       this.onJadwalSelect();
     });
     this.getListUji().then((value) => {
-      this.getUjiKompDetail(); // listUjiKompDetail
+      this.getUjiKompDetail();
     });
     // this.getListPertanyaan();
   },

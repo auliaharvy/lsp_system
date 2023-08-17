@@ -473,12 +473,12 @@ export default {
     this.onResize();
   },
   created() {
-    this.getListSkema().then((value) => {
-      this.onJadwalSelect();
-    });
-    this.getListUji().then((value) => {
-      this.getUjiKompDetail();
-    });
+    // this.getListSkema().then((value) => {
+    this.onJadwalSelect();
+    // });
+    // this.getListUji().then((value) => {
+    this.getUjiKompDetail();
+    // });
     this.getIa01();
   },
   methods: {
@@ -533,14 +533,14 @@ export default {
       }).save();
       this.loading = false;
     },
-    async getListSkema() {
-      const { data } = await skemaResource.list();
-      this.listSkema = data;
-    },
-    async getListUji() {
-      const { data } = await ujiKomResource.list();
-      this.listUji = data;
-    },
+    // async getListSkema() {
+    //   const { data } = await skemaResource.list();
+    //   this.listSkema = data;
+    // },
+    // async getListUji() {
+    //   const { data } = await ujiKomResource.list();
+    //   this.listUji = data;
+    // },
     async getListTuk() {
       const { data } = await tukResource.list();
       this.listTuk = data;
@@ -549,32 +549,46 @@ export default {
       const { data } = await jadwalResource.list();
       this.listJadwal = data;
     },
-    getUjiKompDetail() {
+    async getUjiKompDetail() {
       this.loading = true;
-      var id_uji = this.$route.params.id_uji;
+      // var id_uji = this.$route.params.id_uji;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      var ujiDetail = this.listUji.find((x) => x.id === id_uji);
-      this.selectedUji = ujiDetail;
-      this.selectedUji = ujiDetail;
+      // var ujiDetail = this.listUji.find((x) => x.id === id_uji);
+      // this.selectedUji = ujiDetail;
+      // this.selectedUji = ujiDetail;
+      var id_apl_01 = this.$route.params.id_apl_01;
+      this.listUji = await ujiKomResource.list({ idapl01: id_apl_01 });
+      console.log(this.listUji);
+
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      this.fileName = 'APL.02 - ' + ujiDetail.nama_peserta + ' - ' + ujiDetail.kode_skema;
-      this.headerTable[0].content = ujiDetail.skema_sertifikasi;
-      this.headerTable[1].content = ujiDetail.nama_tuk;
-      this.headerTable[2].content = ujiDetail.asesor;
-      this.headerTable[3].content = ujiDetail.nama_peserta;
-      this.headerTable[4].content = ujiDetail.mulai;
+      this.fileName = 'APL.02 - ' + this.listUji.data[0].nama_peserta + ' - ' + this.listUji.data[0].kode_skema;
+      this.headerTable[0].content = this.listUji.data[0].skema_sertifikasi;
+      this.headerTable[1].content = this.listUji.data[0].nama_tuk;
+      this.headerTable[2].content = this.listUji.data[0].asesor;
+      this.headerTable[3].content = this.listUji.data[0].nama_peserta;
+      this.headerTable[4].content = this.listUji.data[0].mulai;
       this.loading = false;
     },
-    onJadwalSelect() {
-      var id_skema = this.$route.params.id_skema;
+    async onJadwalSelect() {
+      // var id_skema = this.$route.params.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       // console.log(this.listSkema);
-      var skemaId = this.listSkema.find((x) => x.id === id_skema);
-      this.selectedSkema = skemaId;
+      // var skemaId = this.listSkema.find((x) => x.id === id_skema);
+      // this.selectedSkema = skemaId;
+      // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
+      // this.dataTrx.id_skema = skemaId.id;
+      // this.dataTrx.id_tuk = tukId.id;
+      // console.log(this.selectedSkema);;
+      // this.getKuk();
+      var idSkema = this.$route.params.id_skema;
+      // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
+      // var skemaId = this.listSkema.find((x) => x.id === id_skema);
+      var skemaId = await skemaResource.list({ id_skema: idSkema });
+      this.selectedSkema = skemaId.data[0];
+      console.log(skemaId);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
-      // console.log(this.selectedSkema);;
       this.getKuk();
     },
     getKuk(){
