@@ -231,7 +231,7 @@ export default {
     },
     async getListPertanyaan() {
       this.loading = true;
-      const { data } = await mstIa02Resource.list({ id_skema: this.dataPreview.id_skema });
+      const { data } = await mstIa02Resource.list({ id_skema: this.$route.params.id_skema });
       this.listSoal = data;
       this.dataSoal = data[0].file;
       this.listSoal.forEach((element, index) => {
