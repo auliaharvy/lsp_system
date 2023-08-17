@@ -1,5 +1,4 @@
 /** When your routing table is too long, you can split it into small modules**/
-/** When your routing table is too long, you can split it into small modules**/
 const previewRoutes = {
   path: '/preview-uji-komp',
   component: () => import('@/views/preview/index'),

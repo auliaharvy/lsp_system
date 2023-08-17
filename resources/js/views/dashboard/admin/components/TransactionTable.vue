@@ -163,33 +163,33 @@
                     Skema  <i v-if="scope.row.id_skema !== null" type="success" class="el-icon-check" />
                   </li> <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-MAPA-02" placement="top-start">
-                      <router-link :to="{ name: 'form-mapa-02', params: { id_mapa_02: scope.row.id_mapa_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-mapa-02', params: { id_mapa_02: scope.row.id_mapa_02, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">MAPA 02  <i v-if="scope.row.id_mapa_02 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
-                      <router-link :to="{ name: 'form-ak-01', params: { id_ak_01: scope.row.id_ak_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ak-01', params: { id_ak_01: scope.row.id_ak_01, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 01  <i v-if="scope.row.id_ak_01 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <router-link :to="{ name: 'form-ak-04', params: { id_ak_04: scope.row.id_ak_04, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                    <router-link :to="{ name: 'form-ak-04', params: { id_ak_04: scope.row.id_ak_04, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                       <span class="link">AK 04  <i v-if="scope.row.id_ak_04!== null" type="success" class="el-icon-check" /></span>
                     </router-link>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-01', params: { id_ia_01: scope.row.id_ia_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ia-01', params: { id_ia_01: scope.row.id_ia_01, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 01  <i v-if="scope.row.id_ia_01 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-02" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-02', params: { id_ia_02: scope.row.id_ia_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ia-02', params: { id_ia_02: scope.row.id_ia_02, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 02  <i v-if="scope.row.id_ia_02 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
@@ -202,70 +202,70 @@
                 <ul>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-03', params: { id_ia_03: scope.row.id_ia_03, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ia-03', params: { id_ia_03: scope.row.id_ia_03, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 03  <i v-if="scope.row.id_ia_03 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-05" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-05', params: { id_ia_05: scope.row.id_ia_05, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ia-05', params: { id_ia_05: scope.row.id_ia_05, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 05  <i v-if="scope.row.id_ia_05!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-06" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-06', params: { id_ia_06: scope.row.id_ia_06, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ia-06', params: { id_ia_06: scope.row.id_ia_06, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 06  <i v-if="scope.row.id_ia_06!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-07" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-07', params: { id_ia_07: scope.row.id_ia_07, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ia-07', params: { id_ia_07: scope.row.id_ia_07, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 07  <i v-if="scope.row.id_ia_07!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-11" placement="top-start">
-                      <router-link :to="{ name: 'form-ia-11', params: { id_ia_11: scope.row.id_ia_11, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ia-11', params: { id_ia_11: scope.row.id_ia_11, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">IA 11  <i v-if="scope.row.id_ia_11!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-02" placement="top-start">
-                      <router-link :to="{ name: 'form-ak-02', params: { id_ak_02: scope.row.id_ak_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ak-02', params: { id_ak_02: scope.row.id_ak_02, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 02  <i v-if="scope.row.id_ak_02!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-03" placement="top-start">
-                      <router-link :to="{ name: 'form-ak-03', params: { id_ak_03: scope.row.id_ak_03, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ak-03', params: { id_ak_03: scope.row.id_ak_03, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 03  <i v-if="scope.row.id_ak_03!== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-05" placement="top-start">
-                      <router-link :to="{ name: 'form-ak-05', params: { id_ak_05: scope.row.id_ak_05, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ak-05', params: { id_ak_05: scope.row.id_ak_05, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 05  <i v-if="scope.row.id_ak_05 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-06" placement="top-start">
-                      <router-link :to="{ name: 'form-ak-06', params: { id_ak_06: scope.row.id_ak_06, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-ak-06', params: { id_ak_06: scope.row.id_ak_06, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 06  <i v-if="scope.row.id_ak_06 !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-VA" placement="top-start">
-                      <router-link :to="{ name: 'form-va', params: { id_va: scope.row.id_va, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                      <router-link :to="{ name: 'form-va', params: { id_va: scope.row.id_va, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">VA  <i v-if="scope.row.id_va !== null" type="success" class="el-icon-check" /></span>
                       </router-link>
                     </el-tooltip>
