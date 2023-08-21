@@ -669,16 +669,16 @@ export default {
       this.dataAsesi.status = data.apl_01.status;
       this.pilihanTerima = data.apl_01.status;
       if (data.apl_01.foto !== ''){
-        this.buktiKelengkapanTable[0].content = '/uploads/users/foto/' + data.foto;
+        this.buktiKelengkapanTable[0].content = '/uploads/users/foto/' + data.apl_01.foto;
       }
       if (data.apl_01.sertifikat !== ''){
-        this.buktiKelengkapanTable[1].content = '/uploads/users/sertifikat/' + data.sertifikat;
+        this.buktiKelengkapanTable[1].content = '/uploads/users/sertifikat/' + data.apl_01.sertifikat;
       }
       if (data.apl_01.identitas !== ''){
-        this.buktiKelengkapanTable[2].content = '/uploads/users/identitas/' + data.identitas;
+        this.buktiKelengkapanTable[2].content = '/uploads/users/identitas/' + data.apl_01.identitas;
       }
       if (data.apl_01.raport !== ''){
-        this.buktiKelengkapanTable[3].content = '/uploads/users/raport/' + data.raport;
+        this.buktiKelengkapanTable[3].content = '/uploads/users/raport/' + data.apl_01.raport;
       }
       this.loading = false;
     },
