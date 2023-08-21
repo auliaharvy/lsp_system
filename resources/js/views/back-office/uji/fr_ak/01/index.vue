@@ -91,12 +91,13 @@
 
         <br>
 
-        <el-button v-if="$route.params.id_ak_01 === null" @click="onSubmit">Submit Asesor</el-button>
-        <el-button v-else>Print</el-button>
-
+        <!-- <el-button v-if="$route.params.id_ak_01 === null" @click="onSubmit">Submit Asesor</el-button>
+        <el-button v-else>Print</el-button> -->
+        <el-button v-if="checkRole(['assesor'])" @click="onSubmit">Submit Asesor</el-button>
+        <el-button v-if="checkRole(['admin'])" @click="onSubmit">Submit Admin</el-button>
+        <el-button v-if="!checkRole(['assesor', 'admin'])" @click="onSubmitAsesi">Submit</el-button>
         <br>
         <br>
-
       </div>
     </el-main>
   </el-container>
@@ -105,6 +106,7 @@
 <script>
 import vueSignature from 'vue-signature';
 import Resource from '@/api/resource';
+import checkRole from '@/utils/role';
 const jadwalResource = new Resource('jadwal-get');
 const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
@@ -253,6 +255,7 @@ export default {
     this.getAk01();
   },
   methods: {
+    checkRole,
     clear() {
       this.$refs.signature.clear();
     },
