@@ -227,7 +227,7 @@ const mstIa11Resource = new Resource('mst-ia-11-get');
 const ia11Resource = new Resource('uji-komp-ia-11');
 const ia11Detail = new Resource('detail/ia-11');
 const preview = new Resource('detail/preview');
-const users = new Resource('users');
+const apl02Resource = new Resource('detail/apl-02');
 
 export default {
   components: {},
@@ -424,11 +424,9 @@ export default {
       this.headerTable[3].content = ujiDetail.nama_peserta;
       this.headerTable[4].content = ujiDetail.mulai;
 
-      const signature = await users.get(this.$route.params.asesor).then((res) => {
-        return res.signature;
-      });
-      if (signature){
-        this.dataTrx.ttd_peninjau = '/uploads/users/signature/' + signature;
+      const signatureAsesor = await apl02Resource.get(this.dataPreview.id_apl_02);
+      if (signatureAsesor.apl_02.ttd_asesor){
+        this.dataTrx.ttd_peninjau = '/uploads/users/signature/' + signatureAsesor.apl_02.ttd_asesor;
       } else {
         this.dataTrx.ttd_peninjau = null;
       }

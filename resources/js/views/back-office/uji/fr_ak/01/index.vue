@@ -95,7 +95,7 @@
         <el-button v-else>Print</el-button> -->
         <el-button v-if="checkRole(['assesor'])" @click="onSubmit">Submit Asesor</el-button>
         <el-button v-if="checkRole(['admin'])" @click="onSubmit">Submit Admin</el-button>
-        <el-button v-if="!checkRole(['assesor', 'admin'])" @click="onSubmitAsesi">Submit</el-button>
+        <!-- <el-button v-if="!checkRole(['assesor', 'admin'])" @click="onSubmitAsesi">Submit</el-button> -->
         <br>
         <br>
       </div>

@@ -575,6 +575,7 @@ export default {
 
       const data = await print.get(this.$route.params.iduji);
       this.dataPreview = data;
+      console.log(this.dataPreview);
 
       this.loading = false;
     },
@@ -583,9 +584,18 @@ export default {
 
       if (this.dataPreview.id_va !== null){
         const data = await dataVa.get(this.dataPreview.id_va);
+        console.log(data.dataVa[0]);
+        const tanggalObj = new Date(data.dataVa[0].created_at);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const tanggalFormatted = tanggalObj.toLocaleDateString('id-ID', options);
+
+        const jamFormatted = tanggalObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+        const waktuUjian = `${tanggalFormatted} - Jam ${jamFormatted}`;
+
         this.dataTrx.tim_validasi_1 = data.dataVa[0].tim_validasi_1;
         this.dataTrx.tim_validasi_2 = data.dataVa[0].tim_validasi_2;
-        this.dataTrx.date = data.dataVa[0].waktu;
+        this.dataTrx.date = waktuUjian;
         this.dataTrx.periode = data.dataVa[0].periode;
         this.dataTrx.tujuan_dan_fokus_validasi = data.dataVa[0].tujuan_dan_fokus_validasi;
         this.dataTrx.konteks_validasi = data.dataVa[0].tujuan_dan_fokus_validasi;

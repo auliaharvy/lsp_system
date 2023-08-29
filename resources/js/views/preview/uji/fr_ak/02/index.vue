@@ -237,7 +237,7 @@ const ak02Resource = new Resource('uji-komp-ak-02');
 const ak02Detail = new Resource('detail/ak-02');
 const preview = new Resource('detail/preview');
 const signature = new Resource('detail/signature');
-const signatureAsesor = new Resource('detail/asesor');
+const apl02Resource = new Resource('detail/apl-02');
 
 export default {
   components: {},
@@ -425,7 +425,8 @@ export default {
       this.ttdTable2[0].tanggal = ujiDetail.selesai;
 
       const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: ujiDetail.nama_peserta });
-      const ttdAsesor = await signatureAsesor.list({ asesor: this.$route.params.asesor });
+      const signatureAsesor = await apl02Resource.get(this.dataPreview.id_apl_02);
+
       // console.log(signatures);
       // console.log(ttdAsesor);
       if (signatures.asesi){
@@ -433,8 +434,8 @@ export default {
       } else {
         this.ttdTable1[0].ttd = null;
       }
-      if (ttdAsesor.signature){
-        this.ttdTable2[0].ttd = '/uploads/users/signature/' + ttdAsesor.signature;
+      if (signatureAsesor.apl_02.ttd_asesor){
+        this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatureAsesor.apl_02.ttd_asesor;
       } else {
         this.ttdTable2[0].ttd = null;
       }

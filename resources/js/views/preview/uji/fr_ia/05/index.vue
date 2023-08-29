@@ -243,7 +243,7 @@ const ia05Resource = new Resource('uji-komp-ia-05');
 const ia05Detail = new Resource('detail/ia-05');
 const nilaiIa05Resource = new Resource('uji-komp-ia-05');
 const preview = new Resource('detail/preview');
-const signatureAsesor = new Resource('detail/asesor');
+const apl02Resource = new Resource('detail/apl-02');
 
 export default {
   components: {},
@@ -378,7 +378,7 @@ export default {
         this.loading = true;
         const { data } = await mstIa05Resource.list({ id_skema: this.dataPreview.id_skema });
         const result = await ia05Detail.get(this.dataPreview.id_ia_05);
-        const ttdAsesor = await signatureAsesor.list({ asesor: this.$route.params.asesor });
+        const signatureAsesor = await apl02Resource.get(this.dataPreview.id_apl_02);
         // console.log(result);
         this.listSoal = data;
         // console.log(data);
@@ -388,8 +388,8 @@ export default {
           element['rekomendasi'] = result.detail[index].rekomendasi;
         });
 
-        if (ttdAsesor.signature){
-          this.ttdTable2[0].ttd = '/uploads/users/signature/' + ttdAsesor.signature;
+        if (signatureAsesor.apl_02.ttd_asesor){
+          this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatureAsesor.apl_02.ttd_asesor;
         } else {
           this.ttdTable2[0].ttd = null;
         }

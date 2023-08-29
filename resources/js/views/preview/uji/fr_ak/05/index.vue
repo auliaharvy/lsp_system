@@ -197,8 +197,7 @@ const mstAk03Resource = new Resource('mst-ak-03-get');
 const ak05Resource = new Resource('uji-komp-ak-05');
 const ak05Detail = new Resource('detail/ak-05');
 const preview = new Resource('detail/preview');
-// const signature = new Resource('detail/signature');
-const signatureAsesor = new Resource('detail/asesor');
+const apl02Resource = new Resource('detail/apl-02');
 
 export default {
   components: {},
@@ -314,9 +313,9 @@ export default {
         this.dataTrx.reg = data.reg;
 
         // const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: data.ak_05.nama_asesi });
-        const ttdAsesor = await signatureAsesor.list({ asesor: this.$route.params.asesor });
-        if (ttdAsesor.signature){
-          this.ttdAsesor = '/uploads/users/signature/' + ttdAsesor.signature;
+        const signatureAsesor = await apl02Resource.get(this.dataPreview.id_apl_02);
+        if (signatureAsesor.apl_02.ttd_asesor){
+          this.ttdAsesor = '/uploads/users/signature/' + signatureAsesor.apl_02.ttd_asesor;
         } else {
           this.ttdAsesor = null;
         }

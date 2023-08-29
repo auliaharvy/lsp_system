@@ -505,6 +505,7 @@ export default {
       }
       if (signatures.asesor){
         this.ttdAsesor = '/uploads/users/signature/' + signatures.asesor;
+        console.log(this.ttdAsesor);
       } else {
         this.ttdAsesor = null;
       }
@@ -516,8 +517,10 @@ export default {
       this.loading = true;
       const data = await apl02Resource.get(this.dataPreview.id_apl_02);
       this.listDetailApl02 = data;
+      console.log(this.listDetailApl02);
       this.initStatus = this.listDetailApl02.apl_02.status;
       this.ttdTable2[0].status = this.listDetailApl02.apl_02.status;
+      console.log(this.listDetailApl02.apl_02.ttd_asesor);
       if (this.listDetailApl02.apl_02.ttd_asesor){
         this.ttdTable2[0].ttd = '/uploads/users/signature/' + this.listDetailApl02.apl_02.ttd_asesor;
       } else {
