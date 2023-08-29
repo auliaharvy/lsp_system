@@ -536,10 +536,11 @@ class UjiKompController extends BaseController
     public function showApl01($id)
     {
         $queryApl01 = UjiKompApl1::where('trx_uji_komp_apl_01.id',$id)->first();
+        $queryAdmin = User::where('users.id', $queryApl01->id_admin)->first();
         // $users = User::where('nik',$queryApl01->nik)->first();
 
         // return ['apl_01' => $queryApl01, 'signature' => $users->signature];
-        return ['apl_01' => $queryApl01 ];
+        return ['apl_01' => $queryApl01, 'admin' => $queryAdmin ];
     }
 
     public function showApl02($id)
@@ -777,8 +778,8 @@ class UjiKompController extends BaseController
 
         $dataVa = DB::table('trx_uji_komp_va as a')
         ->join('trx_uji_komp_va_aspek_aspek as b', 'a.id', '=', 'b.id_trx_va')
-        ->join('trx_uji_komp_va_rencana_implementasi as c', 'a.id', '=', 'c.id_trx_va')
-        ->join('trx_uji_komp_va_temuan as d', 'a.id', '=', 'd.id_trx_va')
+        // ->join('trx_uji_komp_va_rencana_implementasi as c', 'a.id', '=', 'c.id_trx_va')
+        // ->join('trx_uji_komp_va_temuan as d', 'a.id', '=', 'd.id_trx_va')
         ->join('trx_uji_komp as e', 'b.id_uji_komp', '=', 'e.id')
         ->join('mst_skema_sertifikasi as f', 'e.id_skema', '=', 'f.id')
         ->join('trx_uji_komp_apl_01 as g', 'e.id_apl_01', '=', 'g.id')
@@ -787,7 +788,7 @@ class UjiKompController extends BaseController
         ->leftJoin('mst_asesor as j', 'a.asesor_2', '=', 'j.id')
         ->leftJoin('mst_asesor as k', 'a.asesor_3', '=', 'k.id')
         ->leftJoin('mst_asesor as l', 'a.lead_asesor', '=', 'l.id')
-        ->select(DB::raw('a.*, c.*, d.*, f.kode_skema, f.skema_sertifikasi, h.nama as nama_tuk, i.nama as nama_asesor_1, j.nama as nama_asesor_2, k.nama as nama_asesor_3, l.nama as nama_lead_asesor, e.id as id_uji_komp_for_va'))
+        ->select(DB::raw('a.*, f.kode_skema, f.skema_sertifikasi, h.nama as nama_tuk, i.nama as nama_asesor_1, j.nama as nama_asesor_2, k.nama as nama_asesor_3, l.nama as nama_lead_asesor, e.id as id_uji_komp_for_va'))
         ->where('b.id_trx_va', '=', $id)
         ->groupBy('b.id_trx_va')
         ->get();
@@ -1729,7 +1730,7 @@ class UjiKompController extends BaseController
                 $mytime = Carbon::now();
                 $now = $mytime->toDateString();
                 // membuat nama file unik
-                $nama_file = $now . '-asesor-' . 'ak01' . '-' . '.png';
+                $nama_file = $now . '-asesor-' . $id_uji_komp . '-ak01' . '-' . '.png';
                 \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
 
                 //upload sign
@@ -1737,7 +1738,7 @@ class UjiKompController extends BaseController
                 $image1 = str_replace('data:image/png;base64,', '', $file1);
                 $image1 = str_replace(' ', '+', $image1);
                 // membuat nama file unik
-                $nama_file1 = $now . '-asesi-' . 'ak01' . '-' . '.png';
+                $nama_file1 = $now . '-asesi-' . $id_uji_komp . '-ak01' . '-' . '.png';
                 \File::put(public_path(). '/uploads/users/signature/' . $nama_file1, base64_decode($image1));
 
                 $foundUser = User::where('email', $params['email_asesi'])->first();

@@ -262,6 +262,16 @@ export default {
       const { data } = await mstAk03Resource.list({ id_skema: this.dataPreview.id_skema });
       if (this.dataPreview.id_ak_03 !== null){
         const result = await detailAk03.get(this.dataPreview.id_ak_03);
+        console.log(result);
+        const tanggalObj = new Date(result.ak_03.created_at);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const tanggalFormatted = tanggalObj.toLocaleDateString('id-ID', options);
+
+        const jamFormatted = tanggalObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+        const waktuUjian = `${tanggalFormatted} - Jam ${jamFormatted}`;
+        this.headerTable[3].content = waktuUjian;
+
         this.listSoal = data;
         this.listSoal.forEach((element, index) => {
           element['index'] = index + 1;
@@ -302,6 +312,7 @@ export default {
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       this.selectedUji = ujiDetail;
+
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.headerTable[0].content = ujiDetail.nama_peserta;
       this.headerTable[1].content = ujiDetail.asesor;

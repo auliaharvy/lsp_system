@@ -177,6 +177,7 @@
         <el-form
           ref="form"
           :model="dataTrx"
+          :rules="rules"
           label-width="250px"
           :label-position="labelPosition"
         >
@@ -554,9 +555,16 @@ export default {
       this.loading = false;
     },
     onSubmit() {
-      if (this.active++ > 2) {
-        this.active = 0;
-      }
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          if (this.active++ > 2) {
+            this.active = 0;
+            return;
+          }
+        } else {
+          return;
+        }
+      });
     },
     back() {
       if (this.active-- < 0) {
@@ -737,7 +745,7 @@ export default {
           console.log(error);
           this.$message({
             message: error,
-            type: 'success',
+            type: 'error',
             duration: 5 * 1000,
           });
           this.loading = false;

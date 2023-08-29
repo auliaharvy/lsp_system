@@ -349,6 +349,7 @@ export default {
       if (this.dataPreview.id_ak_01 !== null) {
         this.loading = true;
         const data = await ak01Detail.get(this.dataPreview.id_ak_01);
+        console.log(data);
         this.ak01Preview = data;
         if (this.ak01Preview.verifikasi_portofolio === 0) {
           this.verifikasi_portofolio = false;
@@ -392,11 +393,13 @@ export default {
         this.waktu = this.dataTrx.date;
         if (data.tanda_tangan_asesor){
           this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
+          console.log(this.headerTable[10].content);
         } else {
           this.headerTable[10].content = null;
         }
         if (data.tanda_tangan_asesi){
           this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
+          console.log(this.headerTable[11].content);
         } else {
           this.headerTable[11].content = null;
         }

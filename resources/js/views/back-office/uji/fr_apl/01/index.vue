@@ -403,7 +403,8 @@
                 <div v-else>
                   {{ namaAdmin }}
                   <br>
-                  <img :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
+                  <img v-if="ttdAdmin" :src="'/uploads/users/signature/' + ttdAdmin" class="sidebar-logo">
+                  <h3 v-else>APL 01 Belum ditanda tangani</h3>
                 </div>
               </template>
             </template>

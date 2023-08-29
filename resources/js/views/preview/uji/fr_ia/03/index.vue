@@ -288,7 +288,7 @@ const ia03NilaiResource = new Resource('uji-komp-ia-03-nilai');
 const ia03Detail = new Resource('detail/ia-03');
 const preview = new Resource('detail/preview');
 const signature = new Resource('detail/signature');
-const showAsesor = new Resource('detail/asesor');
+const apl02Resource = new Resource('detail/apl-02');
 
 export default {
   data() {
@@ -428,7 +428,7 @@ export default {
         });
 
         const signatures = await signature.list({ asesor: this.$route.params.asesor, asesi: this.dataPreview.nama_peserta });
-        const signatureAsesor = await showAsesor.list({ asesor: this.$route.params.asesor });
+        const signatureAsesor = await apl02Resource.get(this.dataPreview.id_apl_02);
 
         this.ttdTable1[0].umpan_balik = dataia03.ia_03.umpan_balik;
         this.ttdTable2[0].rekomendasi_asesor = dataia03.ia_03.rekomendasi_asesor;
@@ -437,8 +437,9 @@ export default {
         } else {
           this.ttdTable1[0].ttd = null;
         }
-        if (signatureAsesor.signature){
-          this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatureAsesor.signature;
+        if (signatureAsesor.apl_02.ttd_asesor){
+          this.ttdTable2[0].ttd = '/uploads/users/signature/' + signatureAsesor.apl_02.ttd_asesor;
+          console.log(this.ttdTable2[0].ttd);
         } else {
           this.ttdTable2[0].ttd = null;
         }

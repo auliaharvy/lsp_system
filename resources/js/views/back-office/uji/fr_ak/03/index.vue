@@ -176,7 +176,7 @@ export default {
     this.getUjiKompDetail();
     // });
     this.getListPertanyaan();
-    this.getDate();
+    // this.getDate();
   },
   methods: {
     allKompeten() {
@@ -190,6 +190,7 @@ export default {
     async getListPertanyaan() {
       this.loading = true;
       const { data } = await mstAk03Resource.list({ id_skema: this.$route.params.id_skema });
+
       this.listSoal = data;
       this.listSoal.forEach((element, index) => {
         element['index'] = index + 1;
@@ -232,9 +233,21 @@ export default {
       // var id_apl_01 = this.$route.params.id_apl_01;
 
       var id_apl_01 = this.$route.params.id_apl_01;
-      console.log(this.$route.params.id_apl_01);
       this.listUji = await ujiKomResource.list({ idapl01: id_apl_01 });
-      console.log(this.listUji);
+      const waktu = this.listUji.data[0].mulai;
+      const [tahun, bulan, tanggal] = waktu.split('-');
+
+      const namaBulan = [
+        'Januari', 'Februari', 'Maret', 'April',
+        'Mei', 'Juni', 'Juli', 'Agustus',
+        'September', 'Oktober', 'November', 'Desember',
+      ];
+
+      const namaBulanFormatted = namaBulan[parseInt(bulan, 10) - 1];
+
+      const hasilAkhir = `${tanggal} ${namaBulanFormatted} ${tahun}`;
+      this.headerTable[3].content = hasilAkhir;
+
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       // var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       // this.selectedUji = ujiDetail;

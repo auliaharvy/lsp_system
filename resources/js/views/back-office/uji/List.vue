@@ -88,7 +88,7 @@
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li class="list-progress">
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
                       <router-link :to="{ name: 'form-ak-01', params: { id_ak_01: scope.row.id_ak_01, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 01  <i v-if="scope.row.id_ak_01 !== null" type="success" class="el-icon-check" /></span>
