@@ -681,7 +681,15 @@ export default {
         .store(this.dataTrx)
         .then((response) => {
           if (response.msg === 'User sudah terdaftar') {
-            this.sendData();
+            // this.sendData();
+            this.$message({
+              message:
+                'Berhasil daftar uji, silakan login',
+              type: 'success',
+              duration: 5 * 1000,
+            });
+            this.reset();
+            this.$router.push({ name: 'login' });
           } else {
             this.dialogNewUser = true;
             this.loading = false;

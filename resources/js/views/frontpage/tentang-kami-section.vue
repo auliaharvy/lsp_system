@@ -42,7 +42,7 @@
                       <div style="padding-inline: 14px;">
                         <span>{{ itemSkema.skema_sertifikasi }}</span>
                         <div class="bottom clearfix">
-                          <router-link to="/login"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
+                          <router-link :to="'/skema/' + itemSkema.id + '/' + itemSkema.nama_kategori"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
                         </div>
                       </div>
                     </el-card>
@@ -58,7 +58,7 @@
                       <div style="padding-inline: 14px;">
                         <span>{{ itemSkema.skema_sertifikasi }}</span>
                         <div class="bottom clearfix">
-                          <router-link to="/login"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
+                          <router-link :to="'/skema/' + itemSkema.id + '/' + itemSkema.nama_kategori"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
                         </div>
                       </div>
                     </el-card>
@@ -237,23 +237,6 @@ export default {
 </script>
 
 <style>
-  /* @media(max-width: 1000px) {
-    .carousel-card-mode{
-      display: none;
-    }
-    .carousel-arrows{
-      display: block;
-    }
-  }
-
-  @media(min-width: 999px) {
-    .carousel-card-mode{
-      display: block;
-    }
-    .carousel-arrows{
-      display: none;
-    }
-  } */
 
   @media(max-width: 990px){
     .card-mengapa-kami{

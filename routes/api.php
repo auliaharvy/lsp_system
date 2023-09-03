@@ -57,6 +57,7 @@ Route::namespace('Api')->group(function() {
     Route::get('preview/ak-04/{id}', 'UjiKompController@previewAk04');
 
     //detail FR;
+    Route::get('detail/jadwal-asesmen/{id}', 'UjiKompController@showJadwalAsesmen');
     Route::get('jumlah-skema', 'SkemaController@countSkema');
     Route::get('detail/asesor', 'UjiKompController@showAsesor');
     Route::get('detail/signature', 'UjiKompController@showSignature');

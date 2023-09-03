@@ -27,6 +27,7 @@ import masterRoutes from './modules/master-data';
 import persiapanRoutes from './modules/persiapan';
 import ujiRoutes from './modules/uji-komp';
 import previewRoutes from './modules/preview';
+// import skemaRoutes from './modules/skema';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -75,6 +76,11 @@ export const constantRoutes = [
   {
     path: '/form-apl-02',
     component: () => import('@/views/frontpage/form-apl-02/index'),
+    hidden: true,
+  },
+  {
+    path: '/skema/:id/:kategori',
+    component: () => import('@/views/back-office/skema/komponen/index'),
     hidden: true,
   },
 
@@ -129,6 +135,7 @@ export const constantRoutes = [
   },
   ujiRoutes,
   previewRoutes,
+  // skemaRoutes,
   // {
   //   path: '/documentation',
   //   component: Layout,
@@ -209,6 +216,7 @@ export const asyncRoutes = [
   //   ],
   // },
   errorRoutes,
+  // skemaRoutes,
   // excelRoutes,
   // {
   //   path: '/zip',
