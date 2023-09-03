@@ -460,6 +460,25 @@ class UjiKompController extends BaseController
      * @return MasterResource|\Illuminate\Http\JsonResponse
      */
 
+    public function showJadwalAsesmen($id){
+        $queryJumlahAsesor = DB::table('trx_jadwal_asesmen as a')
+        ->select(DB::raw('COUNT(a.id_asesor) as jumlah_asesor' ))
+        ->join('mst_skema_sertifikasi as b', 'a.id_skema', '=', 'b.id')
+        ->join('mst_asesor as c', 'a.id_asesor', '=', 'c.id')
+        ->where('b.id', $id)
+        ->first();
+
+        $queryPemegangSertifikat = DB::table('trx_uji_komp as a')
+        ->select(DB::raw('COUNT(a.id) as jumlah_pemegang_sertifikat' ))
+        ->where('a.id_skema', $id)
+        ->first();
+
+        $data = [
+            'jumlah_asesor' => $queryJumlahAsesor->jumlah_asesor,
+            'jumlah_pemegang_sertifikat' => $queryPemegangSertifikat->jumlah_pemegang_sertifikat
+        ];
+        return $data;
+    }
     public function showAsesor(Request $request)
     {
         $searchParams = $request->all();
