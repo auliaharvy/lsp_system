@@ -84,7 +84,6 @@
 <script>
 import Resource from '@/api/resource';
 const skemaResource = new Resource('skema-get');
-const ujiKompResource = new Resource('uji-komp-get');
 const jadwalAsesmen = new Resource('detail/jadwal-asesmen');
 export default {
   name: 'SkemaList',
@@ -125,7 +124,6 @@ export default {
   },
   created(){
     this.getSkema();
-    this.getUjiKomp();
   },
   mounted(){
     this.handleResize();
@@ -172,11 +170,6 @@ export default {
       });
       this.asesorKompetensi = asesmen.jumlah_asesor;
       this.pemegangSertifikat = asesmen.jumlah_pemegang_sertifikat;
-      console.log(asesmen);
-    },
-    async getUjiKomp(){
-      const ujiKomp = await ujiKompResource.list({ id_skema: this.$route.params.id });
-      console.log(ujiKomp);
     },
   },
 };
