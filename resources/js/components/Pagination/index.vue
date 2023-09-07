@@ -5,13 +5,15 @@
       :current-page.sync="currentPage"
       :page-size.sync="pageSize"
       :layout="layout"
-      :page-sizes="pageSizes"
       :total="total"
       v-bind="$attrs"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
   </div>
+  <!--
+      :page-sizes="pageSizes"
+    -->
 </template>
 
 <script>
@@ -40,7 +42,8 @@ export default {
     },
     layout: {
       type: String,
-      default: 'total, sizes, prev, pager, next, jumper',
+      // default: 'total, sizes, prev, pager, next, jumper',
+      default: 'total, prev, pager, next, jumper',
     },
     background: {
       type: Boolean,
