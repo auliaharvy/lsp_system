@@ -176,7 +176,7 @@ export default {
     this.getUjiKompDetail();
     // });
     this.getListPertanyaan();
-    // this.getDate();
+    this.getDate();
   },
   methods: {
     allKompeten() {
