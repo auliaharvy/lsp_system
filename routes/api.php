@@ -57,6 +57,7 @@ Route::namespace('Api')->group(function() {
     Route::get('preview/ak-04/{id}', 'UjiKompController@previewAk04');
 
     //detail FR;
+    Route::get('soal/ia05/ia07', 'UjiKompController@getSoalIa05AndIa07');
     Route::get('detail/jadwal-asesmen/{id}', 'UjiKompController@showJadwalAsesmen');
     Route::get('jumlah-skema', 'SkemaController@countSkema');
     Route::get('detail/asesor', 'UjiKompController@showAsesor');
@@ -147,6 +148,14 @@ Route::namespace('Api')->group(function() {
         Route::apiResource('tuk', 'TukController');
         Route::post('tuk/update', 'TukController@update');
 
+        // KKNI jRoutes
+        Route::apiResource('kkni', 'KkniController');
+        Route::post('kkni/update', 'KkniController@update');
+
+        // DUDI Routes
+        Route::apiResource('dudi', 'DudiController');
+        Route::post('dudi/update', 'DudiController@update');
+
         // Assesor Routes
         Route::apiResource('assesor', 'AssesorController');
         Route::post('assesor/update', 'AssesorController@update');
@@ -230,14 +239,13 @@ Route::get('/articles', function () {
         $row = [
             'id' => mt_rand(100, 10000),
             'display_time' => Faker::randomDateTime()->format('Y-m-d H:i:s'),
-            'title' => Faker::randomString(mt_rand(20, 50)),
+            'title' => Faker::randomString(mt_rand(3, 10)),
             'author' => Faker::randomString(mt_rand(5, 10)),
             'comment_disabled' => Faker::randomBoolean(),
-            'content' => Faker::randomString(mt_rand(100, 300)),
-            'content_short' => Faker::randomString(mt_rand(30, 50)),
+            'content' => Faker::randomString(mt_rand(10, 20)),
             'status' => Faker::randomInArray(['deleted', 'published', 'draft']),
             'forecast' => mt_rand(100, 9999) / 100,
-            'image_uri' => 'https://via.placeholder.com/400x300',
+            'image_uri' => 'https://cdn.siasat.com/wp-content/uploads/2019/03/online-store.png',
             'importance' => mt_rand(1, 3),
             'pageviews' => mt_rand(10000, 999999),
             'reviewer' => Faker::randomString(mt_rand(5, 10)),

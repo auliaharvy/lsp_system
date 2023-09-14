@@ -8,7 +8,10 @@ import getPageTitle from '@/utils/get-page-title';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect', '', '/form-apl-02', '/skema/:id/:kategori']; // no redirect whitelist
+const whiteList = [
+  '/login', '/auth-redirect', '', '/form-apl-02', '/skema/:id/:kategori', '/kegiatan',
+  '/dudi', '/kkni', '/tuk', '/assesor',
+]; // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar

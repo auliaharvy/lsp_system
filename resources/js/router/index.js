@@ -83,6 +83,40 @@ export const constantRoutes = [
     component: () => import('@/views/back-office/skema/komponen/index'),
     hidden: true,
   },
+  {
+    path: '/kegiatan',
+    component: () => import('@/views/articles/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/assesor',
+    component: () => import('@/views/back-office/asesor/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/dudi',
+    component: () => import('@/views/back-office/dudi/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/kkni',
+    component: () => import('@/views/back-office/kkni/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/tuk',
+    component: () => import('@/views/back-office/tuk/Index'),
+    hidden: true,
+  },
+
+  // {
+  //   path: '/kegiatan',
+  //   component: () => import('@/views/articles/list.vue'),
+  // },
 
   // {
   //   // path: '/preview-page/:id',

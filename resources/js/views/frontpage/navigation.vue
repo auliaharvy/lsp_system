@@ -2,14 +2,17 @@
   <el-menu background-color="#fff" :mode="mode" router class="navbar-mobile">
     <el-menu-item v-if="mode === 'horizontal'" index="/login"><img :src="logo" class="logo"></el-menu-item>
     <el-menu-item index="/login">Home</el-menu-item>
+    <el-menu-item index="1">Tentang LSP</el-menu-item>
     <el-submenu index="2">
       <template slot="title">Profile</template>
       <el-menu-item index="2-1">Pemegang Sertifikat</el-menu-item>
       <el-menu-item index="2-2">Asesor Kompetensi</el-menu-item>
+      <el-menu-item index="tuk">TUK</el-menu-item>
+      <el-menu-item index="kkni">KKNI</el-menu-item>
+      <el-menu-item index="dudi">DUDI</el-menu-item>
     </el-submenu>
     <el-menu-item index="form-apl-02">Uji Kompetensi</el-menu-item>
-    <el-menu-item index="3">Kontak</el-menu-item>
-    <el-menu-item index="penelusuran-tamatan">Penelusuran Tamatan</el-menu-item>
+    <el-menu-item index="kegiatan">Kegiatan</el-menu-item>
 
     <template v-if="!isLogged">
       <el-menu-item style="float: right" index="/login"><el-button>Login</el-button></el-menu-item>

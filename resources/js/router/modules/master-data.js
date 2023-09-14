@@ -79,6 +79,31 @@ const masterRoutes = {
         permissions: ['manage user'],
       },
     },
+
+    /** DUDI */
+    {
+      path: 'dudi',
+      component: () => import('@/views/back-office/dudi/List'),
+      name: 'Dudi',
+      meta: {
+        title: 'DUDI',
+        icon: 'el-icon-office-building',
+        permissions: ['manage user'],
+      },
+    },
+
+    /** KKNI */
+    {
+      path: 'kkni',
+      component: () => import('@/views/back-office/kkni/List'),
+      name: 'Kkni',
+      meta: {
+        title: 'KKNI',
+        icon: 'el-icon-s-claim',
+        permissions: ['manage user'],
+      },
+    },
+
   ],
 };
 
