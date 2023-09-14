@@ -69,7 +69,6 @@
   </div>
 </template>
 <script>
-import image1 from '/uploads/dudi/suryamicrosystems.jpg';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 const dudiResource = new Resource('dudi');
@@ -79,7 +78,6 @@ export default {
   directives: { waves },
   data() {
     return {
-      image1: image1,
       list: {},
       isWide: true,
       activeName: 'Unit Kompetensi',
