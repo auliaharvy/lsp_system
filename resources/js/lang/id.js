@@ -328,4 +328,31 @@ export default {
       upload: 'Upload',
     },
   },
+
+  dudi: {
+    table: {
+      namaPerusahaan: 'Nama Perusahaan',
+      tahunKerjaSama: 'Tahun Kerja Sama',
+      uploadPath: 'Upload Path',
+    },
+    dialog: {
+      addNew: 'Tambah Baru',
+      edit: 'Edit',
+      upload: 'Upload',
+    },
+  },
+
+  kkni: {
+    table: {
+      nama: 'Nama',
+      jurusan: 'Jurusan',
+      tahun: 'Tahun',
+      uploadPath: 'Upload File',
+    },
+    dialog: {
+      addNew: 'Add New',
+      edit: 'Edit',
+    },
+  },
+
 };
