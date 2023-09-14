@@ -338,7 +338,7 @@ export default {
     dialog: {
       addNew: 'Tambah Baru',
       edit: 'Edit',
-      upload: 'Upload',
+      image: 'Upload Image',
     },
   },
 

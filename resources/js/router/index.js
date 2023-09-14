@@ -95,11 +95,11 @@ export const constantRoutes = [
   //   hidden: true,
   // },
 
-  // {
-  //   path: '/dudi',
-  //   component: () => import('@/views/back-office/dudi/Index'),
-  //   hidden: true,
-  // },
+  {
+    path: '/dudi',
+    component: () => import('@/views/back-office/dudi/Index'),
+    hidden: true,
+  },
 
   {
     path: '/kkni',
