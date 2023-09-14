@@ -80,17 +80,17 @@ const masterRoutes = {
       },
     },
 
-    /** DUDI */
-    {
-      path: 'dudi',
-      component: () => import('@/views/back-office/dudi/List'),
-      name: 'Dudi',
-      meta: {
-        title: 'DUDI',
-        icon: 'el-icon-office-building',
-        permissions: ['manage user'],
-      },
-    },
+    // /** DUDI */
+    // {
+    //   path: 'dudi',
+    //   component: () => import('@/views/back-office/dudi/List'),
+    //   name: 'Dudi',
+    //   meta: {
+    //     title: 'DUDI',
+    //     icon: 'el-icon-office-building',
+    //     permissions: ['manage user'],
+    //   },
+    // },
 
     /** KKNI */
     {
