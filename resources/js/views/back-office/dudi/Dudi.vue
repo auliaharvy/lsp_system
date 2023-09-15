@@ -16,7 +16,7 @@
             </el-col>
           </el-row>
           <el-row type="flex" justify="center">
-            <el-col style="display: flex; justify-content: center; align-items: center;">
+            <el-col style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
               <div v-if="isMobile" :interval="4000" height="440px" arrow="always" style="width: 100%;">
                 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
                   <el-card v-for="(item, index) in list" :key="index" class="container-card">
@@ -42,7 +42,7 @@
               <div v-else style="width: 80%;">
                 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
                   <el-card v-for="(item, index) in list" :key="index" class="container-card">
-                    <div style="padding-bottom: 15px;">
+                    <div class="container-content">
                       <img :src="'/uploads/dudi/' + item.image" class="image">
                       <h4>{{ item.nama_perusahaan }}</h4>
                       <div class="created-article">
@@ -61,6 +61,7 @@
                   </el-card>
                 </div>
               </div>
+              <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" class="pagination" @pagination="getList" />
             </el-col>
           </el-row>
         </el-col>
@@ -69,12 +70,14 @@
   </div>
 </template>
 <script>
+import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 const dudiResource = new Resource('dudi');
 
 export default {
   name: 'SkemaList',
+  components: { Pagination },
   directives: { waves },
   data() {
     return {
@@ -87,7 +90,7 @@ export default {
       isTabletToLaptop: false,
       query: {
         page: 1,
-        limit: 15,
+        limit: 12,
         keyword: '',
         role: '',
       },
@@ -184,8 +187,9 @@ export default {
     }
 
     .image{
-      width: 100%;
+      width: 200px;
       height: 200px;
+      object-fit: fill;
     }
 
     .icon-article{
@@ -211,6 +215,12 @@ export default {
       text-align: center;
     }
 
+    .image{
+      width: 200px;
+      height: 200px;
+      object-fit: fill;
+    }
+
     .container-col2{
       display: flex;
       justify-content: center;
@@ -220,10 +230,6 @@ export default {
     .icon-article{
       border: none;
       padding: 0;
-    }
-
-    .image{
-      width: 100%;
     }
 
     .container-card{
@@ -265,7 +271,9 @@ export default {
     }
 
     .image{
-      width: 100%;
+      width: 200px;
+      height: 200px;
+      object-fit: fill;
     }
 
     .container-card{

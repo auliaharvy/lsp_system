@@ -29,5 +29,5 @@ class Dudi extends Model
      * @return Builder
      */
     protected $table = "mst_dudi";
-    protected $fillable = ['nama_perusahaan','tahun_kerjasama', 'alamat'];
+    protected $fillable = ['nama_perusahaan','tahun_kerjasama', 'image'];
 }

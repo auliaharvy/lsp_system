@@ -11,9 +11,6 @@
       @current-change="handleCurrentChange"
     />
   </div>
-  <!--
-      :page-sizes="pageSizes"
-    -->
 </template>
 
 <script>
@@ -43,7 +40,7 @@ export default {
     layout: {
       type: String,
       // default: 'total, sizes, prev, pager, next, jumper',
-      default: 'total, prev, pager, next, jumper',
+      default: 'total, prev, pager, next',
     },
     background: {
       type: Boolean,
