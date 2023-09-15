@@ -169,7 +169,14 @@ class DudiController extends BaseController
     public function destroy($id)
     {
         try {
+            $dudi = Dudi::find($id);
+            $filename  = public_path('uploads/dudi/').$dudi->image;
+            if(File::exists($filename)) {
+                File::delete($filename);  // or unlink($filename);
+            }
+
             Dudi::where('id',$id)->delete();
+
             return response()->json(['message' => "Success Delete DUDI"], 201);
         } catch (\Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], 403);
