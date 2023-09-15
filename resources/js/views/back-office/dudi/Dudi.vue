@@ -16,13 +16,13 @@
             </el-col>
           </el-row>
           <el-row type="flex" justify="center">
-            <el-col style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <el-col>
               <div v-if="isMobile" :interval="4000" height="440px" arrow="always" style="width: 100%;">
-                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                  <el-card v-for="(item, index) in list" :key="index" class="container-card">
-                    <div class="container-content">
+                <div class="container-card">
+                  <el-card v-for="(item, index) in list" :key="index" class="card">
+                    <div style="padding-bottom: 15px;">
                       <img :src="'/uploads/dudi/' + item.image" class="image">
-                      <h4>{{ item.nama_perusahaan }}</h4>
+                      <h4 style="word-wrap: break-word;">{{ item.nama_perusahaan }}</h4>
                       <div class="created-article">
                         <span>
                           <div style="padding-bottom: 10px;">Tahun Kerja Sama : </div>
@@ -39,12 +39,12 @@
                   </el-card>
                 </div>
               </div>
-              <div v-else style="width: 80%;">
-                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                  <el-card v-for="(item, index) in list" :key="index" class="container-card">
-                    <div class="container-content">
+              <div v-else class="container-main-card">
+                <div class="container-card">
+                  <el-card v-for="(item, index) in list" :key="index" class="card">
+                    <div style="padding-botom: 15px;">
                       <img :src="'/uploads/dudi/' + item.image" class="image">
-                      <h4>{{ item.nama_perusahaan }}</h4>
+                      <h4 style="word-wrap: break-word;">{{ item.nama_perusahaan }}</h4>
                       <div class="created-article">
                         <span>
                           <div style="padding-bottom: 10px;">Tahun Kerja Sama : </div>
@@ -61,7 +61,9 @@
                   </el-card>
                 </div>
               </div>
-              <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" class="pagination" @pagination="getList" />
+              <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
+                <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" class="pagination" @pagination="getList" />
+              </div>
             </el-col>
           </el-row>
         </el-col>
@@ -172,10 +174,38 @@ export default {
 <style>
   @media(min-width: 990px){
 
+    .container-main-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container-card {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      width: 80%;
+    }
+
+    .card {
+      width: 28%;
+    }
+
+    .image{
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+    }
+
     .container-col2{
       display: flex;
       justify-content: center;
       align-content: center;
+    }
+
+    .container-content{
+      width: 200px;
     }
 
     .filter-container{
@@ -186,19 +216,9 @@ export default {
       text-align: center;
     }
 
-    .image{
-      width: 200px;
-      height: 200px;
-      object-fit: fill;
-    }
-
     .icon-article{
       border: none;
       padding: 0;
-    }
-
-    .container-card{
-      max-width: 80%;
     }
 
     .created-article{
@@ -211,14 +231,32 @@ export default {
 
   @media(min-width: 769px) and (max-width: 989px) {
 
-    .container-judul{
-      text-align: center;
+    .container-main-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container-card {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      width: 80%;
+    }
+
+    .card {
+      width: 28%;
     }
 
     .image{
-      width: 200px;
-      height: 200px;
+      width: 100%;
+      height: 100%;
       object-fit: fill;
+    }
+
+    .container-judul{
+      text-align: center;
     }
 
     .container-col2{
@@ -230,10 +268,6 @@ export default {
     .icon-article{
       border: none;
       padding: 0;
-    }
-
-    .container-card{
-      max-width: 48%;
     }
 
     .created-article{
@@ -250,7 +284,32 @@ export default {
 
   }
 
-  @media(max-width: 768px){
+  @media(min-width: 540px) and (max-width: 768px){
+
+    .container-main-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container-card {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card {
+      width: 50%;
+    }
+
+    .image{
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+    }
 
     .container-judul {
       text-align: center;
@@ -270,18 +329,63 @@ export default {
       width: 500px;
     }
 
+    .icon-article{
+      border: none;
+      padding: 0;
+    }
+
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+  }
+  @media(max-width: 539px){
+
+    .container-main-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container-card {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card {
+      width: 100%;
+    }
+
     .image{
-      width: 200px;
-      height: 200px;
+      width: 100%;
+      height: 100%;
       object-fit: fill;
     }
 
-    .container-card{
-      max-width: 300px;
+    .container-judul {
+      text-align: center;
     }
 
-    .container-content{
-      width: 100%;
+    .container-col2{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+    }
+
+    .container-judul h1{
+      word-wrap: break-word;
+    }
+
+    .filter-container{
+      width: 500px;
     }
 
     .icon-article{
