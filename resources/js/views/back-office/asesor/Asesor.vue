@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container-judul">
-      <h1>Daftar DUDI</h1>
+      <h1>Daftar Asesor</h1>
     </div>
     <div style="margin-top: 15px;">
       <el-row type="flex" justify="center" class="container-row">
@@ -21,14 +21,19 @@
                 <div class="container-card">
                   <el-card v-for="(item, index) in list" :key="index" class="card">
                     <div style="padding-bottom: 15px;">
-                      <img :src="'/uploads/dudi/' + item.image" class="image">
-                      <h4 style="word-wrap: break-word;">{{ item.nama_perusahaan }}</h4>
+                      <img :src="'/uploads/assesor/' + item.image" class="image">
+                      <h4 style="word-wrap: break-word">{{ item.nama }}</h4>
                       <div class="created-article">
-                        <span>
-                          <div style="padding-bottom: 10px;">Tahun Kerja Sama : </div>
+                        <div style="padding-bottom: 10px;">
+                          <div style="padding-bottom: 5px;">No Registrasi : </div>
                           <el-button icon="el-icon-date" class="icon-article" />
-                          <span>{{ item.tahun_kerjasama }}</span>
-                        </span>
+                          <span>{{ item.no_reg }}</span>
+                        </div>
+                        <div>
+                          <div style="padding-bottom: 5px;">Email : </div>
+                          <el-button icon="el-icon-person" class="icon-article" />
+                          <span>{{ item.email }}</span>
+                        </div>
                       </div>
                     </div>
                     <!-- <div>
@@ -42,15 +47,20 @@
               <div v-else class="container-main-card">
                 <div class="container-card">
                   <el-card v-for="(item, index) in list" :key="index" class="card">
-                    <div style="padding-botom: 15px;">
-                      <img :src="'/uploads/dudi/' + item.image" class="image">
-                      <h4 style="word-wrap: break-word;">{{ item.nama_perusahaan }}</h4>
+                    <div style="padding-bottom: 15px;">
+                      <img :src="'/uploads/assesor/' + item.image" class="image">
+                      <h4 style="word-wrap: break-word">{{ item.nama }}</h4>
                       <div class="created-article">
-                        <span>
-                          <div style="padding-bottom: 10px;">Tahun Kerja Sama : </div>
+                        <div style="padding-bottom: 10px;">
+                          <div style="padding-bottom: 5px;">No Registrasi : </div>
                           <el-button icon="el-icon-date" class="icon-article" />
-                          <span>{{ item.tahun_kerjasama }}</span>
-                        </span>
+                          <span>{{ item.no_reg }}</span>
+                        </div>
+                        <div>
+                          <div style="padding-bottom: 5px;">Email : </div>
+                          <el-button icon="el-icon-person" class="icon-article" />
+                          <span>{{ item.email }}</span>
+                        </div>
                       </div>
                     </div>
                     <!-- <div>
@@ -75,12 +85,12 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
-const dudiResource = new Resource('dudi');
+const assesorResource = new Resource('assesor');
 
 export default {
   name: 'SkemaList',
-  components: { Pagination },
   directives: { waves },
+  components: { Pagination },
   data() {
     return {
       list: {},
@@ -109,14 +119,6 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
-    filterList() {
-      const keyword = this.query.search.toLowerCase(); // Konversi kata kunci pencarian ke huruf kecil
-      this.filteredList = this.list.filter((item) => {
-        return (
-          item.nama_perusahaan.toLowerCase().includes(keyword)
-        );
-      });
-    },
     getColumnSpan(){
       if (this.isMobile) {
         return 24;
@@ -148,26 +150,25 @@ export default {
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
-      const { data, meta } = await dudiResource.list(this.query);
+      const { data, meta } = await assesorResource.list(this.query);
       this.list = data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
       this.total = meta.total;
       this.loading = false;
-      // console.log(this.list);
+      console.log(this.list);
     },
-
     handleFilter() {
       const keyword = this.query.keyword.toLowerCase(); // Konversi kata kunci pencarian ke huruf kecil
       this.list = this.list.filter((item) => {
         return (
-          item.nama_perusahaan.toLowerCase().includes(keyword)
+          item.nama.toLowerCase().includes(keyword) ||
+          item.no_reg.toLowerCase().includes(keyword)
         );
       });
       this.getList();
     },
-
   },
 };
 </script>
@@ -222,8 +223,6 @@ export default {
     }
 
     .created-article{
-      display: flex;
-      justify-content: space-between;
       font-size: 11px;
       padding-top: 10px;
     }
@@ -271,8 +270,6 @@ export default {
     }
 
     .created-article{
-      display: flex;
-      justify-content: space-between;
       font-size: 11px;
       padding-top: 10px;
       padding-bottom: 10px;
@@ -335,8 +332,6 @@ export default {
     }
 
     .created-article{
-      display: flex;
-      justify-content: space-between;
       font-size: 11px;
       padding-top: 10px;
       padding-bottom: 10px;
@@ -394,8 +389,6 @@ export default {
     }
 
     .created-article{
-      display: flex;
-      justify-content: space-between;
       font-size: 11px;
       padding-top: 10px;
       padding-bottom: 10px;
