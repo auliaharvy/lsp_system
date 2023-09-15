@@ -21,7 +21,8 @@
                 <div class="container-card">
                   <el-card v-for="(item, index) in list" :key="index" class="card">
                     <div style="padding-bottom: 15px;">
-                      <img :src="'/uploads/assesor/' + item.image" class="image">
+                      <!-- <img :src="'/uploads/assesor/' + item.image" class="image"> -->
+                      <img :src="'/uploads/assesor/default.png'" class="image">
                       <h4 style="word-wrap: break-word">{{ item.nama }}</h4>
                       <div class="created-article">
                         <div style="padding-bottom: 10px;">
@@ -48,7 +49,8 @@
                 <div class="container-card">
                   <el-card v-for="(item, index) in list" :key="index" class="card">
                     <div style="padding-bottom: 15px;">
-                      <img :src="'/uploads/assesor/' + item.image" class="image">
+                      <!-- <img :src="'/uploads/assesor/' + item.image" class="image"> -->
+                      <img :src="'/uploads/assesor/default.png'" class="image">
                       <h4 style="word-wrap: break-word">{{ item.nama }}</h4>
                       <div class="created-article">
                         <div style="padding-bottom: 10px;">
