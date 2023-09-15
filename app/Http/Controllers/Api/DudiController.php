@@ -171,6 +171,7 @@ class DudiController extends BaseController
         try {
             $dudi = Dudi::find($id);
             $filename  = public_path('uploads/dudi/').$dudi->image;
+            // hapus file yang sudah tidak digunakan
             if(File::exists($filename)) {
                 File::delete($filename);  // or unlink($filename);
             }
