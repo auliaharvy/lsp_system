@@ -73,6 +73,9 @@
                   </el-card>
                 </div>
               </div>
+              <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
+                <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" class="pagination" @pagination="getList" />
+              </div>
             </el-col>
           </el-row>
         </el-col>
@@ -81,11 +84,13 @@
   </div>
 </template>
 <script>
+import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 const kkniResource = new Resource('kkni');
 export default {
   name: 'SkemaList',
+  components: { Pagination },
   directives: { waves },
   data() {
     return {

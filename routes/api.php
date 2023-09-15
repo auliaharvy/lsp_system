@@ -86,6 +86,22 @@ Route::namespace('Api')->group(function() {
 
     Route::apiResource('dashboard', 'DashboardController');
 
+    // TUK Routes
+    Route::apiResource('tuk', 'TukController');
+    Route::post('tuk/update', 'TukController@update');
+
+    // KKNI jRoutes
+    Route::apiResource('kkni', 'KkniController');
+    Route::post('kkni/update', 'KkniController@update');
+
+    // DUDI Routes
+    Route::apiResource('dudi', 'DudiController');
+    Route::post('dudi/update', 'DudiController@update');
+
+    // Assesor Routes
+    Route::apiResource('assesor', 'AssesorController');
+    Route::post('assesor/update', 'AssesorController@update');
+
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
         //Post MST FR
@@ -144,21 +160,6 @@ Route::namespace('Api')->group(function() {
         // APL 02 / Pendaftaran Routes
         Route::apiResource('uji-kompetensi', 'UjiKompController');
 
-        // TUK Routes
-        Route::apiResource('tuk', 'TukController');
-        Route::post('tuk/update', 'TukController@update');
-
-        // KKNI jRoutes
-        Route::apiResource('kkni', 'KkniController');
-        Route::post('kkni/update', 'KkniController@update');
-
-        // DUDI Routes
-        Route::apiResource('dudi', 'DudiController');
-        Route::post('dudi/update', 'DudiController@update');
-
-        // Assesor Routes
-        Route::apiResource('assesor', 'AssesorController');
-        Route::post('assesor/update', 'AssesorController@update');
 
         // Skema
         Route::apiResource('skema/kategori', 'AsesmenKategoriController');
@@ -167,9 +168,6 @@ Route::namespace('Api')->group(function() {
         Route::post('skema/add/unit', 'SkemaController@storeUnit');
         Route::post('skema/upload/elemen', 'SkemaController@uploadElemenUnit');
         Route::post('skema/upload/kuk', 'SkemaController@uploadKuk');
-
-       
-
 
         // Auth routes
         Route::get('auth/user', 'AuthController@user');
