@@ -107,11 +107,11 @@ export const constantRoutes = [
     hidden: true,
   },
 
-  // {
-  //   path: '/tuk',
-  //   component: () => import('@/views/back-office/tuk/Index'),
-  //   hidden: true,
-  // },
+  {
+    path: '/tuk',
+    component: () => import('@/views/back-office/tuk/Index'),
+    hidden: true,
+  },
 
   // {
   //   path: '/kegiatan',

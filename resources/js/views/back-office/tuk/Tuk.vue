@@ -116,7 +116,7 @@ export default {
     }
 
     .filter-container{
-      min-width: 400px;
+      min-width: 50%;
     }
 
     .container-table{
@@ -138,6 +138,19 @@ export default {
     }
   }
 
+  @media(min-width: 560px) and (max-width: 989px) {
+    .filter-container{
+      min-width: 50%;
+    }
+
+  }
+
+  @media(max-width: 559px){
+    .filter-container{
+      min-width: 100%;
+    }
+
+  }
   .container-judul {
     display: block;
     text-align: center;
