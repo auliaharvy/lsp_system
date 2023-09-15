@@ -214,6 +214,7 @@ export default {
           dudiResource
             .store(uploadData)
             .then(response => {
+              console.log(response);
               this.$message({
                 message: 'New DUDI ' + this.newDudi.nama_perusahaan + ' has been created successfully.',
                 type: 'success',
