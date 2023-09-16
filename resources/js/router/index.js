@@ -84,11 +84,11 @@ export const constantRoutes = [
     hidden: true,
   },
 
-  // {
-  //   path: '/kegiatan',
-  //   component: () => import('@/views/articles/Index'),
-  //   hidden: true,
-  // },
+  {
+    path: '/kegiatan',
+    component: () => import('@/views/articles/Index'),
+    hidden: true,
+  },
 
   {
     path: '/assesor',
