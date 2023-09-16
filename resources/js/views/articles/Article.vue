@@ -25,13 +25,13 @@
                       <span>Eko Khannedy</span>
                     </span>
                   </div>
-                  <div style="padding-inline: 14px;">
+                  <div class="judul">
                     <h4>{{ item.judul }}</h4>
                   </div>
-                  <div style="padding-inline: 14px;">
+                  <div class="description">
                     <span>{{ item.description }}</span>
                     <div class="bottom clearfix">
-                      <router-link :to="'/skema/' + item.id + '/' + item.kategori"><el-button type="text" class="button">Baca Selengkapnya</el-button></router-link>
+                      <router-link to="#"><el-button type="text" class="button">Baca Selengkapnya</el-button></router-link>
                     </div>
                   </div>
                 </el-card>
@@ -51,13 +51,13 @@
                       <span>Eko Khannedy</span>
                     </span>
                   </div>
-                  <div style="padding-inline: 14px;">
+                  <div class="judul">
                     <h4>{{ item.judul }}</h4>
                   </div>
-                  <div style="padding-inline: 14px;">
+                  <div class="description">
                     <span>{{ item.description }}</span>
                     <div class="bottom clearfix">
-                      <router-link :to="'/skema/' + item.id + '/' + item.kategori"><el-button type="text" class="button">Baca Selengkapnya</el-button></router-link>
+                      <router-link to="#"><el-button type="text" class="button">Baca Selengkapnya</el-button></router-link>
                     </div>
                   </div>
                 </el-card>
@@ -320,6 +320,22 @@ export default {
     .image{
       width: 100%;
       height: 200px;
+    }
+
+    .judul, .description, .clearfix{
+      font-size: 11px;
+    }
+
+    .carousel{
+      height: 500px;
+    }
+
+    .carousel-item{
+      height: 500px;
+    }
+
+    .card{
+      height: 500px;
     }
 
   }
