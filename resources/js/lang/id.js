@@ -329,6 +329,14 @@ export default {
     },
   },
 
+  article: {
+    create: {
+      deskripsi: 'Deskripsi',
+      kategori: 'Kategori',
+      uploadImageHeader: 'Upload Image Header',
+    },
+  },
+
   dudi: {
     table: {
       namaPerusahaan: 'Nama Perusahaan',
