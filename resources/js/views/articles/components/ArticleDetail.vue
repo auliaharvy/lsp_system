@@ -2,10 +2,20 @@
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <sticky :class-name="'sub-navbar '+postForm.status">
-        <CommentDropdown v-model="postForm.comment_disabled" />
+        <!-- <CommentDropdown v-model="postForm.comment_disabled" />
         <PlatformDropdown v-model="postForm.platforms" />
-        <SourceUrlDropdown v-model="postForm.source_uri" />
+        <SourceUrlDropdown v-model="postForm.source_uri" /> -->
         <el-button
+          v-if="$route.name === 'EditArticle'"
+          v-loading="loading"
+          style="margin-left: 10px;"
+          type="success"
+          @click="submitFormEdit"
+        >
+          Submit
+        </el-button>
+        <el-button
+          v-if="$route.name === 'CreateArticle'"
           v-loading="loading"
           style="margin-left: 10px;"
           type="success"
@@ -13,6 +23,7 @@
         >
           Submit
         </el-button>
+
         <el-button v-loading="loading" type="warning" @click="draftForm">
           Draft
         </el-button>
@@ -21,18 +32,27 @@
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="24">
-            <el-form-item style="margin-bottom: 40px;" prop="title">
-              <MDinput v-model="postForm.title" :maxlength="100" name="name" required>
-                Title
+            <el-form-item style="margin-bottom: 40px;" prop="judul">
+              <MDinput v-model="postForm.judul" :maxlength="100" :name="$t('article.create.judul')" required>
+                {{ $t('article.create.judul') }}
               </MDinput>
             </el-form-item>
-
+            <el-form-item style="margin-bottom: 40px;" prop="description">
+              <MDinput v-model="postForm.description" :maxlength="100" :name="$t('article.create.deskripsi')" required>
+                {{ $t('article.create.deskripsi') }}
+              </MDinput>
+            </el-form-item>
+            <el-form-item style="margin-bottom: 40px;" prop="kategori">
+              <MDinput v-model="postForm.kategori" :maxlength="100" :name="$t('article.create.kategori')" required>
+                {{ $t('article.create.kategori') }}
+              </MDinput>
+            </el-form-item>
             <div class="postInfo-container">
               <el-row>
-                <el-col :span="8">
+                <!-- <el-col :span="8">
                   <el-form-item label-width="80px" label="Author:" class="postInfo-container-item">
                     <el-select
-                      v-model="postForm.author"
+                      v-model="postForm.ostForm.author"
                       :remote-method="getRemoteUserList"
                       filterable
                       remote
@@ -46,9 +66,9 @@
                       />
                     </el-select>
                   </el-form-item>
-                </el-col>
+                </el-col> -->
 
-                <el-col :span="10">
+                <!-- <el-col :span="10">
                   <el-form-item
                     label-width="120px"
                     label="Published date:"
@@ -61,9 +81,9 @@
                       placeholder="Select date and time"
                     />
                   </el-form-item>
-                </el-col>
+                </el-col> -->
 
-                <el-col :span="6">
+                <!-- <el-col :span="6">
                   <el-form-item
                     label-width="80px"
                     label="Important:"
@@ -78,13 +98,13 @@
                       style="margin-top:8px;"
                     />
                   </el-form-item>
-                </el-col>
+                </el-col> -->
               </el-row>
             </div>
           </el-col>
         </el-row>
 
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="Summary:">
+        <!-- <el-form-item style="margin-bottom: 40px;" label-width="80px" :label="$t('article.create.deskripsi') + ':'">
           <el-input
             v-model="postForm.content_short"
             :rows="1"
@@ -94,15 +114,20 @@
             placeholder="Please enter the content"
           />
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }} word</span>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item prop="content" style="margin-bottom: 30px;">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
 
-        <el-form-item prop="image_uri" style="margin-bottom: 30px;">
-          <Upload v-model="postForm.image_uri" />
+        <el-form-item :label="$t('article.create.uploadImageHeader')" prop="image">
+          <input type="file" @change="handleUploadSuccess">
         </el-form-item>
+
+        <!-- <el-form-item prop="image" style="margin-bottom: 30px;">
+          <div>{{ $t('article.create.uploadImageHeader') }}</div>
+          <Upload v-model="postForm.image" />
+        </el-form-item> -->
       </div>
     </el-form>
   </div>
@@ -110,30 +135,39 @@
 
 <script>
 import Tinymce from '@/components/Tinymce';
-import Upload from '@/components/Upload/SingleImage';
+// import Upload from '@/components/Upload/SingleImage';
 import MDinput from '@/components/MDinput';
-import Sticky from '@/components/Sticky'; // Sticky header
+import Sticky from '@/components/Sticky'; // Sticky headers
 import { validURL } from '@/utils/validate';
 import { fetchArticle } from '@/api/article';
 import { userSearch } from '@/api/search';
-import {
-  CommentDropdown,
-  PlatformDropdown,
-  SourceUrlDropdown,
-} from './Dropdown';
+import Resource from '@/api/resource';
+
+const articleResource = new Resource('article');
+const articleUpdateResource = new Resource('article/update');
+// import {
+//   CommentDropdown,
+//   PlatformDropdown,
+//   SourceUrlDropdown,
+// } from './Dropdown';
 
 const defaultForm = {
-  status: 'draft',
-  title: '',
+  // status: 'draft',
+  // title: '',
+  // content: '',
+  // content_short: '',
+  // source_uri: '',
+  // image_uri: '',
+  // display_time: undefined,
+  // id: undefined,
+  // platforms: ['a-platform'],
+  // comment_disabled: false,
+  // importance: 0,
+  judul: '',
+  description: '',
   content: '',
-  content_short: '',
-  source_uri: '',
-  image_uri: '',
-  display_time: undefined,
-  id: undefined,
-  platforms: ['a-platform'],
-  comment_disabled: false,
-  importance: 0,
+  kategori: '',
+  image: '',
 };
 
 export default {
@@ -141,11 +175,11 @@ export default {
   components: {
     Tinymce,
     MDinput,
-    Upload,
+    // Upload,
     Sticky,
-    CommentDropdown,
-    PlatformDropdown,
-    SourceUrlDropdown,
+    // CommentDropdown,
+    // PlatformDropdown,
+    // SourceUrlDropdown,
   },
   props: {
     isEdit: {
@@ -188,6 +222,7 @@ export default {
         image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
         content: [{ validator: validateRequire }],
+        image: [{ validator: validateRequire }],
         source_uri: [{ validator: validateSourceUri, trigger: 'blur' }],
       },
       tempRoute: {},
@@ -204,7 +239,7 @@ export default {
   created() {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id;
-      this.fetchData(id);
+      this.getArticle(id);
     } else {
       this.postForm = Object.assign({}, defaultForm);
     }
@@ -214,6 +249,17 @@ export default {
     this.tempRoute = Object.assign({}, this.$route);
   },
   methods: {
+    handleUploadSuccess(e) {
+      const files = e.target.files;
+      const rawFile = files[0]; // only use files[0]
+      this.postForm.image = rawFile;
+    },
+    async getArticle(id){
+      const data = await articleResource.get(id);
+      this.postForm = data;
+      console.log('test');
+      console.log(this.postForm);
+    },
     fetchData(id) {
       fetchArticle(id)
         .then(response => {
@@ -241,19 +287,71 @@ export default {
       });
       this.$store.dispatch('updateVisitedView', route);
     },
+    resetPostForm() {
+      this.postForm = {};
+    },
     submitForm() {
       this.postForm.display_time = parseInt(this.display_time / 1000);
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true;
-          this.$notify({
-            title: 'Success',
-            message: 'Article has been published successfully',
-            type: 'success',
-            duration: 2000,
-          });
-          this.postForm.status = 'published';
-          this.loading = false;
+          const uploadData = new FormData();
+          uploadData.append('judul', this.postForm.judul);
+          uploadData.append('description', this.postForm.description);
+          uploadData.append('content', this.postForm.content);
+          uploadData.append('kategori', this.postForm.kategori);
+          uploadData.append('file', this.postForm.image);
+          // console.log(this.postForm);
+          articleResource
+            .store(uploadData)
+            .then((response) => {
+              this.resetPostForm();
+              this.$notify({
+                title: 'Success',
+                message: 'Article has been published successfully',
+                type: 'success',
+                duration: 2000,
+              });
+              this.postForm.status = 'published';
+              this.loading = false;
+            });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    submitFormEdit() {
+      this.postForm.display_time = parseInt(this.display_time / 1000);
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          this.loading = true;
+          const uploadData = new FormData();
+          uploadData.append('id', this.postForm.id);
+          uploadData.append('judul', this.postForm.judul);
+          uploadData.append('description', this.postForm.description);
+          uploadData.append('content', this.postForm.content);
+          uploadData.append('kategori', this.postForm.kategori);
+          uploadData.append('file', this.postForm.image);
+          console.log(this.postForm);
+          // console.log(uploadData);
+          articleUpdateResource
+            .store(uploadData)
+            .then((response) => {
+              console.log(response);
+              this.resetPostForm();
+              this.$notify({
+                title: 'Success',
+                message: 'Article has been edited successfully',
+                type: 'success',
+                duration: 2000,
+              });
+              this.loading = false;
+              this.postForm.status = 'published';
+              this.$router.push({ path: '/administrator/articles' }).then(() => {
+                window.location.reload();
+              });
+            });
         } else {
           console.log('error submit!!');
           return false;

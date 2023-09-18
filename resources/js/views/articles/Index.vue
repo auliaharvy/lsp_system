@@ -12,7 +12,8 @@
       </el-collapse>
     </el-header>
     <el-main>
-      <articles />
+      <articles v-if="$route.name === 'kegiatan'" />
+      <detailArticle v-if="$route.name === 'detailKegiatan'" />
     </el-main>
     <lsp-footer />
   </el-container>
@@ -21,6 +22,7 @@
 <script>
 import navigation from '../frontpage/navigation.vue';
 import articles from './Article.vue';
+import detailArticle from './Detail.vue';
 import footer from '../frontpage/footer.vue';
 
 import { mapGetters } from 'vuex';
@@ -32,6 +34,7 @@ export default {
     navigation,
     'lsp-footer': footer,
     articles,
+    detailArticle,
   },
   data() {
     return {

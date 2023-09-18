@@ -85,9 +85,11 @@ class ArticleController extends BaseController
                 $file->move('uploads/article/', $nama_file);
 
                 $params = $request->all();
+                $slug = Str::slug($params['judul']);
                 $article = Article::create([
-                    'judul' => $params['nama_perusahaan'],
-                    'description' => $params['tahun_kerjasama'],
+                    'slug' => $slug,
+                    'judul' => $params['judul'],
+                    'description' => $params['description'],
                     'content' => $params['content'],
                     'kategori' => $params['kategori'],
                     'image' => $nama_file,
@@ -118,6 +120,20 @@ class ArticleController extends BaseController
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  Article $article
+     * @return MasterResource|\Illuminate\Http\JsonResponse
+     */
+    public function slug($slug)
+    {
+       
+        $articleQuery = Article::where('slug', $slug)->first();
+       
+        return $articleQuery;
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param Request $request
@@ -140,25 +156,29 @@ class ArticleController extends BaseController
                 ['file' => "required|file|max:$maxFileSizeKB"]
             );
 
+            $slug = Str::slug($request->get('judul'));
+
             $article = Article::find($request->get('id'));
+            $article->slug = $slug;
             $article->judul = $request->get('judul');
             $article->description = $request->get('description');
             $article->content = $request->get('content');
             $article->kategori = $request->get('kategori');
-            $article->image = $request->get('image');
 
             //find data by id
-            $filename  = public_path('uploads/article/').$article->image;
-            if(File::exists($filename)) {
+            if ($file) {
+                $filename  = public_path('uploads/article/').$article->image;
+                if(File::exists($filename)) {
 
-                $uniq = Str::random(5);
-                $nama_file = $uniq . '-' . $file->getClientOriginalName();
-                $file->move('uploads/article/', $nama_file);
+                    $uniq = Str::random(5);
+                    $nama_file = $uniq . '-' . $file->getClientOriginalName();
+                    $file->move('uploads/article/', $nama_file);
 
-                //update filename to database
-                $article->image = $nama_file;
-                //Found existing file then delete
-                File::delete($filename);  // or unlink($filename);
+                    //update filename to database
+                    $article->image = $nama_file;
+                    //Found existing file then delete
+                    File::delete($filename);  // or unlink($filename);
+                }
             }
             $article->save();
             return new MasterResource($article);
@@ -194,7 +214,10 @@ class ArticleController extends BaseController
     private function getValidationRules($isNew = true)
     {
         return [
-            'nama_perusahaan' => 'required',
+            'judul' => 'required',
+            'description' => 'required',
+            'content' => 'required',
+            'kategori' => 'required',
         ];
     }
 }

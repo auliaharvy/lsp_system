@@ -86,6 +86,14 @@ export const constantRoutes = [
 
   {
     path: '/kegiatan',
+    name: 'kegiatan',
+    component: () => import('@/views/articles/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/kegiatan/:slug',
+    name: 'detailKegiatan',
     component: () => import('@/views/articles/Index'),
     hidden: true,
   },

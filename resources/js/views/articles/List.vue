@@ -1,5 +1,15 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        {{ $t('table.search') }}
+      </el-button>
+      <router-link to="/administrator/articles/create" class="link-type">
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" />
+      </router-link>
+    </div>
+
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -55,27 +65,36 @@
 
       <el-table-column align="center" label="Actions" width="120">
         <template slot-scope="scope">
-          <router-link :to="'/administrator/articles/edit/'+scope.row.id">
-            <el-button type="primary" size="small" icon="el-icon-edit">
-              Edit
-            </el-button>
+          <router-link :to="'/kegiatan/'+scope.row.slug">
+            <el-button type="success" size="small" icon="el-icon-view" />
           </router-link>
+          <router-link :to="'/administrator/articles/edit/'+scope.row.id">
+            <el-button type="primary" size="small" icon="el-icon-edit" />
+          </router-link>
+          <el-button-group>
+            <el-tooltip class="item" effect="dark" content="Delete" placement="top-end">
+              <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row)" />
+            </el-tooltip>
+          </el-button-group>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
+import waves from '@/directive/waves'; // Waves directive
+import permission from '@/directive/permission'; // Permission directive
 const articleResource = new Resource('article');
 
 export default {
   name: 'ArticleList',
   components: { Pagination },
+  directives: { waves, permission },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -91,9 +110,11 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
-      listQuery: {
+      query: {
         page: 1,
-        limit: 20,
+        limit: 15,
+        keyword: '',
+        role: '',
       },
     };
   },
@@ -106,9 +127,44 @@ export default {
       const tanggal = new Date(tanggalAwal.replace('Z', ''));
       return tanggal.toLocaleDateString('id-ID', options);
     },
+    handleFilter() {
+      this.query.page = 1;
+      this.getList();
+    },
+    handleCreate() {
+      this.resetNewDudi();
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs['dudiForm'].clearValidate();
+      });
+    },
+    handleDelete(data) {
+      var deleteData = data;
+      console.log(deleteData);
+      this.$confirm('This will permanently delete ' + deleteData.judul + ', Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      }).then(() => {
+        articleResource.destroy(deleteData.id).then(response => {
+          this.$message({
+            type: 'success',
+            message: 'Delete completed',
+          });
+          this.handleFilter();
+        }).catch(error => {
+          console.log(error);
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled',
+        });
+      });
+    },
     async getList() {
       this.listLoading = true;
-      const { data } = await articleResource.list(this.listQuery);
+      const { data } = await articleResource.list(this.query);
       this.list = data;
       this.list.forEach((element, index) => {
         const waktu = this.ubahFormatTanggal(element.created_at);

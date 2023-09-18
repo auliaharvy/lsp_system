@@ -29,5 +29,5 @@ class Article extends Model
      * @return Builder
      */
     protected $table = "mst_article";
-    protected $fillable = ['judul', 'description', 'content', 'kategori', 'image'];
+    protected $fillable = ['slug', 'judul', 'description', 'content', 'kategori', 'image'];
 }
