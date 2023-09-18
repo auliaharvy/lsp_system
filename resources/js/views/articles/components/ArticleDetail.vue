@@ -314,6 +314,9 @@ export default {
               });
               this.postForm.status = 'published';
               this.loading = false;
+              this.$router.push({ path: '/administrator/articles' }).then(() => {
+                window.location.reload();
+              });
             });
         } else {
           console.log('error submit!!');
