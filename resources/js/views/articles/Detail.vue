@@ -1,119 +1,41 @@
 <template>
   <div>
-    <div class="container-judul">
-      <h1>ARTIKEL</h1>
-    </div>
-    <div style="margin-top: 15px;">
-      <el-row type="flex" justify="center" class="container-carousel">
-        <el-col :span="getColumnSpan() === 6 ? 12 : getColumnSpan()" class="for-carousel">
-          <el-input v-model="input3" placeholder="Please input" class="input-with-select" @input="filterArticles">
-            <el-button slot="append" icon="el-icon-search" />
-          </el-input>
-        </el-col>
-      </el-row>
-      <el-row type="flex" justify="center" class="container-carousel">
-        <el-col :span="getColumnSpan() === 6 ? 12 : getColumnSpan()" class="for-carousel">
-          <el-tabs v-if="listArticles" v-model="activeName">
-            <el-row type="flex" justify="center">
-              <el-col :span="24">
-                <el-carousel v-if="isMobile" :interval="4000" height="440px" arrow="always">
-                  <el-carousel-item v-for="item in filteredArticles" :key="item.id">
-                    <el-card style="height: 100%;">
-                      <img :src="item.image_uri" class="image">
-                      <div style="padding-inline: 14px;">
-                        <div class="created-article">
-                          <span>
-                            <el-button icon="el-icon-date" class="icon-article" />
-                            <span>11 September 2023</span>
-                          </span>
-                          <span>
-                            <el-button icon="el-icon-user-solid" class="icon-article" />
-                            <span>John Wick</span>
-                          </span>
-                        </div>
-                        <h4>{{ item.title }}</h4>
-                      </div>
-                      <div style="padding-inline: 14px;">
-                        <span>{{ item.content }}</span>
-                        <div class="bottom clearfix">
-                          <router-link to="/"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
-                        </div>
-                      </div>
-                    </el-card>
-                  </el-carousel-item>
-                </el-carousel>
-                <el-carousel v-else :interval="4000" type="card" height="430px">
-                  <el-carousel-item v-for="item in filteredArticles" :key="item.id">
-                    <el-card style="height: 100%;">
-                      <img :src="item.image_uri" class="image">
-                      <div style="padding-inline: 14px;">
-                        <div class="created-article">
-                          <span>
-                            <el-button icon="el-icon-date" class="icon-article" />
-                            <span>11 September 2023</span>
-                          </span>
-                          <span>
-                            <el-button icon="el-icon-user-solid" class="icon-article" />
-                            <span>John Wick</span>
-                          </span>
-                        </div>
-                        <h4>{{ item.title }}</h4>
-                      </div>
-                      <div style="padding-inline: 14px;">
-                        <span>{{ item.content }}</span>
-                        <div class="bottom clearfix">
-                          <router-link to="/"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
-                        </div>
-                      </div>
-                    </el-card>
-                  </el-carousel-item>
-                </el-carousel>
-              </el-col>
-            </el-row>
-          </el-tabs>
-        </el-col>
-      </el-row>
-    </div>
+    <el-row type="flex" class="content" justify="center">
+      <el-col class="container-col">
+        <div>
+          <img v-if="article.image" :src="'uploads/article/' + article.image" class="image">
+        </div>
+        <div class="created-article">
+          <span class="child-created-article">
+            <el-button icon="el-icon-date" class="icon-article" />
+            <span>{{ article.waktu }}</span>
+          </span>
+          <span class="child-created-article">
+            <el-button icon="el-icon-user-solid" class="icon-article" />
+            <span>Eko Khannedy</span>
+          </span>
+        </div>
+        <div>
+          <article>
+            <div v-html="article.content" />
+          </article>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
 import Resource from '@/api/resource';
-const articleResource = new Resource('articles');
+const articleResource = new Resource('article/detail');
 export default {
   name: 'SkemaList',
   data() {
     return {
       input3: null,
       select: null,
-      asesorKompetensi: null,
-      pemegangSertifikat: null,
       listArticles: [],
+      article: {},
       filteredArticles: [],
-      tableData: [
-        {
-          title: 'Nama',
-          tiua: ':',
-          content: '',
-        },
-        {
-          title: 'Kode',
-          tiua: ':',
-          content: '',
-        },
-        {
-          title: 'Unit Kompetensi',
-          tiua: ':',
-          content: '',
-        },
-      ],
-      listSkema: [
-        {
-          judul: 'Unit Kompetensi',
-          content: [],
-        },
-      ],
-      listUnitKompetensi: [],
-      activeName: 'Unit Kompetensi',
       isMobile: false,
       isTablet: false,
       isLaptop: false,
@@ -157,17 +79,219 @@ export default {
       this.isTablet = screenWidth >= 768 && screenWidth < 1024;
       this.isLaptop = screenWidth >= 1024;
     },
+    ubahFormatTanggal(tanggalAwal) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const tanggal = new Date(tanggalAwal.replace('Z', ''));
+      return tanggal.toLocaleDateString('id-ID', options);
+    },
     async getListArticle() {
-      const { data } = await articleResource.list();
-      this.listArticles = data.items;
-      this.filteredArticles = this.listArticles;
-      console.log(this.listArticles);
+      const data = await articleResource.get(this.$route.params.slug);
+      this.article = data;
+      this.article.waktu = this.ubahFormatTanggal(data.created_at);
     },
   },
 };
 </script>
 <style>
   @media(min-width: 990px){
+
+    .container-col{
+      width: 60%;
+    }
+
+    .image{
+      width: 100%;
+      object-fit: cover;
+      object-position: 100% 0;
+      background-position:fixed;
+      background-repeat:no-repeat;
+      height: 300px;
+      -webkit-background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      -o-background-size: 100% 100%;
+      background-size: 100% 100%;
+    }
+
+    article {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      color: #333;
+      background-color: #fff;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    p {
+      margin-bottom: 1.5em;
+    }
+
+    .icon-article{
+      border: none;
+      padding: 0;
+    }
+
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding-top: 10px;
+    }
+
+  }
+
+  @media(min-width: 769px) and (max-width: 989px) {
+
+    .container-col{
+      width: 70%;
+    }
+
+    .image{
+      width: 100%;
+      object-fit: cover;
+      object-position: 100% 0;
+      background-position:fixed;
+      background-repeat:no-repeat;
+      height: 300px;
+      -webkit-background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      -o-background-size: 100% 100%;
+      background-size: 100% 100%;
+    }
+
+    article {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      color: #333;
+      background-color: #fff;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    p {
+      margin-bottom: 1.5em;
+    }
+
+    .icon-article{
+      border: none;
+      padding: 0;
+    }
+
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding-top: 10px;
+    }
+
+  }
+
+  @media(min-width: 540px) and (max-width: 768px){
+
+    .container-col{
+      width: 88%;
+    }
+
+    .image{
+      width: 100%;
+      object-fit: cover;
+      object-position: 100% 0;
+      background-position:fixed;
+      background-repeat:no-repeat;
+      height: 300px;
+      -webkit-background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      -o-background-size: 100% 100%;
+      background-size: 100% 100%;
+    }
+
+    article {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      color: #333;
+      background-color: #fff;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    p {
+      margin-bottom: 1.5em;
+    }
+
+    .icon-article{
+      border: none;
+      padding: 0;
+    }
+
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding-top: 10px;
+    }
+
+  }
+
+  @media(min-width: 359px) and (max-width: 539px){
+
+    .container-col{
+      width: 90%;
+    }
+
+    .image{
+      width: 100%;
+      object-fit: cover;
+      object-position: 100% 0;
+      background-position:fixed;
+      background-repeat:no-repeat;
+      height: 200px;
+      -webkit-background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      -o-background-size: 100% 100%;
+      background-size: 100% 100%;
+    }
+
     article {
       font-family: Arial, Helvetica, sans-serif;
       font-size: 16px;
@@ -194,6 +318,80 @@ export default {
     p {
       margin-bottom: 1.5em;
     }
-  }
 
+    .icon-article{
+      border: none;
+      padding: 0;
+    }
+
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding-top: 10px;
+    }
+
+  }
+  @media(max-width: 358px){
+
+    .container-col{
+      width: 100%;
+    }
+
+    .image{
+      width: 100%;
+      object-fit: cover;
+      object-position: 50% 0;
+      background-position:fixed;
+      background-repeat:no-repeat;
+      height: 170px;
+      -webkit-background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      -o-background-size: 100% 100%;
+      background-size: 100% 100%;
+    }
+
+    .child-created-article{
+      display: block;
+      padding-bottom: 10px;
+    }
+
+    .created-article{
+      font-size: 11px;
+      padding-top: 10px;
+    }
+
+    .icon-article{
+      border: none;
+      padding: 0;
+    }
+
+    article {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      color: #333;
+      background-color: #fff;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    p {
+      margin-bottom: 1.5em;
+    }
+
+  }
 </style>

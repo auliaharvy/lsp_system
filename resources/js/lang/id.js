@@ -331,6 +331,7 @@ export default {
 
   article: {
     create: {
+      judul: 'Judul',
       deskripsi: 'Deskripsi',
       kategori: 'Kategori',
       uploadImageHeader: 'Upload Image Header',

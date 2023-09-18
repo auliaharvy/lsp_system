@@ -105,6 +105,7 @@ Route::namespace('Api')->group(function() {
     // Article Routes
     Route::apiResource('article', 'ArticleController');
     Route::post('article/update', 'ArticleController@update');
+    Route::get('article/detail/{slug}', 'ArticleController@slug');
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
 

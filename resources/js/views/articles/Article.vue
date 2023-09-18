@@ -7,14 +7,16 @@
         </div>
       </el-col>
     </el-row>
-    <el-row type="flex" justify="center" class="container-carousel">
+    <el-row type="flex" justify="center">
       <el-col :span="getColumnSpan() === 6 ? 12 : getColumnSpan()" class="for-carousel">
         <el-row type="flex" justify="center">
           <el-col :span="24" class="container-carousel">
-            <el-carousel v-if="isMobile" :interval="4000" height="440px" arrow="always" class="carousel">
+            <el-carousel v-if="isMobile" :interval="4000" arrow="always" class="carousel">
               <el-carousel-item v-for="item in listArticles" :key="item.id" class="carousel-item">
                 <el-card class="card">
-                  <img :src="'uploads/article/' + item.image" class="image">
+                  <div class="container-image">
+                    <img :src="'uploads/article/' + item.image" height="200" style="width: 100%; object-fit: cover; object-position: 50% 0;">
+                  </div>
                   <div class="created-article">
                     <span class="child-created-article">
                       <el-button icon="el-icon-date" class="icon-article" />
@@ -31,22 +33,22 @@
                   <div class="description">
                     <span>{{ item.description }}</span>
                     <div class="bottom clearfix">
-                      <router-link to="#"><el-button type="text" class="button">Baca Selengkapnya</el-button></router-link>
+                      <router-link :to="'/kegiatan/' + item.slug "><el-button type="text" class="button">Baca Selengkapnya</el-button></router-link>
                     </div>
                   </div>
                 </el-card>
               </el-carousel-item>
             </el-carousel>
-            <el-carousel v-else :interval="4000" type="card" height="430px" arrow="always" class="container-card">
-              <el-carousel-item v-for="item in listArticles" :key="item.id">
+            <el-carousel v-else :interval="4000" type="card" arrow="always" class="carousel">
+              <el-carousel-item v-for="item in listArticles" :key="item.id" class="carousel-item">
                 <el-card class="card">
-                  <img :src="'uploads/article/' + item.image" class="image">
+                  <img :src="'uploads/article/' + item.image" height="200" style="width: 100%; object-fit: cover; object-position: 50% 0;">
                   <div class="created-article">
-                    <span>
+                    <span class="child-created-article">
                       <el-button icon="el-icon-date" class="icon-article" />
                       <span>{{ item.waktu }}</span>
                     </span>
-                    <span>
+                    <span class="child-created-article">
                       <el-button icon="el-icon-user-solid" class="icon-article" />
                       <span>Eko Khannedy</span>
                     </span>
@@ -57,7 +59,7 @@
                   <div class="description">
                     <span>{{ item.description }}</span>
                     <div class="bottom clearfix">
-                      <router-link to="#"><el-button type="text" class="button">Baca Selengkapnya</el-button></router-link>
+                      <router-link :to="'/kegiatan/' + item.slug "><el-button type="text" class="button">Baca Selengkapnya</el-button></router-link>
                     </div>
                   </div>
                 </el-card>
@@ -165,86 +167,79 @@ export default {
 
       this.filteredArticles.forEach((element, index) => {
         const waktu = this.ubahFormatTanggal(element.created_at);
-        console.log(element.created_at);
         element['waktu'] = waktu;
       });
-
-      console.log(this.listArticles);
     },
   },
 };
 </script>
 <style>
   @media(min-width: 990px){
-    .container-info{
-      display: flex;
-      margin-top: 40px;
+
+    .container-judul{
+      text-align: center;
     }
 
-    .card{
-      display: inline-block;
-      height: 100%;
-      /* width: 33%; */
+    .carousel{
+      height: 500px;
     }
 
-    .container-info .card span{
-      margin-top: 20px;
-      font-size: 30px;
-      color: #223f4d;
-      font-weight: 900;
-    }
-
-    .container-bio{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .container-second-bio{
-      width: 80%;
-    }
-
-    .image{
-      width: 100%;
-      height: 200px;
-    }
-
-    .icon-article{
-      border: none;
-      padding: 0;
+    .carousel-item{
+      height: 500px;
+      padding-bottom: 5px;
     }
 
     .created-article{
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
-      padding-top: 10px;
+      flex-wrap: wrap;
     }
+
+    .judul, .description{
+      font-size: 14px;
+    }
+
+    .child-created-article{
+      padding-bottom: 5px;
+    }
+
   }
 
   @media(min-width: 769px) and (max-width: 989px) {
 
-    .icon-article{
-      border: none;
-      padding: 0;
+    .container-judul{
+      text-align: center;
     }
 
-    .image{
-      width: 100%;
-      height: 200px;
+    .carousel{
+      height: 500px;
+    }
+
+    .carousel-item{
+      height: 500px;
+      padding-bottom: 5px;
     }
 
     .created-article{
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
-      padding-top: 10px;
+      flex-wrap: wrap;
     }
 
-  }
+    .judul, .description{
+      font-size: 14px;
+    }
+
+    .child-created-article{
+      padding-bottom: 5px;
+    }
+ }
 
   @media(min-width: 540px) and (max-width: 768px){
+
+    .container-judul{
+      text-align: center;
+    }
 
     .container-carousel{
       display: flex;
@@ -253,77 +248,34 @@ export default {
     }
 
     .carousel{
+      height: 500px;
       width: 80%;
     }
 
     .carousel-item{
-      width: 100%;
-    }
-
-    .image{
-      width: 100%;
-      height: 200px;
+      height: 500px;
+      padding-bottom: 5px;
     }
 
     .created-article{
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
-      padding-top: 10px;
+      flex-wrap: wrap;
     }
 
-    .icon-article{
-      border: none;
-      padding: 0;
+    .child-created-article{
+      padding-bottom: 5px;
     }
 
-  }
+    .judul, .description{
+      font-size: 14px;
+    }
+ }
 
   @media(min-width: 359px) and (max-width: 539px){
 
-    .icon-article{
-      border: none;
-      padding: 0;
-    }
-
-    .image{
-      width: 100%;
-      height: 200px;
-    }
-
-    .created-article{
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      padding-top: 10px;
-    }
-
-  }
-
-  @media(max-width: 360px){
-
-    .child-created-article{
-      display: block;
-      padding-bottom: 10px;
-    }
-
-    .created-article{
-      font-size: 11px;
-      padding-top: 10px;
-    }
-
-    .icon-article{
-      border: none;
-      padding: 0;
-    }
-
-    .image{
-      width: 100%;
-      height: 200px;
-    }
-
-    .judul, .description, .clearfix{
-      font-size: 11px;
+    .container-judul{
+      text-align: center;
     }
 
     .carousel{
@@ -332,61 +284,40 @@ export default {
 
     .carousel-item{
       height: 500px;
+      padding-bottom: 5px;
     }
 
-    .card{
+    .image{
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      object-position: 50% 0;
+    }
+
+    .judul, .description{
+      font-size: 14px;
+    }
+
+  }
+
+  @media(max-width: 360px){
+
+    .container-judul{
+      text-align: center;
+    }
+
+    .carousel{
       height: 500px;
     }
 
+    .carousel-item{
+      height: 500px;
+      padding-bottom: 5px;
+    }
+
+    .judul, .description{
+      font-size: 14px;
+    }
   }
 
-  .container-judul {
-    display: block;
-    text-align: center;
-  }
-  .container-judul h1{
-    word-wrap: break-word;
-  }
-
-  .container-info{
-    display: block;
-  }
-
-  .container-info .card{
-    text-align: center;
-    height: 80px;
-    margin-top: 20px;
-  }
-
-  .container-info .card span{
-    font-size: 30px;
-    color: #223f4d;
-    font-weight: 900;
-  }
-
-  .card div h4{
-    color: #23252a;
-    font-size: 15px;
-  }
-
-  .title{
-    word-wrap: break-word;
-    font-weight: 900;
-  }
-
-  .container-bio{
-    margin-bottom: 30px;
-  }
-
-  .column-no{
-    width: 5%;
-  }
-
-  .column-kode-unit{
-    width: 15%;
-  }
-
-  .column-unit-kompetensi{
-    width: 80%;
-  }
 </style>
