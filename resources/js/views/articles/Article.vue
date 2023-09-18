@@ -7,6 +7,19 @@
         </div>
       </el-col>
     </el-row>
+    <el-row :span="getColumnSpan() === 6 ? 12 : getColumnSpan()" type="flex" class="content" justify="center">
+      <el-col class="container-column">
+        <el-row class="container-row2">
+          <el-col class="container-col2">
+            <div class="filter-container">
+              <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" @input="handleFilter">
+                <el-button slot="append" v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter" />
+              </el-input>
+            </div>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
     <el-row type="flex" justify="center">
       <el-col :span="getColumnSpan() === 6 ? 12 : getColumnSpan()" class="for-carousel">
         <el-row type="flex" justify="center">
@@ -26,6 +39,9 @@
                       <el-button icon="el-icon-user-solid" class="icon-article" />
                       <span>Eko Khannedy</span>
                     </span>
+                  </div>
+                  <div class="kategori">
+                    <el-tag class="tag">{{ item.kategori }}</el-tag>
                   </div>
                   <div class="judul">
                     <h4>{{ item.judul }}</h4>
@@ -53,6 +69,9 @@
                       <span>Eko Khannedy</span>
                     </span>
                   </div>
+                  <div class="kategori">
+                    <el-tag class="tag">{{ item.kategori }}</el-tag>
+                  </div>
                   <div class="judul">
                     <h4>{{ item.judul }}</h4>
                   </div>
@@ -74,15 +93,23 @@
 </template>
 <script>
 import Resource from '@/api/resource';
+import waves from '@/directive/waves'; // Waves directive
 const articleResource = new Resource('article');
 export default {
   name: 'SkemaList',
+  directives: { waves },
   data() {
     return {
       input3: null,
       select: null,
       asesorKompetensi: null,
       pemegangSertifikat: null,
+      query: {
+        page: 1,
+        limit: 9,
+        keyword: '',
+        role: '',
+      },
       listArticles: [],
       filteredArticles: [],
       tableData: [
@@ -159,22 +186,41 @@ export default {
       return tanggal.toLocaleDateString('id-ID', options);
     },
     async getListArticle() {
-      const { data } = await articleResource.list();
+      const { data } = await articleResource.list(this.query);
 
       this.listArticles = data;
 
-      this.filteredArticles = this.listArticles;
-
-      this.filteredArticles.forEach((element, index) => {
+      this.listArticles.forEach((element, index) => {
         const waktu = this.ubahFormatTanggal(element.created_at);
         element['waktu'] = waktu;
       });
     },
+
+    handleFilter() {
+      const keyword = this.query.keyword.toLowerCase(); // Konversi kata kunci pencarian ke huruf kecil
+      this.list = this.listArticles.filter((item) => {
+        return (
+          item.judul.toLowerCase().includes(keyword)
+        );
+      });
+      this.getListArticle();
+    },
+
   },
 };
 </script>
 <style>
   @media(min-width: 990px){
+
+    .filter-container{
+      min-width: 400px;
+    }
+
+    .container-col2{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+    }
 
     .container-judul{
       text-align: center;
@@ -203,9 +249,22 @@ export default {
       padding-bottom: 5px;
     }
 
+    .tag{
+      font-size: 11px;
+    }
   }
 
   @media(min-width: 769px) and (max-width: 989px) {
+
+    .filter-container{
+      width: 500px;
+    }
+
+    .container-col2{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+    }
 
     .container-judul{
       text-align: center;
@@ -236,6 +295,16 @@ export default {
  }
 
   @media(min-width: 540px) and (max-width: 768px){
+
+    .filter-container{
+      width: 500px;
+    }
+
+    .container-col2{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+    }
 
     .container-judul{
       text-align: center;
@@ -274,6 +343,16 @@ export default {
 
   @media(min-width: 359px) and (max-width: 539px){
 
+    .filter-container{
+      width: 500px;
+    }
+
+    .container-col2{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+    }
+
     .container-judul{
       text-align: center;
     }
@@ -298,6 +377,9 @@ export default {
       font-size: 14px;
     }
 
+    .child-created-article{
+      padding-bottom: 5px;
+    }
   }
 
   @media(max-width: 360px){
@@ -317,6 +399,10 @@ export default {
 
     .judul, .description{
       font-size: 14px;
+    }
+
+    .child-created-article{
+      padding-bottom: 5px;
     }
   }
 
