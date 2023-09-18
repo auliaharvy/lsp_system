@@ -15,6 +15,9 @@
             <span>Eko Khannedy</span>
           </span>
         </div>
+        <div class="kategori">
+          <el-tag class="tag">{{ article.kategori }}</el-tag>
+        </div>
         <div>
           <article>
             <div v-html="article.content" />
@@ -394,4 +397,9 @@ export default {
     }
 
   }
+
+  .tag{
+    font-size: 11px;
+  }
+
 </style>
