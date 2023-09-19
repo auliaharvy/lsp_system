@@ -143,16 +143,18 @@ class DudiController extends BaseController
 
             //find data by id
             $filename  = public_path('uploads/dudi/').$dudi->image;
-            if(File::exists($filename)) {
+            if ($file) {
+                if(File::exists($filename)) {
 
-                $uniq = Str::random(5);
-                $nama_file = $uniq . '-' . $file->getClientOriginalName();
-                $file->move('uploads/dudi/', $nama_file);
+                    $uniq = Str::random(5);
+                    $nama_file = $uniq . '-' . $file->getClientOriginalName();
+                    $file->move('uploads/dudi/', $nama_file);
 
-                //update filename to database
-                $dudi->image = $nama_file;
-                //Found existing file then delete
-                File::delete($filename);  // or unlink($filename);
+                    //update filename to database
+                    $dudi->image = $nama_file;
+                    //Found existing file then delete
+                    File::delete($filename);  // or unlink($filename);
+                }
             }
             $dudi->save();
             return new MasterResource($dudi);
