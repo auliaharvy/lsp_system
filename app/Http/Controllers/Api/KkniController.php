@@ -147,19 +147,21 @@ class KkniController extends BaseController
             $kkni->tahun = $request->get('tahun');
 
             //find data by id
-            $filename  = public_path('uploads/kkni/').$kkni->upload_path;
-            if(File::exists($filename)) {
+            if ($file){
+                $filename  = public_path('uploads/kkni/').$kkni->upload_path;
+                if(File::exists($filename)) {
 
-                $uniq = Str::random(5);
-                $nama_file = $uniq . '-' . $file->getClientOriginalName();
-                $file->move('uploads/kkni/', $nama_file);
+                    $uniq = Str::random(5);
+                    $nama_file = $uniq . '-' . $file->getClientOriginalName();
+                    $file->move('uploads/kkni/', $nama_file);
 
-                //update filename to database
-                $kkni->upload_path = $nama_file;
-                //Found existing file then delete
-                File::delete($filename);  // or unlink($filename);
+                    //update filename to database
+                    $kkni->upload_path = $nama_file;
+                    //Found existing file then delete
+                    File::delete($filename);  // or unlink($filename);
+                }
             }
-            $kkni->save();
+           $kkni->save();
             return new MasterResource($kkni);
         }
     }

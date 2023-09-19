@@ -60,8 +60,17 @@
           <el-form-item :label="$t('dudi.table.tahunKerjaSama')" prop="tahun_kerjasama">
             <el-input v-model="newDudi.tahun_kerjasama" />
           </el-form-item>
-          <el-form-item :label="$t('dudi.dialog.image')" prop="image">
-            <input type="file" @change="handleUploadSuccess">
+          <el-form-item :label="$t('dudi.table.uploadPath')" prop="image">
+            <el-upload
+              ref="upload_image_create"
+              class="upload-demo"
+              action=""
+              :auto-upload="false"
+              :on-change="handleUploadSuccess"
+            >
+              <el-button slot="trigger" size="small" type="primary">select file</el-button>
+              <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
+            </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -84,8 +93,18 @@
           <el-form-item :label="$t('dudi.table.tahunKerjaSama')" prop="tahun_kerjasama">
             <el-input v-model="editedDudi.tahun_kerjasama" />
           </el-form-item>
-          <el-form-item :label="$t('skema.perangkat.file')" prop="image">
-            <input type="file" @change="handleUploadSuccessEdit">
+          <el-form-item :label="$t('dudi.table.uploadPath')" prop="image">
+            <el-upload
+              ref="upload_image_edit"
+              class="upload-demo"
+              action=""
+              :auto-upload="false"
+              :on-change="handleUploadSuccessEdit"
+            >
+              <el-button slot="trigger" size="small" type="primary">select file</el-button>
+              <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
+              <div v-if="isSelect" slot="tip" class="el-upload__tip">Select file untuk mengganti file KKNI</div>
+            </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -117,6 +136,8 @@ export default {
   directives: { waves, permission },
   data() {
     return {
+      fileIsRequired: '',
+      isSelect: true,
       list: null,
       total: 0,
       loading: true,
@@ -124,7 +145,12 @@ export default {
       dudiCreating: false,
       dialogFormVisible: false,
       dialogFormUpdateVisible: false,
-      newDudi: {},
+      newDudi: {
+        id: 0,
+        nama_perusahaan: '',
+        tahun_kerjasama: '',
+        image: '',
+      },
       editedDudi: {
         id: 0,
         nama_perusahaan: '',
@@ -139,8 +165,7 @@ export default {
       },
       rules: {
         nama_perusahaan: [{ required: true, message: 'Nama Perusahaan is required', trigger: 'change' }],
-        tahun_kerjasama: [{ required: true, message: 'Tahun Kerja Sama is required', trigger: 'blur' }],
-        image: [{ required: true, message: 'Foto Sama is required', trigger: 'blur' }],
+        tahun_kerjasama: [{ required: true, message: 'Tahun Kerja Sama is required', trigger: 'change' }],
       },
     };
   },
@@ -209,36 +234,45 @@ export default {
           uploadData.append('nama_perusahaan', this.newDudi.nama_perusahaan);
           uploadData.append('tahun_kerjasama', this.newDudi.tahun_kerjasama);
           uploadData.append('file', this.newDudi.image);
-          console.log(this.newDudi);
           this.dudiCreating = true;
-          dudiResource
-            .store(uploadData)
-            .then(response => {
-              console.log(response);
-              this.$message({
-                message: 'New DUDI ' + this.newDudi.nama_perusahaan + ' has been created successfully.',
-                type: 'success',
-                duration: 5 * 1000,
+          if (this.$refs.upload_image_create.uploadFiles.length === 0) {
+            this.fileIsRequired = 'File is required';
+            this.dudiCreating = false;
+            this.loading = false;
+          } else {
+            dudiResource
+              .store(uploadData)
+              .then(() => {
+                // console.log(this.newDudi);
+                this.$message({
+                  message: 'New File ' + this.newDudi.nama + ' has been created successfully.',
+                  type: 'success',
+                  duration: 5 * 1000,
+                });
+                this.resetNewDudi();
+                this.$refs.upload_image_create.handleRemove();
+                this.dialogFormVisible = false;
+                this.handleFilter();
+              })
+              .catch(error => {
+                console.log(error);
+              })
+              .finally(() => {
+                this.loading = false;
+                this.dudiCreating = false;
               });
-              this.resetNewDudi();
-              this.dialogFormVisible = false;
-              this.handleFilter();
-            })
-            .catch(error => {
-              console.log(error);
-            })
-            .finally(() => {
-              this.loading = true;
-              this.dudiCreating = false;
-            });
+          }
         } else {
+          this.loading = false;
+          // console.log(this.newDudi);
           // console.log('error submit!!');
           return false;
         }
       });
     },
-    handleUpdate(tuk) {
-      this.editedDudi = tuk;
+    handleUpdate(dudi) {
+      this.isSelect = true;
+      this.editedDudi = dudi;
       this.dialogFormUpdateVisible = true;
       console.log(this.editedDudi);
     },
@@ -249,9 +283,12 @@ export default {
       uploadData.append('nama_perusahaan', this.editedDudi.nama_perusahaan);
       uploadData.append('tahun_kerjasama', this.editedDudi.tahun_kerjasama);
       uploadData.append('file', this.editedDudi.image);
+      console.log(this.editedDudi);
+      this.dudiCreating = true;
       dudiUpdateResource
         .store(uploadData)
-        .then(() => {
+        .then((response) => {
+          // console.log(response);
           this.getList();
           this.resetEditedDudi();
           this.dialogFormUpdateVisible = false;
@@ -261,6 +298,7 @@ export default {
             type: 'success',
             duration: 2000,
           });
+          this.$refs.upload_path_edit.handleRemove();
         })
         .catch(error => {
           console.log(error);
@@ -271,17 +309,14 @@ export default {
         });
     },
     handleUploadSuccess(e) {
-      const files = e.target.files;
-      const rawFile = files[0]; // only use files[0]
-      this.newDudi.image = rawFile;
+      this.newDudi.image = this.$refs.upload_image_create.uploadFiles[0].raw;
+      this.fileIsRequired = '';
     },
-
     handleUploadSuccessEdit(e) {
-      const files = e.target.files;
-      const rawFile = files[0]; // only use files[0]
-      this.editedDudi.image = rawFile;
+      this.editedDudi.image = this.$refs.upload_image_edit.uploadFiles[0].raw;
+      this.isSelect = false;
+      console.log(this.editedDudi.image);
     },
-
     handleDownload() {
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {
@@ -329,5 +364,6 @@ export default {
   .clear-left {
     clear: left;
   }
+
 }
 </style>

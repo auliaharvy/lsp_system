@@ -66,8 +66,17 @@
           <el-form-item :label="$t('kkni.table.tahun')" prop="tahun">
             <el-input v-model="dataTrx.tahun" />
           </el-form-item>
-          <el-form-item ref="uploadSuccess" :label="$t('skema.perangkat.file')" prop="upload_path">
-            <input type="file" @change="handleUploadSuccess">
+          <el-form-item :label="$t('kkni.table.uploadPath')" prop="upload_path">
+            <el-upload
+              ref="upload_path_create"
+              class="upload-demo"
+              action=""
+              :auto-upload="false"
+              :on-change="handleUploadSuccess"
+            >
+              <el-button slot="trigger" size="small" type="primary">select file</el-button>
+              <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
+            </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -93,8 +102,18 @@
           <el-form-item :label="$t('kkni.table.tahun')" prop="tahun">
             <el-input v-model="editedKkni.tahun" />
           </el-form-item>
-          <el-form-item :label="$t('skema.perangkat.file')" prop="upload_path">
-            <input type="file" @change="handleUploadSuccessEdit">
+          <el-form-item :label="$t('kkni.table.uploadPath')" prop="upload_path">
+            <el-upload
+              ref="upload_path_edit"
+              class="upload-demo"
+              action=""
+              :auto-upload="false"
+              :on-change="handleUploadSuccessEdit"
+            >
+              <el-button slot="trigger" size="small" type="primary">select file</el-button>
+              <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
+              <div v-if="isSelect" slot="tip" class="el-upload__tip">Select file untuk mengganti file KKNI</div>
+            </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -107,7 +126,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -124,9 +142,12 @@ export default {
   name: 'UserList',
   components: { Pagination },
   directives: { waves, permission },
-  data() {
+  data(){
     return {
       list: null,
+      fileIsRequired: '',
+      isSelect: true,
+      filename: '',
       total: 0,
       loading: true,
       downloading: false,
@@ -152,7 +173,6 @@ export default {
         nama: [{ required: true, message: 'Nama is required', trigger: 'change' }],
         jurusan: [{ required: true, message: 'Jurusan is required', trigger: 'blur' }],
         tahun: [{ required: true, message: 'Tahun is required', trigger: 'blur' }],
-        upload_path: [{ required: true, message: 'File is required', trigger: 'blur' }],
       },
     };
   },
@@ -170,7 +190,7 @@ export default {
       });
       this.total = meta.total;
       this.loading = false;
-      console.log(this.list);
+      // console.log(this.list);
     },
     handleFilter() {
       this.query.page = 1;
@@ -191,7 +211,6 @@ export default {
     },
     handleDelete(data) {
       var deleteData = data;
-      console.log(deleteData);
       this.$confirm('This will permanently delete ' + deleteData.nama + ', Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
@@ -208,14 +227,12 @@ export default {
         });
       }).catch(() => {
         this.$message({
-          type: 'info',
-          message: 'Delete canceled',
+          tessage: 'Delete canceled',
         });
       });
     },
-    submit() {
+    submit(){
       this.loading = true;
-      this.dataTrx.id_skema = this.idSkema;
       this.$refs['newForm'].validate((valid) => {
         if (valid) {
           const uploadData = new FormData();
@@ -223,36 +240,44 @@ export default {
           uploadData.append('jurusan', this.dataTrx.jurusan);
           uploadData.append('tahun', this.dataTrx.tahun);
           uploadData.append('file', this.dataTrx.upload_path);
-          console.log(this.dataTrx);
-          this.creating = true;
-          kkniResource
-            .store(uploadData)
-            .then(response => {
-              this.$message({
-                message: 'New File ' + this.dataTrx.nama + ' has been created successfully.',
-                type: 'success',
-                duration: 5 * 1000,
+          this.kkniCreating = true;
+          if (this.$refs.upload_path_create.uploadFiles.length === 0) {
+            this.fileIsRequired = 'File is required';
+            this.kkniCreating = false;
+            this.loading = false;
+          } else {
+            kkniResource
+              .store(uploadData)
+              .then(() => {
+                // console.log(this.dataTrx);
+                this.$message({
+                  message: 'New File ' + this.dataTrx.nama + ' has been created successfully.',
+                  type: 'success',
+                  duration: 5 * 1000,
+                });
+                this.resetdataTrx();
+                this.$refs.upload_path_create.handleRemove();
+                this.dialogFormVisible = false;
+                this.handleFilter();
+              })
+              .catch(error => {
+                console.log(error);
+              })
+              .finally(() => {
+                this.loading = false;
+                this.kkniCreating = false;
               });
-              this.$refs.uploadSuccess.value = '';
-              this.resetdataTrx();
-              this.dialogFormVisible = false;
-              this.handleFilter();
-              console.log(this.dataTrx);
-            })
-            .catch(error => {
-              console.log(error);
-            })
-            .finally(() => {
-              this.loading = true;
-              this.creating = false;
-            });
+          }
         } else {
-          console.log('error submit!!');
+          this.loading = false;
+          // console.log(this.dataTrx);
+          // console.log('error submit!!');
           return false;
         }
       });
     },
     handleUpdate(kkni) {
+      this.isSelect = true;
       this.editedKkni = kkni;
       this.dialogFormUpdateVisible = true;
     },
@@ -264,10 +289,12 @@ export default {
       uploadData.append('jurusan', this.editedKkni.jurusan);
       uploadData.append('tahun', this.editedKkni.tahun);
       uploadData.append('file', this.editedKkni.upload_path);
+      // console.log(this.editedKkni);
+      this.kkniCreating = true;
       kkniUpdateResource
         .store(uploadData)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           this.getList();
           this.resetEditedKkni();
           this.dialogFormUpdateVisible = false;
@@ -277,6 +304,7 @@ export default {
             type: 'success',
             duration: 2000,
           });
+          this.$refs.upload_path_edit.handleRemove();
         })
         .catch(error => {
           console.log(error);
@@ -287,17 +315,13 @@ export default {
         });
     },
     handleUploadSuccess(e) {
-      const files = e.target.files;
-      const rawFile = files[0]; // only use files[0]
-      this.dataTrx.upload_path = rawFile;
+      this.dataTrx.upload_path = this.$refs.upload_path_create.uploadFiles[0].raw;
+      this.fileIsRequired = '';
     },
-
     handleUploadSuccessEdit(e) {
-      const files = e.target.files;
-      const rawFile = files[0]; // only use files[0]
-      this.editedKkni.upload_path = rawFile;
+      this.editedKkni.upload_path = this.$refs.upload_path_edit.uploadFiles[0].raw;
+      this.isSelect = false;
     },
-
     handleDownload() {
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {
