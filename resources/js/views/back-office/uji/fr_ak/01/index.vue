@@ -15,7 +15,8 @@
         >
           <el-table-column align="left" min-width="30px">
             <template slot-scope="scope">
-              <span>{{ scope.row.title }}</span>
+              <span v-if="checkRole(['assesor', 'admin'])">{{ scope.row.title === 'Tanda Tangan Asesi' ? '' : scope.row.title }}</span>
+              <span v-if="checkRole(['user'])">{{ scope.row.title === 'Tanda Tangan Asesor' ? '' : scope.row.title }}</span>
 
             </template>
           </el-table-column>
@@ -23,38 +24,42 @@
             <template slot-scope="scope">
               <template v-if="scope.row.content !== '.'">
                 <template v-if="scope.row.content === '-'">
-                  <el-checkbox v-model="verifikasi_portofolio">TL : Verifikasi Portofolio</el-checkbox>
-                  <el-checkbox v-model="observasi_langsung">L : Observasi Langsung</el-checkbox>
-                  <el-checkbox v-model="hasil_tes_tulis">T : Hasil Tes Tulis</el-checkbox>
-                  <el-checkbox v-model="hasil_tes_lisan">T : Hasil Tes Lisan</el-checkbox>
-                  <el-checkbox v-model="hasil_tes_wawancara">T : Hasil Tes Wawancara</el-checkbox>
+                  <el-checkbox v-model="verifikasi_portofolio" :disabled="!checkRole(['assesor', 'admin'])">TL : Verifikasi Portofolio</el-checkbox>
+                  <el-checkbox v-model="observasi_langsung" :disabled="!checkRole(['assesor', 'admin'])">L : Observasi Langsung</el-checkbox>
+                  <el-checkbox v-model="hasil_tes_tulis" :disabled="!checkRole(['assesor', 'admin'])">T : Hasil Tes Tulis</el-checkbox>
+                  <el-checkbox v-model="hasil_tes_lisan" :disabled="!checkRole(['assesor', 'admin'])">T : Hasil Tes Lisan</el-checkbox>
+                  <el-checkbox v-model="hasil_tes_wawancara" :disabled="!checkRole(['assesor', 'admin'])">T : Hasil Tes Wawancara</el-checkbox>
                 </template>
                 <template v-else-if="scope.row.no === 11">
-                  <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
-                  <div v-else>
-                    <vueSignature
-                      ref="signature"
-                      :sig-option="option"
-                      :w="'300px'"
-                      :h="'150px'"
-                      :disabled="false"
-                      style="border-style: outset"
-                    />
-                    <el-button size="small" @click="clear">Clear</el-button>
+                  <div v-if="checkRole(['assesor', 'admin'])">
+                    <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
+                    <div v-else>
+                      <vueSignature
+                        ref="signature"
+                        :sig-option="option"
+                        :w="'300px'"
+                        :h="'150px'"
+                        :disabled="false"
+                        style="border-style: outset"
+                      />
+                      <el-button size="small" @click="clear">Clear</el-button>
+                    </div>
                   </div>
                 </template>
                 <template v-else-if="scope.row.no === 12">
-                  <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
-                  <div v-else>
-                    <vueSignature
-                      ref="signature1"
-                      :sig-option="option"
-                      :w="'300px'"
-                      :h="'150px'"
-                      :disabled="false"
-                      style="border-style: outset"
-                    />
-                    <el-button size="small" @click="clear1">Clear</el-button>
+                  <div v-if="!checkRole(['assesor', 'admin'])">
+                    <img v-if="scope.row.content" :src="scope.row.content" class="sidebar-logo">
+                    <div v-else>
+                      <vueSignature
+                        ref="signature1"
+                        :sig-option="option"
+                        :w="'300px'"
+                        :h="'150px'"
+                        :disabled="false"
+                        style="border-style: outset"
+                      />
+                      <el-button size="small" @click="clear1">Clear</el-button>
+                    </div>
                   </div>
                 </template>
                 <span v-else>{{ scope.row.content }}</span>
@@ -62,7 +67,7 @@
               <template v-else>
                 Tanggal dan Waktu :
                 <template v-if="$route.params.id_ak_01 !== null">
-                  {{ hari + ', ' + tanggal + '-' + bulan + '-' + tahun }}
+                  {{ hari + ', ' + tanggal + '-' + bulan + '-' + tahun + ' Jam ' + jam }}
                 </template>
                 <template v-else>
                   <el-form
@@ -72,6 +77,17 @@
                   >
                     <el-form-item>
                       <el-date-picker
+                        v-if="!checkRole(['assesor', 'admin'])"
+                        v-model="dataTrx.date"
+                        :disabled="true"
+                        type="datetime"
+                        placeholder="Pick a date"
+                        style="width: 100%"
+                        format="dd/MM/yyyy HH:mm"
+                        @change="getDate"
+                      />
+                      <el-date-picker
+                        v-if="checkRole(['assesor', 'admin'])"
                         v-model="dataTrx.date"
                         type="datetime"
                         placeholder="Pick a date"
@@ -95,6 +111,7 @@
         <el-button v-else>Print</el-button> -->
         <el-button v-if="checkRole(['assesor'])" @click="onSubmit">Submit Asesor</el-button>
         <el-button v-if="checkRole(['admin'])" @click="onSubmit">Submit Admin</el-button>
+        <el-button v-if="!checkRole(['assesor', 'admin'])" @click="onSubmitAsesi">Submit Asesi</el-button>
         <!-- <el-button v-if="!checkRole(['assesor', 'admin'])" @click="onSubmitAsesi">Submit</el-button> -->
         <br>
         <br>
@@ -297,7 +314,8 @@ export default {
         this.tahun = data.tahun;
         this.jam = data.jam;
         this.headerTable[10].content = '/uploads/users/signature/' + data.tanda_tangan_asesor;
-        this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
+        // this.headerTable[11].content = '/uploads/users/signature/' + data.tanda_tangan_asesi;
+        console.log(this.headerTable[11].content);
         this.loading = false;
       } else {
         this.loading = true;
@@ -398,6 +416,7 @@ export default {
       this.loading = true;
       this.dataTrx.id_uji_komp = this.$route.params.id_uji;
       this.dataTrx.id_ak_01 = this.$route.params.id_ak_01;
+      this.dataTrx.signature_asesi = this.$refs.signature1.save();
       this.dataTrx.pernyataan_asesor = this.headerTable[7].content;
       this.dataTrx.pernyataan_asesi = this.headerTable[8].content;
       // console.log(this.dataTrx);
@@ -423,10 +442,8 @@ export default {
       this.loading = true;
       this.dataTrx.id_uji_komp = this.$route.params.id_uji;
       this.dataTrx.signature_asesor = this.$refs.signature.save();
-      this.dataTrx.signature_asesi = this.$refs.signature1.save();
       this.dataTrx.pernyataan_asesor = this.headerTable[7].content;
       this.dataTrx.pernyataan_asesi = this.headerTable[8].content;
-      this.dataTrx.signature_asesor = this.$refs.signature.save();
       if (this.verifikasi_portofolio === false) {
         this.dataTrx.verifikasi_portofolio = 0;
       } else {
@@ -471,7 +488,6 @@ export default {
       formData.append('pernyataan_asesor', this.dataTrx.pernyataan_asesor);
       formData.append('pernyataan_asesi', this.dataTrx.pernyataan_asesi);
       formData.append('signature_asesor', this.dataTrx.signature_asesor);
-      formData.append('signature_asesi', this.dataTrx.signature_asesi);
       ak01Resource
         .store(formData)
         .then(response => {
@@ -507,7 +523,8 @@ export default {
     getDate() {
       var arrbulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
       var arrHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-      var date = this.dataTrx.date;
+      // var date = this.dataTrx.date;
+      var date = new Date(this.dataTrx.date);
       // var millisecond = date.getMilliseconds();
       // var detik = date.getSeconds();
       var menit = date.getMinutes();
@@ -516,12 +533,16 @@ export default {
       var tanggal = date.getDate();
       var bulan = date.getMonth();
       var tahun = date.getFullYear();
-      this.dataTrx.jam = jam;
-      this.dataTrx.menit = menit;
+
+      var resultMenit = menit > 9 ? menit : '0' + menit;
+      this.dataTrx.menit = resultMenit;
+      var resultJam = jam > 9 ? jam + ':' + resultMenit : '0' + jam + ':' + resultMenit;
+      this.dataTrx.jam = resultJam;
       this.dataTrx.tanggal = tanggal;
       this.dataTrx.bulan = arrbulan[bulan];
       this.dataTrx.tahun = tahun;
       this.dataTrx.hari = arrHari[hari];
+      console.log(`${this.dataTrx.hari}, ${this.dataTrx.tanggal}/${this.dataTrx.bulan}/${this.dataTrx.tahun} - Jam ${this.dataTrx.jam}`);
       // document.write(tanggal+"-"+arrbulan[bulan]+"-"+tahun+"<br/>"+jam+" : "+menit+" : "+detik+"."+millisecond);
     },
     handleFotoSuccess(res, file) {

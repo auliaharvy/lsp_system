@@ -131,7 +131,7 @@ class UjiKompController extends BaseController
 
         if (!empty($keyword)) {
             $query->where('b.email', 'LIKE', '%' . $keyword . '%');
-            $query->orWhere('e.nama', 'LIKE', '%' . $keyword . '%');
+            $query->orWhere('trx_uji_komp.nama_peserta', 'LIKE', '%' . $keyword . '%');
         }
 
         return UjiKompResource::collection($query->paginate($limit));
@@ -1751,12 +1751,23 @@ class UjiKompController extends BaseController
             DB::beginTransaction();
             $id_uji_komp = $request->get('id_uji_komp');
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+
             try {
+
+                //upload sign
+                $file1 = $request['signature_asesi'];
+                $image1 = str_replace('data:image/png;base64,', '', $file1);
+                $image1 = str_replace(' ', '+', $image1);
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                // membuat nama file unik
+                $nama_file1 = $now . '-asesi-' . $id_uji_komp . '-ak01' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file1, base64_decode($image1));
+
                 $params = $request->all();
-                $foundUser = User::where('email', $params['email_asesi'])->first();
                 $foundAk01 = UjiKompAk01::where('id', $params['id_ak_01'])->first();
 
-                $foundAk01->tanda_tangan_asesi = $foundUser->signature;
+                $foundAk01->tanda_tangan_asesi = $nama_file1;
                 $foundAk01->save();
 
                 DB::commit();
@@ -1794,14 +1805,6 @@ class UjiKompController extends BaseController
                 $nama_file = $now . '-asesor-' . $id_uji_komp . '-ak01' . '-' . '.png';
                 \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
 
-                //upload sign
-                $file1 = $request['signature_asesi'];
-                $image1 = str_replace('data:image/png;base64,', '', $file1);
-                $image1 = str_replace(' ', '+', $image1);
-                // membuat nama file unik
-                $nama_file1 = $now . '-asesi-' . $id_uji_komp . '-ak01' . '-' . '.png';
-                \File::put(public_path(). '/uploads/users/signature/' . $nama_file1, base64_decode($image1));
-
                 $foundUser = User::where('email', $params['email_asesi'])->first();
                 $ak01 = UjiKompAk01::create([
                     'nama_asesi' => $params['nama_asesi'],
@@ -1820,7 +1823,7 @@ class UjiKompController extends BaseController
                     'pernyataan_asesor' => $params['pernyataan_asesor'],
                     'pernyataan_asesi' => $params['pernyataan_asesi'],
                     'tanda_tangan_asesor' => $nama_file,
-                    'tanda_tangan_asesi' => $nama_file1,
+                    'tanda_tangan_asesi' => '',
                 ]);
 
                 $progress = $foundUjiKomp->persentase;
@@ -2267,8 +2270,8 @@ class UjiKompController extends BaseController
                 $foundUjiKomp->id_va = $va->id;
                 $persentaseVa = 15;
                 $dataSoal = $this->getSoalIa05AndIa07($foundUjiKomp->id_skema);
-                $soalIa05 = $dataSoal->soalIa05 ?? null;
-                $soalIa07 = $dataSoal->soalIa07 ?? null;
+                $soalIa05 = $dataSoal['soalIa05'] ?? null;
+                $soalIa07 = $dataSoal['soalIa07'] ?? null;
                 if ($soalIa05 === null && $soalIa07 === null){
                     $persentaseVa = 25;
                 }

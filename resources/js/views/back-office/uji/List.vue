@@ -88,7 +88,7 @@
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li v-if="query.role !== 'user'" class="list-progress">
+                  <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
                       <router-link :to="{ name: 'form-ak-01', params: { id_ak_01: scope.row.id_ak_01, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 01  <i v-if="scope.row.id_ak_01 !== null" type="success" class="el-icon-check" /></span>
@@ -361,11 +361,14 @@ import Pagination from '@/components/Pagination'; // Secondary package based on 
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
+import checkRole from '@/utils/role';
 
 const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
 const jadwalResource = new Resource('jadwal-get');
 const ujiResource = new Resource('uji');
+// const preview = new Resource('detail/preview');
+// const soalIa05AndIa07 = new Resource('soal/ia05/ia07');
 
 export default {
   name: 'PerangkatAsemenList',
@@ -385,6 +388,8 @@ export default {
       dialogFormUpdateVisible: false,
       newData: {},
       pwdType: 'password',
+      ia05: null,
+      ia07: null,
       editedData: {
         id: 0,
         kode_tuk: '',
@@ -427,6 +432,20 @@ export default {
     this.getListJadwal();
   },
   methods: {
+    checkRole,
+    // tidak menampilkan ia 05 dan ia 07 ketika form tersebut tidak punya list pertanyaan
+    // async getSoalIa05AndIa07(){
+    //   console.log(this.list);
+    //   const dataPreview = await preview.get(this.list[0].id);
+    //   const dataSoal = await soalIa05AndIa07.list(dataPreview.id_skema);
+    //   console.log(dataSoal);
+    //   if (dataSoal.soalIa05 !== null) {
+    //     this.ia05 = dataSoal.soalIa05;
+    //   }
+    //   if (dataSoal.soalIa07 !== null) {
+    //     this.ia07 = dataSoal.soalIa07;
+    //   }
+    // },
     async getList() {
       this.query.role = this.roles[0];
       this.query.user_id = this.userId;
@@ -438,7 +457,7 @@ export default {
       // get data perangkat / list table
       const { data, meta } = await listResource.list(this.query);
       this.list = data;
-      console.log(this.list);
+      // console.log(this.list);
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });

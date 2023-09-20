@@ -293,9 +293,6 @@ const skemaResource = new Resource('skema');
 const jadwalResource = new Resource('jadwal-get');
 const print = new Resource('print-semua-module');
 const preview = new Resource('detail/preview');
-// const print = new Resource('print-modules');
-// const skemaunit = new Resource('unit-kompetensi-get');
-const cityOptions = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen'];
 
 export default {
   components: { Pagination },
@@ -364,7 +361,6 @@ export default {
       checkAll: false,
       checkedCities: ['Shanghai', 'Beijing'],
       checkedDataUjiKomp: [],
-      cities: cityOptions,
       isIndeterminate: true,
       showButtonPrint: false,
     };
