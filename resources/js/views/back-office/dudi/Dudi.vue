@@ -21,7 +21,9 @@
                 <div class="container-card">
                   <el-card v-for="(item, index) in list" :key="index" class="card">
                     <div style="padding-bottom: 15px;">
-                      <img :src="'/uploads/dudi/' + item.image" height="300" style="width: 100%; object-fit: cover; object-position: 50% 0;">
+                      <div style="width: 100%; max-height: 300px;">
+                        <img :src="'/uploads/dudi/' + item.image" class="image">
+                      </div>
                       <h4 style="word-wrap: break-word;">{{ item.nama_perusahaan }}</h4>
                       <div class="created-article">
                         <span>
@@ -39,11 +41,13 @@
                   </el-card>
                 </div>
               </div>
-              <div v-else class="container-main-card">
+              <div v-else class="container-main-card" height="440px" arrow="always" style="width: 100%;">
                 <div class="container-card">
                   <el-card v-for="(item, index) in list" :key="index" class="card">
                     <div style="padding-botom: 15px;">
-                      <img :src="'/uploads/dudi/' + item.image" height="300" style="width: 100%; object-fit: cover; object-position: 50% 0;">
+                      <div style="width: 100%; max-height: 300px;">
+                        <img :src="'/uploads/dudi/' + item.image" class="image">
+                      </div>
                       <h4 style="word-wrap: break-word;">{{ item.nama_perusahaan }}</h4>
                       <div class="created-article">
                         <span>
@@ -192,11 +196,11 @@ export default {
       width: 28%;
     }
 
-    /* .image{
+    .image{
       width: 100%;
       height: 100%;
       object-fit: fill;
-    } */
+    }
 
     .container-col2{
       display: flex;
@@ -249,11 +253,11 @@ export default {
       width: 28%;
     }
 
-    /* .image{
+    .image{
       width: 100%;
       height: 100%;
       object-fit: fill;
-    } */
+    }
 
     .container-judul{
       text-align: center;
@@ -305,11 +309,11 @@ export default {
       width: 50%;
     }
 
-    /* .image{
+    .image{
       width: 100%;
       height: 100%;
       object-fit: fill;
-    } */
+    }
 
     .container-judul {
       text-align: center;
@@ -343,7 +347,67 @@ export default {
     }
 
   }
-  @media(max-width: 539px){
+  @media(min-width: 361px) and (max-width: 539px){
+
+    .container-main-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container-card {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card {
+      width: 70%;
+    }
+
+    .image{
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+    }
+
+    .container-judul {
+      text-align: center;
+    }
+
+    .container-col2{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+    }
+
+    .container-judul h1{
+      word-wrap: break-word;
+    }
+
+    .filter-container{
+      width: 500px;
+    }
+
+    .icon-article{
+      border: none;
+      padding: 0;
+    }
+
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+  }
+
+  @media(max-width: 360px){
 
     .container-main-card {
       display: flex;
@@ -364,11 +428,11 @@ export default {
       width: 100%;
     }
 
-    /* .image{
+    .image{
       width: 100%;
       height: 100%;
       object-fit: fill;
-    } */
+    }
 
     .container-judul {
       text-align: center;
