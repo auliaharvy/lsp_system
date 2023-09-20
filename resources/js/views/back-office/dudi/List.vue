@@ -70,6 +70,7 @@
             >
               <el-button slot="trigger" size="small" type="primary">select file</el-button>
               <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
+              <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsImage }}</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -84,7 +85,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="$t('dudi.dialog.edit')" :visible.sync="dialogFormUpdateVisible">
+    <el-dialog :title="$t('dudi.dialog.edit')" :visible.sync="dialogFormUpdateIsVisible">
       <div v-loading="dudiCreating" class="form-container">
         <el-form ref="dudiForm" :rules="rules" :model="editedDudi" label-position="left" label-width="150px" style="max-width: 500px;">
           <el-form-item :label="$t('dudi.table.namaPerusahaan')" prop="nama_perusahaan">
@@ -103,12 +104,13 @@
             >
               <el-button slot="trigger" size="small" type="primary">select file</el-button>
               <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
+              <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsImage }}</div>
               <div v-if="isSelect" slot="tip" class="el-upload__tip">Select file untuk mengganti file KKNI</div>
             </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="dialogFormUpdateVisible()">
             {{ $t('table.cancel') }}
           </el-button>
           <el-button type="primary" @click="updateData()">
@@ -137,6 +139,7 @@ export default {
   data() {
     return {
       fileIsRequired: '',
+      fileIsImage: '',
       isSelect: true,
       list: null,
       total: 0,
@@ -144,7 +147,7 @@ export default {
       downloading: false,
       dudiCreating: false,
       dialogFormVisible: false,
-      dialogFormUpdateVisible: false,
+      dialogFormUpdateIsVisible: false,
       newDudi: {
         id: 0,
         nama_perusahaan: '',
@@ -198,6 +201,10 @@ export default {
     handleCreate() {
       this.resetNewDudi();
       this.dialogFormVisible = true;
+      if (this.$refs.upload_image_create) {
+        const length = this.$refs.upload_image_create.uploadFiles.length;
+        this.$refs.upload_image_create.uploadFiles.splice(0, length);
+      }
       this.$nextTick(() => {
         this.$refs['dudiForm'].clearValidate();
       });
@@ -243,9 +250,8 @@ export default {
             dudiResource
               .store(uploadData)
               .then(() => {
-                // console.log(this.newDudi);
                 this.$message({
-                  message: 'New File ' + this.newDudi.nama + ' has been created successfully.',
+                  message: 'New File ' + this.newDudi.nama_perusahaan + ' has been created successfully.',
                   type: 'success',
                   duration: 5 * 1000,
                 });
@@ -264,7 +270,6 @@ export default {
           }
         } else {
           this.loading = false;
-          // console.log(this.newDudi);
           // console.log('error submit!!');
           return false;
         }
@@ -273,8 +278,16 @@ export default {
     handleUpdate(dudi) {
       this.isSelect = true;
       this.editedDudi = dudi;
-      this.dialogFormUpdateVisible = true;
       console.log(this.editedDudi);
+      if (this.$refs.upload_image_edit) {
+        const length = this.$refs.upload_image_edit.uploadFiles.length;
+        this.$refs.upload_image_edit.uploadFiles.splice(0, length);
+      }
+      this.dialogFormUpdateIsVisible = true;
+    },
+    dialogFormUpdateVisible(){
+      this.dialogFormUpdateIsVisible = false;
+      this.getList();
     },
     updateData() {
       this.loading = true;
@@ -291,14 +304,14 @@ export default {
           // console.log(response);
           this.getList();
           this.resetEditedDudi();
-          this.dialogFormUpdateVisible = false;
+          this.dialogFormUpdateIsVisible = false;
           this.$notify({
             title: 'Success',
             message: 'Updated successfully',
             type: 'success',
             duration: 2000,
           });
-          this.$refs.upload_path_edit.handleRemove();
+          this.$refs.upload_image_edit.handleRemove();
         })
         .catch(error => {
           console.log(error);
@@ -309,11 +322,36 @@ export default {
         });
     },
     handleUploadSuccess(e) {
-      this.newDudi.image = this.$refs.upload_image_create.uploadFiles[0].raw;
       this.fileIsRequired = '';
+      const length = this.$refs.upload_image_create.uploadFiles.length;
+      if (length === 2) {
+        this.$refs.upload_image_create.uploadFiles.splice(0, 1);
+        this.newDudi.image = this.$refs.upload_image_create.uploadFiles[0].raw;
+      } else {
+        this.newDudi.image = this.$refs.upload_image_create.uploadFiles[0].raw;
+      }
+      if (this.newDudi.image.type === 'image/jpeg' || this.newDudi.image.type === 'image/png' || this.newDudi.image.type === 'image/jpg') {
+        this.fileIsImage = '';
+      } else {
+        this.fileIsImage = 'File type must be image/jpeg/jpg/png';
+        this.$refs.upload_image_create.uploadFiles.splice(0, length);
+      }
+      console.log(this.newDudi.image);
     },
     handleUploadSuccessEdit(e) {
-      this.editedDudi.image = this.$refs.upload_image_edit.uploadFiles[0].raw;
+      const length = this.$refs.upload_image_edit.uploadFiles.length;
+      if (length === 2) {
+        this.$refs.upload_image_edit.uploadFiles.splice(0, 1);
+        this.editedDudi.image = this.$refs.upload_image_edit.uploadFiles[0].raw;
+      } else {
+        this.editedDudi.image = this.$refs.upload_image_edit.uploadFiles[0].raw;
+      }
+      if (this.editedDudi.image.type === 'image/jpeg' || this.editedDudi.image.type === 'image/png' || this.editedDudi.image.type === 'image/jpg') {
+        this.fileIsImage = '';
+      } else {
+        this.fileIsImage = 'File type must be image/jpeg/jpg/png';
+        this.$refs.upload_image_edit.uploadFiles.splice(0, length);
+      }
       this.isSelect = false;
       console.log(this.editedDudi.image);
     },

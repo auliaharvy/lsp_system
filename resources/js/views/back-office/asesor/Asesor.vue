@@ -74,7 +74,7 @@
                 </div>
               </div>
               <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
-                <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" class="pagination" @pagination="getList" />
+                <secondPagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" class="pagination" @pagination="getList" />
               </div>
             </el-col>
           </el-row>
@@ -84,15 +84,15 @@
   </div>
 </template>
 <script>
-import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
+import SecondPagination from '@/components/SecondPagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 const assesorResource = new Resource('assesor');
 
 export default {
   name: 'SkemaList',
+  components: { SecondPagination },
   directives: { waves },
-  components: { Pagination },
   data() {
     return {
       list: {},
@@ -109,6 +109,9 @@ export default {
         role: '',
       },
     };
+  },
+  computed(){
+
   },
   created(){
     this.getList();

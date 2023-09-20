@@ -76,6 +76,7 @@
             >
               <el-button slot="trigger" size="small" type="primary">select file</el-button>
               <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
+              <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsPdf }}</div>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -90,7 +91,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="$t('kkni.dialog.edit') + ' ' + editedKkni.nama" :visible.sync="dialogFormUpdateVisible">
+    <el-dialog :title="$t('kkni.dialog.edit') + ' ' + editedKkni.nama" :visible.sync="dialogFormUpdateIsVisible">
       <div v-loading="kkniCreating" class="form-container">
         <el-form ref="kkniForm" :rules="rules" :model="editedKkni" label-position="left" label-width="150px" style="max-width: 500px;">
           <el-form-item :label="$t('kkni.table.nama')" prop="nama">
@@ -112,12 +113,13 @@
             >
               <el-button slot="trigger" size="small" type="primary">select file</el-button>
               <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
+              <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsPdf }}</div>
               <div v-if="isSelect" slot="tip" class="el-upload__tip">Select file untuk mengganti file KKNI</div>
             </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="dialogFormUpdateVisible()">
             {{ $t('table.cancel') }}
           </el-button>
           <el-button type="primary" @click="updateData()">
@@ -146,6 +148,7 @@ export default {
     return {
       list: null,
       fileIsRequired: '',
+      fileIsPdf: '',
       isSelect: true,
       filename: '',
       total: 0,
@@ -153,7 +156,7 @@ export default {
       downloading: false,
       kkniCreating: false,
       dialogFormVisible: false,
-      dialogFormUpdateVisible: false,
+      dialogFormUpdateIsVisible: false,
       pdf: null,
       dataTrx: {},
       editedKkni: {
@@ -204,7 +207,13 @@ export default {
     },
     handleCreate() {
       this.resetdataTrx();
+      this.fileIsRequired = '';
+      this.fileIsPdf = '';
       this.dialogFormVisible = true;
+      if (this.$refs.upload_path_create) {
+        const length = this.$refs.upload_path_create.uploadFiles.length;
+        this.$refs.upload_path_create.uploadFiles.splice(0, length);
+      }
       this.$nextTick(() => {
         this.$refs['newForm'].clearValidate();
       });
@@ -227,9 +236,13 @@ export default {
         });
       }).catch(() => {
         this.$message({
-          tessage: 'Delete canceled',
+          message: 'Delete canceled',
         });
       });
+    },
+    dialogFormUpdateVisible(){
+      this.dialogFormUpdateIsVisible = false;
+      this.getList();
     },
     submit(){
       this.loading = true;
@@ -279,7 +292,11 @@ export default {
     handleUpdate(kkni) {
       this.isSelect = true;
       this.editedKkni = kkni;
-      this.dialogFormUpdateVisible = true;
+      if (this.$refs.upload_path_edit) {
+        const length = this.$refs.upload_path_edit.uploadFiles.length;
+        this.$refs.upload_path_edit.uploadFiles.splice(0, length);
+      }
+      this.dialogFormUpdateIsVisible = true;
     },
     updateData() {
       this.loading = true;
@@ -297,7 +314,7 @@ export default {
           // console.log(response);
           this.getList();
           this.resetEditedKkni();
-          this.dialogFormUpdateVisible = false;
+          this.dialogFormUpdateIsVisible = false;
           this.$notify({
             title: 'Success',
             message: 'Updated successfully',
@@ -315,11 +332,37 @@ export default {
         });
     },
     handleUploadSuccess(e) {
-      this.dataTrx.upload_path = this.$refs.upload_path_create.uploadFiles[0].raw;
       this.fileIsRequired = '';
+      const length = this.$refs.upload_path_create.uploadFiles.length;
+      if (length === 2) {
+        this.$refs.upload_path_create.uploadFiles.splice(0, 1);
+        this.dataTrx.upload_path = this.$refs.upload_path_create.uploadFiles[0].raw;
+      } else {
+        this.dataTrx.upload_path = this.$refs.upload_path_create.uploadFiles[0].raw;
+      }
+      if (this.dataTrx.upload_path.type !== 'application/pdf') {
+        this.fileIsPdf = 'File type must be pdf';
+        this.$refs.upload_path_create.uploadFiles.splice(0, length);
+      } else {
+        this.fileIsPdf = '';
+      }
+      console.log(this.dataTrx.upload_path);
     },
     handleUploadSuccessEdit(e) {
-      this.editedKkni.upload_path = this.$refs.upload_path_edit.uploadFiles[0].raw;
+      const length = this.$refs.upload_path_edit.uploadFiles.length;
+      console.log(this.$refs.upload_path_edit.uploadFiles);
+      if (length === 2) {
+        this.$refs.upload_path_edit.uploadFiles.splice(0, 1);
+        this.editedKkni.upload_path = this.$refs.upload_path_edit.uploadFiles[0].raw;
+      } else {
+        this.editedKkni.upload_path = this.$refs.upload_path_edit.uploadFiles[0].raw;
+      }
+      if (this.editedKkni.upload_path.type !== 'application/pdf') {
+        this.fileIsPdf = 'File type must be pdf';
+        this.$refs.upload_path_edit.uploadFiles.splice(0, length);
+      } else {
+        this.fileIsPdf = '';
+      }
       this.isSelect = false;
     },
     handleDownload() {

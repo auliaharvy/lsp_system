@@ -112,7 +112,7 @@ export default {
       listLoading: true,
       query: {
         page: 1,
-        limit: 15,
+        limit: 10,
         keyword: '',
         role: '',
       },
@@ -164,7 +164,8 @@ export default {
     },
     async getList() {
       this.listLoading = true;
-      const { data } = await articleResource.list(this.query);
+      const { data, meta } = await articleResource.list(this.query);
+      // console.log(await articleResource.list(this.query));
       this.list = data;
       this.list.forEach((element, index) => {
         const waktu = this.ubahFormatTanggal(element.created_at);
@@ -172,7 +173,8 @@ export default {
         element['waktu'] = waktu;
       });
 
-      // this.total = data;
+      this.total = meta.total;
+
       this.listLoading = false;
     },
   },
