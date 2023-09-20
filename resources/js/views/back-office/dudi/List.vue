@@ -69,6 +69,7 @@
               :on-change="handleUploadSuccess"
             >
               <el-button slot="trigger" size="small" type="primary">select file</el-button>
+              <div slot="tip" class="el-upload__tip">Ukuran foto direkomendasikan 300x300</div>
               <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
               <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsImage }}</div>
             </el-upload>
@@ -106,6 +107,7 @@
               <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsRequired }}</div>
               <div slot="tip" style="font-size: 12px; color: rgba(255, 0, 0, 0.8);">{{ fileIsImage }}</div>
               <div v-if="isSelect" slot="tip" class="el-upload__tip">Select file untuk mengganti file KKNI</div>
+              <div slot="tip" class="el-upload__tip">Ukuran foto direkomendasikan 300x300</div>
             </el-upload>
           </el-form-item>
         </el-form>
