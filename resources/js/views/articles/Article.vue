@@ -503,7 +503,6 @@ export default {
       flex-direction: column;
       justify-content: space-between;
       font-size: 12px;
-      border: 1px solid black;
     }
 
     .description span{
@@ -589,7 +588,6 @@ export default {
       flex-direction: column;
       justify-content: space-between;
       font-size: 12px;
-      border: 1px solid black;
     }
 
     .description span{
