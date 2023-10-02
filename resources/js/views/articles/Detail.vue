@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-row type="flex" class="content" justify="center">
+    <el-row type="flex" justify="center">
       <el-col class="container-col">
-        <div>
+        <div class="container-image">
           <img v-if="article.image" :src="'uploads/article/' + article.image" class="image">
         </div>
         <div class="created-article">
@@ -100,6 +100,12 @@ export default {
 
     .container-col{
       width: 60%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container-image{
+      width: 100%;
     }
 
     .image{
@@ -148,18 +154,30 @@ export default {
     }
 
     .created-article{
+      width: 100%;
       display: flex;
       justify-content: space-between;
       font-size: 11px;
       padding-top: 10px;
+    }
+
+    .kategori{
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
     }
 
   }
 
   @media(min-width: 769px) and (max-width: 989px) {
-
     .container-col{
       width: 70%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container-image{
+      width: 100%;
     }
 
     .image{
@@ -176,7 +194,7 @@ export default {
     }
 
     article {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: arial, helvetica, sans-serif;
       font-size: 16px;
       max-width: 800px;
       margin: 0 auto;
@@ -208,18 +226,30 @@ export default {
     }
 
     .created-article{
+      width: 100%;
       display: flex;
       justify-content: space-between;
       font-size: 11px;
       padding-top: 10px;
+    }
+
+    .kategori{
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
     }
 
   }
 
   @media(min-width: 540px) and (max-width: 768px){
-
     .container-col{
-      width: 88%;
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container-image{
+      width: 100%;
     }
 
     .image{
@@ -236,7 +266,7 @@ export default {
     }
 
     article {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: arial, helvetica, sans-serif;
       font-size: 16px;
       max-width: 800px;
       margin: 0 auto;
@@ -268,21 +298,105 @@ export default {
     }
 
     .created-article{
+      width: 100%;
       display: flex;
       justify-content: space-between;
       font-size: 11px;
       padding-top: 10px;
     }
 
+    .kategori{
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+    }
+
   }
 
   @media(min-width: 359px) and (max-width: 539px){
-
     .container-col{
-      width: 90%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
-    .image{
+    .container-image{
+      width: 100%;
+      height: 300px;
+    }
+
+    .container-image .image{
+      width: 100%;
+      object-fit:cover;
+      object-position: 100% 0;
+      background-position:fixed;
+      background-repeat:no-repeat;
+      height: 300px;
+      -webkit-background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      -o-background-size: 100% 100%;
+      background-size: 100% 100%;
+    }
+
+    article {
+      font-family: arial, helvetica, sans-serif;
+      font-size: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      color: #333;
+      background-color: #fff;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    p {
+      margin-bottom: 1.5em;
+    }
+
+    .icon-article{
+      border: none;
+      padding: 0;
+    }
+
+    .created-article{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding-top: 10px;
+    }
+
+    .kategori{
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+  }
+  @media(max-width: 358px){
+    .container-col{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container-image{
+      width: 100%;
+    }
+
+    .container-image .image{
       width: 100%;
       object-fit: cover;
       object-position: 100% 0;
@@ -296,7 +410,7 @@ export default {
     }
 
     article {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: arial, helvetica, sans-serif;
       font-size: 16px;
       max-width: 800px;
       margin: 0 auto;
@@ -307,19 +421,20 @@ export default {
     }
 
     h1 {
-      font-size: 24px;
+      font-size: 32px;
       font-weight: bold;
       color: #333;
     }
 
     h2 {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
       color: #555;
     }
 
     p {
       margin-bottom: 1.5em;
+      font-size: 12px;
     }
 
     .icon-article{
@@ -328,72 +443,18 @@ export default {
     }
 
     .created-article{
+      width: 100%;
       display: flex;
       justify-content: space-between;
       font-size: 11px;
       padding-top: 10px;
+      flex-direction: column;
     }
 
-  }
-  @media(max-width: 358px){
-
-    .container-col{
+    .kategori{
       width: 100%;
-    }
-
-    .image{
-      width: 100%;
-      object-fit: cover;
-      object-position: 50% 0;
-      background-position:fixed;
-      background-repeat:no-repeat;
-      height: 170px;
-      -webkit-background-size: 100% 100%;
-      -moz-background-size: 100% 100%;
-      -o-background-size: 100% 100%;
-      background-size: 100% 100%;
-    }
-
-    .child-created-article{
-      display: block;
-      padding-bottom: 10px;
-    }
-
-    .created-article{
-      font-size: 11px;
-      padding-top: 10px;
-    }
-
-    .icon-article{
-      border: none;
-      padding: 0;
-    }
-
-    article {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 14px;
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: left;
-      color: #333;
-      background-color: #fff;
-      line-height: 1.5;
-    }
-
-    h1 {
-      font-size: 24px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    h2 {
-      font-size: 20px;
-      font-weight: bold;
-      color: #555;
-    }
-
-    p {
-      margin-bottom: 1.5em;
+      display: flex;
+      justify-content: flex-start;
     }
 
   }
