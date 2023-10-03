@@ -23,9 +23,12 @@
                     <div style="padding-bottom: 15px;">
                       <!-- <img :src="'/uploads/assesor/' + item.image" class="image"> -->
                       <img :src="'/uploads/assesor/default.png'" class="image">
-                      <h4 style="word-wrap: break-word">{{ item.nama }}</h4>
+                      <h4 style="word-wrap: break-word; padding: 5px 0px;">{{ item.nama }}</h4>
                       <div class="created-article">
                         <div style="padding-bottom: 10px;">
+                          <div class="kategori">
+                            <el-tag class="tag">{{ item.status_asesor === "Assesor Tetap" ? item.status_asesor : 'Assesor Pinjam' }}</el-tag>
+                          </div>
                           <div style="padding-bottom: 5px;">No Registrasi : </div>
                           <el-button icon="el-icon-date" class="icon-article" />
                           <span>{{ item.no_reg }}</span>
@@ -51,15 +54,18 @@
                     <div style="padding-bottom: 15px;">
                       <!-- <img :src="'/uploads/assesor/' + item.image" class="image"> -->
                       <img :src="'/uploads/assesor/default.png'" class="image">
-                      <h4 style="word-wrap: break-word">{{ item.nama }}</h4>
+                      <h4 style="word-wrap: break-word; margin: 0px 0px 5px 0px;">{{ item.nama }}</h4>
                       <div class="created-article">
                         <div style="padding-bottom: 10px;">
-                          <div style="padding-bottom: 5px;">No Registrasi : </div>
+                          <div class="kategori">
+                            <el-tag class="tag">{{ item.status_asesor === "Assesor Tetap" ? item.status_asesor : 'Assesor Pinjam' }}</el-tag>
+                          </div>
+                          <div style="padding: 5px 0px;">No Registrasi : </div>
                           <el-button icon="el-icon-date" class="icon-article" />
                           <span>{{ item.no_reg }}</span>
                         </div>
                         <div>
-                          <div style="padding-bottom: 5px;">Email : </div>
+                          <div style="padding: 5px 0px;">Email : </div>
                           <el-button icon="el-icon-person" class="icon-article" />
                           <span>{{ item.email }}</span>
                         </div>
@@ -160,6 +166,7 @@ export default {
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
+      console.log(this.list);
       this.total = meta.total;
       this.loading = false;
       console.log(this.list);
@@ -229,8 +236,18 @@ export default {
 
     .created-article{
       font-size: 11px;
-      padding-top: 10px;
     }
+    .card div h4{
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .kategori{
+      margin-bottom: 10px;
+    }
+
   }
 
   @media(min-width: 769px) and (max-width: 989px) {
@@ -276,12 +293,21 @@ export default {
 
     .created-article{
       font-size: 11px;
-      padding-top: 10px;
       padding-bottom: 10px;
     }
 
     .filter-container{
       min-width: 500px;
+    }
+    .card div h4{
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .kategori{
+      margin-bottom: 10px;
     }
 
   }
@@ -338,8 +364,15 @@ export default {
 
     .created-article{
       font-size: 11px;
-      padding-top: 10px;
       padding-bottom: 10px;
+    }
+    .card div h4{
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .kategori{
+      margin-bottom: 15px;
     }
 
   }
@@ -395,9 +428,15 @@ export default {
 
     .created-article{
       font-size: 11px;
-      padding-top: 10px;
       padding-bottom: 10px;
     }
+    .card div h4{
+      margin: 0px;
+      padding: 0px;
+    }
 
+    .kategori{
+      margin-bottom: 15px;
+    }
   }
 </style>
