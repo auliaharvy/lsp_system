@@ -6,15 +6,11 @@
     <div style="margin-top: 15px;">
       <el-row type="flex" justify="center" class="container-row">
         <el-col class="container-col">
-          <el-row class="container-row2">
-            <el-col class="container-col2">
-              <div class="filter-container">
-                <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" @input="handleFilter">
-                  <el-button slot="append" v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter" />
-                </el-input>
-              </div>
-            </el-col>
-          </el-row>
+          <div class="filter-container">
+            <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" @input="handleFilter">
+              <el-button slot="append" v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter" />
+            </el-input>
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -48,9 +44,7 @@
               </div>
               <div class="description">
                 <span>{{ item.description }}</span>
-                <div class="bottom clearfix">
-                  <router-link :to="'/kegiatan/' + item.slug "><el-button type="primary" class="button">Baca Selengkapnya</el-button></router-link>
-                </div>
+                <router-link :to="'/kegiatan/' + item.slug " class="container-router"><el-button type="primary" class="button">Baca Selengkapnya</el-button></router-link>
               </div>
             </el-card>
           </el-carousel-item>
@@ -149,76 +143,104 @@ export default {
   },
 };
 </script>
-<style>
-  @media(min-width: 990px){
-    .container-judul{
-      text-align: center;
-    }
+<style scoped>
+  .container-judul{
+    text-align: center;
+  }
 
-    .container-row{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+  .container-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .container-col{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 80%;
-    }
+  .container-col{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+  }
 
-    .carousel{
-      width: 60%;
-      height: 450px;
-    }
+  .filter-container{
+    width: 60%;
+  }
 
-    .carousel-item{
-      width: 100%;
-      height: 450px;
-    }
+  .carousel{
+    width: 60%;
+    height: 450px;
+  }
 
-    .judul, .description{
-      font-size: 14px;
-    }
+  .carousel-item{
+    width: 100%;
+    height: 450px;
+  }
 
-    .card{
-      width: 100%;
-      height: 100%;
-    }
+  .created-article {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 5px 0px;
+  }
 
-    .kategori{
-      padding: 8px 0px;
-    }
+  .icon-article {
+    border: none;
+    padding: 0;
+  }
 
-    .judul{
-      display: flex;
-      align-items: center;
-      width: 100%;
-      height: 30px;
-    }
+  .child-created-article{
+    padding-bottom: 5px;
+  }
 
-    .judul h4{
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+  .kategori{
+    padding-bottom: 5px;
+  }
 
-    .description{
-      height: 100px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+  .judul, .description{
+    font-size: 14px;
+  }
 
-    .description span{
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+  .card{
+    width: 100%;
+    height: 100%;
+  }
 
+  .judul{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+  }
+
+  .judul h4{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .description{
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .description span{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .container-router{
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .button{
+    font-size: 12px;
+    padding: 8px;
   }
 
   @media(min-width: 769px) and (max-width: 989px) {
@@ -239,9 +261,18 @@ export default {
       width: 80%;
     }
 
+    .filter-container{
+      width: 80%;
+    }
+
     .carousel{
       width: 80%;
       height: 450px;
+    }
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     .carousel-item{
@@ -257,9 +288,8 @@ export default {
       width: 100%;
       height: 100%;
     }
-
     .kategori{
-      padding: 8px 0px;
+      padding-bottom: 5px;
     }
 
     .judul{
@@ -288,6 +318,16 @@ export default {
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+
+    .container-router{
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .button{
+      font-size: 12px;
+      padding: 8px;
     }
 
   }
@@ -309,6 +349,9 @@ export default {
       align-items: center;
       width: 80%;
     }
+    .filter-container{
+      width: 80%;
+    }
 
     .carousel{
       width: 80%;
@@ -319,6 +362,11 @@ export default {
       width: 100%;
       height: 450px;
     }
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
 
     .judul, .description{
       font-size: 14px;
@@ -328,9 +376,8 @@ export default {
       width: 100%;
       height: 100%;
     }
-
     .kategori{
-      padding: 8px 0px;
+      padding-bottom: 5px;
     }
 
     .judul{
@@ -359,6 +406,15 @@ export default {
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+    .container-router{
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .button{
+      font-size: 12px;
+      padding: 8px;
     }
 
   }
@@ -380,15 +436,23 @@ export default {
       align-items: center;
       width: 80%;
     }
+    .filter-container{
+      width: 80%;
+    }
 
     .carousel{
       width: 80%;
-      height: 450px;
+      height: 460px;
+    }
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     .carousel-item{
       width: 100%;
-      height: 450px;
+      height: 460px;
     }
 
     .judul, .description{
@@ -401,7 +465,7 @@ export default {
     }
 
     .kategori{
-      padding: 8px 0px;
+      padding-bottom: 5px;
     }
 
     .judul{
@@ -431,6 +495,15 @@ export default {
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+    .container-router{
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .button{
+      font-size: 12px;
+      padding: 8px;
+    }
 
   }
 
@@ -449,7 +522,11 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 80%;
+      width: 100%;
+    }
+
+    .filter-container{
+      width: 100%;
     }
 
     .carousel{
@@ -465,6 +542,11 @@ export default {
     .container-image img{
       height: 150px;
     }
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
 
     .created-article .child-created-article{
       padding-bottom: 5px;
@@ -478,7 +560,6 @@ export default {
       width: 100%;
       height: 100%;
     }
-
     .kategori{
       padding-bottom: 5px;
     }
@@ -511,6 +592,10 @@ export default {
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+    .container-router{
+      display: flex;
+      justify-content: flex-start;
+    }
 
     .button{
       font-size: 12px;
@@ -519,7 +604,7 @@ export default {
 
   }
 
-  @media(min-width: 259px) and (max-width: 360px){
+  @media(min-width: 260px) and (max-width: 360px){
     .container-judul{
       text-align: center;
     }
@@ -534,21 +619,30 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 80%;
+      width: 100%;
+    }
+
+    .filter-container{
+      width: 100%;
     }
 
     .carousel{
       width: 100%;
-      height: 395px;
+      height: 410px;
     }
 
     .carousel-item{
       width: 100%;
-      height: 395px;
+      height: 410px;
     }
 
     .container-image img{
       height: 150px;
+    }
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     .created-article .child-created-article{
@@ -563,7 +657,6 @@ export default {
       width: 100%;
       height: 100%;
     }
-
     .kategori{
       padding-bottom: 5px;
     }
@@ -596,6 +689,10 @@ export default {
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+    .container-router{
+      display: flex;
+      justify-content: flex-start;
+    }
 
     .button{
       font-size: 12px;
@@ -604,7 +701,7 @@ export default {
 
   }
 
-  @media(min-width: 0px) and (max-width: 260px){
+  @media(min-width: 0px) and (max-width: 259px){
     .container-judul{
       text-align: center;
     }
@@ -619,6 +716,10 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 80%;
+    }
+
+    .filter-container{
       width: 80%;
     }
 
@@ -636,6 +737,12 @@ export default {
       height: 145px;
     }
 
+    .created-article{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
     .created-article .child-created-article{
       padding-bottom: 5px;
     }
@@ -648,9 +755,8 @@ export default {
       width: 100%;
       height: 100%;
     }
-
-    .kategori .tag{
-      padding: 0px;
+    .kategori{
+      padding-bottom: 5px;
     }
 
     .judul{
@@ -680,6 +786,10 @@ export default {
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+    .container-router{
+      display: flex;
+      justify-content: flex-start;
     }
 
     .button{

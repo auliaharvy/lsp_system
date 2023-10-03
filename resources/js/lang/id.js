@@ -298,7 +298,7 @@ export default {
     },
     perangkat: {
       filename: 'Nama File',
-      file: 'File',
+      soal: 'Soal',
       versi: 'Versi',
       version: 'Versi',
       pertanyaan: 'Pertanyaan',
