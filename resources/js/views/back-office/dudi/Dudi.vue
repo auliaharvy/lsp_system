@@ -175,7 +175,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
   @media(min-width: 990px){
 
     .container-main-card {
@@ -193,6 +193,7 @@ export default {
     }
 
     .card {
+      height: 500px;
       width: 28%;
     }
 

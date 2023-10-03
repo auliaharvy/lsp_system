@@ -1,71 +1,55 @@
 <template>
   <div>
-    <el-collapse-transition>
-      <el-row type="flex" class="content" justify="center">
-        <el-col :span="getColumnSpan() === 6 ? 12 : getColumnSpan()">
-          <h1 class="heading-1">Lembaga Sertifikasi Profesi <br> SMKN 2 Cikarang Barat</h1>
-          <h2 class="heading-1">Mengapa Kami?</h2>
-          <p class="heading-1">Karena komitmen kami untuk meningkatkan kebertrimaan Sertifikat Kompetensi oleh industri baik di tingkat nasional maupun internasional.</p>
+    <el-row class="container-row">
+      <el-col class="container-col">
+        <h1>Lembaga Sertifikasi Profesi <br> SMKN 2 Cikarang Barat</h1>
+        <h2>Mengapa Kami?</h2>
+        <p>Karena komitmen kami untuk meningkatkan kebertrimaan Sertifikat Kompetensi oleh industri baik di tingkat nasional maupun internasional.</p>
+      </el-col>
+    </el-row>
+    <el-row class="container-row row-sda">
+      <el-row class="child-row-sda">
+        <el-col v-for="(item, index) in cardMengapaKami" :key="index" class="container-col col-sda">
+          <div class="container-sda">
+            <div v-html="item.icon" />
+            <h3>{{ item.title }}</h3>
+            <span>{{ item.content }}</span>
+          </div>
         </el-col>
       </el-row>
-    </el-collapse-transition>
-    <el-row :span="12" type="flex" class="card-mengapa-kami" justify="center">
-      <el-col v-for="(item, index) in cardMengapaKami" :key="index" :span="getColumnSpan()" style="text-align: center;">
-        <div v-html="item.icon" />
-        <h3>{{ item.title }}</h3>
-        <span>{{ item.content }}</span>
+    </el-row>
+    <el-row class="container-row">
+      <el-col class="container-col">
+        <h2>Daftar Skema Sertifikasi</h2>
       </el-col>
     </el-row>
-    <el-row :span="getColumnSpan() === 6 ? 12 : getColumnSpan()" type="flex" class="content" justify="center">
-      <el-col :span="getColumnSpan() === 6 ? 12 : getColumnSpan()">
-        <h3 class="heading-1">Daftar Skema Sertifikasi</h3>
-      </el-col>
-    </el-row>
-    <el-row type="flex" justify="center" class="container-carousel">
-      <el-col :span="getColumnSpan() === 6 ? 12 : getColumnSpan()" class="for-carousel">
-        <el-tabs v-if="listKategori" v-model="activeName" @tab-click="handleClickSertifikasi">
+    <el-row class="container-row">
+      <el-col class="container-col">
+        <el-tabs v-if="listKategori" v-model="activeName" class="row-tabs" @tab-click="handleClickSertifikasi">
           <el-tab-pane
             v-for="item in listKategori"
             :key="item.id"
             :label="item.nama"
             :name="item.nama"
           >
-            <el-row type="flex" justify="center">
-              <el-col :span="24">
-                <el-carousel v-if="isMobile" :interval="4000" height="440px" arrow="always">
-                  <el-carousel-item v-for="itemSkema in listSkema" :key="itemSkema.id">
-                    <el-card style="height: 100%;">
-                      <img src="https://cdn.siasat.com/wp-content/uploads/2019/03/online-store.png" class="image">
-                      <div style="padding-inline: 14px;">
-                        <h4>{{ itemSkema.kode_skema }}</h4>
-                      </div>
-                      <div style="padding-inline: 14px;">
-                        <span>{{ itemSkema.skema_sertifikasi }}</span>
-                        <div class="bottom clearfix">
-                          <router-link :to="'/skema/' + itemSkema.id + '/' + itemSkema.nama_kategori"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
-                        </div>
-                      </div>
-                    </el-card>
-                  </el-carousel-item>
-                </el-carousel>
-                <el-carousel v-else :interval="4000" type="card" height="430px">
-                  <el-carousel-item v-for="itemSkema in listSkema" :key="itemSkema.id">
-                    <el-card style="height: 100%;">
-                      <img src="https://cdn.siasat.com/wp-content/uploads/2019/03/online-store.png" class="image">
-                      <div style="padding-inline: 14px;">
-                        <h4>{{ itemSkema.kode_skema }}</h4>
-                      </div>
-                      <div style="padding-inline: 14px;">
-                        <span>{{ itemSkema.skema_sertifikasi }}</span>
-                        <div class="bottom clearfix">
-                          <router-link :to="'/skema/' + itemSkema.id + '/' + itemSkema.nama_kategori"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
-                        </div>
-                      </div>
-                    </el-card>
-                  </el-carousel-item>
-                </el-carousel>
-              </el-col>
-            </el-row>
+            <el-carousel :interval="4000" class="row-carousel" arrow="always" indicator-position="none">
+              <el-carousel-item v-for="itemSkema in listSkema" :key="itemSkema.id" class="row-carousel-item">
+                <el-card class="card">
+                  <div class="container-image">
+                    <img src="https://cdn.siasat.com/wp-content/uploads/2019/03/online-store.png" class="image">
+                  </div>
+                  <div class="kode_skema">
+                    <h4>{{ itemSkema.kode_skema }} </h4>
+                  </div>
+                  <div class="skema_sertifikasi">
+                    <span>{{ itemSkema.skema_sertifikasi }}</span>
+                    <div class="bottom clearfix">
+                      <router-link :to="'/skema/' + itemSkema.id + '/' + itemSkema.nama_kategori"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
+                    </div>
+                  </div>
+                </el-card>
+              </el-carousel-item>
+            </el-carousel>
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -153,52 +137,13 @@ export default {
         this.listSkema = this.querySkema[index][newValue];
       }
     },
-    carouselCardTabletActive(newValue, oldValue){
-      if (this.getColumnSpan() > 768) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    carouselArrowsMobileActive(newValue, oldValue){
-      const screenWidth = window.innerWidth;
-      if (screenWidth < 768) {
-        return screenWidth;
-      } else {
-        return false;
-      }
-    },
   },
   created() {
     this.getListKategori().then(() => {
       this.getListSkema();
     });
   },
-  mounted(){
-    this.handleResize();
-    window.addEventListener('resize', this.handleResize);
-  },
-  beforeDestroy(){
-    window.removeEventListener('resize', this.handleResize);
-  },
   methods: {
-    getColumnSpan(){
-      if (this.isMobile) {
-        return 24;
-      } else if (this.isTablet) {
-        return 16;
-      } else if (this.isLaptop) {
-        return 6;
-      } else {
-        return 12;
-      }
-    },
-    handleResize(){
-      const screenWidth = window.innerWidth;
-      this.isMobile = screenWidth < 768;
-      this.isTablet = screenWidth >= 768 && screenWidth < 1024;
-      this.isLaptop = screenWidth >= 1024;
-    },
     async getListKategori() {
       const { data } = await kategoriResource.list();
       const countSkemaResult = await skemaCount.list();
@@ -236,78 +181,360 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 
-  @media(max-width: 990px){
-    .card-mengapa-kami{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+  .container-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 30px;
   }
 
-  @media(max-width: 768px){
-    .container-carousel{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .for-carousel{
-      max-width: 420px;
-    }
-    .content h1{
-      font-size: 30px;
-    }
-    .content h2{
-      font-size: 25px;
-    }
-    .content p{
-      font-size: 18px;
-      font-weight: 500;
-    }
-  }
-  .icon-card-mengapa-kami{
-    color: #223f4d;
+  .container-col{
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 
-  .heading {
-    margin-top: 50px;
+  .container-col h1,
+  .container-col h2,
+  .container-col p{
+    width: 50%;
     text-align: center;
-  }
-  .heading-1 {
-    margin-top: 20px;
-    text-align: center;
-  }
-  .content {
-    margin-top: 20px;
+    margin: 20px 0px 0px 0px;
     color: #23252a;
   }
-  .time {
-    font-size: 13px;
-    color: #999;
+  .container-col h3{
+    color: #23252a;
   }
-  .bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
-
-  .button {
-    padding: 0;
-    float: right;
-  }
-
-  .image {
+  .container-row.row-sda{
     width: 100%;
+    display: flex;
   }
 
-  .clearfix:before,
-  .clearfix:after {
-      display: table;
-      content: "";
+  .child-row-sda{
+    width: 80%;
+    display: flex;
+    gap: 10px;
   }
-  .clearfix:after {
-      clear: both
+ .container-col.col-sda{
+    width: 33.3%;
   }
+  .container-sda div{
+    color: #223f4d;
+  }
+  .container-sda{
+    text-align: center;
+  }
+
+  .row-tabs{
+    width: 40%;
+  }
+  .row-carousel{
+    width: 100%;
+    height: 330px;
+  }
+
+  .row-carousel-item{
+    width: 100%;
+    height: 330px;
+  }
+
+  .card{
+    width: 100%;
+    height: 100%;
+  }
+  .image{
+    width: 100%;
+    height: 200px;
+  }
+  .kode_skema{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+  }
+ .kode_skema h4{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .skema_sertifikasi span{
+    font-size: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media(min-width: 761px) and (max-width: 990px){
+  .container-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 30px;
+  }
+
+  .container-col{
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .container-col h1,
+  .container-col h2,
+  .container-col p{
+    width: 50%;
+    text-align: center;
+    margin: 20px 0px 0px 0px;
+    color: #23252a;
+  }
+  .container-col h3{
+    color: #23252a;
+  }
+  .container-row.row-sda{
+    width: 100%;
+    display: flex;
+  }
+
+  .child-row-sda{
+    width: 80%;
+    display: flex;
+    gap: 10px;
+  }
+ .container-col.col-sda{
+    width: 33.3%;
+  }
+  .container-sda div{
+    color: #223f4d;
+  }
+  .container-sda{
+    text-align: center;
+  }
+
+  .row-tabs{
+    width: 60%;
+  }
+  .row-carousel{
+    width: 100%;
+    height: 330px;
+  }
+
+  .row-carousel-item{
+    width: 100%;
+    height: 330px;
+  }
+
+  .card{
+    width: 100%;
+    height: 330px;
+  }
+  .image{
+    width: 100%;
+    height: 200px;
+  }
+
+  }
+  @media(min-width: 691px) and (max-width: 760px){
+  .container-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 30px;
+  }
+
+  .container-col{
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .container-col h1,
+  .container-col h2,
+  .container-col p{
+    width: 50%;
+    text-align: center;
+    margin: 20px 0px 0px 0px;
+    color: #23252a;
+  }
+  .container-col h3{
+    color: #23252a;
+  }
+  .container-row.row-sda{
+    width: 100%;
+    display: flex;
+  }
+
+  .child-row-sda{
+    width: 80%;
+    display: flex;
+    gap: 10px;
+  }
+ .container-col.col-sda{
+    width: 33.3%;
+  }
+  .container-sda div{
+    color: #223f4d;
+  }
+  .container-sda{
+    text-align: center;
+  }
+
+  .row-tabs{
+    width: 60%;
+  }
+  .row-carousel{
+    width: 100%;
+    height: 330px;
+  }
+
+  .row-carousel-item{
+    width: 100%;
+    height: 330px;
+  }
+
+  .card{
+    width: 100%;
+    height: 330px;
+  }
+  .image{
+    width: 100%;
+    height: 200px;
+  }
+
+  }
+
+  @media(min-width: 471px) and (max-width: 690px){
+    .container-col{
+      width: 100%;
+    }
+    .container-col h1,
+    .container-col h2,
+    .container-col p{
+      width: 100%;
+      text-align: center;
+      margin: 20px 0px 0px 0px;
+      color: #23252a;
+    }
+    .container-row.row-sda{
+      width: 100%;
+    }
+    .child-row-sda{
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+    }
+    .container-col.col-sda{
+      display: block;
+      width: 100%;
+    }
+    .card div h4{
+      font-size: 15px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .row-tabs{
+    width: 60%;
+    }
+  .row-carousel{
+    width: 100%;
+    height: 330px;
+  }
+
+  .row-carousel-item{
+    width: 100%;
+    height: 330px;
+  }
+
+  .card{
+    width: 100%;
+    height: 330px;
+  }
+    .card div span{
+      font-size: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  @media(min-width: 0px) and (max-width: 470px){
+    .container-col{
+      width: 100%;
+    }
+    .container-col h1,
+    .container-col h2,
+    .container-col p{
+      width: 100%;
+      text-align: center;
+      margin: 20px 0px 0px 0px;
+      color: #23252a;
+    }
+    .container-row.row-sda{
+      width: 100%;
+    }
+    .child-row-sda{
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+    }
+    .container-col.col-sda{
+      display: block;
+      width: 100%;
+    }
+    .row-tabs{
+    width: 100%;
+    }
+  .row-carousel{
+    width: 100%;
+    height: 330px;
+  }
+
+  .row-carousel-item{
+    width: 100%;
+    height: 330px;
+  }
+
+  .card{
+    width: 100%;
+    height: 100%;
+  }
+
+  .kode_skema{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    padding: 10px 0px;
+  }
+ .kode_skema h4{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-wrap:wrap;
+  }
+  .skema_sertifikasi span{
+    font-size: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+}
 
 </style>
