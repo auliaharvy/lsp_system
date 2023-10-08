@@ -416,7 +416,7 @@ export default {
       },
       queryDropdown: {
         page: 1,
-        limit: 100,
+        limit: 120,
         keyword: '',
         role: '',
         user_id: null,
