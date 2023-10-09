@@ -416,7 +416,7 @@ export default {
       },
       queryDropdown: {
         page: 1,
-        limit: 120,
+        limit: 120, // ditambah karena asesor ada 100 lebih
         keyword: '',
         role: '',
         user_id: null,
