@@ -270,10 +270,6 @@ class SkemaController extends BaseController
                 $params = $request->all();
                 for ($i = 0; $i < count($params['unit']); $i++) {
                     $kode_unit = $params['unit'][$i]['kode_unit'];
-                    $fountUnit = SkemaUnit::where('kode_unit', $kode_unit)->first();
-                    if ($fountUnit) {
-                        return response()->json(['error' => 'Kode Unit ' . $kode_unit . ' sudah pernah di upload'], 403);
-                    } 
                     $skemaUnit = SkemaUnit::create([
                         'id_skema' => $params['id_skema'],
                         'kode_unit' => $params['unit'][$i]['kode_unit'],
@@ -285,7 +281,7 @@ class SkemaController extends BaseController
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
-                //return $e->getMessage();
+                //return $e->getMessage(); /
             }
             
         }
