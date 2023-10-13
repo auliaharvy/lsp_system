@@ -197,7 +197,7 @@
                       </router-link>
                     </el-tooltip>
                   </li>
-                  <li v-if="query.role !== 'user'" class="list-progress">
+                  <li class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-AK-03" placement="top-start">
                       <router-link :to="{ name: 'form-ak-03', params: { id_ak_03: scope.row.id_ak_03, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">AK 03  <i v-if="scope.row.id_ak_03!== null" type="success" class="el-icon-check" /></span>
@@ -482,7 +482,7 @@ export default {
         });
       } else {
         if (this.aksesForm.fr === 'ia02') {
-          this.$router.push({ name: 'form-ia-02', params: { id_ia_02: this.aksesForm.id_ia_02, id_apl_01: this.aksesForm.id_apl_01, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
+          this.$router.push({ path: `form-ia-02/${this.aksesForm.id_ia_02}/${this.aksesForm.id_apl_01}/${this.aksesForm.id_skema}/${this.aksesForm.id}` });
         } if (this.aksesForm.fr === 'ia03') {
           this.$router.push({ name: 'form-ia-03', params: { id_ia_03: this.aksesForm.id_ia_03, id_apl_01: this.aksesForm.id_apl_01, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
         } if (this.aksesForm.fr === 'ia05') {
