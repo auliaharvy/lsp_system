@@ -482,7 +482,8 @@ export default {
         });
       } else {
         if (this.aksesForm.fr === 'ia02') {
-          this.$router.push({ path: `form-ia-02/${this.aksesForm.id_ia_02}/${this.aksesForm.id_apl_01}/${this.aksesForm.id_skema}/${this.aksesForm.id}` });
+          // this.$router.push({ path: `form-ia-02/${this.aksesForm.id_ia_02}/${this.aksesForm.id_apl_01}/${this.aksesForm.id_skema}/${this.aksesForm.id}` }); // ini nanti akan dipake klo masalah perbaikan ia 02 selesai
+          this.$router.push({ name: 'form-ia-02', params: { id_ia_02: this.aksesForm.id_ia_02, id_apl_01: this.aksesForm.id_apl_01, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
         } if (this.aksesForm.fr === 'ia03') {
           this.$router.push({ name: 'form-ia-03', params: { id_ia_03: this.aksesForm.id_ia_03, id_apl_01: this.aksesForm.id_apl_01, id_skema: this.aksesForm.id_skema, id_uji: this.aksesForm.id }});
         } if (this.aksesForm.fr === 'ia05') {

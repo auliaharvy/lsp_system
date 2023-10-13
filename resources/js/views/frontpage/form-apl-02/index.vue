@@ -681,7 +681,7 @@ export default {
         .store(this.dataTrx)
         .then((response) => {
           if (response.msg === 'User sudah terdaftar') {
-            this.sendData();
+            this.sendData(); // sekarang pendaftaran bisa duplikat email
           } else {
             this.dialogNewUser = true;
             this.loading = false;
