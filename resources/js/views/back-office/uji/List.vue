@@ -289,6 +289,12 @@
                 @click="handleDelete(scope.row)"
               />
             </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="Buat Sertifikat" placement="top-end">
+              <el-button v-if="query.role !== 'user' && scope.row.id_ak_05 !== null" type="primary" size="small" icon="el-icon-document-checked" @click="handleCreateSertifikat(scope.row)" />
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="Edit Sertifikat" placement="top-end">
+              <el-button v-if="query.role !== 'user' && scope.row.id_ak_05 !== null" type="warning" size="small" icon="el-icon-document-checked" @click="handleUpdateSertifikat(scope.row)" />
+            </el-tooltip>
           </el-button-group>
         </template>
       </el-table-column>
@@ -296,6 +302,80 @@
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
+
+    <el-dialog :title="$t('sertifikat.dialog.new') + ' ' + newSertifikat.nama" :visible.sync="dialogFormSertifikatVisible">
+      <div v-loading="sertifikatCreating" class="form-container">
+        <el-form ref="newSertifikatForm" :rules="rulesSertifikat" :model="newSertifikat" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('sertifikat.table.nama')" prop="nama">
+            <el-input v-model="newSertifikat.nama" disabled />
+          </el-form-item>
+          <el-form-item :label="$t('sertifikat.table.no_registrasi')" prop="no_registrasi">
+            <el-input v-model="newSertifikat.no_registrasi" />
+          </el-form-item>
+          <el-form-item :label="$t('sertifikat.table.skema_sertifikasi')" prop="skema_sertifikasi">
+            <el-input v-model="newSertifikat.skema_sertifikasi" disabled />
+          </el-form-item>
+          <el-form-item :label="$t('sertifikat.table.no_sertifikat')" prop="no_sertifikat">
+            <el-input v-model="newSertifikat.no_sertifikat" />
+          </el-form-item>
+          <el-form-item :label="$t('sertifikat.table.masa_berlaku')" prop="masa_berlaku">
+            <el-date-picker
+              v-model="newSertifikat.masa_berlaku"
+              type="date"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              placeholder="Pick a date"
+              style="width: 100%"
+            />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormSertifikatVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="submitNewSertifikat()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="$t('sertifikat.dialog.edit') + ' ' + editedSertifikat.nama" :visible.sync="dialogFormUpdateSertifikatVisible">
+      <div v-loading="sertifikatCreating" class="form-container">
+        <el-form ref="editedSertifikatForm" :rules="rulesSertifikat" :model="editedSertifikat" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('sertifikat.table.nama')" prop="nama">
+            <el-input v-model="editedSertifikat.nama" disabled />
+          </el-form-item>
+          <el-form-item :label="$t('sertifikat.table.no_registrasi')" prop="no_registrasi">
+            <el-input v-model="editedSertifikat.no_registrasi" />
+          </el-form-item>
+          <el-form-item :label="$t('sertifikat.table.skema_sertifikasi')" prop="skema_sertifikasi">
+            <el-input v-model="editedSertifikat.skema_sertifikasi" disabled />
+          </el-form-item>
+          <el-form-item :label="$t('sertifikat.table.no_sertifikat')" prop="no_sertifikat">
+            <el-input v-model="editedSertifikat.no_sertifikat" />
+          </el-form-item>
+          <el-form-item :label="$t('sertifikat.table.masa_berlaku')" prop="masa_berlaku">
+            <el-date-picker
+              v-model="editedSertifikat.masa_berlaku"
+              type="date"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              placeholder="Pick a date"
+              style="width: 100%"
+            />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormUpdateSertifikatVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="updateDataSertifikat()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
 
     <el-dialog title="Silakan masukan password untuk akses form" :visible.sync="dialogFormVisible">
       <div v-loading="creating" class="form-container">
@@ -367,7 +447,8 @@ const listResource = new Resource('uji-komp-get');
 const skemaResource = new Resource('skema');
 const jadwalResource = new Resource('jadwal-get');
 const ujiResource = new Resource('uji');
-// const preview = new Resource('detail/preview');
+const pemegangSertifikatResource = new Resource('pemegang-sertifikat');
+// const preview = new Resource('detail/preview') ;
 // const soalIa05AndIa07 = new Resource('soal/ia05/ia07');
 
 export default {
@@ -384,12 +465,33 @@ export default {
       loading: true,
       downloading: false,
       creating: false,
+      sertifikatCreating: false,
       dialogFormVisible: false,
       dialogFormUpdateVisible: false,
+      dialogFormSertifikatVisible: false,
+      dialogFormUpdateSertifikatVisible: false,
       newData: {},
       pwdType: 'password',
       ia05: null,
       ia07: null,
+      newSertifikat: {
+        id: 0,
+        id_uji_komp: 0,
+        nama: '',
+        no_registrasi: '',
+        skema_sertifikasi: '',
+        no_sertifikat: '',
+        masa_berlaku: '',
+      },
+      editedSertifikat: {
+        id: 0,
+        id_uji_komp: 0,
+        nama: '',
+        no_registrasi: '',
+        skema_sertifikasi: '',
+        no_sertifikat: '',
+        masa_berlaku: '',
+      },
       editedData: {
         id: 0,
         kode_tuk: '',
@@ -405,10 +507,18 @@ export default {
         role: '',
         user_id: null,
       },
+      pemegangSertifikat: '',
       rules: {
         kode_perangkat: [{ required: true, message: 'Kode Perangkat is required', trigger: 'change' }],
         nama_perangkat: [{ required: true, message: 'Nama Perangkat is required', trigger: 'blur' }],
         id_skema: [{ required: true, message: 'Skema Sertifikasi is required', trigger: 'blur' }],
+      },
+      rulesSertifikat: {
+        nama: [{ required: true, message: 'Nama is required', trigger: 'change' }],
+        no_registrasi: [{ required: true, message: 'Nomor Registrasi is required', trigger: 'blur' }],
+        skema_sertifikasi: [{ required: true, message: 'Skema Sertifikasi is required', trigger: 'blur' }],
+        no_sertifikat: [{ required: true, message: 'Nomor Sertifikat is required', trigger: 'blur' }],
+        masa_berlaku: [{ required: true, message: 'Masa Berlaku is required', trigger: 'blur' }],
       },
       colors: [
         { color: '#f56c6c', percentage: 20 },
@@ -457,7 +567,7 @@ export default {
       // get data perangkat / list table
       const { data, meta } = await listResource.list(this.query);
       this.list = data;
-      // console.log(this.list);
+      console.log(this.list);
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
@@ -467,6 +577,10 @@ export default {
     async getListJadwal() {
       const { data } = await jadwalResource.list({ limit: 1000 });
       this.listJadwal = data;
+    },
+    async getDataSertifikat(id){
+      const { data } = await pemegangSertifikatResource.list({ id });
+      return data;
     },
     handleAkses(form, data) {
       this.aksesForm = data;
@@ -505,6 +619,93 @@ export default {
     resetnewData() {
       this.newData = {};
     },
+    resetNewSertifikat() {
+      this.newSertifikat = {};
+    },
+    dialogFormUpdateSertifikatIsVisible(){
+      this.dialogFormUpdateSertifikatIsVisible = false;
+      this.getList();
+    },
+    async getPemegangSertifikat(id){
+      this.editedSertifikat = await pemegangSertifikatResource.get(id);
+    },
+    async handleUpdateSertifikat(sertifikat) {
+      this.isSelect = true;
+      this.editedSertifikat = await pemegangSertifikatResource.get(sertifikat.id);
+      console.log(sertifikat);
+      console.log(this.editedSertifikat);
+      this.dialogFormUpdateSertifikatVisible = true;
+    },
+    handleCreateSertifikat(sertifikat) {
+      this.resetNewSertifikat();
+      console.log(sertifikat);
+      this.newSertifikat.id_uji_komp = sertifikat.id;
+      this.newSertifikat.nama = sertifikat.nama_peserta;
+      this.newSertifikat.skema_sertifikasi = sertifikat.skema_sertifikasi;
+      this.dialogFormSertifikatVisible = true;
+      this.$nextTick(() => {
+        this.$refs['newSertifikatForm'].clearValidate();
+      });
+    },
+    submitNewSertifikat() {
+      this.loading = true;
+      this.$refs['newSertifikatForm'].validate((valid) => {
+        if (valid) {
+          const uploadData = new FormData();
+          uploadData.append('nama', this.newSertifikat.nama);
+          uploadData.append('id_uji_komp', this.newSertifikat.id_uji_komp);
+          uploadData.append('no_registrasi', this.newSertifikat.no_registrasi);
+          uploadData.append('skema_sertifikasi', this.newSertifikat.skema_sertifikasi);
+          uploadData.append('no_sertifikat', this.newSertifikat.no_sertifikat);
+          uploadData.append('masa_berlaku', this.newSertifikat.masa_berlaku);
+          this.sertifikatCreating = true;
+          pemegangSertifikatResource
+            .store(uploadData)
+            .then(() => {
+              // console.log(this.dataTrx);
+              this.$message({
+                message: 'A new certificate in the name of ' + this.newSertifikat.nama + ' has been created successfully.',
+                type: 'success',
+                duration: 5 * 1000,
+              });
+              this.resetNewSertifikat();
+              this.dialogFormSertifikatVisible = false;
+              this.handleFilter();
+            })
+            .catch(error => {
+              console.log(error);
+            })
+            .finally(() => {
+              this.loading = false;
+              this.sertifikatCreating = false;
+            });
+        } else {
+          this.loading = false;
+          return false;
+        }
+      });
+    },
+    updateDataSertifikat() {
+      this.loading = true;
+      pemegangSertifikatResource.update(this.editedSertifikat.id, this.editedSertifikat).then(() => {
+        this.getList();
+        this.dialogFormUpdateSertifikatVisible = false;
+        this.$notify({
+          title: 'Success',
+          message: 'Updated successfully',
+          type: 'success',
+          duration: 2000,
+        });
+      })
+        .catch(error => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.loading = true;
+          this.creating = false;
+        });
+    },
+
     handleCreate() {
       this.resetnewData();
       this.dialogFormVisible = true;

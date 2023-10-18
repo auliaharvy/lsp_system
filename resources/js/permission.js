@@ -10,7 +10,7 @@ NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
 const whiteList = [
   '/login', '/auth-redirect', '', '/form-apl-02', '/skema/:id/:kategori', '/kegiatan',
-  '/dudi', '/kkni', '/tuk', '/assesor', '/kegiatan/:slug',
+  '/dudi', '/kkni', '/tuk', '/assesor', '/kegiatan/:slug', '/pemegang-sertifikat',
 ]; // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {

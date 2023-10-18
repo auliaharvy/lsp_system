@@ -326,6 +326,8 @@ export default {
       addNew: 'Tambah Baru',
       edit: 'Edit',
       upload: 'Upload',
+      soal: 'Soal',
+      jawaban: 'Jawaban',
     },
   },
 
@@ -360,6 +362,20 @@ export default {
     },
     dialog: {
       addNew: 'Add New',
+      edit: 'Edit',
+    },
+  },
+
+  sertifikat: {
+    table: {
+      nama: 'Nama',
+      no_registrasi: 'No Registrasi',
+      skema_sertifikasi: 'Skema Sertifikasi',
+      no_sertifikat: 'No Sertifikat',
+      masa_berlaku: 'Masa Berlaku',
+    },
+    dialog: {
+      new: 'Add New',
       edit: 'Edit',
     },
   },

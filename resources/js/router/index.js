@@ -74,6 +74,11 @@ export const constantRoutes = [
   },
 
   {
+    path: '/pemegang-sertifikat',
+    component: () => import('@/views/back-office/pemegang-sertifikat/Index'),
+    hidden: true,
+  },
+  {
     path: '/form-apl-02',
     component: () => import('@/views/frontpage/form-apl-02/index'),
     hidden: true,
@@ -120,11 +125,6 @@ export const constantRoutes = [
     path: '/tuk',
     component: () => import('@/views/back-office/tuk/Index'),
     hidden: true,
-  },
-
-  {
-    path: '/kegiatan',
-    component: () => import('@/views/articles/List.vue'),
   },
 
   // {
