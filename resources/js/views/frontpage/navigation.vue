@@ -5,7 +5,7 @@
     <el-menu-item index="1">Tentang LSP</el-menu-item>
     <el-submenu index="2">
       <template slot="title">Profile</template>
-      <el-menu-item index="2-1">Pemegang Sertifikat</el-menu-item>
+      <el-menu-item index="/pemegang-sertifikat">Pemegang Sertifikat</el-menu-item>
       <el-menu-item index="/assesor">Asesor Kompetensi</el-menu-item>
       <el-menu-item index="/tuk">TUK</el-menu-item>
       <el-menu-item index="/kkni">KKNI</el-menu-item>

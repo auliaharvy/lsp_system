@@ -41,6 +41,8 @@ Route::namespace('Api')->group(function() {
     Route::get('uji-komp-get', 'UjiKompController@index');
     Route::get('skema-kategori-get', 'AsesmenKategoriController@index');
 
+    Route::get('mst-ia02-get-old', 'PerangkatController@indexIa02Old');
+    Route::get('mst-ia02-get-detail', 'PerangkatController@indexIa02Detail');
     Route::get('mst-ia02-get', 'PerangkatController@indexIa02');
     Route::get('mst-ia03-get', 'PerangkatController@indexIa03');
     Route::get('mst-ia06-get', 'PerangkatController@indexIa06');
@@ -86,6 +88,9 @@ Route::namespace('Api')->group(function() {
 
     Route::apiResource('dashboard', 'DashboardController');
 
+    // IA 02
+    Route::post('mst-ia02-update', 'PerangkatController@editIa02');
+
     // TUK Routes
     Route::apiResource('tuk', 'TukController');
     Route::post('tuk/update', 'TukController@update');
@@ -107,10 +112,16 @@ Route::namespace('Api')->group(function() {
     Route::post('article/update', 'ArticleController@update');
     Route::get('article/detail/{slug}', 'ArticleController@slug');
 
+    Route::post('new-mst-ia-02-detail', 'PerangkatController@storeIa02Detail');
+    Route::post('del-mst-ia-02-detail', 'PerangkatController@deleteIa02Detail');
+    Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
+    Route::get('uji-komp-ia-02-detail', 'UjiKompController@indexIa02Detail');
+    Route::get('sendEmail', 'SendEmailController@index');
+    Route::post('uji-komp-ak-05', 'UjiKompController@storeAk05');
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
         //Post MST FR
-        Route::post('new-mst-ia-02', 'PerangkatController@storeIa02');
+        // Route::post('new-mst-ia-02', 'PerangkatController@storeIa02');
         Route::post('new-mst-ia-03', 'PerangkatController@storeIa03');
         Route::post('new-mst-ia-05', 'PerangkatController@storeIa05');
         Route::post('detail-mst-ia-05', 'PerangkatController@storeIa05Detail');
@@ -119,7 +130,7 @@ Route::namespace('Api')->group(function() {
         Route::apiResource('mapa2','Mapa2Controller');
 
         //Delete MST FR
-        Route::post('del-mst-ia-02', 'PerangkatController@deleteIa02');
+        // Route::post('del-mst-ia-02', 'PerangkatController@deleteIa02');
         Route::post('del-mst-ia-03', 'PerangkatController@deleteIa03');
         Route::post('del-mst-ia-05', 'PerangkatController@deleteIa05');
         Route::post('del-mst-ia-06', 'PerangkatController@deleteIa06');
@@ -130,7 +141,7 @@ Route::namespace('Api')->group(function() {
         Route::post('uji-komp-apl-01', 'UjiKompController@submitApl01');
         Route::post('uji-komp-apl-02', 'UjiKompController@submitApl02');
         Route::post('uji-komp-ia-01', 'UjiKompController@storeIa01');
-        Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
+        // Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
         Route::post('uji-komp-ia-02-nilai', 'UjiKompController@penilaianIa02');
         Route::post('uji-komp-ia-03', 'UjiKompController@storeIa03');
         Route::post('uji-komp-ia-03-nilai', 'UjiKompController@penilaianIa03');
@@ -146,7 +157,7 @@ Route::namespace('Api')->group(function() {
         Route::post('uji-komp-ak-03', 'UjiKompController@storeAk03');
         Route::post('uji-komp-ak-02', 'UjiKompController@storeAk02');
         Route::post('uji-komp-ak-04', 'UjiKompController@storeAk04');
-        Route::post('uji-komp-ak-05', 'UjiKompController@storeAk05');
+        // Route::post('uji-komp-ak-05', 'UjiKompController@storeAk05');
         Route::post('uji-komp-ak-06', 'UjiKompController@storeAk06');
         Route::post('uji-komp-mapa-02','UjiKompController@storeMapa02');
         Route::post('uji-komp-va', 'UjiKompController@storeVa');
@@ -164,6 +175,10 @@ Route::namespace('Api')->group(function() {
 
         // APL 02 / Pendaftaran Routes
         Route::apiResource('uji-kompetensi', 'UjiKompController');
+
+        // Pemegang Sertifikat
+        Route::apiResource('pemegang-sertifikat', 'PemegangSertifikatController');
+        Route::post('pemegang-sertifikat-edit', 'PemegangSertifikatController@update');
 
 
         // Skema
