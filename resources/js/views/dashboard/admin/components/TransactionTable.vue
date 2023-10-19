@@ -90,7 +90,7 @@
           </router-link>
           <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
           <!-- <el-button v-if="scope.row.status === 1" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button> -->
-          <el-button v-if="scope.row.persentase > 99" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
+          <el-button v-if="scope.row.persentase > 89" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
           <el-dialog
             v-loading="loading"
             title="Download Data"
@@ -421,13 +421,13 @@ export default {
     handleCheckAllChange(value) {
       // this.checkedCities = val ? cityOptions : [];
       this.checkedDataUjiKomp = value ? this.dataUjiKomp : [];
-      console.log(this.checkedDataUjiKomp);
+      // console.log(this.checkedDataUjiKomp);
       let index = 0;
       for (const item in this.dataUjiKomp){
         this.dataUjiKomp[index].value = this.checkAll;
         // this.data.value = this.checkAll;
         console.log(item);
-        console.log(this.dataUjiKomp[index].index);
+        // console.log(this.dataUjiKomp[index].index);
         index++;
       }
       this.isIndeterminate = false;
@@ -496,9 +496,9 @@ export default {
         valueva: this.dataUjiKomp[16].value,
       };
 
-      console.log(ujikomp);
+      // console.log(ujikomp);
       await print.download(ujikomp).then((response) => {
-        console.log(response);
+        // console.log(response);
         const url = window.URL.createObjectURL(new Blob([response]));
         const link = document.createElement('a');
         link.href = url;
@@ -520,12 +520,12 @@ export default {
       this.loading = true;
       const { data, meta } = await listResource.list(this.query);
       this.list = data;
-      console.log('bwah gual ist');
-      console.log(this.list);
+      // console.log('bwah gual ist');
+      // console.log(this.list);
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
-      console.log(meta);
+      // console.log(meta);
       this.total = meta.total;
       this.loading = false;
     },
