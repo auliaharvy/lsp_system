@@ -121,7 +121,7 @@ Route::namespace('Api')->group(function() {
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
         //Post MST FR
-        // Route::post('new-mst-ia-02', 'PerangkatController@storeIa02');
+        Route::post('new-mst-ia-02', 'PerangkatController@storeIa02');
         Route::post('new-mst-ia-03', 'PerangkatController@storeIa03');
         Route::post('new-mst-ia-05', 'PerangkatController@storeIa05');
         Route::post('detail-mst-ia-05', 'PerangkatController@storeIa05Detail');
@@ -130,7 +130,7 @@ Route::namespace('Api')->group(function() {
         Route::apiResource('mapa2','Mapa2Controller');
 
         //Delete MST FR
-        // Route::post('del-mst-ia-02', 'PerangkatController@deleteIa02');
+        Route::post('del-mst-ia-02', 'PerangkatController@deleteIa02');
         Route::post('del-mst-ia-03', 'PerangkatController@deleteIa03');
         Route::post('del-mst-ia-05', 'PerangkatController@deleteIa05');
         Route::post('del-mst-ia-06', 'PerangkatController@deleteIa06');
