@@ -525,6 +525,7 @@ export default {
           });
       }
       if (this.jenisUpload === 'elemen') {
+        this.uploadTableData[0].id_skema = this.editedSkema.id;
         uploadElemenUnitResource.store(this.uploadTableData).then(() => {
           this.getList();
           this.dialogUploadUnitVisible = false;
