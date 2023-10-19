@@ -292,6 +292,7 @@ class SkemaController extends BaseController
             DB::beginTransaction();
             try {
                 $params = $request->all();
+                $id_skema = $params[0]['id_skema'];
                 for ($i = 0; $i < count($params); $i++) {
                     $validator = Validator::make(
                         $params[$i],
@@ -302,7 +303,10 @@ class SkemaController extends BaseController
                         return response()->json(['errors' => $validator->errors()], 403);
                     } else {
                         $kode_unit = $params[$i]['kode_unit'];
-                        $skemaUnit= SkemaUnit::where('kode_unit', $kode_unit)->first();
+                        $skemaUnit= SkemaUnit::where([
+                            ['id_skema', '=', $id_skema],
+                            ['kode_unit', '=', $kode_unit], 
+                        ])->first();
                         $unitElemen = SkemaElemenUnit::create([
                             'id_unit' => $skemaUnit->id,
                             'nama_elemen' => $params[$i]['nama_elemen'],
