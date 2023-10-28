@@ -91,7 +91,7 @@
         </el-form>
       </div>
       <br>
-      <el-button v-if="!$route.params.id_ia_02" @click="onSubmit">Submit</el-button>
+      <el-button v-if="!$route.params.id_ia_02 && role === 'user'" @click="onSubmit">Submit</el-button>
       <el-button v-if="$route.params.id_ia_02 && role !== 'user'" @click="onSubmitAsesor">Submit Asesor</el-button>
     </el-main>
   </el-container>
