@@ -29,17 +29,10 @@
                 <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateElemen(scope.row.children)">
                   {{ $t('table.export') }} Template Elemen Unit Kompetensi
                 </el-button>
-                <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'elemen')">
-                  Upload Elemen Unit Kompetensi
-                </el-button>
               </el-row>
-
               <el-row>
                 <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateKuk(scope.row.children)">
                   {{ $t('table.export') }} Template Kuk
-                </el-button>
-                <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-upload2" @click="handleUpload(scope.row, 'kuk')">
-                  Upload KUK Elemen
                 </el-button>
               </el-row>
 
@@ -51,19 +44,44 @@
                   <template slot-scope="row">
                     <el-table v-loading="loading" :data="row.row.elemen" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
                       <el-table-column type="expand">
-                        <template slot-scope="elemen">
-                          <span style="font-weight: bold;">KUK Elemen</span>
-                          <ul>
-                            <li v-for="item in elemen.row.kuk" :key="item.id">
-                              {{ item.kuk }}
-                            </li>
-                          </ul>
+                        <template slot-scope="kuk">
+                          <el-table v-loading="loading" :data="kuk.row.kuk" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
+                            <el-table-column align="left" label="Kuk Elemen">
+                              <template slot-scope="elementok">
+                                <span>{{ elementok.row.kuk }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column align="left" label="Actions" min-width="150px">
+                              <template slot-scope="elementox">
+                                <div v-if="kuk.row.kuk.length > 0" style="padding-top: 25px;">
+                                  <el-tooltip class="item" effect="dark" content="Update Kuk Elemen" placement="top-end">
+                                    <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdateSkemaUnit(elementox.row, 'kuk')" />
+                                  </el-tooltip>
+                                  <el-tooltip class="item" effect="dark" content="Delete Kuk Elemen" placement="top-end">
+                                    <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="deleteKuk(elementox.row)" />
+                                  </el-tooltip>
+                                </div>
+                              </template>
+                            </el-table-column>
+                          </el-table>
                         </template>
                       </el-table-column>
-
                       <el-table-column align="left" label="Elemen">
                         <template slot-scope="elemen">
                           <span>{{ elemen.row.nama_elemen }}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column align="left" label="Actions" min-width="150px">
+                        <template slot-scope="elemen">
+                          <el-tooltip class="item" effect="dark" content="Upload Kuk Elemen" placement="top-end">
+                            <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-upload2" @click="handleUpload(row.row, 'kuk')" />
+                          </el-tooltip>
+                          <el-tooltip class="item" effect="dark" content="Update Elemen Unit" placement="top-end">
+                            <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdateSkemaUnit(elemen.row, 'elemen')" />
+                          </el-tooltip>
+                          <el-tooltip class="item" effect="dark" content="Delete Elemen Unit" placement="top-end">
+                            <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="deleteElemen(elemen.row)" />
+                          </el-tooltip>
                         </template>
                       </el-table-column>
                     </el-table>
@@ -77,6 +95,19 @@
                 <el-table-column align="left" label="Unit Kompetensi" min-width="150px">
                   <template slot-scope="row">
                     <span>{{ row.row.unit_kompetensi }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="left" label="Actions" min-width="150px">
+                  <template slot-scope="row">
+                    <el-tooltip class="item" effect="dark" content="Upload Elemen Kompetensi" placement="top-end">
+                      <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-upload2" @click="handleUpload(scope.row, 'elemen')" />
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="Update Unit Kompetensi" placement="top-end">
+                      <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdateSkemaUnit(scope.row, 'unit')" />
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="Delete Unit Kompetensi" placement="top-end">
+                      <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="deleteUnit(row.row)" />
+                    </el-tooltip>
                   </template>
                 </el-table-column>
               </el-table-column>
@@ -284,7 +315,102 @@
         </el-table>
       </div>
     </el-dialog>
-
+    <el-dialog :title="$t('skema.dialog.edit') + ' Unit Skema'" :visible.sync="dialogUpdateUnitVisible" fullscreen>
+      <div class="app-container">
+        <el-row :gutter="20">
+          <el-col :span="10">
+            <div class="grid-content bg-purple">
+              <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="10">
+            <div class="grid-content bg-purple">
+              <el-button type="primary" @click="updateUnit()">Update</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        <span>{{ uploadTableData[0] }}</span>
+        <el-table :data="uploadTableData" border highlight-current-row style="width: 100%;margin-top:20px;">
+          <el-table-column v-for="item of uploadTableHeader" :key="item" :prop="item" :label="item" />
+        </el-table>
+      </div>
+    </el-dialog>
+    <el-dialog :title="$t('skema.dialog.addNew')" :visible.sync="dialogSkemaUnitVisible">
+      <div v-loading="creating" class="form-container">
+        <el-form ref="newForm" :rules="rules" :model="dataTrx" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('skema.dialog.kode_unit')" prop="kode_unit">
+            <el-input v-model="editedUnitKomp.kode_unit" />
+          </el-form-item>
+          <el-form-item :label="$t('skema.dialog.unit_kompetensi')" prop="unit_kompetensi">
+            <el-input v-model="editedUnitKomp.unit_kompetensi" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="submit()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
+    <el-dialog :title="$t('skema.dialog.updateUnit')" :visible.sync="dialogSkemaUnitVisible">
+      <div v-loading="creating" class="form-container">
+        <el-form ref="unitForm" :rules="unitRules" :model="editedUnitKomp" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('skema.dialog.kode_unit')" prop="kode_unit">
+            <el-input v-model="editedUnitKomp.kode_unit" />
+          </el-form-item>
+          <el-form-item :label="$t('skema.dialog.unit_kompetensi')" prop="unit_kompetensi">
+            <el-input v-model="editedUnitKomp.unit_kompetensi" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogSkemaUnitVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="updateUnit()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
+    <el-dialog :title="$t('skema.dialog.updateElemen')" :visible.sync="dialogSkemaElemenVisible">
+      <div v-loading="creating" class="form-container">
+        <el-form ref="elemenForm" :rules="elemenRules" :model="editedElemen" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('skema.dialog.elemen')" prop="nama_elemen">
+            <el-input v-model="editedElemen.nama_elemen" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogSkemaElemenVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="updateUnit()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
+    <el-dialog :title="$t('skema.dialog.updateKuk')" :visible.sync="dialogSkemaKukVisible">
+      <div v-loading="creating" class="form-container">
+        <el-form ref="kukForm" :rules="kukRules" :model="editedKuk" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('skema.dialog.kuk')" prop="kuk">
+            <el-input v-model="editedKuk.kuk" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogSkemaKukVisible = false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="updateUnit()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -302,6 +428,12 @@ const kategoriResource = new Resource('skema/kategori');
 const uploadUnitResource = new Resource('skema/upload/unit');
 const uploadElemenUnitResource = new Resource('skema/upload/elemen');
 const uploadKukResource = new Resource('skema/upload/kuk');
+const updateUnitResource = new Resource('skema/update/unit');
+const updateElemenUnitResource = new Resource('skema/update/elemen');
+const updateKukResource = new Resource('skema/update/kuk');
+const deleteUnitResource = new Resource('skema/unit');
+const deleteElemenResource = new Resource('skema/elemen');
+const deleteKukResource = new Resource('skema/kuk');
 
 export default {
   name: 'SkemaList',
@@ -317,12 +449,36 @@ export default {
       dialogFormVisible: false,
       dialogFormUpdateVisible: false,
       dialogUploadUnitVisible: false,
+      dialogUpdateUnitVisible: false,
+      dialogSkemaUnitVisible: false,
+      dialogSkemaElemenVisible: false,
+      dialogSkemaKukVisible: false,
       jenisUpload: false,
       kategori: [],
       uploadTableData: [],
       uploadTableHeader: [],
       kukTemplateData: [],
+      id_skema: null,
       newSkema: {},
+      dataTrx: {},
+      editedUnitKomp: {
+        id: 0,
+        id_skema: '',
+        kode_unit: '',
+        unit_kompetensi: '',
+      },
+      editedElemen: {
+        id: 0,
+        id_unit: '',
+        nama_elemen: '',
+        benchmark: '',
+      },
+      editedKuk: [
+        {
+          id: 0,
+          kuk: '',
+        },
+      ],
       editedSkema: {
         id: 0,
         kode_skema: '',
@@ -350,6 +506,16 @@ export default {
         jenjang: [{ required: true, message: 'Jenjang is required', trigger: 'blur' }],
         kode_sektor: [{ required: true, message: 'Kode Sektor is required', trigger: 'blur' }],
         visibilitas: [{ required: true, message: 'Visibilitas is required', trigger: 'blur' }],
+      },
+      unitRules: {
+        kode_unit: [{ required: true, message: 'Kode Unit is required', trigger: 'blur' }],
+        unit_kompetensi: [{ required: true, message: 'Unit Kompetensi is required', trigger: 'blur' }],
+      },
+      elemenRules: {
+        nama_elemen: [{ required: true, message: 'Nama Elemen is required', trigger: 'blur' }],
+      },
+      kukRules: {
+        kuk: [{ required: true, message: 'Kuk Elemen is required', trigger: 'blur' }],
       },
     };
   },
@@ -408,6 +574,13 @@ export default {
       this.uploadTableHeader = [];
       this.editedSkema = {};
     },
+    resetUpdateUnit() {
+      this.uploadTableData = [];
+      this.uploadTableHeader = [];
+      this.unitKompetensi = null;
+      this.elemenKompetensi = null;
+      this.kukElemen = null;
+    },
     handleCreate() {
       this.resetNewSkema();
       this.dialogFormVisible = true;
@@ -430,6 +603,94 @@ export default {
         }).catch(error => {
           console.log(error);
         });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled',
+        });
+      });
+    },
+    deleteSkema(data){
+      console.log(data);
+      this.$confirm('Ini akan menghapus semua beberapa data skema sertifikasi, anda yakin?').then(() => {
+        skemaResource.destroy(data.id).then(() => {
+          this.getList();
+          this.$notify({
+            title: 'Success',
+            message: 'Delete successfully',
+            type: 'success',
+            duration: 2000,
+          });
+        })
+          .catch(error => {
+            console.log(error);
+          });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled',
+        });
+      });
+    },
+    deleteUnit(data){
+      console.log(data);
+      this.$confirm('Ini akan menghapus semua unit elemen, apakah kamu yakin?').then(() => {
+        deleteUnitResource.destroy(data.id).then(() => {
+          this.getList();
+          this.$notify({
+            title: 'Success',
+            message: 'Delete successfully',
+            type: 'success',
+            duration: 2000,
+          });
+        })
+          .catch(error => {
+            console.log(error);
+          });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled',
+        });
+      });
+    },
+    deleteElemen(data){
+      console.log(data);
+      this.$confirm('Ini akan menghapus semua elemen unit, apakah kamu yakin?').then(() => {
+        deleteElemenResource.destroy(data.id_elemen).then(() => {
+          this.getList();
+          this.$notify({
+            title: 'Success',
+            message: 'Delete successfully',
+            type: 'success',
+            duration: 2000,
+          });
+        })
+          .catch(error => {
+            console.log(error);
+          });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled',
+        });
+      });
+    },
+    deleteKuk(data){
+      console.log(data);
+      this.$confirm('Ini akan menghapus semua kuk elemen, apakah kamu yakin?').then(() => {
+        deleteKukResource.destroy(data.id).then(() => {
+          this.getList();
+          this.$notify({
+            title: 'Success',
+            message: 'Delete successfully',
+            type: 'success',
+            duration: 2000,
+          });
+        })
+          .catch(error => {
+            console.log(error);
+          });
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -470,13 +731,39 @@ export default {
     handleUpdate(skema) {
       this.editedSkema = skema;
       this.dialogFormUpdateVisible = true;
-      console.log(this.editedSkema);
+      // console.log(this.editedSkema);
     },
-    handleUpload(skema, jenis) {
-      this.jenisUpload = jenis;
-      this.editedSkema = skema;
-      this.dialogUploadUnitVisible = true;
-      console.log(this.editedSkema);
+    handleUpdateSkemaUnit(data, jenisUpdate) {
+      this.jenisUpload = jenisUpdate;
+      if (this.jenisUpload === 'unit'){
+        this.editedUnitKomp = data;
+        this.dialogSkemaUnitVisible = true;
+      }
+      if (this.jenisUpload === 'elemen'){
+        this.editedElemen = data;
+        this.dialogSkemaElemenVisible = true;
+      }
+      if (this.jenisUpload === 'kuk'){
+        this.editedKuk = data;
+        console.log(this.editedKuk);
+        this.dialogSkemaKukVisible = true;
+      }
+    },
+    handleUpload(data, jenisUpdate) {
+      this.jenisUpload = jenisUpdate;
+      if (this.jenisUpload === 'unit'){
+        this.editedUnitKomp = data;
+        this.dialogUploadUnitVisible = true;
+      }
+      if (this.jenisUpload === 'elemen'){
+        this.editedElemen = data;
+        this.dialogUploadUnitVisible = true;
+      }
+      if (this.jenisUpload === 'kuk'){
+        this.editedKuk = data;
+        console.log(this.editedKuk);
+        this.dialogUploadUnitVisible = true;
+      }
     },
     updateData() {
       this.loading = true;
@@ -502,7 +789,7 @@ export default {
       this.loading = true;
       if (this.jenisUpload === 'unit') {
         var uploadData = {
-          id_skema: this.editedSkema.id,
+          id_skema: this.editedUnitKomp.id,
           unit: this.uploadTableData,
         };
         uploadUnitResource.store(uploadData).then(() => {
@@ -525,8 +812,12 @@ export default {
           });
       }
       if (this.jenisUpload === 'elemen') {
-        this.uploadTableData[0].id_skema = this.editedSkema.id;
-        uploadElemenUnitResource.store(this.uploadTableData).then(() => {
+        var uploadElemen = {
+          id_skema: this.editedElemen.id,
+          elemen: this.uploadTableData,
+        };
+        console.log(uploadElemen);
+        uploadElemenUnitResource.store(uploadElemen).then(() => {
           this.getList();
           this.dialogUploadUnitVisible = false;
           this.resetUpload();
@@ -550,6 +841,72 @@ export default {
           this.getList();
           this.dialogUploadUnitVisible = false;
           this.resetUpload();
+          this.$notify({
+            title: 'Success',
+            message: 'Upload successfully',
+            type: 'success',
+            duration: 2000,
+          });
+        })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => {
+            this.loading = false;
+            this.creating = false;
+          });
+      }
+    },
+    updateUnit() {
+      this.loading = true;
+      if (this.jenisUpload === 'unit') {
+        console.log('unit blabal');
+        console.log(this.editedUnitKomp);
+        updateUnitResource.store(this.editedUnitKomp).then(() => {
+          this.getList();
+          this.dialogSkemaUnitVisible = false;
+          this.resetUpdateUnit();
+          this.$notify({
+            title: 'Success',
+            message: 'Update successfully',
+            type: 'success',
+            duration: 2000,
+          });
+        })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => {
+            this.loading = false;
+            this.creating = false;
+          });
+      }
+      if (this.jenisUpload === 'elemen') {
+        updateElemenUnitResource.store(this.editedElemen).then(() => {
+          this.getList();
+          this.dialogSkemaElemenVisible = false;
+          this.resetUpdateUnit();
+          this.$notify({
+            title: 'Success',
+            message: 'Update successfully',
+            type: 'success',
+            duration: 2000,
+          });
+        })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => {
+            this.loading = false;
+            this.creating = false;
+          });
+      }
+      if (this.jenisUpload === 'kuk') {
+        console.log(this.editedKuk);
+        updateKukResource.store(this.editedKuk).then(() => {
+          this.getList();
+          this.dialogSkemaKukVisible = false;
+          this.resetUpdateUnit();
           this.$notify({
             title: 'Success',
             message: 'Upload successfully',
@@ -609,7 +966,7 @@ export default {
       });
     },
     handleDownloadTemplateKuk(list) {
-      console.log(list);
+      // console.log(list);
       var dataDownload = [];
       for (var i = 0; i < list.length; i++) {
         var elemen = list[i].elemen;
@@ -617,9 +974,9 @@ export default {
           // console.log(elemen[x]);
           dataDownload.push(elemen[x]);
         }
-        console.log(dataDownload);
+        // console.log(dataDownload);
       }
-      console.log(dataDownload);
+      // console.log(dataDownload);
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {
         const tHeader = ['id_elemen', 'nama_elemen', 'kuk'];
