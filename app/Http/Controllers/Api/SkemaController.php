@@ -214,6 +214,58 @@ class SkemaController extends BaseController
 
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Skema $skema
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyUnit($id)
+    {
+        try {
+            SkemaUnit::where('id',$id)->delete();
+            return response()->json(['message' => "Success Delete Unit Kompetensi"], 201);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 403);
+        }
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Skema $skema
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyElemen($id)
+    {
+        try {
+            $elemen = SkemaElemenUnit::where('id', $id)->first();
+            $kuk = SkemaKukElemen::where('id_elemen', $elemen->id)->delete();
+            $elemen->delete();
+            return response()->json(['message' => "Success Delete Elemen Unit Kompetensi"], 201);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 403);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Skema $skema
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyKuk($id)
+    {
+        try {
+            SkemaKukElemen::where('id', $id)->delete();
+            return response()->json(['message' => "Success Delete KUK Elemen Unit Kompetensi"], 201);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 403);
+        }
+
+    }
+
     //Controller Skema Unit
     /**
      * Store a newly created resource in storage.
@@ -289,37 +341,43 @@ class SkemaController extends BaseController
 
     public function uploadElemenUnit(Request $request)
     {   
-            DB::beginTransaction();
-            try {
-                $params = $request->all();
-                $id_skema = $params[0]['id_skema'];
-                for ($i = 0; $i < count($params); $i++) {
-                    $validator = Validator::make(
-                        $params[$i],
-                        $this->getValidationElemenUnitRules(),
-                    );
-            
-                    if ($validator->fails()) {
-                        return response()->json(['errors' => $validator->errors()], 403);
-                    } else {
-                        $kode_unit = $params[$i]['kode_unit'];
-                        $skemaUnit= SkemaUnit::where([
-                            ['id_skema', '=', $id_skema],
-                            ['kode_unit', '=', $kode_unit], 
-                        ])->first();
-                        $unitElemen = SkemaElemenUnit::create([
-                            'id_unit' => $skemaUnit->id,
-                            'nama_elemen' => $params[$i]['nama_elemen'],
-                        ]);
+        DB::beginTransaction();
+        try {
+            $params = $request->all();
+
+            for ($i = 0; $i < count($params['elemen']); $i++) {
+                $validator = Validator::make(
+                    $params,
+                    $this->getValidationElemenUnitRules(),
+                );
+        
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 403);
+                } else {
+                    $kode_unit = $params['elemen'][$i]['kode_unit'];
+                    $skemaUnit = SkemaUnit::where([
+                        ['id_skema', '=', $params['id_skema']],
+                        ['kode_unit', '=', $kode_unit], 
+                    ])->first();
+                    if (!$skemaUnit){
+                        return response()->json(['message' => 'Tidak ada kode unit yang sesuai'], 403);
                     }
+
+                    // return response()->json(['skemaUnit' => $skemaUnit, 'id_skema' => $params['id_skema'], 'kode_unit' => $kode_unit], 403);
+
+                    $unitElemen = SkemaElemenUnit::create([
+                        'id_unit' => $skemaUnit->id,
+                        'nama_elemen' => $params['elemen'][$i]['nama_elemen'],
+                    ]);
                 }
-                DB::commit();
-                return response()->json(['message' => "Success Upload Elemen Unit Skema"], 200);
-            } catch (\Exception $e) {
-                DB::rollback();
-                return response()->json(['message' => $e->getMessage()], 400);
-                //return $e->getMessage();
             }
+            DB::commit();
+            return response()->json(['message' => "Success Upload Elemen Unit Skema"], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => $e->getMessage()], 400);
+            //return $e->getMessage();
+        }
     }
 
     public function uploadKuk(Request $request)
@@ -327,6 +385,9 @@ class SkemaController extends BaseController
         DB::beginTransaction();
         try {
             $params = $request->all();
+
+            return response()->json(['params' => $params], 403);
+
             for ($i = 0; $i < count($params); $i++) {
                 $validator = Validator::make(
                     $params[$i],
@@ -361,6 +422,103 @@ class SkemaController extends BaseController
         }
     }
 
+     /**
+     * Update a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateUnit(Request $request)
+    {   
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationUpdateUnitRules(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $params = $request->all();
+
+                $unitKomp = SkemaUnit::where('id', $params['id'])->first();
+                $unitKomp->kode_unit = $params['kode_unit'];
+                $unitKomp->unit_kompetensi = $params['unit_kompetensi'];
+                $unitKomp->save();
+
+                DB::commit();
+                return response()->json(['message' => "Success Update Unit Skema"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage(); /
+            }
+            
+        }
+    }
+
+    public function updateElemenUnit(Request $request)
+    {   
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationUpdateElemenUnitRules(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $params = $request->all();
+
+                $elemenUnit = SkemaElemenUnit::where('id', $params['id_elemen'])->first();
+                $elemenUnit->nama_elemen = $params['nama_elemen'];
+                $elemenUnit->benchmark = $params['benchmark'];
+                $elemenUnit->save();
+
+                DB::commit();
+                return response()->json(['message' => "Success Update Elemen Unit Skema"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage(); /
+            }
+        }
+    }
+
+    public function updateKuk(Request $request)
+    {   
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationUpdateKukRules(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $params = $request->all();
+                $kuk = SkemaKukElemen::where('id', $params['id'])->first();
+                $kuk->kuk = $params['kuk'];
+                $kuk->pertanyaan_kuk = $params['kuk'];
+                $kuk->jumlah_bukti = $params['jumlah_bukti'];
+                $kuk->jenis_bukti_id = $params['jenis_bukti_id'];
+                $kuk->bukti = $params['bukti'];
+
+                $kuk->save();
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+                //return $e->getMessage(); /
+            }
+        }
+    }
+
+
     private function getValidationRules($isNew = true)
     {
         return [
@@ -380,8 +538,30 @@ class SkemaController extends BaseController
     private function getValidationElemenUnitRules()
     {
         return [
-            'kode_unit' => 'required',
-            'nama_elemen' => 'required',
+            'id_skema' => 'required',
+        ];
+    }
+
+
+    private function getValidationUpdateUnitRules()
+    {
+        return [
+            'id' => 'required',
+        ];
+    }
+
+
+    private function getValidationUpdateElemenUnitRules()
+    {
+        return [
+            'id_elemen' => 'required',
+        ];
+    }
+
+    private function getValidationUpdateKukRules()
+    {
+        return [
+            'id' => 'required',
         ];
     }
 

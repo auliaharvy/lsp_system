@@ -118,6 +118,8 @@ Route::namespace('Api')->group(function() {
     Route::get('uji-komp-ia-02-detail', 'UjiKompController@indexIa02Detail');
     Route::get('sendEmail', 'SendEmailController@index');
     Route::post('uji-komp-ak-05', 'UjiKompController@storeAk05');
+
+
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
         //Post MST FR
@@ -188,6 +190,14 @@ Route::namespace('Api')->group(function() {
         Route::post('skema/add/unit', 'SkemaController@storeUnit');
         Route::post('skema/upload/elemen', 'SkemaController@uploadElemenUnit');
         Route::post('skema/upload/kuk', 'SkemaController@uploadKuk');
+
+        Route::post('skema/update/unit', 'SkemaController@updateUnit');
+        Route::post('skema/update/elemen', 'SkemaController@updateElemenUnit');
+        Route::post('skema/update/kuk', 'SkemaController@updateKuk');
+        Route::delete('skema/unit/{id}', 'SkemaController@destroyUnit');
+        Route::delete('skema/elemen/{id}', 'SkemaController@destroyElemen');
+        Route::delete('skema/kuk/{id}', 'SkemaController@destroyKuk');
+
 
         // Auth routes
         Route::get('auth/user', 'AuthController@user');
