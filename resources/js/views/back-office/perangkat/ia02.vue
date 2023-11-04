@@ -25,20 +25,33 @@
           <span>{{ scope.row.versi }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" :label="$t('skema.perangkat.pertanyaan')">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" content="Liat Soal" placement="top-end">
+            <a :href="'/' + scope.row.soal" target="_blank">
+              {{ scope.row.namaSoal }}
+            </a>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" :label="$t('skema.perangkat.jawaban')">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" content="Liat Jawaban" placement="top-end">
+            <a :href="'/' + scope.row.jawaban" target="_blank">
+              {{ scope.row.namaJawaban }}
+            </a>
+          </el-tooltip>
+        </template>
+      </el-table-column>
 
       <el-table-column align="center" label="Actions" width="120">
         <template slot-scope="scope">
           <el-button-group>
-            <!-- <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
+            <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
               <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row)" />
-            </el-tooltip> -->
+            </el-tooltip>
             <el-tooltip class="item" effect="dark" content="Delete" placement="top-end">
               <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row)" />
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="Liat File" placement="top-end">
-              <a :href="'/' + scope.row.file" target="_blank">
-                <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-view" />
-              </a>
             </el-tooltip>
           </el-button-group>
         </template>
@@ -54,8 +67,11 @@
           <el-form-item :label="$t('skema.perangkat.filename')" prop="filename">
             <el-input v-model="dataTrx.filename" />
           </el-form-item>
-          <el-form-item :label="$t('skema.perangkat.file')" prop="file">
-            <input type="file" @change="handleUploadSuccess">
+          <el-form-item :label="$t('skema.perangkat.soal')" prop="soal">
+            <input type="file" @change="handleUploadSoalSuccess">
+          </el-form-item>
+          <el-form-item :label="$t('skema.perangkat.jawaban')" prop="jawaban">
+            <input type="file" @change="handleUploadJawabanSuccess">
           </el-form-item>
           <el-form-item :label="$t('skema.perangkat.versi')" prop="versi">
             <el-input v-model="dataTrx.versi" />
@@ -71,7 +87,44 @@
         </div>
       </div>
     </el-dialog>
-
+    <el-dialog :title="$t('skema.dialog.edit')" :visible.sync="dialogFormUpdateIsVisible">
+      <div v-loading="creating" class="form-container">
+        <el-form ref="ia02Form" :rules="rules" :model="editedIa02" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item :label="$t('perangkat.dialog.soal')" prop="nama">
+            <el-upload
+              ref="upload_path_edit_soal"
+              class="upload-demo"
+              action=""
+              :auto-upload="false"
+              :on-change="handleUploadSuccessEditSoal"
+            >
+              <el-button slot="trigger" size="small" type="primary">select file</el-button>
+              <div v-if="isSelect" slot="tip" class="el-upload__tip">Kosongkan bila tidak ingin diubah</div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item :label="$t('perangkat.dialog.jawaban')" prop="nama">
+            <el-upload
+              ref="upload_path_edit_jawaban"
+              class="upload-demo"
+              action=""
+              :auto-upload="false"
+              :on-change="handleUploadSuccessEditJawaban"
+            >
+              <el-button slot="trigger" size="small" type="primary">select file</el-button>
+              <div v-if="isSelect" slot="tip" class="el-upload__tip">Kosongkan bila tidak ingin diubah</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormUpdateVisible()">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="updateData()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -82,8 +135,13 @@ import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
 
 const listResource = new Resource('mst-ia02-get');
-const deleteResource = new Resource('del-mst-ia-02');
-const postResource = new Resource('new-mst-ia-02');
+// const deleteResource = new Resource('del-mst-ia-02');
+// const postResource = new Resource('new-mst-ia-02');
+const deleteResourceSoal = new Resource('del-mst-ia-02-detail');
+const postResourceSoal = new Resource('new-mst-ia-02-detail');
+const editResource = new Resource('mst-ia02-update');
+// const deleteResourceJawaban = new Resource('del-mst-ia-02-jawaban');
+// const postResourceJawaban = new Resource('new-mst-ia-02-jawaban');
 const skemaResource = new Resource('skema');
 
 export default {
@@ -104,14 +162,21 @@ export default {
     return {
       list: null,
       listSkema: null,
+      fileIsRequired: '',
       total: 0,
       loading: true,
       downloading: false,
       creating: false,
       dialogFormVisible: false,
-      dialogFormUpdateVisible: false,
+      dialogFormUpdateIsVisible: false,
       kategori: [],
       dataTrx: {},
+      editedIa02: {
+        id: 0,
+        soal: '',
+        jawaban: '',
+        updated_by: '',
+      },
       editedSkema: {
         id: 0,
         id_skema: '',
@@ -127,7 +192,8 @@ export default {
       rules: {
         filename: [{ required: true, message: 'Filename is required', trigger: 'blur' }],
         version: [{ required: true, message: 'Versi is required', trigger: 'blur' }],
-        file: [{ required: true, message: 'File is required', trigger: 'blur' }],
+        soal: [{ required: true, message: 'Soal is required', trigger: 'blur' }],
+        jawaban: [{ required: true, message: 'Jawaban is required', trigger: 'blur' }],
       },
     };
   },
@@ -143,6 +209,41 @@ export default {
     this.getList();
   },
   methods: {
+    handleUploadSuccessEditSoal(e) {
+      const length = this.$refs.upload_path_edit_soal.uploadFiles.length;
+      console.log(this.$refs.upload_path_edit_soal.uploadFiles);
+      if (length === 2) {
+        this.$refs.upload_path_edit_soal.uploadFiles.splice(0, 1);
+        this.editedIa02.soal = this.$refs.upload_path_edit_soal.uploadFiles[0].raw;
+      } else {
+        this.editedIa02.soal = this.$refs.upload_path_edit_soal.uploadFiles[0].raw;
+      }
+      this.isSelect = false;
+    },
+    handleUploadSuccessEditJawaban(e) {
+      const length = this.$refs.upload_path_edit_jawaban.uploadFiles.length;
+      console.log(this.$refs.upload_path_edit_jawaban.uploadFiles);
+      if (length === 2) {
+        this.$refs.upload_path_edit_jawaban.uploadFiles.splice(0, 1);
+        this.editedIa02.jawaban = this.$refs.upload_path_edit_jawaban.uploadFiles[0].raw;
+      } else {
+        this.editedIa02.jawaban = this.$refs.upload_path_edit_jawaban.uploadFiles[0].raw;
+      }
+      this.isSelect = false;
+    },
+    resetEditedIa02(){
+      this.editedIa02 = {};
+    },
+    dialogFormUpdateVisible(){
+      this.dialogFormUpdateIsVisible = false;
+      this.getList();
+    },
+    filename(teks) {
+      const regex = new RegExp('uploads/perangkat/file/');
+      teks.replace(regex, '');
+      const again = /^([^\-]+\-[^\-]+\-[^\-]+\-)/;
+      return teks.replace(again, '');
+    },
     async getList() {
       const { limit, page } = this.query;
       this.query.id_skema = this.idSkema;
@@ -151,6 +252,12 @@ export default {
       this.list = data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
+        if (element['soal'] !== null){
+          element['namaSoal'] = this.filename(element['soal']);
+        }
+        if (element['jawaban'] !== null){
+          element['namaJawaban'] = this.filename(element['jawaban']);
+        }
       });
       this.total = meta.total;
       this.loading = false;
@@ -161,11 +268,17 @@ export default {
       this.listSkema = data;
       this.loading = false;
     },
-    handleUploadSuccess(e) {
+    handleUploadSoalSuccess(e) {
       const files = e.target.files;
       const rawFile = files[0]; // only use files[0]
-      this.dataTrx.file = rawFile;
+      this.dataTrx.soal = rawFile;
     },
+    handleUploadJawabanSuccess(e) {
+      const files = e.target.files;
+      const rawFile = files[0]; // only use files[0]
+      this.dataTrx.jawaban = rawFile;
+    },
+
     handleFilter() {
       this.query.page = 1;
       this.getList();
@@ -187,7 +300,7 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning',
       }).then(() => {
-        deleteResource.store(deleteData).then(response => {
+        deleteResourceSoal.store(deleteData).then(response => {
           this.$message({
             type: 'success',
             message: 'Delete completed',
@@ -212,10 +325,11 @@ export default {
           uploadData.append('id_skema', this.idSkema);
           uploadData.append('versi', this.dataTrx.versi);
           uploadData.append('filename', this.dataTrx.filename);
-          uploadData.append('file', this.dataTrx.file);
+          uploadData.append('soal', this.dataTrx.soal);
+          uploadData.append('jawaban', this.dataTrx.jawaban);
           uploadData.append('user_id', this.userId);
           this.creating = true;
-          postResource
+          postResourceSoal
             .store(uploadData)
             .then(response => {
               this.$message({
@@ -240,23 +354,31 @@ export default {
         }
       });
     },
-    handleUpdate(skema) {
-      this.editedSkema = skema;
-      this.dialogFormUpdateVisible = true;
-      console.log(this.editedSkema);
-    },
     updateData() {
       this.loading = true;
-      skemaResource.update(this.editedSkema.id, this.editedSkema).then(() => {
-        this.getList();
-        this.dialogFormUpdateVisible = false;
-        this.$notify({
-          title: 'Success',
-          message: 'Updated successfully',
-          type: 'success',
-          duration: 2000,
-        });
-      })
+      const uploadData = new FormData();
+      uploadData.append('id', this.editedIa02.id_mst_ia_02_detail);
+      uploadData.append('soal', this.editedIa02.soal);
+      uploadData.append('jawaban', this.editedIa02.jawaban);
+      uploadData.append('updated_by', this.userId);
+      // console.log(this.editedKkni);
+      this.creating = true;
+      editResource
+        .store(uploadData)
+        .then((response) => {
+          // console.log(response);
+          this.getList();
+          this.resetEditedIa02();
+          this.dialogFormUpdateIsVisible = false;
+          this.$notify({
+            title: 'Success',
+            message: 'Updated successfully',
+            type: 'success',
+            duration: 2000,
+          });
+          this.$refs.upload_path_edit_soal.handleRemove();
+          this.$refs.upload_path_edit_jawaban.handleRemove();
+        })
         .catch(error => {
           console.log(error);
         })
@@ -265,6 +387,40 @@ export default {
           this.creating = false;
         });
     },
+    handleUpdate(ia02) {
+      this.isSelect = true;
+      this.editedIa02 = ia02;
+      console.log(this.editedIa02);
+      if (this.$refs.upload_path_edit_soal) {
+        const length = this.$refs.upload_path_edit_soal.uploadFiles.length;
+        this.$refs.upload_path_edit_soal.uploadFiles.splice(0, length);
+      }
+      if (this.$refs.upload_path_edit_jawaban) {
+        const length = this.$refs.upload_path_edit_jawaban.uploadFiles.length;
+        this.$refs.upload_path_edit_jawaban.uploadFiles.splice(0, length);
+      }
+      this.dialogFormUpdateIsVisible = true;
+    },
+    // updateData() {
+    //   this.loading = true;
+    //   skemaResource.update(this.editedSkema.id, this.editedSkema).then(() => {
+    //     this.getList();
+    //     this.dialogFormUpdateVisible = false;
+    //     this.$notify({
+    //       title: 'Success',
+    //       message: 'Updated successfully',
+    //       type: 'success',
+    //       duration: 2000,
+    //     });
+    //   })
+    //     .catch(error => {
+    //       console.log(error);
+    //     })
+    //     .finally(() => {
+    //       this.loading = true;
+    //       this.creating = false;
+    //     });
+    // },
     handleDownload() {
       this.downloading = true;
       import('@/vendor/Export2Excel').then(excel => {

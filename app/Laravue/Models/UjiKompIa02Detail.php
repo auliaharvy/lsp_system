@@ -1,6 +1,6 @@
 <?php
 /**
- * File MstFrIa02.php
+ * File UjiKompIa02.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System
@@ -12,13 +12,14 @@ use App\Laravue\Acl;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Laravue\Models\SkemaElemenUnit;
 
 /**
  * Class Skema
  *
  * @package App\Laravue\Models
  */
-class MstFrIa02 extends Model
+class UjiKompIa02Detail extends Model
 {
     public $guard_name = 'api';
 
@@ -28,6 +29,6 @@ class MstFrIa02 extends Model
      * @param $query
      * @return Builder
      */
-    protected $table = "mst_perangkat_ia_02";
-    protected $fillable = ['id_skema', 'jumlah', 'upload_by'];
+    protected $table = "trx_uji_komp_ia_02_detail";
+    protected $fillable = ['id_trx_ia_02', 'jawaban'];
 }

@@ -61,7 +61,9 @@
 import Resource from '@/api/resource';
 const kategoriResource = new Resource('skema-kategori-get');
 const skemaResource = new Resource('skema-get');
-const skemaCount = new Resource('jumlah-skema');
+const kkni = new Resource('kkni');
+const dudi = new Resource('dudi');
+const ujiKomp = new Resource('uji');
 export default {
   name: 'TentangKamiSection',
   data() {
@@ -76,6 +78,8 @@ export default {
       listSkema: null,
       querySkema: null,
       jumlahSkema: '',
+      jumlahDudi: '',
+      jumlahSdm: '',
       activeName: 'first',
       currentDate: new Date(),
       itemKategori: null,
@@ -86,12 +90,12 @@ export default {
           icon: '<i class="el-icon-s-order icon-card-mengapa-kami" style="font-size: 100px; " />',
         },
         {
-          title: '300++ Link DUDI',
+          title: '',
           content: 'Perusahaan mitra LSP yang siap untuk menerima profesional bidang IT yang telah tersertifikasi, kompeten dan sesuai bidang keahliannya.',
           icon: '<i class="el-icon-office-building icon-card-mengapa-kami" style="font-size: 100px; " />',
         },
         {
-          title: '1000++ SDM Tersertifikasi',
+          title: '',
           content: 'Daftar tenaga kerja profesional yang telah tersertifikasi oleh LSP SMKN 2 Cikarang Barat. Siap untuk menjawab kebutuhan industri.',
           icon: '<i class="el-icon-s-custom icon-card-mengapa-kami" style="font-size: 100px; " />',
         },
@@ -146,9 +150,15 @@ export default {
   methods: {
     async getListKategori() {
       const { data } = await kategoriResource.list();
-      const countSkemaResult = await skemaCount.list();
-      this.jumlahSkema = countSkemaResult;
+      const kkniResource = await kkni.list();
+      const dudiResource = await dudi.list();
+      const ujiKompResource = await ujiKomp.list();
+      this.jumlahSkema = kkniResource.data.length;
+      this.jumlahDudi = dudiResource.data.length;
+      this.jumlahSdm = ujiKompResource.data.length;
       this.cardMengapaKami[0].title = this.jumlahSkema + ' Skema Sertifikasi';
+      this.cardMengapaKami[1].title = this.jumlahDudi + ' Link Dudi';
+      this.cardMengapaKami[2].title = this.jumlahSdm + ' SDM Tersertifikasi';
       this.listKategori = data;
       this.activeName = this.listKategori[0].nama;
     },

@@ -124,18 +124,39 @@
 
         <br>
         <br>
-        <a target="_blank" :href="'/' + dataSoal">
-          <el-button type="primary">
-            Klik untuk melihat soal
-          </el-button>
-        </a>
-        <br>
-        <br>
-        <a v-if="dataPreview.id_ia_02" target="_blank" :href="'/' + detail.file">
-          <el-button type="primary">
-            Klik untuk melihat jawaban
-          </el-button>
-        </a>
+        <el-table
+          v-loading="loading"
+          :data="soalJawaban"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
+        >
+          <!-- <el-table-column align="left" width="120px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.col1 }}</span>
+            </template>
+          </el-table-column> -->
+          <el-table-column align="left" width="120px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.col2 }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="left">
+            <template slot-scope="scope">
+              <ul>
+                <li v-for="item in scope.row.col3" :key="item" style="margin-bottom: 10px;">
+                  <a target="_blank" :href="'/' + item">
+                    <el-button type="primary">
+                      Klik untuk melihat {{ scope.row.col2 === 'Soal' ? 'Soal' : 'Jawaban' }}
+                    </el-button>
+                  </a>
+                </li>
+              </ul>
+            </template>
+          </el-table-column>
+        </el-table>
         <br>
         <br>
         <el-form
@@ -168,8 +189,10 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const ia02Resource = new Resource('uji-komp-ia-02');
+const ia02DetailResource = new Resource('uji-komp-ia-02-detail');
 const ia02NilaiResource = new Resource('uji-komp-ia-02-nilai');
 const mstIa02Resource = new Resource('mst-ia02-get');
+const mstIa02DetailResource = new Resource('mst-ia02-get-detail');
 const ia02Detail = new Resource('detail/ia-02');
 const preview = new Resource('detail/preview');
 
@@ -192,6 +215,23 @@ export default {
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
+      soalJawaban: [
+        {
+          col1: '',
+          col2: 'Soal',
+          col3: [],
+        },
+        {
+          col1: '',
+          col2: 'Jawaban',
+          col3: [],
+        },
+        {
+          col1: '',
+          col2: 'Jawaban Asesi',
+          col3: [],
+        },
+      ],
       unitKompetensiTable: [
         {
           col1: 'Unit Kompetensi',
@@ -259,9 +299,9 @@ export default {
     });
     this.getListUji().then((value) => {
       this.getUjiKompDetail();
-      this.getListPertanyaan();
       this.getIa02();
     });
+    this.getListPertanyaan();
   },
   methods: {
     async getDataPreview(){
@@ -288,15 +328,40 @@ export default {
         }
       }
     },
+
     async getListPertanyaan() {
       this.loading = true;
-      if (this.dataPreview.id_ia_02 !== null) {
-        const { data } = await mstIa02Resource.list({ id_skema: this.dataPreview.id_skema });
-        this.listSoal = data;
-        this.dataSoal = data[0].file;
-        this.listSoal.forEach((element, index) => {
-          element['index'] = index + 1;
-        });
+      console.log(this.$route.params.id_skema);
+      const { data } = await mstIa02Resource.list({ id_skema: this.$route.params.idskema });
+      const id_mst_ia_02 = data[0].id;
+      this.listSoal = data;
+
+      if (this.dataPreview.id_ia_02) {
+        const { data: dataIa02Detail } = await ia02DetailResource.list({ id_trx_ia_02: this.dataPreview.id_ia_02 });
+        const { data: dataMstIa02Detail } = await mstIa02DetailResource.list({ id_mst_ia_02 });
+        console.log(dataIa02Detail);
+        const countingJawaban = dataIa02Detail.length;
+        const countingSoal = dataMstIa02Detail.length;
+        if (countingJawaban < countingSoal){
+          this.showUpload = true;
+          for (let i = 0; i <= countingJawaban; i++) {
+            this.soalJawaban[0].col3.push(this.listSoal[i].soal);
+          }
+          for (let i = 0; i < countingJawaban; i++) {
+            this.soalJawaban[1].col3.push(this.listSoal[i].jawaban);
+            this.soalJawaban[2].col3.push(dataIa02Detail[i].jawaban);
+          }
+        }
+        if (countingJawaban === countingSoal){
+          for (let i = 0; i < countingJawaban; i++) {
+            this.soalJawaban[0].col3.push(this.listSoal[i].soal);
+            this.soalJawaban[1].col3.push(this.listSoal[i].jawaban);
+            this.soalJawaban[2].col3.push(dataIa02Detail[i].jawaban);
+          }
+        }
+      } else {
+        this.showUpload = true;
+        this.soalJawaban[0].col3.push(this.listSoal[0].soal);
       }
       this.loading = false;
     },

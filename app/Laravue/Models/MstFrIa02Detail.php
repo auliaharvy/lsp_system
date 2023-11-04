@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Laravue\Models
  */
-class MstFrIa02 extends Model
+class MstFrIa02Detail extends Model
 {
     public $guard_name = 'api';
 
@@ -28,6 +28,6 @@ class MstFrIa02 extends Model
      * @param $query
      * @return Builder
      */
-    protected $table = "mst_perangkat_ia_02";
-    protected $fillable = ['id_skema', 'jumlah', 'upload_by'];
+    protected $table = "mst_perangkat_ia_02_detail";
+    protected $fillable = ['id_mst_ia_02', 'versi', 'filename', 'soal', 'jawaban', 'updated_by'];
 }
