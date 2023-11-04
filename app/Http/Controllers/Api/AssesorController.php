@@ -52,6 +52,7 @@ class AssesorController extends BaseController
             $asessorQuery->where('nama', 'LIKE', '%' . $keyword . '%');
             $asessorQuery->orWhere('email', 'LIKE', '%' . $keyword . '%');
             $asessorQuery->orWhere('no_reg', 'LIKE', '%' . $keyword . '%');
+            $asessorQuery->orWhere('status_asesor', 'LIKE', '%' . $keyword . '%');
         }
 
         return MasterResource::collection($asessorQuery->paginate($limit));

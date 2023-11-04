@@ -29,6 +29,7 @@ use App\Laravue\Models\UjiKompAk06;
 use App\Laravue\Models\UjiKompIa01;
 use App\Laravue\Models\UjiKompIa01Detail;
 use App\Laravue\Models\UjiKompIa02;
+use App\Laravue\Models\UjiKompIa02Detail;
 use App\Laravue\Models\UjiKompIa03;
 use App\Laravue\Models\UjiKompIa03Detail;
 use App\Laravue\Models\UjiKompIa05;
@@ -51,18 +52,21 @@ use App\Laravue\Models\Skema;
 use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
+use App\Laravue\Models\MstFrIa02;
 use App\Laravue\Models\MstFrIa03;
 use App\Laravue\Models\MstFrIa05;
 use App\Laravue\Models\MstFrIa07;
 use App\Laravue\Models\MstFrAk03;
 use App\Laravue\Models\MstFrAk04;
 use App\Laravue\Models\MstFrIa11;
+use App\Http\Controllers\Api\SendEmailController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use Validator;
 use File;
 use App\Image;
@@ -310,6 +314,7 @@ class UjiKompController extends BaseController
             DB::beginTransaction();
             try {
                 $params = $request->all();
+                DB::commit();
                 //upload sign
                 $file = $request['signature'];
                 $image = str_replace('data:image/png;base64,', '', $file);
@@ -961,6 +966,22 @@ class UjiKompController extends BaseController
         return MasterResource::collection($query->paginate($limit));
     }
 
+    public function indexIa02Detail(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        // $keyword = Arr::get($searchParams, 'keyword', '');
+        // $jadwal = Arr::get($searchParams, 'di_jadwal', '');
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
+        $id_trx_ia_02 = Arr::get($searchParams, 'id_trx_ia_02', '');
+
+        $query = UjiKompIa02Detail::query();
+        $query->where('trx_uji_komp_ia_02_detail.id_trx_ia_02', $id_trx_ia_02)
+        ->select('trx_uji_komp_ia_02_detail.*');
+
+        return MasterResource::collection($query->paginate($limit));
+    }
+
     public function indexIa03(Request $request)
     {
         $searchParams = $request->all();
@@ -1214,6 +1235,10 @@ class UjiKompController extends BaseController
             DB::beginTransaction();
             $id_uji_komp = $request->get('id_uji_komp');
             $foundUjiKomp = UjiKomp::where('id', $id_uji_komp)->first();
+            $mstIa02 = MstFrIa02::where('id_skema', $foundUjiKomp->id_skema)->first();
+            $countingJawaban = UjiKompIa02Detail::where('id_trx_ia_02', $foundUjiKomp->id_ia_02)->count();
+            $ujiKompIa02;
+
             try {
                 $params = $request->all();
                 // upload file
@@ -1225,24 +1250,52 @@ class UjiKompController extends BaseController
                 $file->move('uploads/ia-02/jawaban/', $nama_file);
                 $file = 'uploads/ia-02/jawaban/'.$nama_file;
 
-                $ia02 = UjiKompIa02::create([
-                    'rekomendasi_asesor' => 'Belum Penilaian',
-                    'file' =>  $file,
-                    'submit_by' => $params['user_id'],
-                ]);
+                // return response()->json(['mstia02' => $mstIa02->jumlah, 'couting' => $countingJawaban], 200);
+                if ($mstIa02->jumlah > $countingJawaban) {
+                    if ($foundUjiKomp->id_ia_02){
+                        // create upload jawaban baru
+                        $ia02Detail = UjiKompIa02Detail::create([
+                            'id_trx_ia_02' => $foundUjiKomp->id_ia_02,
+                            'jawaban' => $file
+                        ]);    
+                        $ujiKompIa02 = UjiKompIa02::find($foundUjiKomp->id_ia_02);
+                    } else {
+                        // trx_uji_komp_ia_02 terbuat
+                        $ia02 = UjiKompIa02::create([
+                            'rekomendasi_asesor' => 'Belum Penilaian',
+                            'submit_by' => $params['user_id'],
+                            'updated_by' => $params['user_id'],
+                        ]);
 
-                $progress = $foundUjiKomp->persentase;
-                $foundUjiKomp->id_ia_02 = $ia02->id;
-                $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
+                        $ujiKompIa02 = UjiKompIa02::find($ia02->id);
+                        $foundUjiKomp->id_ia_02 = $ujiKompIa02->id;
+                        $foundUjiKomp->save();
+
+                        $ia02Detail = UjiKompIa02Detail::create([
+                            'id_trx_ia_02' => $ia02->id,
+                            'jawaban' => $file
+                        ]);
+                    }
+
+                    $jumlahJawaban = UjiKompIa02Detail::where('id_trx_ia_02', $ujiKompIa02->id)->count();
+
+                    if ($mstIa02->jumlah === $jumlahJawaban) {
+                        $progress = $foundUjiKomp->persentase;
+                        $foundUjiKomp->id_ia_02 = $ujiKompIa02->id;
+                        $foundUjiKomp->persentase = $progress + 5;
+                        if($foundUjiKomp->persentase === 100) {
+                            $foundUjiKomp->status = 1;
+                        }
+
+                        $foundUjiKomp->save();
+                    }
+
+                    DB::commit();
+                    return response()->json(['message' => "Sukses Upload Jawaban FR IA 02"], 200);
+                } else {
+                    return response()->json(['message' => "Upload Jawaban Sudah Melebihi Soal"], 200);
                 }
 
-                $foundUjiKomp->save();
-
-
-                DB::commit();
-                return response()->json(['message' => "Sukses membuat FR IA 02"], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
@@ -2051,6 +2104,20 @@ class UjiKompController extends BaseController
 
                 $foundUjiKomp->save();
 
+                // dapetin email asesi
+                $users = UjiKompApl1::where('id', $foundUjiKomp->id_apl_01)->first();
+
+                // kirim email
+                $sendEmailController = App::make(SendEmailController::class);
+                $sendEmail = $sendEmailController->index(new Request([
+                    'email' => $users->email,
+                    'nama_asesi' => $ak05->nama_asesi,
+                    'rekomendasi' => $ak05->rekomendasi,
+                    'keterangan' => $ak05->keterangan,
+                    'aspek' => $ak05->aspek,
+                    'pencatatan_penolakan' => $ak05->pencatatan_penolakan,
+                    'saran_perbaikan' => $ak05->saran_perbaikan
+                ]));
 
                 DB::commit();
                 return response()->json(['message' => "Sukses membuat FR AK 05"], 200);

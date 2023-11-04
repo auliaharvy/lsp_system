@@ -9,6 +9,7 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Resources\MasterResource;
+use App\Http\Resources\MstIa02Resource;
 use App\Http\Resources\MstIa05Resource;
 use App\Http\Resources\UjiKompResource;
 use App\Laravue\JsonResponse;
@@ -34,6 +35,7 @@ use App\Laravue\Models\User;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\MstFrIa02;
+use App\Laravue\Models\MstFrIa02Detail;
 use App\Laravue\Models\MstFrIa03;
 use App\Laravue\Models\MstFrIa05;
 use App\Laravue\Models\MstFrIa05Detail;
@@ -61,7 +63,7 @@ class PerangkatController extends BaseController
 {
     const ITEM_PER_PAGE = 15;
 
-    public function indexIa02(Request $request)
+    public function indexIa02Old(Request $request)
     {
         $searchParams = $request->all();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
@@ -73,6 +75,31 @@ class PerangkatController extends BaseController
         $query->where('mst_perangkat_ia_02.id_skema', $id_skema)
         ->select('mst_perangkat_ia_02.*');
 
+        return MasterResource::collection($query->paginate(100));
+    }
+    public function indexIa02(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
+
+        $query = MstFrIa02::query();
+        $query->where('mst_perangkat_ia_02.id_skema', $id_skema)
+        ->join('mst_perangkat_ia_02_detail as a', 'a.id_mst_ia_02', '=', 'mst_perangkat_ia_02.id')
+        ->select('mst_perangkat_ia_02.*', 'a.versi', 'a.filename', 'a.soal', 'a.jawaban', 'a.updated_by', 'a.id as id_mst_ia_02_detail');
+        return MasterResource::collection($query->paginate(100));
+    }
+
+    public function indexIa02Detail(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        $id_mst_ia_02 = Arr::get($searchParams, 'id_mst_ia_02', '');
+
+        $query = MstFrIa02Detail::query();
+        $query->where('mst_perangkat_ia_02_detail.id_mst_ia_02', $id_mst_ia_02)
+        ->select('mst_perangkat_ia_02_detail.*')
+        ->groupBy('mst_perangkat_ia_02_detail.id');
         return MasterResource::collection($query->paginate(100));
     }
 
@@ -166,11 +193,11 @@ class PerangkatController extends BaseController
         return MasterResource::collection($query->paginate(100));
     }
 
-    public function storeIa02(Request $request)
+    public function storeIa02Detail(Request $request)
     {
         $validator = Validator::make(
             $request->all(),
-            $this->getValidationRulesIa02(),
+            $this->getValidationRulesIa02Detail(),
         );
 
         if ($validator->fails()) {
@@ -178,22 +205,61 @@ class PerangkatController extends BaseController
         } else {
             DB::beginTransaction();
             try {
-                // upload file
-                $file = $request->file('file');
+                $params = $request->all();
+                $idskema = $params['id_skema'];
+
+                // upload soal 
+                $soal = $request->file('soal');
                 $mytime = Carbon::now();
                 $now = $mytime->toDateString();
-                $nama_file = $now . '-' . $file->getClientOriginalName();
-                $file->move('uploads/perangkat/file/', $nama_file);
-                $file = 'uploads/perangkat/file/'.$nama_file;
+                $nama_file = $now . '-' . $soal->getClientOriginalName();
+                $soal->move('uploads/perangkat/file/', $nama_file);
+                $soal = 'uploads/perangkat/file/'.$nama_file;
 
-                $params = $request->all();
-                $ia02 = MstFrIa02::create([
-                    'id_skema' => $params['id_skema'],
-                    'versi' => $params['versi'],
-                    'filename' => $params['filename'],
-                    'file' => $file,
-                    'updated_by' => $params['user_id'],
-                ]);
+                // upload jawaban
+                $jawaban = $request->file('jawaban');
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $nama_file = $now . '-' . $jawaban->getClientOriginalName();
+                $jawaban->move('uploads/perangkat/file/', $nama_file);
+                $jawaban = 'uploads/perangkat/file/'.$nama_file;
+
+                // cek ada ga id_skema di mst_perangkat_ia_02
+                $mstPerangkatIa02 = MstFrIa02::where('id_skema', $idskema)->first();
+
+                if ($mstPerangkatIa02) {
+                    // create mst soal ia 02 yang baru
+                    $ia02Soal = MstFrIa02Detail::create([
+                        'id_mst_ia_02' => $mstPerangkatIa02->id,
+                        'filename' => $params['filename'],
+                        'versi' => $params['versi'],
+                        'soal' => $soal,
+                        'jawaban' => $jawaban,
+                        'updated_by' => $params['user_id'],
+                    ]);
+                    // nilai di kolom jumlah nya bertambah 1
+                    $jumlahSoal = $mstPerangkatIa02->jumlah;
+                    $mstPerangkatIa02->jumlah = $jumlahSoal + 1;
+                    $mstPerangkatIa02->save();
+
+                } else {
+                    // create mst perangkat ia 02
+                    $ia02 = MstFrIa02::create([
+                        'id_skema' => $params['id_skema'],
+                        'jumlah' => 1,
+                        'upload_by' => $params['user_id'],
+                    ]);
+
+                    // create mst perangkat ia 02 soal yang baru
+                    $ia02Soal = MstFrIa02Detail::create([
+                        'id_mst_ia_02' => $ia02->id,
+                        'filename' => $params['filename'],
+                        'versi' => $params['versi'],
+                        'soal' => $soal,
+                        'jawaban' => $jawaban,
+                        'updated_by' => $params['user_id'],
+                    ]);
+                }
 
                 DB::commit();
                 return response()->json(['message' => "Sukses Upload Perangkat FR IA 02"], 200);
@@ -362,6 +428,50 @@ class PerangkatController extends BaseController
         }
     }
 
+    public function editIa02(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $params = $request->all();
+
+            // ambil data ia 02 detail
+            $ia02Detail = MstFrIa02Detail::where('id', $params['id'])->first();
+
+            // ambil dan periksa, kalo update soal maka soalnya diupdate 
+            $soal = $request->file('soal');
+            if ($soal) {
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $nama_file = $now . '-' . $soal->getClientOriginalName();
+                $soal->move('uploads/perangkat/file/', $nama_file);
+                $soal = 'uploads/perangkat/file/'.$nama_file;
+                $ia02Detail->soal = $soal;
+            }
+
+            // ambil dan periksa, kalo update jawaban maka jawabannya diupdate 
+            $jawaban = $request->file('jawaban');
+            if ($jawaban) {
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $nama_file = $now . '-' . $jawaban->getClientOriginalName();
+                $jawaban->move('uploads/perangkat/file/', $nama_file);
+                $jawaban = 'uploads/perangkat/file/'.$nama_file;
+                $ia02Detail->jawaban = $jawaban;
+            }
+
+            // kalo udah save, jangan lupa di isi updated_by nya
+            $ia02Detail->updated_by = $params['updated_by'];
+            $ia02Detail->save();
+
+            DB::commit();
+            return response()->json(['message' => "Sukses Update Perangkat FR IA 02"], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => $e->getMessage()], 400);
+            //return $e->getMessage();
+        }
+    }
+
     public function deleteIa02(Request $request)
     {
         try {
@@ -373,6 +483,36 @@ class PerangkatController extends BaseController
         } catch (\Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], 403);
         }
+    }
+
+    public function deleteIa02Detail(Request $request)
+    {
+        $params = $request->all();
+        $soal = $params['soal'];
+        $jawaban = $params['jawaban'];
+        File::delete($soal);
+        File::delete($jawaban);
+
+        $mstFrIa02Detail = MstFrIa02Detail::where('id', $params['id_mst_ia_02_detail'])->first();
+
+        $mstFrIa02 = MstFrIa02::where('id', $mstFrIa02Detail->id_mst_ia_02)->first();
+
+        $rowsDelete = MstFrIa02Detail::where('id', $params['id_mst_ia_02_detail'])->delete();
+        if($rowsDelete > 0){
+            $jumlah = $mstFrIa02->jumlah;
+            if ($jumlah > 0){
+                $mstFrIa02->jumlah = $jumlah - 1;
+                $jumlah = $mstFrIa02->jumlah;
+                if ($jumlah === 0){
+                    MstFrIa02::where('id', $mstFrIa02->id)->delete();
+                }
+                $mstFrIa02->save();
+            }
+            return response()->json(['message' => "Success Delete Soal IA 02"], 201);
+        } else {
+            return response()->json(['error' => 'No records were deleted'], 403);
+        }
+
     }
 
     public function deleteIa03(Request $request)
@@ -426,6 +566,16 @@ class PerangkatController extends BaseController
             'filename' => 'required',
             'id_skema' => 'required',
             'file' => 'required',
+        ];
+    }
+
+    private function getValidationRulesIa02Detail($isNew = true)
+    {
+        return [
+            'filename' => 'required',
+            'id_skema' => 'required',
+            'soal' => 'required',
+            'jawaban' => 'required',
         ];
     }
 

@@ -51,7 +51,7 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <ul>
-                <li v-for="item in scope.row.col3" :key="item">
+                <li v-for="item in scope.row.col3" :key="item.filename">
                   {{ item }}
                 </li>
               </ul>
@@ -59,39 +59,55 @@
           </el-table-column>
         </el-table>
 
-        <br>
-        <br>
-        <a target="_blank" :href="'/' + dataSoal">
-          <el-button type="primary">
-            Klik untuk melihat soal
-          </el-button>
-        </a>
-        <br>
-        <br>
-        <a v-if="$route.params.id_ia_02" target="_blank" :href="'/' + detail.file">
-          <el-button type="primary">
-            Klik untuk melihat jawaban
-          </el-button>
-        </a>
-        <br>
-        <br>
+        <el-table
+          v-loading="loading"
+          :data="soalJawaban"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
+        >
+          <!-- <el-table-column align="left" width="120px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.col1 }}</span>
+            </template>
+          </el-table-column> -->
+          <el-table-column align="left" width="120px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.col2 }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="left">
+            <template slot-scope="scope">
+              <ul>
+                <li v-for="item in scope.row.col3" :key="item.filename" style="margin-bottom: 10px;">
+                  <a target="_blank" :href="'/' + item.link">
+                    {{ item.filename }}
+                  </a>
+                </li>
+              </ul>
+            </template>
+          </el-table-column>
+        </el-table>
+
         <el-form
           ref="form"
           :model="dataTrx"
           label-width="250px"
           label-position="left"
         >
-          <el-form-item v-if="!$route.params.id_ia_02 && role !== 'assesor'" label="Upload File Jawaban" prop="file">
-            <input type="file" @change="handleUploadSuccess">
+          <el-form-item v-if="role !== 'assesor' && showUpload" label="Upload File Jawaban" prop="file">
+            <input ref="inputFile" type="file" @change="handleUploadSuccess">
           </el-form-item>
-          <el-form-item v-if="role !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor">
+          <el-form-item v-if="role !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor" style="margin-top: 15px">
             <el-radio v-model="dataTrx.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
             <el-radio v-model="dataTrx.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
           </el-form-item>
         </el-form>
       </div>
       <br>
-      <el-button v-if="!$route.params.id_ia_02 && role === 'user'" @click="onSubmit">Submit</el-button>
+      <el-button v-if="showUpload" @click="onSubmit">Submit</el-button>
       <el-button v-if="$route.params.id_ia_02 && role !== 'user'" @click="onSubmitAsesor">Submit Asesor</el-button>
     </el-main>
   </el-container>
@@ -105,8 +121,10 @@ const skemaResource = new Resource('skema-get');
 const tukResource = new Resource('tuk-get');
 const ujiKomResource = new Resource('uji-komp-get');
 const ia02Resource = new Resource('uji-komp-ia-02');
+const ia02DetailResource = new Resource('uji-komp-ia-02-detail');
 const ia02NilaiResource = new Resource('uji-komp-ia-02-nilai');
 const mstIa02Resource = new Resource('mst-ia02-get');
+const mstIa02DetailResource = new Resource('mst-ia02-get-detail');
 const ia02Detail = new Resource('detail/ia-02');
 const preview = new Resource('detail/preview');
 
@@ -116,6 +134,7 @@ export default {
     return {
       radio1: 'Kompeten',
       role: null,
+      showUpload: false,
       kompeten: null,
       loading: false,
       listSkema: null,
@@ -130,10 +149,27 @@ export default {
       selectedSkema: {},
       selectedUji: {},
       dataTrx: {},
+      soalJawaban: [
+        {
+          col1: '',
+          col2: 'Soal',
+          col3: [],
+        },
+        {
+          col1: '',
+          col2: 'Jawaban',
+          col3: [],
+        },
+        {
+          col1: '',
+          col2: 'Jawaban Asesi',
+          col3: [],
+        },
+      ],
       unitKompetensiTable: [
         {
           col1: 'Unit Kompetensi',
-          col2: 'Kode Unit',
+          col2: '',
           col3: [],
         },
         {
@@ -175,6 +211,9 @@ export default {
       isWide: true,
       labelPosition: 'left',
       dataPreview: '',
+      soal: [],
+      jawaban: [],
+      jawabanAsesi: [],
     };
   },
   computed: {
@@ -200,8 +239,9 @@ export default {
     //   this.getIa02();
     // });
 
+    this.getDataPreview();
     this.getUjiKompDetail();
-    this.getListPertanyaan();
+    this.getListSoal();
     this.getIa02();
   },
   methods: {
@@ -229,15 +269,96 @@ export default {
         }
       }
     },
-    async getListPertanyaan() {
+    filename(teks) {
+      const regexfirst = new RegExp('uploads/perangkat/file/', 'i');
+      const perangkatMatch = regexfirst.test(teks);
+      if (perangkatMatch){
+        const again = /^([^\-]+\-[^\-]+\-[^\-]+\-)/;
+        return teks.replace(again, '');
+      }
+      const regexsecond = new RegExp('uploads/ia-02/jawaban/', 'i');
+      const ia02DetailMatch = regexsecond.test(teks);
+      if (ia02DetailMatch){
+        const again = /^([^\-]+\-[^\-]+\-[^\-]+\-[^\-]+\-)/;
+        return teks.replace(again, '');
+      }
+    },
+    async getListSoal() {
       this.loading = true;
       const { data } = await mstIa02Resource.list({ id_skema: this.$route.params.id_skema });
+      // console.log(await mstIa02Resource.list({ id_skema: this.$route.params.id_skema }));
+      // console.log(this.$route.params.id_skema);
+      const id_mst_ia_02 = data[0].id;
       this.listSoal = data;
-      this.dataSoal = data[0].file;
-      this.listSoal.forEach((element, index) => {
-        element['index'] = index + 1;
-      });
-      // console.log(this.listSoal);
+
+      if (this.dataPreview.id_ia_02) {
+        const { data: dataIa02Detail } = await ia02DetailResource.list({ id_trx_ia_02: this.dataPreview.id_ia_02 });
+        const { data: dataMstIa02Detail } = await mstIa02DetailResource.list({ id_mst_ia_02 });
+        // console.log(dataIa02Detail);
+        const countingJawaban = dataIa02Detail.length;
+        const countingSoal = dataMstIa02Detail.length;
+
+        if (countingJawaban < countingSoal){
+          this.showUpload = true;
+          for (let i = 0; i <= countingJawaban; i++) {
+            if (this.listSoal[i].soal !== null){
+              this.soal.push({ link: this.listSoal[i].soal, filename: this.filename(this.listSoal[i].soal) });
+              // console.log(this.soal);
+              this.soalJawaban[0].col3.push(this.soal[i]);
+              // console.log(this.soalJawaban[0]);
+            }
+          }
+
+          for (let i = 0; i < countingJawaban; i++) {
+            if (this.listSoal[i].jawaban !== null){
+              this.jawaban.push({ link: this.listSoal[i].jawaban, filename: this.filename(this.listSoal[i].jawaban) });
+              // console.log(this.jawaban[i]);
+              this.soalJawaban[1].col3.push(this.jawaban[i]);
+              // console.log(this.soalJawaban[1]);
+            }
+
+            if (dataIa02Detail[i].jawaban !== null){
+              this.jawabanAsesi.push({ link: dataIa02Detail[i].jawaban, filename: this.filename(dataIa02Detail[i].jawaban) });
+              // console.log(this.jawabanAsesi[i]);
+              this.soalJawaban[2].col3.push(this.jawabanAsesi[i]);
+              // console.log(this.soalJawaban[2]);
+            }
+          }
+        }
+
+        if (countingJawaban === countingSoal){
+          for (let i = 0; i < countingJawaban; i++) {
+            if (this.listSoal[i].soal !== null){
+              this.soal.push({ link: this.listSoal[i].soal, filename: this.filename(this.listSoal[i].soal) });
+              // console.log(this.soal);
+              this.soalJawaban[0].col3.push(this.soal[i]);
+            }
+
+            if (this.listSoal[i].jawaban !== null){
+              this.jawaban.push({ link: this.listSoal[i].jawaban, filename: this.filename(this.listSoal[i].jawaban) });
+              // console.log(this.jawaban);
+              // console.log(this.soalJawaban[1]);
+            }
+
+            if (dataIa02Detail[i].jawaban !== null){
+              this.jawabanAsesi.push({ link: dataIa02Detail[i].jawaban, filename: this.filename(dataIa02Detail[i].jawaban) });
+              // console.log(this.jawabanAsesi);
+              this.soalJawaban[2].col3.push(this.jawabanAsesi[i]);
+            }
+          }
+          this.jawaban.forEach((element, index) => {
+            this.soalJawaban[1].col3.push(element);
+          });
+        }
+      } else {
+        this.showUpload = true;
+
+        if (this.listSoal[0].soal !== null){
+          this.soal.push({ link: this.listSoal[0].soal, filename: this.filename(this.listSoal[0].soal) });
+          // console.log(this.soal);
+          this.soalJawaban[0].col3.push(this.soal[0]);
+        }
+      }
       this.loading = false;
     },
     async getListSkema() {
@@ -269,7 +390,7 @@ export default {
       // var ujiDetail = this.listUji.find((x) => x.id === id_uji);
       // this.selectedUji = ujiDetail;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
-      console.log(this.listUji);
+      // console.log(this.listUji);
       this.headerTable[0].content = this.listUji.data[0].skema_sertifikasi;
       this.headerTable[1].content = this.listUji.data[0].nama_tuk;
       this.headerTable[2].content = this.listUji.data[0].asesor;
@@ -290,7 +411,7 @@ export default {
       // var skemaId = this.listSkema.find((x) => x.id === id_skema);
       var skemaId = await skemaResource.list({ id_skema: idSkema });
       this.selectedSkema = skemaId.data[0];
-      console.log(skemaId);
+      // console.log(skemaId);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
@@ -322,6 +443,24 @@ export default {
       // var kuk = elemen.kuk;
       this.listKuk = kuk;
     },
+    async detectAsesiIsDone(){
+      const { data } = await mstIa02Resource.list({ id_skema: this.$route.params.id_skema });
+      const id_mst_ia_02 = data[0].id;
+      const { data: dataIa02Detail } = await ia02DetailResource.list({ id_trx_ia_02: this.dataPreview.id_ia_02 });
+      const { data: dataMstIa02Detail } = await mstIa02DetailResource.list({ id_mst_ia_02 });
+      console.log(dataIa02Detail);
+      console.log(dataMstIa02Detail);
+      const countingJawaban = dataIa02Detail.length;
+      const countingSoal = dataMstIa02Detail.length;
+      console.log(countingJawaban);
+      console.log(countingSoal);
+
+      if (countingJawaban === countingSoal){
+        this.$router.push({ name: 'uji-komp-list' }).catch(() => {});
+      } else {
+        location.reload();
+      }
+    },
     onSubmit() {
       this.loading = true;
       const uploadData = new FormData();
@@ -335,12 +474,12 @@ export default {
       ia02Resource
         .store(uploadData)
         .then(response => {
+          this.detectAsesiIsDone();
           this.$message({
             message: 'FR IA 02 has been created successfully.',
             type: 'success',
             duration: 5 * 1000,
           });
-          this.$router.push({ name: 'uji-komp-list' });
         })
         .catch(error => {
           console.log(error);
@@ -369,7 +508,6 @@ export default {
             type: 'success',
             duration: 5 * 1000,
           });
-          this.$router.push({ name: 'uji-komp-list' });
         })
         .catch(error => {
           console.log(error);

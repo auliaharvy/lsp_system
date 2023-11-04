@@ -68,7 +68,7 @@ const ujiRoutes = {
       hidden: true,
     },
     {
-      path: 'form-ia-02',
+      path: 'form-ia-02/:id_ia_02/:id_apl_01/:id_skema/:id_uji',
       component: () => import('@/views/back-office/uji/fr_ia/02/index'),
       name: 'form-ia-02',
       meta: {
