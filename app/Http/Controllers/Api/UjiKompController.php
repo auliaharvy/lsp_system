@@ -1250,7 +1250,6 @@ class UjiKompController extends BaseController
                 $file->move('uploads/ia-02/jawaban/', $nama_file);
                 $file = 'uploads/ia-02/jawaban/'.$nama_file;
 
-                // return response()->json(['mstia02' => $mstIa02->jumlah, 'couting' => $countingJawaban], 200);
                 if ($mstIa02->jumlah > $countingJawaban) {
                     if ($foundUjiKomp->id_ia_02){
                         // create upload jawaban baru
@@ -1299,7 +1298,6 @@ class UjiKompController extends BaseController
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
-                //return $e->getMessage();
             }
         }
     }
