@@ -1328,7 +1328,6 @@ class UjiKompController extends BaseController
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => $e->getMessage()], 400);
-                //return $e->getMessage();
             }
         }
     }
