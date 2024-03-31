@@ -24,6 +24,16 @@ const ujiRoutes = {
       },
     },
     {
+      path: 'history',
+      component: () => import('@/views/back-office/uji/History'),
+      name: 'history',
+      meta: {
+        title: 'History',
+        icon: 'el-icon-timer',
+        permissions: ['manage user'],
+      },
+    },
+    {
       path: 'form-mapa-02',
       component: () => import('@/views/back-office/uji/fr_mapa/02/index'),
       name: 'form-mapa-02',

@@ -290,7 +290,7 @@
               />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="Buat Sertifikat" placement="top-end">
-              <el-button v-if="query.role !== 'user' && scope.row.id_ak_05 !== null" type="primary" size="small" icon="el-icon-document-checked" @click="handleCreateSertifikat(scope.row)" />
+              <el-button v-if="query.role !== 'user' && scope.row.status == 1" type="primary" size="small" icon="el-icon-document-checked" @click="handleCreateSertifikat(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="Edit Sertifikat" placement="top-end">
               <el-button v-if="query.role !== 'user' && scope.row.id_ak_05 !== null" type="warning" size="small" icon="el-icon-document-checked" @click="handleUpdateSertifikat(scope.row)" />
@@ -502,7 +502,7 @@ export default {
       },
       query: {
         page: 1,
-        limit: 15,
+        limit: 5,
         keyword: '',
         role: '',
         user_id: null,
@@ -567,7 +567,7 @@ export default {
       // get data perangkat / list table
       const { data, meta } = await listResource.list(this.query);
       this.list = data;
-      console.log(this.list);
+      // console.log(this.list);
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
@@ -585,7 +585,7 @@ export default {
     handleAkses(form, data) {
       this.aksesForm = data;
       this.aksesForm.fr = form;
-      console.log(this.aksesForm);
+      // console.log(this.aksesForm);
       this.dialogFormVisible = true;
     },
     toForm() {
@@ -632,13 +632,13 @@ export default {
     async handleUpdateSertifikat(sertifikat) {
       this.isSelect = true;
       this.editedSertifikat = await pemegangSertifikatResource.get(sertifikat.id);
-      console.log(sertifikat);
-      console.log(this.editedSertifikat);
+      // console.log(sertifikat);
+      // console.log(this.editedSertifikat);
       this.dialogFormUpdateSertifikatVisible = true;
     },
     handleCreateSertifikat(sertifikat) {
       this.resetNewSertifikat();
-      console.log(sertifikat);
+      // console.log(sertifikat);
       this.newSertifikat.id_uji_komp = sertifikat.id;
       this.newSertifikat.nama = sertifikat.nama_peserta;
       this.newSertifikat.skema_sertifikasi = sertifikat.skema_sertifikasi;
@@ -785,7 +785,7 @@ export default {
     handleUpdate(tuk) {
       this.editedData = tuk;
       this.dialogFormUpdateVisible = true;
-      console.log(this.editedData);
+      // console.log(this.editedData);
     },
     updateData() {
       this.loading = true;
