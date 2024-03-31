@@ -49,6 +49,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Validator;
 
 /**
@@ -68,6 +69,8 @@ class JadwalController extends BaseController
      */
     public function index(Request $request)
     {
+        $currentDate = Carbon::now()->toDateString();
+
         $searchParams = $request->all();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
@@ -80,7 +83,9 @@ class JadwalController extends BaseController
         $query->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema');
         $query->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk');
         $query->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
-        ->orderBy('trx_jadwal_asesmen.created_at', 'desc')
+        ->whereDate('trx_jadwal_asesmen.start_date', '>=', $currentDate) // Jadwal asesmen dari hari ini ke depan
+        ->orderBy('trx_jadwal_asesmen.start_date') // Urutkan berdasarkan tanggal asesmen
+        // ->orderBy('trx_jadwal_asesmen.created_at', 'desc')
         ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor');
 
         if ($visibility === 0) {

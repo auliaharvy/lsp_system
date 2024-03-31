@@ -39,6 +39,7 @@ Route::namespace('Api')->group(function() {
     Route::post('new-user-uji', 'UjiKompController@newUser');
     Route::post('check-user-uji', 'UjiKompController@checkUser');
     Route::get('uji-komp-get', 'UjiKompController@index');
+    Route::get('history', 'UjiKompController@history');
     Route::get('skema-kategori-get', 'AsesmenKategoriController@index');
 
     Route::get('mst-ia02-get-old', 'PerangkatController@indexIa02Old');
@@ -117,9 +118,12 @@ Route::namespace('Api')->group(function() {
     Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
     Route::get('uji-komp-ia-02-detail', 'UjiKompController@indexIa02Detail');
     Route::get('sendEmail', 'SendEmailController@index');
+    Route::post('uji-komp-apl-01', 'UjiKompController@submitApl01');
     Route::post('uji-komp-ak-05', 'UjiKompController@storeAk05');
 
-
+    // Uji Routes
+    Route::apiResource('uji', 'UjiKompController');
+    
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
         //Post MST FR
@@ -140,7 +144,6 @@ Route::namespace('Api')->group(function() {
         Route::post('del-mapa2','Mapa2Controller@destroy');
         
         //Post FR
-        Route::post('uji-komp-apl-01', 'UjiKompController@submitApl01');
         Route::post('uji-komp-apl-02', 'UjiKompController@submitApl02');
         Route::post('uji-komp-ia-01', 'UjiKompController@storeIa01');
         // Route::post('uji-komp-ia-02', 'UjiKompController@storeIa02');
@@ -165,9 +168,6 @@ Route::namespace('Api')->group(function() {
         Route::post('uji-komp-va', 'UjiKompController@storeVa');
         // Jadwal Routes
         Route::apiResource('jadwal', 'JadwalController');
-
-        // Uji Routes
-        Route::apiResource('uji', 'UjiKompController');
 
         // Perangkat Routes
         Route::apiResource('perangkat-asesmen', 'PerangkatAsesmenController');

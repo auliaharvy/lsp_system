@@ -108,6 +108,7 @@ class UjiKompController extends BaseController
         $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk');
         $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
         ->orderBy('c.created_at', 'desc')
+        ->where('trx_uji_komp.status', '=', 0)
         ->select('trx_uji_komp.*', 'b.nik', 'b.nama_lengkap', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
         'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor');
 
@@ -134,11 +135,47 @@ class UjiKompController extends BaseController
         }
 
         if (!empty($keyword)) {
-            $query->where('b.email', 'LIKE', '%' . $keyword . '%');
-            $query->orWhere('trx_uji_komp.nama_peserta', 'LIKE', '%' . $keyword . '%');
+            $query->where(function ($query) use ($keyword) { // agar mempertahankan query where yang sudah dibuat diatas (karena jika tidak menggunakan ini maka query where akan direplace oleh query orWhere dibawah ini)
+                $query->where('b.email', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('trx_uji_komp.nama_peserta', 'LIKE', '%' . $keyword . '%');
+            });
         }
 
         return UjiKompResource::collection($query->paginate($limit));
+    }
+
+    public function history(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', 10);
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $jadwal = Arr::get($searchParams, 'id_jadwal', '');
+        $skema = Arr::get($searchParams, 'id_skema', '');
+
+        $historyQuery = DB::table('trx_uji_komp as a')
+        ->select('a.id as id', 'a.nama_peserta', 'd.jadwal', 'e.skema_sertifikasi', 'e.kode_skema', 'f.nama as asesor', 'd.start_date as mulai', 'a.status', 'c.id_skema', 'c.id_jadwal')
+        ->join('mst_pemegang_sertifikat as b', 'b.id_uji_komp', '=', 'a.id')
+        ->join('trx_uji_komp_apl_01 as c', 'c.id', '=', 'a.id_apl_01')
+        ->join('trx_jadwal_asesmen as d', 'd.id', '=', 'c.id_jadwal')
+        ->join('mst_skema_sertifikasi as e', 'e.id', '=', 'c.id_skema')
+        ->join('mst_asesor as f', 'f.id', '=', 'd.id_asesor');
+    
+        if (!empty($jadwal)) {
+            $historyQuery->where('c.id_jadwal', $jadwal);
+        }
+        if (!empty($skema)) {
+            $historyQuery->where('c.id_skema', $skema);
+        }
+        if (!empty($keyword)) {
+            $historyQuery->where(function ($query) use ($keyword) {
+                $query->where('c.email', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('a.nama_peserta', 'LIKE', '%' . $keyword . '%');
+            });
+        }
+        
+        $history = $historyQuery->paginate($limit);
+
+        return $history;
     }
 
     public function indexPreview($id)
@@ -288,7 +325,7 @@ class UjiKompController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+    * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function newUser(Request $request)
