@@ -290,7 +290,7 @@
               />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="Buat Sertifikat" placement="top-end">
-              <el-button v-if="query.role !== 'user' && scope.row.status == 1" type="primary" size="small" icon="el-icon-document-checked" @click="handleCreateSertifikat(scope.row)" />
+              <el-button v-if="query.role !== 'user' && scope.row.id_ak_05 !== null" type="primary" size="small" icon="el-icon-document-checked" @click="handleCreateSertifikat(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="Edit Sertifikat" placement="top-end">
               <el-button v-if="query.role !== 'user' && scope.row.id_ak_05 !== null" type="warning" size="small" icon="el-icon-document-checked" @click="handleUpdateSertifikat(scope.row)" />
@@ -638,7 +638,7 @@ export default {
     },
     handleCreateSertifikat(sertifikat) {
       this.resetNewSertifikat();
-      // console.log(sertifikat);
+      console.log(sertifikat);
       this.newSertifikat.id_uji_komp = sertifikat.id;
       this.newSertifikat.nama = sertifikat.nama_peserta;
       this.newSertifikat.skema_sertifikasi = sertifikat.skema_sertifikasi;

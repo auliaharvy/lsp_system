@@ -123,6 +123,10 @@ Route::namespace('Api')->group(function() {
 
     // Uji Routes
     Route::apiResource('uji', 'UjiKompController');
+
+    // Pemegang Sertifikat
+    Route::apiResource('pemegang-sertifikat', 'PemegangSertifikatController');
+    Route::post('pemegang-sertifikat-edit', 'PemegangSertifikatController@update');
     
     Route::group(['middleware' => 'auth:sanctum'], function () {
 
@@ -177,11 +181,6 @@ Route::namespace('Api')->group(function() {
 
         // APL 02 / Pendaftaran Routes
         Route::apiResource('uji-kompetensi', 'UjiKompController');
-
-        // Pemegang Sertifikat
-        Route::apiResource('pemegang-sertifikat', 'PemegangSertifikatController');
-        Route::post('pemegang-sertifikat-edit', 'PemegangSertifikatController@update');
-
 
         // Skema
         Route::apiResource('skema/kategori', 'AsesmenKategoriController');
