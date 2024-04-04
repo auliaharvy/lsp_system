@@ -2368,7 +2368,7 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_va = $va->id;
-                $persentaseVa = 15;
+                $persentaseVa = 10;
                 $dataSoal = $this->getSoalIa05AndIa07($foundUjiKomp->id_skema);
                 $soalIa05 = $dataSoal['soalIa05'] ?? null;
                 $soalIa07 = $dataSoal['soalIa07'] ?? null;

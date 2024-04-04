@@ -91,6 +91,8 @@ class PemegangSertifikatController extends BaseController
                 ]);
 
                 $foundUjiKomp = UjiKomp::where('id', $params['id_uji_komp'])->first();
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->persentase = $progress + 5;
                 if($foundUjiKomp->persentase === 100) {
                     $foundUjiKomp->status = 1;
                 }
