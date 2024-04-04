@@ -108,7 +108,7 @@ class UjiKompController extends BaseController
         $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk');
         $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
         ->orderBy('c.created_at', 'desc')
-        ->where('trx_uji_komp.status', '=', 0)
+        ->where('trx_uji_komp.status', '=', 0)  
         ->select('trx_uji_komp.*', 'b.nik', 'b.nama_lengkap', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
         'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor');
 
@@ -1227,9 +1227,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_01 = $ia01->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -1401,9 +1401,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_03 = $ia03->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -1496,9 +1496,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_05 = $ia05->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -1595,9 +1595,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_06 = $ia06->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -1694,9 +1694,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_07 = $ia07->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -1791,9 +1791,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ia_11 = $ia11->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -1915,9 +1915,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ak_01 = $ak01->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -1963,9 +1963,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ak_02 = $ak02->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
                 $foundUjiKomp->save();
 
                 $elemen = $params['detail'];
@@ -2028,9 +2028,9 @@ class UjiKompController extends BaseController
                 $foundUjiKomp->id_ak_03 = $ak03->id;
 
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -2087,9 +2087,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_ak_04 = $ak04->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -2131,9 +2131,9 @@ class UjiKompController extends BaseController
                 $foundUjiKomp->id_ak_05 = $ak05->id;
 
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -2256,9 +2256,9 @@ class UjiKompController extends BaseController
                 $foundUjiKomp->id_ak_06 = $ak06->id;
 
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -2306,9 +2306,9 @@ class UjiKompController extends BaseController
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_mapa_02 = $mapa02->id;
                 $foundUjiKomp->persentase = $progress + 5;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
@@ -2384,9 +2384,9 @@ class UjiKompController extends BaseController
                 }
 
                 $foundUjiKomp->persentase = $progress + $persentaseVa;
-                if($foundUjiKomp->persentase === 100) {
-                    $foundUjiKomp->status = 1;
-                }
+                // if($foundUjiKomp->persentase === 100) {
+                //     $foundUjiKomp->status = 1;
+                // }
 
                 $foundUjiKomp->save();
 
