@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\MasterResource;
 use App\Laravue\JsonResponse;
 use App\Laravue\Models\PemegangSertifikat;
+use App\Laravue\Models\UjiKomp;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
@@ -88,6 +89,12 @@ class PemegangSertifikatController extends BaseController
                     'no_sertifikat' => $params['no_sertifikat'],
                     'masa_berlaku' => $params['masa_berlaku'],
                 ]);
+
+                $foundUjiKomp = UjiKomp::where('id', $params['id_uji_komp'])->first();
+                if($foundUjiKomp->persentase === 100) {
+                    $foundUjiKomp->status = 1;
+                }
+                $foundUjiKomp->save();
 
                 DB::commit();
                 return response()->json(['message' => "Sukses Upload pemegang sertifikat"], 200);
