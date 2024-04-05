@@ -75,7 +75,7 @@
           <span> {{ scope.row.mulai }} </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkRole(['admin'])" align="center" label="Action">
+      <el-table-column v-if="checkRole(['admin', 'assesor'])" align="center" label="Action">
         <template slot-scope="scope">
           <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor }}">
             <el-button type="primary" icon="el-icon-view">Preview</el-button>
