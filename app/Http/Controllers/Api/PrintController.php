@@ -87,7 +87,7 @@ class PrintController extends BaseController
         $asesor = Arr::get($searchParams, 'asesor');
 
         $dataUjiKomp = $ujiKompController->showPreview($iduji);
-        $dataSkemaSertifikasi = $ujiKompController->index(new Request(['idapl01' => $dataUjiKomp->id_apl_01]));
+        $dataSkemaSertifikasi = $ujiKompController->index(new Request(['idapl01' => $dataUjiKomp->id_apl_01, 'isPrint' => true]));
         $dataSkemaUnit = $skemaController->indexUnit(new Request(['id_skema' => $dataUjiKomp->id_skema]));
         $dataSkema = $skemaController->index(new Request(['id_skema' => $dataUjiKomp->id_skema]));
 

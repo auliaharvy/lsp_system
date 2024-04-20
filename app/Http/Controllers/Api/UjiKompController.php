@@ -100,6 +100,7 @@ class UjiKompController extends BaseController
         $visibility = Arr::get($searchParams, 'visibility', 0);
         $skema = Arr::get($searchParams, 'id_skema', '');
         $idapl01 = Arr::get($searchParams, 'idapl01', '');
+        $isPrint = Arr::get($searchParams, 'isPrint', false);
 
         $query = UjiKomp::query();
         $query->join('trx_uji_komp_apl_01 as b', 'b.id', '=', 'trx_uji_komp.id_apl_01');
@@ -108,10 +109,14 @@ class UjiKompController extends BaseController
         $query->join('mst_tuk as e', 'e.id', '=', 'b.id_tuk');
         $query->join('mst_asesor as f', 'f.id', '=', 'c.id_asesor')
         ->orderBy('c.created_at', 'desc')
-        ->where('trx_uji_komp.status', '=', 0)  
+        // ->where('trx_uji_komp.status', '=', 0)  
         ->select('trx_uji_komp.*', 'b.nik', 'b.nama_lengkap', 'b.nama_sekolah', 'b.email as email_peserta', 'c.start_date as mulai', 'c.end_date as selesai', 
         'd.skema_sertifikasi', 'd.kode_skema', 'e.nama as nama_tuk', 'c.jadwal', 'c.password_asesi', 'b.id_jadwal', 'f.nama as nama_asesor', 'f.email as email_asesor');
 
+        if(!$isPrint){
+            $query->where('trx_uji_komp.status', '=', 0);
+        }
+        
         if ($visibility === 0) {
             $query->where('c.visibility', 0);
         }
