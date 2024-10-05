@@ -2,9 +2,16 @@
   <el-menu background-color="#fff" :mode="mode" router class="navbar-mobile">
     <el-menu-item v-if="mode === 'horizontal'" index="/login"><img :src="logo" class="logo"></el-menu-item>
     <el-menu-item index="/login">Home</el-menu-item>
-    <el-menu-item index="1">Tentang LSP</el-menu-item>
-    <el-submenu index="2">
+    <el-submenu index="1">
       <template slot="title">Profile</template>
+      <el-menu-item index="/tentang-lsp">Lembaga Sertifikasi Profesi</el-menu-item>
+      <el-menu-item index="/visi-misi">Visi & Misi</el-menu-item>
+      <el-menu-item index="/struktur-organisasi">Struktur Organisasi</el-menu-item>
+      <el-menu-item index="/stakeholder">Stakeholder</el-menu-item>
+      <el-menu-item index="/komitmen-ketidakberpihakan">Komitmen Ketidakberpihakan</el-menu-item>
+      <el-menu-item index="/rencana-strategis">Rencana Strategis</el-menu-item>
+      <el-menu-item index="/program-kerja">Program Kerja 2024</el-menu-item>
+      <el-menu-item index="/mitra-kerja">Mitra Kerja</el-menu-item>
       <el-menu-item index="/pemegang-sertifikat">Pemegang Sertifikat</el-menu-item>
       <el-menu-item index="/assesor">Asesor Kompetensi</el-menu-item>
       <el-menu-item index="/tuk">TUK</el-menu-item>
