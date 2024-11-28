@@ -1,5 +1,5 @@
 <template>
-    <div ref="pdfContainer"></div>
+  <div ref="pdfContainer" />
 </template>
 
 <script>

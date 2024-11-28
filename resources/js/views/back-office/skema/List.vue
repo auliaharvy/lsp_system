@@ -1,21 +1,58 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-input
+        v-model="query.keyword"
+        :placeholder="$t('table.keyword')"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-button
+        v-waves
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-plus"
+        @click="handleCreate"
+      >
         {{ $t('table.add') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateUnitKompetensi">
+      <el-button
+        v-waves
+        :loading="downloading"
+        class="filter-item"
+        type="primary"
+        icon="el-icon-download"
+        @click="handleDownloadTemplateUnitKompetensi"
+      >
         {{ $t('table.export') }}
       </el-button>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }">
+    <el-table
+      v-loading="loading"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
+    >
       <el-table-column label="Skema Sertifikasi">
-        <el-table-column align="center" label="No" width="80">
+        <el-table-column
+          align="center"
+          label="No"
+          width="80"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.index }}</span>
           </template>
@@ -25,21 +62,46 @@
             <br>
             <div class="filter-container">
               <el-row>
-                <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateElemen(scope.row.children)">
+                <el-button
+                  v-waves
+                  :loading="downloading"
+                  class="filter-item"
+                  type="primary"
+                  icon="el-icon-download"
+                  @click="handleDownloadTemplateElemen(scope.row.children)"
+                >
                   {{ $t('table.export') }} Template Elemen Unit Kompetensi
                 </el-button>
               </el-row>
               <el-row>
-                <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownloadTemplateKuk(scope.row.children)">
+                <el-button
+                  v-waves
+                  :loading="downloading"
+                  class="filter-item"
+                  type="primary"
+                  icon="el-icon-download"
+                  @click="handleDownloadTemplateKuk(scope.row.children)"
+                >
                   {{ $t('table.export') }} Template Kuk
                 </el-button>
               </el-row>
-
             </div>
 
-            <el-table v-loading="loading" :data="scope.row.children" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
+            <el-table
+              v-loading="loading"
+              :data="scope.row.children"
+              border
+              fit
+              highlight-current-row
+              style="width: 80%"
+              :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }"
+              class="table-child"
+            >
               <el-table-column label="Unit Kompetensi">
-                <el-table-column align="left" label="Kelompok Pekerjaan">
+                <el-table-column
+                  align="left"
+                  label="Kelompok Pekerjaan"
+                >
                   <template slot-scope="elemen">
                     <span>{{ getKelompokPekerjaan(elemen.row.kelompok_pekerjaan) }}</span>
                   </template>
@@ -47,23 +109,73 @@
 
                 <el-table-column type="expand">
                   <template slot-scope="row">
-                    <el-table v-loading="loading" :data="row.row.elemen" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
+                    <el-table
+                      v-loading="loading"
+                      :data="row.row.elemen"
+                      border
+                      fit
+                      highlight-current-row
+                      style="width: 80%"
+                      :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }"
+                      class="table-child"
+                    >
                       <el-table-column type="expand">
                         <template slot-scope="kuk">
-                          <el-table v-loading="loading" :data="kuk.row.kuk" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
-                            <el-table-column align="left" label="Kuk Elemen">
+                          <el-table
+                            v-loading="loading"
+                            :data="kuk.row.kuk"
+                            border
+                            fit
+                            highlight-current-row
+                            style="width: 80%"
+                            :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }"
+                            class="table-child"
+                          >
+                            <el-table-column
+                              align="left"
+                              label="Kuk Elemen"
+                            >
                               <template slot-scope="elementok">
                                 <span>{{ elementok.row.kuk }}</span>
                               </template>
                             </el-table-column>
-                            <el-table-column align="left" label="Actions" min-width="150px">
+                            <el-table-column
+                              align="left"
+                              label="Actions"
+                              min-width="150px"
+                            >
                               <template slot-scope="elementox">
-                                <div v-if="kuk.row.kuk.length > 0" style="padding-top: 25px;">
-                                  <el-tooltip class="item" effect="dark" content="Update Kuk Elemen" placement="top-end">
-                                    <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdateSkemaUnit(elementox.row, 'kuk')" />
+                                <div
+                                  v-if="kuk.row.kuk.length > 0"
+                                  style="padding-top: 25px;"
+                                >
+                                  <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Update Kuk Elemen"
+                                    placement="top-end"
+                                  >
+                                    <el-button
+                                      v-permission="['manage user']"
+                                      type="primary"
+                                      size="small"
+                                      icon="el-icon-edit-outline"
+                                      @click="handleUpdateSkemaUnit(elementox.row, 'kuk')"
+                                    />
                                   </el-tooltip>
-                                  <el-tooltip class="item" effect="dark" content="Delete Kuk Elemen" placement="top-end">
-                                    <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="deleteKuk(elementox.row)" />
+                                  <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Delete Kuk Elemen"
+                                    placement="top-end"
+                                  >
+                                    <el-button
+                                      v-permission="['manage user']"
+                                      type="danger"
+                                      size="small"
+                                      icon="el-icon-delete"
+                                      @click="deleteKuk(elementox.row)"
+                                    />
                                   </el-tooltip>
                                 </div>
                               </template>
@@ -71,69 +183,164 @@
                           </el-table>
                         </template>
                       </el-table-column>
-                      <el-table-column align="left" label="Elemen">
+                      <el-table-column
+                        align="left"
+                        label="Elemen"
+                      >
                         <template slot-scope="elemen">
                           <span>{{ elemen.row.nama_elemen }}</span>
                         </template>
                       </el-table-column>
-                      <el-table-column align="left" label="Actions" min-width="150px">
+                      <el-table-column
+                        align="left"
+                        label="Actions"
+                        min-width="150px"
+                      >
                         <template slot-scope="elemen">
-                          <el-tooltip class="item" effect="dark" content="Upload Kuk Elemen" placement="top-end">
-                            <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-upload2" @click="handleUpload(row.row, 'kuk')" />
+                          <el-tooltip
+                            class="item"
+                            effect="dark"
+                            content="Upload Kuk Elemen"
+                            placement="top-end"
+                          >
+                            <el-button
+                              v-permission="['manage user']"
+                              type="success"
+                              size="small"
+                              icon="el-icon-upload2"
+                              @click="handleUpload(row.row, 'kuk')"
+                            />
                           </el-tooltip>
-                          <el-tooltip class="item" effect="dark" content="Update Elemen Unit" placement="top-end">
-                            <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdateSkemaUnit(elemen.row, 'elemen')" />
+                          <el-tooltip
+                            class="item"
+                            effect="dark"
+                            content="Update Elemen Unit"
+                            placement="top-end"
+                          >
+                            <el-button
+                              v-permission="['manage user']"
+                              type="primary"
+                              size="small"
+                              icon="el-icon-edit-outline"
+                              @click="handleUpdateSkemaUnit(elemen.row, 'elemen')"
+                            />
                           </el-tooltip>
-                          <el-tooltip class="item" effect="dark" content="Delete Elemen Unit" placement="top-end">
-                            <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="deleteElemen(elemen.row)" />
+                          <el-tooltip
+                            class="item"
+                            effect="dark"
+                            content="Delete Elemen Unit"
+                            placement="top-end"
+                          >
+                            <el-button
+                              v-permission="['manage user']"
+                              type="danger"
+                              size="small"
+                              icon="el-icon-delete"
+                              @click="deleteElemen(elemen.row)"
+                            />
                           </el-tooltip>
                         </template>
                       </el-table-column>
                     </el-table>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="Kode Unit">
+                <el-table-column
+                  align="center"
+                  label="Kode Unit"
+                >
                   <template slot-scope="row">
                     <span>{{ row.row.kode_unit }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="left" label="Unit Kompetensi" min-width="150px">
+                <el-table-column
+                  align="left"
+                  label="Unit Kompetensi"
+                  min-width="150px"
+                >
                   <template slot-scope="row">
                     <span>{{ row.row.unit_kompetensi }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="left" label="Actions" min-width="150px">
+                <el-table-column
+                  align="left"
+                  label="Actions"
+                  min-width="150px"
+                >
                   <template slot-scope="row">
-                    <el-tooltip class="item" effect="dark" content="Upload Elemen Kompetensi" placement="top-end">
-                      <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-upload2" @click="handleUpload(scope.row, 'elemen')" />
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="Upload Elemen Kompetensi"
+                      placement="top-end"
+                    >
+                      <el-button
+                        v-permission="['manage user']"
+                        type="success"
+                        size="small"
+                        icon="el-icon-upload2"
+                        @click="handleUpload(scope.row, 'elemen')"
+                      />
                     </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="Update Unit Kompetensi" placement="top-end">
-                      <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdateSkemaUnit(scope.row, 'unit')" />
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="Update Unit Kompetensi"
+                      placement="top-end"
+                    >
+                      <el-button
+                        v-permission="['manage user']"
+                        type="primary"
+                        size="small"
+                        icon="el-icon-edit-outline"
+                        @click="handleUpdateSkemaUnit(scope.row, 'unit')"
+                      />
                     </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="Delete Unit Kompetensi" placement="top-end">
-                      <el-button v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="deleteUnit(row.row)" />
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="Delete Unit Kompetensi"
+                      placement="top-end"
+                    >
+                      <el-button
+                        v-permission="['manage user']"
+                        type="danger"
+                        size="small"
+                        icon="el-icon-delete"
+                        @click="deleteUnit(row.row)"
+                      />
                     </el-tooltip>
                   </template>
                 </el-table-column>
               </el-table-column>
             </el-table>
-
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.code')" min-width="200px">
+        <el-table-column
+          align="center"
+          :label="$t('skema.table.code')"
+          min-width="200px"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.kode_skema }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="left" :label="$t('skema.table.skema')" min-width="250px">
+        <el-table-column
+          align="left"
+          :label="$t('skema.table.skema')"
+          min-width="250px"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.skema_sertifikasi }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.category')" min-width="100px">
+        <el-table-column
+          align="center"
+          :label="$t('skema.table.category')"
+          min-width="100px"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.nama_kategori }}</span>
           </template>
@@ -157,13 +364,20 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column align="center" :label="$t('skema.table.jenjang')">
+        <el-table-column
+          align="center"
+          :label="$t('skema.table.jenjang')"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.jenjang }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" :label="$t('skema.table.sector_code')" min-width="80px">
+        <el-table-column
+          align="center"
+          :label="$t('skema.table.sector_code')"
+          min-width="80px"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.kode_sektor }}</span>
           </template>
@@ -175,18 +389,54 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column align="center" label="Actions" min-width="120">
+        <el-table-column
+          align="center"
+          label="Actions"
+          min-width="120"
+        >
           <template slot-scope="scope">
             <el-button-group>
-              <el-tooltip class="item" effect="dark" content="Upload Unit Kompetensi" placement="top-end">
-                <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-upload2" @click="handleUpload(scope.row, 'unit')" />
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="Upload Unit Kompetensi"
+                placement="top-end"
+              >
+                <el-button
+                  v-permission="['manage user']"
+                  type="success"
+                  size="small"
+                  icon="el-icon-upload2"
+                  @click="handleUpload(scope.row, 'unit')"
+                />
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
-                <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit-outline" @click="handleUpdate(scope.row)" />
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="Update"
+                placement="top-end"
+              >
+                <el-button
+                  v-permission="['manage user']"
+                  type="primary"
+                  size="small"
+                  icon="el-icon-edit-outline"
+                  @click="handleUpdate(scope.row)"
+                />
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="List Perangkat" placement="top-end">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="List Perangkat"
+                placement="top-end"
+              >
                 <router-link :to="{ name: 'PerangkatSkemaList', params: { id_skema: scope.row.id, skema: scope.row.skema_sertifikasi }}">
-                  <el-button v-permission="['manage user']" type="warning" size="small" icon="el-icon-view" />
+                  <el-button
+                    v-permission="['manage user']"
+                    type="warning"
+                    size="small"
+                    icon="el-icon-view"
+                  />
                 </router-link>
               </el-tooltip>
             </el-button-group>
@@ -195,222 +445,491 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="query.page"
+      :limit.sync="query.limit"
+      @pagination="getList"
+    />
 
-    <el-dialog :title="$t('skema.dialog.addNew')" :visible.sync="dialogFormVisible">
-      <div v-loading="creating" class="form-container">
-        <el-form ref="skemaForm" :rules="rules" :model="newSkema" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('skema.table.code')" prop="kode_skema">
+    <el-dialog
+      :title="$t('skema.dialog.addNew')"
+      :visible.sync="dialogFormVisible"
+    >
+      <div
+        v-loading="creating"
+        class="form-container"
+      >
+        <el-form
+          ref="skemaForm"
+          :rules="rules"
+          :model="newSkema"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
+          <el-form-item
+            :label="$t('skema.table.code')"
+            prop="kode_skema"
+          >
             <el-input v-model="newSkema.kode_skema" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.skema')" prop="skema_sertifikasi">
+          <el-form-item
+            :label="$t('skema.table.skema')"
+            prop="skema_sertifikasi"
+          >
             <el-input v-model="newSkema.skema_sertifikasi" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.category')" prop="kategori_id">
-            <el-select v-model="newSkema.kategori_id" filterable clearable class="filter-item full" :placeholder="$t('skema.table.category')">
-              <el-option v-for="item in kategori" :key="item.id" :label="item.nama" :value="item.id" />
+          <el-form-item
+            :label="$t('skema.table.category')"
+            prop="kategori_id"
+          >
+            <el-select
+              v-model="newSkema.kategori_id"
+              filterable
+              clearable
+              class="filter-item full"
+              :placeholder="$t('skema.table.category')"
+            >
+              <el-option
+                v-for="item in kategori"
+                :key="item.id"
+                :label="item.nama"
+                :value="item.id"
+              />
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('skema.table.unit_qty')" prop="jumlah_unit">
+          <el-form-item
+            :label="$t('skema.table.unit_qty')"
+            prop="jumlah_unit"
+          >
             <el-input v-model="newSkema.jumlah_unit" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.kblui')" prop="kblui">
+          <el-form-item
+            :label="$t('skema.table.kblui')"
+            prop="kblui"
+          >
             <el-input v-model="newSkema.kblui" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.kbji')" prop="kbji">
+          <el-form-item
+            :label="$t('skema.table.kbji')"
+            prop="kbji"
+          >
             <el-input v-model="newSkema.kbji" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.jenjang')" prop="jenjang">
+          <el-form-item
+            :label="$t('skema.table.jenjang')"
+            prop="jenjang"
+          >
             <el-input v-model="newSkema.jenjang" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.sector_code')" prop="kode_sektor">
+          <el-form-item
+            :label="$t('skema.table.sector_code')"
+            prop="kode_sektor"
+          >
             <el-input v-model="newSkema.kode_sektor" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.visibility')" prop="visibilitas">
+          <el-form-item
+            :label="$t('skema.table.visibility')"
+            prop="visibilitas"
+          >
             <el-input v-model="newSkema.visibilitas" />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createSkema()">
+          <el-button
+            type="primary"
+            @click="createSkema()"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
 
-    <el-dialog :title="$t('skema.dialog.edit') + ' ' + editedSkema.skema_sertifikasi" :visible.sync="dialogFormUpdateVisible">
-      <div v-loading="creating" class="form-container">
-        <el-form ref="skemaForm" :rules="rules" :model="editedSkema" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('skema.table.code')" prop="kode_skema">
+    <el-dialog
+      :title="$t('skema.dialog.edit') + ' ' + editedSkema.skema_sertifikasi"
+      :visible.sync="dialogFormUpdateVisible"
+    >
+      <div
+        v-loading="creating"
+        class="form-container"
+      >
+        <el-form
+          ref="skemaForm"
+          :rules="rules"
+          :model="editedSkema"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
+          <el-form-item
+            :label="$t('skema.table.code')"
+            prop="kode_skema"
+          >
             <el-input v-model="editedSkema.kode_skema" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.skema')" prop="skema_sertifikasi">
+          <el-form-item
+            :label="$t('skema.table.skema')"
+            prop="skema_sertifikasi"
+          >
             <el-input v-model="editedSkema.skema_sertifikasi" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.category')" prop="kategori_id">
-            <el-select v-model="editedSkema.kategori_id" filterable clearable class="filter-item full" :placeholder="$t('skema.table.category')">
-              <el-option v-for="item in kategori" :key="item.id" :label="item.nama" :value="item.id" />
+          <el-form-item
+            :label="$t('skema.table.category')"
+            prop="kategori_id"
+          >
+            <el-select
+              v-model="editedSkema.kategori_id"
+              filterable
+              clearable
+              class="filter-item full"
+              :placeholder="$t('skema.table.category')"
+            >
+              <el-option
+                v-for="item in kategori"
+                :key="item.id"
+                :label="item.nama"
+                :value="item.id"
+              />
             </el-select>
           </el-form-item>
           <!-- <el-form-item :label="$t('skema.table.unit_qty')" prop="jumlah_unit">
             <el-input v-model="editedSkema.jumlah_unit" />
           </el-form-item> -->
-          <el-form-item :label="$t('skema.table.kblui')" prop="kblui">
+          <el-form-item
+            :label="$t('skema.table.kblui')"
+            prop="kblui"
+          >
             <el-input v-model="editedSkema.kblui" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.kbji')" prop="kbji">
+          <el-form-item
+            :label="$t('skema.table.kbji')"
+            prop="kbji"
+          >
             <el-input v-model="editedSkema.kbji" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.jenjang')" prop="jenjang">
+          <el-form-item
+            :label="$t('skema.table.jenjang')"
+            prop="jenjang"
+          >
             <el-input v-model="editedSkema.jenjang" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.sector_code')" prop="kode_sektor">
+          <el-form-item
+            :label="$t('skema.table.sector_code')"
+            prop="kode_sektor"
+          >
             <el-input v-model="editedSkema.kode_sektor" />
           </el-form-item>
-          <el-form-item :label="$t('skema.table.visibility')" prop="visibilitas">
+          <el-form-item
+            :label="$t('skema.table.visibility')"
+            prop="visibilitas"
+          >
             <el-input v-model="editedSkema.visibilitas" />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="updateData()">
+          <el-button
+            type="primary"
+            @click="updateData()"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
 
-    <el-dialog :title="$t('skema.dialog.upload') + ' Unit Skema'" :visible.sync="dialogUploadUnitVisible" fullscreen>
+    <el-dialog
+      :title="$t('skema.dialog.upload') + ' Unit Skema'"
+      :visible.sync="dialogUploadUnitVisible"
+      fullscreen
+    >
       <div class="app-container">
         <el-row :gutter="20">
           <el-col :span="10">
             <div class="grid-content bg-purple">
               <el-descriptions title="Skema Sertifikasi">
-                <el-descriptions-item label="Kode Skema">{{ editedSkema.kode_skema }}</el-descriptions-item>
-                <el-descriptions-item label="Skema">{{ editedSkema.skema_sertifikasi }}</el-descriptions-item>
-                <el-descriptions-item label="Kategori">{{ editedSkema.nama_kategori }}</el-descriptions-item>
-                <el-descriptions-item label="KBLUI">{{ editedSkema.kblui }}</el-descriptions-item>
-                <el-descriptions-item label="KBJI">{{ editedSkema.kbji }}</el-descriptions-item>
-                <el-descriptions-item label="Jenjang">{{ editedSkema.jenjang }}</el-descriptions-item>
-                <el-descriptions-item label="Kode Sektor">{{ editedSkema.kode_sektor }}</el-descriptions-item>
+                <el-descriptions-item label="Kode Skema">
+                  {{ editedSkema.kode_skema }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Skema">
+                  {{ editedSkema.skema_sertifikasi }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Kategori">
+                  {{ editedSkema.nama_kategori }}
+                </el-descriptions-item>
+                <el-descriptions-item label="KBLUI">
+                  {{ editedSkema.kblui }}
+                </el-descriptions-item>
+                <el-descriptions-item label="KBJI">
+                  {{ editedSkema.kbji }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Jenjang">
+                  {{ editedSkema.jenjang }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Kode Sektor">
+                  {{ editedSkema.kode_sektor }}
+                </el-descriptions-item>
               </el-descriptions>
             </div>
           </el-col>
           <el-col :span="10">
             <div class="grid-content bg-purple">
-              <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
+              <upload-excel-component
+                :on-success="handleSuccess"
+                :before-upload="beforeUpload"
+              />
             </div>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="10">
             <div class="grid-content bg-purple">
-              <el-button type="primary" @click="uploadData()">Upload</el-button>
+              <el-button
+                type="primary"
+                @click="uploadData()"
+              >
+                Upload
+              </el-button>
             </div>
           </el-col>
         </el-row>
         <span>{{ uploadTableData[0] }}</span>
-        <el-table :data="uploadTableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-          <el-table-column v-for="item of uploadTableHeader" :key="item" :prop="item" :label="item" />
+        <el-table
+          :data="uploadTableData"
+          border
+          highlight-current-row
+          style="width: 100%;margin-top:20px;"
+        >
+          <el-table-column
+            v-for="item of uploadTableHeader"
+            :key="item"
+            :prop="item"
+            :label="item"
+          />
         </el-table>
       </div>
     </el-dialog>
-    <el-dialog :title="$t('skema.dialog.edit') + ' Unit Skema'" :visible.sync="dialogUpdateUnitVisible" fullscreen>
+    <el-dialog
+      :title="$t('skema.dialog.edit') + ' Unit Skema'"
+      :visible.sync="dialogUpdateUnitVisible"
+      fullscreen
+    >
       <div class="app-container">
         <el-row :gutter="20">
           <el-col :span="10">
             <div class="grid-content bg-purple">
-              <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
+              <upload-excel-component
+                :on-success="handleSuccess"
+                :before-upload="beforeUpload"
+              />
             </div>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="10">
             <div class="grid-content bg-purple">
-              <el-button type="primary" @click="updateUnit()">Update</el-button>
+              <el-button
+                type="primary"
+                @click="updateUnit()"
+              >
+                Update
+              </el-button>
             </div>
           </el-col>
         </el-row>
         <span>{{ uploadTableData[0] }}</span>
-        <el-table :data="uploadTableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-          <el-table-column v-for="item of uploadTableHeader" :key="item" :prop="item" :label="item" />
+        <el-table
+          :data="uploadTableData"
+          border
+          highlight-current-row
+          style="width: 100%;margin-top:20px;"
+        >
+          <el-table-column
+            v-for="item of uploadTableHeader"
+            :key="item"
+            :prop="item"
+            :label="item"
+          />
         </el-table>
       </div>
     </el-dialog>
-    <el-dialog :title="$t('skema.dialog.addNew')" :visible.sync="dialogSkemaUnitVisible">
-      <div v-loading="creating" class="form-container">
-        <el-form ref="newForm" :rules="rules" :model="dataTrx" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('skema.dialog.kode_unit')" prop="kode_unit">
+    <el-dialog
+      :title="$t('skema.dialog.addNew')"
+      :visible.sync="dialogSkemaUnitVisible"
+    >
+      <div
+        v-loading="creating"
+        class="form-container"
+      >
+        <el-form
+          ref="newForm"
+          :rules="rules"
+          :model="dataTrx"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
+          <el-form-item
+            :label="$t('skema.dialog.kode_unit')"
+            prop="kode_unit"
+          >
             <el-input v-model="editedUnitKomp.kode_unit" />
           </el-form-item>
-          <el-form-item :label="$t('skema.dialog.unit_kompetensi')" prop="unit_kompetensi">
+          <el-form-item
+            :label="$t('skema.dialog.unit_kompetensi')"
+            prop="unit_kompetensi"
+          >
             <el-input v-model="editedUnitKomp.unit_kompetensi" />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="submit()">
+          <el-button
+            type="primary"
+            @click="submit()"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
-    <el-dialog :title="$t('skema.dialog.updateUnit')" :visible.sync="dialogSkemaUnitVisible">
-      <div v-loading="creating" class="form-container">
-        <el-form ref="unitForm" :rules="unitRules" :model="editedUnitKomp" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('skema.dialog.kode_unit')" prop="kode_unit">
+    <el-dialog
+      :title="$t('skema.dialog.updateUnit')"
+      :visible.sync="dialogSkemaUnitVisible"
+    >
+      <div
+        v-loading="creating"
+        class="form-container"
+      >
+        <el-form
+          ref="unitForm"
+          :rules="unitRules"
+          :model="editedUnitKomp"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
+          <el-form-item
+            :label="$t('skema.dialog.kode_unit')"
+            prop="kode_unit"
+          >
             <el-input v-model="editedUnitKomp.kode_unit" />
           </el-form-item>
-          <el-form-item :label="$t('skema.dialog.unit_kompetensi')" prop="unit_kompetensi">
+          <el-form-item
+            :label="$t('skema.dialog.unit_kompetensi')"
+            prop="unit_kompetensi"
+          >
             <el-input v-model="editedUnitKomp.unit_kompetensi" />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogSkemaUnitVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="updateUnit()">
+          <el-button
+            type="primary"
+            @click="updateUnit()"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
-    <el-dialog :title="$t('skema.dialog.updateElemen')" :visible.sync="dialogSkemaElemenVisible">
-      <div v-loading="creating" class="form-container">
-        <el-form ref="elemenForm" :rules="elemenRules" :model="editedElemen" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('skema.dialog.elemen')" prop="nama_elemen">
+    <el-dialog
+      :title="$t('skema.dialog.updateElemen')"
+      :visible.sync="dialogSkemaElemenVisible"
+    >
+      <div
+        v-loading="creating"
+        class="form-container"
+      >
+        <el-form
+          ref="elemenForm"
+          :rules="elemenRules"
+          :model="editedElemen"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
+          <el-form-item
+            :label="$t('skema.dialog.elemen')"
+            prop="nama_elemen"
+          >
             <el-input v-model="editedElemen.nama_elemen" />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogSkemaElemenVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="updateUnit()">
+          <el-button
+            type="primary"
+            @click="updateUnit()"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
-    <el-dialog :title="$t('skema.dialog.updateKuk')" :visible.sync="dialogSkemaKukVisible">
-      <div v-loading="creating" class="form-container">
-        <el-form ref="kukForm" :rules="kukRules" :model="editedKuk" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('skema.dialog.kuk')" prop="kuk">
+    <el-dialog
+      :title="$t('skema.dialog.updateKuk')"
+      :visible.sync="dialogSkemaKukVisible"
+    >
+      <div
+        v-loading="creating"
+        class="form-container"
+      >
+        <el-form
+          ref="kukForm"
+          :rules="kukRules"
+          :model="editedKuk"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
+          <el-form-item
+            :label="$t('skema.dialog.kuk')"
+            prop="kuk"
+          >
             <el-input v-model="editedKuk.kuk" />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogSkemaKukVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="updateUnit()">
+          <el-button
+            type="primary"
+            @click="updateUnit()"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>

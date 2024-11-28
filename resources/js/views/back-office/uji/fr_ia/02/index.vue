@@ -1,7 +1,10 @@
 <template>
   <el-container class="app-container">
     <el-header>
-      <el-page-header content="FR.IA.02 TUGAS PRAKTIK DEMONSTRASI" @back="$router.back()" />
+      <el-page-header
+        content="FR.IA.02 TUGAS PRAKTIK DEMONSTRASI"
+        @back="$router.back()"
+      />
     </el-header>
     <el-main>
       <div>
@@ -13,10 +16,12 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="left" min-width="30px">
+          <el-table-column
+            align="left"
+            min-width="30px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.title }}</span>
-
             </template>
           </el-table-column>
           <el-table-column align="left">
@@ -38,12 +43,18 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="left" width="150px">
+          <el-table-column
+            align="left"
+            width="150px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.col1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" width="120px">
+          <el-table-column
+            align="left"
+            width="120px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.col2 }}</span>
             </template>
@@ -51,7 +62,10 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <ul>
-                <li v-for="item in scope.row.col3" :key="item.filename">
+                <li
+                  v-for="item in scope.row.col3"
+                  :key="item.filename"
+                >
                   {{ item }}
                 </li>
               </ul>
@@ -73,7 +87,10 @@
               <span>{{ scope.row.col1 }}</span>
             </template>
           </el-table-column> -->
-          <el-table-column align="left" width="120px">
+          <el-table-column
+            align="left"
+            width="120px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.col2 }}</span>
             </template>
@@ -81,8 +98,15 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <ul>
-                <li v-for="item in scope.row.col3" :key="item.filename" style="margin-bottom: 10px;">
-                  <a target="_blank" :href="'/' + item.link">
+                <li
+                  v-for="item in scope.row.col3"
+                  :key="item.filename"
+                  style="margin-bottom: 10px;"
+                >
+                  <a
+                    target="_blank"
+                    :href="'/' + item.link"
+                  >
                     {{ item.filename }}
                   </a>
                 </li>
@@ -97,18 +121,53 @@
           label-width="250px"
           label-position="left"
         >
-          <el-form-item v-if="role !== 'assesor' && showUpload" label="Upload File Jawaban" prop="file">
-            <input ref="inputFile" type="file" @change="handleUploadSuccess">
+          <el-form-item
+            v-if="role !== 'assesor' && showUpload"
+            label="Upload File Jawaban"
+            prop="file"
+          >
+            <input
+              ref="inputFile"
+              type="file"
+              @change="handleUploadSuccess"
+            >
           </el-form-item>
-          <el-form-item v-if="role !== 'user'" label="Rekomendasi Assesor" prop="rekomendasi_asesor" style="margin-top: 15px">
-            <el-radio v-model="dataTrx.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
-            <el-radio v-model="dataTrx.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
+          <el-form-item
+            v-if="role !== 'user'"
+            label="Rekomendasi Assesor"
+            prop="rekomendasi_asesor"
+            style="margin-top: 15px"
+          >
+            <el-radio
+              v-model="dataTrx.rekomendasi_asesor"
+              label="Kompeten"
+              border
+            >
+              Kompeten
+            </el-radio>
+            <el-radio
+              v-model="dataTrx.rekomendasi_asesor"
+              label="Belum Kompeten"
+              border
+            >
+              Belum Kompeten
+            </el-radio>
           </el-form-item>
         </el-form>
       </div>
       <br>
-      <el-button v-if="showUpload" @click="onSubmit">Submit</el-button>
-      <el-button v-if="$route.params.id_ia_02 && role !== 'user'" @click="onSubmitAsesor">Submit Asesor</el-button>
+      <el-button
+        v-if="showUpload"
+        @click="onSubmit"
+      >
+        Submit
+      </el-button>
+      <el-button
+        v-if="$route.params.id_ia_02 && role !== 'user'"
+        @click="onSubmitAsesor"
+      >
+        Submit Asesor
+      </el-button>
     </el-main>
   </el-container>
 </template>

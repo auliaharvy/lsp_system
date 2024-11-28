@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <h1 class="fw-bold text-center text-uppercase">Daftar Tuk</h1>
+    <h1 class="fw-bold text-center text-uppercase">
+      Daftar Tuk
+    </h1>
     <VTable
       search-placeholder="Cari Tuk"
       :headers="headers"
@@ -10,9 +12,14 @@
       @handleSearch="handleSearch"
       @handleChangeSort="handleChangeSort"
     />
-    <VPagination :total-entries="total" :per-page="query.limit" :loading="loading" @handleChangePage="handleChangePage"/>
+    <VPagination
+      :total-entries="total"
+      :per-page="query.limit"
+      :loading="loading"
+      @handleChangePage="handleChangePage"
+    />
   </div>
- </template>
+</template>
  
  <script>
   import VTable from '@/components/Table/VTable';

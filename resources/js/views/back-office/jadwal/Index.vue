@@ -1,12 +1,23 @@
 <template>
   <el-container>
     <el-header>
-      <div v-if="isWide" :class="{ 'fixed-header': true }">
-        <navigation mode="horizontal" style="position: -webkit-sticky" />
+      <div
+        v-if="isWide"
+        :class="{ 'fixed-header': true }"
+      >
+        <navigation
+          mode="horizontal"
+          style="position: -webkit-sticky"
+        />
       </div>
       <el-collapse v-else>
         <el-collapse-item :class="{'fixed-header': true }">
-          <div slot="title" class="custom-title">Menu</div>
+          <div
+            slot="title"
+            class="custom-title"
+          >
+            Menu
+          </div>
           <navigation mode="vertical" />
         </el-collapse-item>
       </el-collapse>
