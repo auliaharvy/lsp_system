@@ -44,6 +44,7 @@ class SkemaUnit extends Model
             $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, null, null);
             $data['kode_unit'] = $row->kode_unit;
             $data['unit_kompetensi'] = $row->unit_kompetensi;
+            $data['kelompok_pekerjaan'] = $row->kelompok_pekerjaan;
             $plunckData[] = $data;
 		endforeach;
 		return $plunckData;

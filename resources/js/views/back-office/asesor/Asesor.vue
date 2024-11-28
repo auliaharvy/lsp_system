@@ -1,164 +1,85 @@
 <template>
-  <div>
-    <div class="container-judul">
-      <h1>Daftar Asesor</h1>
+  <div class="container">
+    <h1 class="fw-bold text-center text-uppercase">Jadwal Assesor</h1>
+    <div class="input-group mb-3">
+      <span class="input-group-text search-icon" id="basic-addon1">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.71 19.29L17.31 15.9C18.407 14.5025 19.0022 12.7767 19 11C19 9.41775 18.5308 7.87103 17.6518 6.55544C16.7727 5.23985 15.5233 4.21447 14.0615 3.60897C12.5997 3.00347 10.9911 2.84504 9.43928 3.15372C7.88743 3.4624 6.46197 4.22433 5.34315 5.34315C4.22433 6.46197 3.4624 7.88743 3.15372 9.43928C2.84504 10.9911 3.00347 12.5997 3.60897 14.0615C4.21447 15.5233 5.23985 16.7727 6.55544 17.6518C7.87103 18.5308 9.41775 19 11 19C12.7767 19.0022 14.5025 18.407 15.9 17.31L19.29 20.71C19.383 20.8037 19.4936 20.8781 19.6154 20.9289C19.7373 20.9797 19.868 21.0058 20 21.0058C20.132 21.0058 20.2627 20.9797 20.3846 20.9289C20.5064 20.8781 20.617 20.8037 20.71 20.71C20.8037 20.617 20.8781 20.5064 20.9289 20.3846C20.9797 20.2627 21.0058 20.132 21.0058 20C21.0058 19.868 20.9797 19.7373 20.9289 19.6154C20.8781 19.4936 20.8037 19.383 20.71 19.29ZM5 11C5 9.81332 5.3519 8.65328 6.01119 7.66658C6.67047 6.67989 7.60755 5.91085 8.7039 5.45673C9.80026 5.0026 11.0067 4.88378 12.1705 5.11529C13.3344 5.3468 14.4035 5.91825 15.2426 6.75736C16.0818 7.59648 16.6532 8.66558 16.8847 9.82946C17.1162 10.9933 16.9974 12.1997 16.5433 13.2961C16.0892 14.3925 15.3201 15.3295 14.3334 15.9888C13.3467 16.6481 12.1867 17 11 17C9.4087 17 7.88258 16.3679 6.75736 15.2426C5.63214 14.1174 5 12.5913 5 11Z" fill="#919EAB"/>
+        </svg>
+      </span>
+      <input
+        type="text"
+        class="form-control custom-input"
+        v-model="searchQuery"
+        placeholder="Cari Assesor"
+        @keyup.enter="handleSearch"
+        aria-label="Username"
+        aria-describedby="basic-addon1"
+      >
     </div>
-    <div style="margin-top: 15px;">
-      <el-row type="flex" justify="center" class="container-row">
-        <el-col class="container-column">
-          <el-row class="container-row2">
-            <el-col class="container-col2">
-              <div class="filter-container">
-                <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" @input="handleFilter">
-                  <el-button slot="append" v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter" />
-                </el-input>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row type="flex" justify="center">
-            <el-col>
-              <div v-if="isMobile" :interval="4000" height="440px" arrow="always" style="width: 100%;">
-                <div class="container-card">
-                  <el-card v-for="(item, index) in list" :key="index" class="card">
-                    <div style="padding-bottom: 15px;">
-                      <!-- <img :src="'/uploads/assesor/' + item.image" class="image"> -->
-                      <img :src="'/uploads/assesor/default.png'" class="image">
-                      <h4 style="word-wrap: break-word; padding: 5px 0px;">{{ item.nama }}</h4>
-                      <div class="created-article">
-                        <div style="padding-bottom: 10px;">
-                          <div class="kategori">
-                            <el-tag class="tag">{{ item.status_asesor === "Assesor Tetap" ? item.status_asesor : 'Assesor Pinjam' }}</el-tag>
-                          </div>
-                          <div style="padding-bottom: 5px;">No Registrasi : </div>
-                          <el-button icon="el-icon-date" class="icon-article" />
-                          <span>{{ item.no_reg }}</span>
-                        </div>
-                        <div>
-                          <div style="padding-bottom: 5px;">Email : </div>
-                          <el-button icon="el-icon-person" class="icon-article" />
-                          <span>{{ item.email }}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- <div>
-                      <div class="bottom clearfix">
-                        <router-link to="/"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
-                      </div>
-                    </div> -->
-                  </el-card>
+    <div class="row">
+      <div
+        v-for="(item, index) in list"
+        :key="index"
+        class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4"
+      >
+        <div class="card card-shadow h-100">
+          <div class="card-body">
+            <img :src="defaultPhoto" class="card-img-top">
+            <div class="pt-3">
+              <span class="fs-5" style="word-wrap: break-word; padding: 5px 0px;">{{ item.nama }}</span>
+              <div>
+                <div style="padding-bottom: 10px;">
+                  <div class="py-3">
+                    <el-tag class="tag">{{ item.status_asesor === "Assesor Tetap" ? item.status_asesor : 'Assesor Pinjam' }}</el-tag>
+                  </div>
+                  <div class="fs-7">No Registrasi : </div>
+                  <span class="fs-7">{{ item.no_reg }}</span>
+                </div>
+                <div>
+                  <div class="fs-7">Email : </div>
+                  <span class="fs-7">{{ item.email }}</span>
                 </div>
               </div>
-              <div v-else class="container-main-card">
-                <div class="container-card">
-                  <el-card v-for="(item, index) in list" :key="index" class="card">
-                    <div style="padding-bottom: 15px;">
-                      <!-- <img :src="'/uploads/assesor/' + item.image" class="image"> -->
-                      <img :src="'/uploads/assesor/default.png'" class="image">
-                      <h4 style="word-wrap: break-word; margin: 0px 0px 5px 0px;">{{ item.nama }}</h4>
-                      <div class="created-article">
-                        <div style="padding-bottom: 10px;">
-                          <div class="kategori">
-                            <el-tag class="tag">{{ item.status_asesor === "Assesor Tetap" ? item.status_asesor : 'Assesor Pinjam' }}</el-tag>
-                          </div>
-                          <div style="padding: 5px 0px;">No Registrasi : </div>
-                          <el-button icon="el-icon-date" class="icon-article" />
-                          <span>{{ item.no_reg }}</span>
-                        </div>
-                        <div>
-                          <div style="padding: 5px 0px;">Email : </div>
-                          <el-button icon="el-icon-person" class="icon-article" />
-                          <span>{{ item.email }}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- <div>
-                      <div class="bottom clearfix">
-                        <router-link to="/"><el-button type="text" class="button">Selengkapnya</el-button></router-link>
-                      </div>
-                    </div> -->
-                  </el-card>
-                </div>
-              </div>
-              <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
-                <secondPagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" class="pagination" @pagination="getList" />
-              </div>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <VPagination :total-entries="total" :per-page="query.limit" :loading="loading" @handleChangePage="handleChangePage" />
   </div>
 </template>
 <script>
-import SecondPagination from '@/components/SecondPagination'; // Secondary package based on el-pagination
+import VPagination from '@/components/Pagination/VPagination';
 import Resource from '@/api/resource';
-import waves from '@/directive/waves'; // Waves directive
+import waves from '@/directive/waves';
+import { debounce } from 'lodash';
+import defaultPhoto from '@/assets/default/assesor.png';
+
 const assesorResource = new Resource('assesor');
 
 export default {
   name: 'SkemaList',
-  components: { SecondPagination },
+  components: { VPagination },
   directives: { waves },
   data() {
     return {
       list: {},
-      isWide: true,
-      activeName: 'Unit Kompetensi',
-      isMobile: false,
-      isTablet: false,
-      isLaptop: false,
-      isTabletToLaptop: false,
+      defaultPhoto: defaultPhoto,
+      loading: false,
       query: {
         page: 1,
-        limit: 9,
+        limit: 12,
         keyword: '',
         role: '',
       },
     };
   },
-  computed(){
-
-  },
   created(){
-    this.getList();
-  },
-  mounted(){
-    this.handleResize();
-    window.addEventListener('resize', this.handleResize);
-  },
-  beforeDestroy(){
-    window.removeEventListener('resize', this.handleResize);
+    this.fetchDataAssesor();
   },
   methods: {
-    getColumnSpan(){
-      if (this.isMobile) {
-        return 24;
-      } else if (this.isTablet) {
-        return 16;
-      } else if (this.isLaptop) {
-        return 6;
-      } else {
-        return 12;
-      }
-    },
-    handleResize(){
-      const screenWidth = window.innerWidth;
-      this.isMobile = screenWidth < 768;
-      this.isTablet = screenWidth >= 768 && screenWidth < 1024;
-      this.isLaptop = screenWidth >= 1024;
-    },
-
-    onResize() {
-      const width = document.body.clientWidth;
-      this.isWide = width > 800;
-      if (this.isWide) {
-        this.labelPosition = 'left';
-      } else {
-        this.labelPosition = 'top';
-      }
-    },
-
-    async getList() {
+    async fetchDataAssesor() {
       const { limit, page } = this.query;
       this.loading = true;
       const { data, meta } = await assesorResource.list(this.query);
@@ -166,277 +87,29 @@ export default {
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
-      console.log(this.list);
       this.total = meta.total;
       this.loading = false;
-      console.log(this.list);
     },
-    handleFilter() {
-      const keyword = this.query.keyword.toLowerCase(); // Konversi kata kunci pencarian ke huruf kecil
-      this.list = this.list.filter((item) => {
-        return (
-          item.nama.toLowerCase().includes(keyword) ||
-          item.no_reg.toLowerCase().includes(keyword)
-        );
-      });
-      this.getList();
-    },
+    handleSearch: debounce(function () {
+      this.query.keyword = this.searchQuery
+      this.fetchDataAssesor();
+    }, 500),
+    handleChangePage: debounce(function (newPage) {
+      this.query.page = newPage
+      this.fetchDataAssesor()
+    }, 500),
   },
 };
 </script>
 <style scoped>
-  @media(min-width: 990px){
-
-    .container-main-card {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container-card {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      width: 80%;
-    }
-
-    .card {
-      width: 28%;
-    }
-
-    .image{
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-    }
-
-    .container-col2{
-      display: flex;
-      justify-content: center;
-      align-content: center;
-    }
-
-    .container-content{
-      width: 200px;
-    }
-
-    .filter-container{
-      min-width: 400px;
-    }
-
-    .container-judul{
-      text-align: center;
-    }
-
-    .icon-article{
-      border: none;
-      padding: 0;
-    }
-
-    .created-article{
-      font-size: 11px;
-    }
-    .card div h4{
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .kategori{
-      margin-bottom: 10px;
-    }
-
-  }
-
-  @media(min-width: 769px) and (max-width: 989px) {
-
-    .container-main-card {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container-card {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      width: 80%;
-    }
-
-    .card {
-      width: 28%;
-    }
-
-    .image{
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-    }
-
-    .container-judul{
-      text-align: center;
-    }
-
-    .container-col2{
-      display: flex;
-      justify-content: center;
-      align-content: center;
-    }
-
-    .icon-article{
-      border: none;
-      padding: 0;
-    }
-
-    .created-article{
-      font-size: 11px;
-      padding-bottom: 10px;
-    }
-
-    .filter-container{
-      min-width: 500px;
-    }
-    .card div h4{
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .kategori{
-      margin-bottom: 10px;
-    }
-
-  }
-
-  @media(min-width: 540px) and (max-width: 768px){
-
-    .container-main-card {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container-card {
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .card {
-      width: 50%;
-    }
-
-    .image{
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-    }
-
-    .container-judul {
-      text-align: center;
-    }
-
-    .container-col2{
-      display: flex;
-      justify-content: center;
-      align-content: center;
-    }
-
-    .container-judul h1{
-      word-wrap: break-word;
-    }
-
-    .filter-container{
-      width: 500px;
-    }
-
-    .icon-article{
-      border: none;
-      padding: 0;
-    }
-
-    .created-article{
-      font-size: 11px;
-      padding-bottom: 10px;
-    }
-    .card div h4{
-      margin: 0px;
-      padding: 0px;
-    }
-
-    .kategori{
-      margin-bottom: 15px;
-    }
-
-  }
-  @media(max-width: 539px){
-
-    .container-main-card {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container-card {
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .card {
-      width: 100%;
-    }
-
-    .image{
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-    }
-
-    .container-judul {
-      text-align: center;
-    }
-
-    .container-col2{
-      display: flex;
-      justify-content: center;
-      align-content: center;
-    }
-
-    .container-judul h1{
-      word-wrap: break-word;
-    }
-
-    .filter-container{
-      width: 500px;
-    }
-
-    .icon-article{
-      border: none;
-      padding: 0;
-    }
-
-    .created-article{
-      font-size: 11px;
-      padding-bottom: 10px;
-    }
-    .card div h4{
-      margin: 0px;
-      padding: 0px;
-    }
-
-    .kategori{
-      margin-bottom: 15px;
-    }
-  }
+.card-shadow{ box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1); }
+.fs-7{ font-size: .9rem !important; }
+.search-icon { background-color: white; border-right: none !important }
+.custom-input {  border-left: none !important; border-color: none !important;}
+.custom-input:focus {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid #ced4da !important;
+  border-left: none !important;
+}
 </style>

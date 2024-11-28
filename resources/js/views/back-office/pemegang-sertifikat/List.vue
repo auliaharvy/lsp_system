@@ -123,7 +123,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -133,6 +132,12 @@ import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
+      // :headers="['First', 'Last', 'Handle']"
+      // :rows="[
+      //   ['Mark', 'Otto', '@mdo'],
+      //   ['Jacob', 'Thornton', '@fat'],
+      //   ['Larry', 'the Bird', '@twitter']
+      // ]"
 
 const userResource = new UserResource();
 const tukResource = new Resource('tuk');

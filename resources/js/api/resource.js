@@ -49,6 +49,17 @@ class Resource {
       Accept: 'application/pdf',
     });
   }
+  stream(query) {
+    return request({
+      url: '/' + this.uri,
+      method: 'get',
+      params: query,
+      responseType: 'blob', // ensure we get a blob for PDF
+      headers: {
+        Accept: 'application/pdf',
+      },
+    });
+  }
 }
 
 export { Resource as default };

@@ -127,6 +127,12 @@
             </template>
           </el-table-column>
 
+          <el-table-column align="center" label="Kelompok Pekerjaan">
+            <template slot-scope="scope">
+              <span >{{ scope.row.kelompokPekerjaan }}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column align="center" label="Kode Unit">
             <template slot-scope="scope">
               <span>{{ scope.row.kode_unit }}</span>
@@ -368,7 +374,6 @@ export default {
         const data = await ia01Detail.get(this.dataPreview.id_ia_01);
         this.listDetailIa01 = data.detail;
         this.ia01 = data.ia_01;
-        // console.log(this.ia01);
         // this.ttdAsesor = '/uploads/users/signature/' + this.ia01.ttd_asesor;
         // this.ttdAsesi = '/uploads/users/signature/' + this.ia01.ttd_asesi;
         if (this.ia01.ttd_asesor){
@@ -414,7 +419,6 @@ export default {
         document.body.appendChild(link);
         link.click();
       });
-      // console.log(data);
       // await preview.get(this.$route.params.iduji);
       this.loading = false;
     },
@@ -466,22 +470,27 @@ export default {
     onJadwalSelect() {
       var id_skema = this.dataPreview.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      // console.log(this.listSkema);
       var skemaId = this.listSkema.find((x) => x.id === id_skema);
       this.selectedSkema = skemaId;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
-      // console.log(this.selectedSkema);
       this.getKuk();
     },
     getKuk(){
       var number = 1;
       var unitKomp = this.selectedSkema.children;
       var kuk = [];
+      let kelompokPekerjaan = ''
+
       unitKomp.forEach((element, index) => {
+        if(index == 0) element['kelompokPekerjaan'] = element?.kelompok_pekerjaan
+        if(kelompokPekerjaan != element?.kelompok_pekerjaan) {
+          element['index'] = number++
+          element['kelompokPekerjaan'] = element?.kelompok_pekerjaan
+        }
+        kelompokPekerjaan = element?.kelompok_pekerjaan
         element['type'] = 'unitKomp';
-        element['index'] = number++;
         kuk.push(element);
         element.elemen.forEach((element, index) => {
           element['type'] = 'elemen';
@@ -532,7 +541,6 @@ export default {
           this.$router.push({ name: 'uji-komp-list' });
         })
         .catch(error => {
-          console.log(error);
           this.loading = false;
         })
         .finally(() => {

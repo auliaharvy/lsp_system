@@ -54,7 +54,7 @@ class SkemaController extends BaseController
         $skemaQuery->join('mst_skema_sertifikasi_kategori as a', 'a.id', '=', 'mst_skema_sertifikasi.kategori_id');
         $skemaQuery->leftJoin('mst_skema_sertifikasi_unit_kompetensi as b', 'b.id_skema', '=', 'mst_skema_sertifikasi.id')
         ->groupBy('mst_skema_sertifikasi.id')
-        ->select('mst_skema_sertifikasi.*', 'a.nama as nama_kategori', DB::raw('COUNT(b.id) as jumlah_unit_count'));
+        ->select('mst_skema_sertifikasi.*', 'b.kelompok_pekerjaan', 'a.nama as nama_kategori', DB::raw('COUNT(b.id) as jumlah_unit_count'));
 
         if (!empty($keyword)) {
             $skemaQuery->where('kode_skema', 'LIKE', '%' . $keyword . '%');
@@ -88,6 +88,28 @@ class SkemaController extends BaseController
 
         return MasterResource::collection($query->paginate($limit));
     }
+
+    public function indexKelompokPekerjaan(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        $kelompokPekerjaan = Arr::get($searchParams, 'kelompok_pekerjaan', '');
+        $id_skema = Arr::get($searchParams, 'id_skema', '');
+
+        $query = SkemaUnit::query();
+        $query->select('mst_skema_sertifikasi_unit_kompetensi.*');
+
+        if (!empty($id_skema)) {
+            $query->where('mst_skema_sertifikasi_unit_kompetensi.id_skema', $id_skema);
+        }
+
+        if (!empty($kelompokPekerjaan)) {
+            $query->where('mst_skema_sertifikasi_unit_kompetensi.kelompok_pekerjaan', $kelompokPekerjaan);
+        }
+
+        return MasterResource::collection($query->paginate($limit));
+    }
+
 
     /**
      * Store a newly created resource in storage.

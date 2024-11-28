@@ -174,12 +174,17 @@ export default {
       dataTrx: {},
       unitKompetensiTable: [
         {
-          col1: 'Unit Kompetensi',
+          col1: '',
+          col2: 'Kelompok Pekerjaan',
+          col3: [],
+        },
+        {
+          col1: '',
           col2: 'Kode Unit',
           col3: [],
         },
         {
-          col1: 'Unit Kompetensi',
+          col1: '',
           col2: 'Judul Unit',
           col3: [],
         },
@@ -336,8 +341,9 @@ export default {
         element['type'] = 'unitKomp';
         element['index'] = number++;
         kuk.push(element);
-        this.unitKompetensiTable[0].col3.push(element['kode_unit']);
-        this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
+        this.unitKompetensiTable[0].col3 = Array.from(new Set([...this.unitKompetensiTable[0].col3, element['kelompok_pekerjaan']]));
+        this.unitKompetensiTable[1].col3.push(element['kode_unit']);
+        this.unitKompetensiTable[2].col3.push(element['unit_kompetensi']);
         element.elemen.forEach((element, index) => {
           element['type'] = 'elemen';
           kuk.push(element);

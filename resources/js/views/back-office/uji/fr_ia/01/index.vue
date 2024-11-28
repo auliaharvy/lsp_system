@@ -236,6 +236,12 @@
             </template>
           </el-table-column>
 
+          <el-table-column align="center" label="Kelompok Pekerjaan">
+            <template slot-scope="scope">
+              <span >{{ scope.row.kelompokPekerjaan }}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column align="center" label="Kode Unit">
             <template slot-scope="scope">
               <span>{{ scope.row.kode_unit }}</span>
@@ -558,7 +564,6 @@ export default {
       // this.selectedUji = ujiDetail;
       var id_apl_01 = this.$route.params.id_apl_01;
       this.listUji = await ujiKomResource.list({ idapl01: id_apl_01 });
-      console.log(this.listUji);
 
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.fileName = 'APL.02 - ' + this.listUji.data[0].nama_peserta + ' - ' + this.listUji.data[0].kode_skema;
@@ -572,20 +577,17 @@ export default {
     async onJadwalSelect() {
       // var id_skema = this.$route.params.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      // console.log(this.listSkema);
       // var skemaId = this.listSkema.find((x) => x.id === id_skema);
       // this.selectedSkema = skemaId;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       // this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
-      // console.log(this.selectedSkema);;
       // this.getKuk();
       var idSkema = this.$route.params.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       // var skemaId = this.listSkema.find((x) => x.id === id_skema);
       var skemaId = await skemaResource.list({ id_skema: idSkema });
       this.selectedSkema = skemaId.data[0];
-      console.log(skemaId);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
@@ -595,9 +597,16 @@ export default {
       var number = 1;
       var unitKomp = this.selectedSkema.children;
       var kuk = [];
+      let kelompokPekerjaan = ''
+
       unitKomp.forEach((element, index) => {
+        if(index == 0) element['kelompokPekerjaan'] = element?.kelompok_pekerjaan
+        if(kelompokPekerjaan != element?.kelompok_pekerjaan) {
+          element['index'] = number++
+          element['kelompokPekerjaan'] = element?.kelompok_pekerjaan
+        }
+        kelompokPekerjaan = element?.kelompok_pekerjaan
         element['type'] = 'unitKomp';
-        element['index'] = number++;
         kuk.push(element);
         element.elemen.forEach((element, index) => {
           element['type'] = 'elemen';
@@ -648,7 +657,6 @@ export default {
           this.$router.push({ name: 'uji-komp-list' });
         })
         .catch(error => {
-          console.log(error);
           this.loading = false;
         })
         .finally(() => {

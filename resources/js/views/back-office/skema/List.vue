@@ -20,7 +20,6 @@
             <span>{{ scope.row.index }}</span>
           </template>
         </el-table-column>
-
         <el-table-column type="expand">
           <template slot-scope="scope">
             <br>
@@ -40,6 +39,12 @@
 
             <el-table v-loading="loading" :data="scope.row.children" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
               <el-table-column label="Unit Kompetensi">
+                <el-table-column align="left" label="Kelompok Pekerjaan">
+                  <template slot-scope="elemen">
+                    <span>{{ getKelompokPekerjaan(elemen.row.kelompok_pekerjaan) }}</span>
+                  </template>
+                </el-table-column>
+
                 <el-table-column type="expand">
                   <template slot-scope="row">
                     <el-table v-loading="loading" :data="row.row.elemen" border fit highlight-current-row style="width: 80%" :header-cell-style="{ 'text-align': 'center', background: '#C0C0C0', color: 'white' }" class="table-child">
@@ -434,6 +439,8 @@ const updateKukResource = new Resource('skema/update/kuk');
 const deleteUnitResource = new Resource('skema/unit');
 const deleteElemenResource = new Resource('skema/elemen');
 const deleteKukResource = new Resource('skema/kuk');
+let nameKelompokPekerjaan = ''
+let counterKelompokPekerjaan = 0
 
 export default {
   name: 'SkemaList',
@@ -524,6 +531,11 @@ export default {
     this.getListKategori();
   },
   methods: {
+    getKelompokPekerjaan(val){
+      if(counterKelompokPekerjaan == 0) nameKelompokPekerjaan = val
+      val == nameKelompokPekerjaan ? counterKelompokPekerjaan++ : counterKelompokPekerjaan = 0
+      return counterKelompokPekerjaan > 0 ? '' : val
+    },
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;

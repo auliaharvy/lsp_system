@@ -12,7 +12,7 @@ const whiteList = [
   '/login', '/auth-redirect', '', '/form-apl-02', '/skema/:id/:kategori', '/kegiatan',
   '/dudi', '/kkni', '/tuk', '/assesor', '/kegiatan/:slug', '/pemegang-sertifikat',
   '/tentang-lsp', '/visi-misi', '/struktur-organisasi', '/stakeholder', '/komitmen-ketidakberpihakan',
-  '/rencana-strategis', '/program-kerja', '/mitra-kerja',
+  '/rencana-strategis', '/program-kerja', '/mitra-kerja', '/jadwal-assesmen', '/pdf-viewer'
 ]; // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {

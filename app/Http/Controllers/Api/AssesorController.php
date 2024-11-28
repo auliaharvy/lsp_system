@@ -47,6 +47,9 @@ class AssesorController extends BaseController
         $asessorQuery = Assesor::query();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
+        $orderBy = Arr::get($searchParams, 'order_by', 'created_at');
+        $orderType = Arr::get($searchParams, 'order_type', 'desc');
+
 
         if (!empty($keyword)) {
             $asessorQuery->where('nama', 'LIKE', '%' . $keyword . '%');
@@ -54,6 +57,8 @@ class AssesorController extends BaseController
             $asessorQuery->orWhere('no_reg', 'LIKE', '%' . $keyword . '%');
             $asessorQuery->orWhere('status_asesor', 'LIKE', '%' . $keyword . '%');
         }
+
+        $asessorQuery->orderBy($orderBy, $orderType);
 
         return MasterResource::collection($asessorQuery->paginate($limit));
     }

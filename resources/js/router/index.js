@@ -79,6 +79,11 @@ export const constantRoutes = [
     hidden: true,
   },
   {
+    path: '/jadwal-assesmen',
+    component: () => import('@/views/back-office/jadwal/Index'),
+    hidden: true,
+  },
+  {
     path: '/form-apl-02',
     component: () => import('@/views/frontpage/form-apl-02/index'),
     hidden: true,
@@ -172,6 +177,12 @@ export const constantRoutes = [
   {
     path: '/mitra-kerja',
     component: () => import('@/views/frontpage/mitra-kerja/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/pdf-viewer',
+    component: () => import('@/views/pdf/PdfViewer'),
     hidden: true,
   },
   // {
