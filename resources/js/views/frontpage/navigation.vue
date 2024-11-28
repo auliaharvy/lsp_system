@@ -1,27 +1,95 @@
 <template>
-  <el-menu background-color="#fff" :mode="mode" router class="navbar-mobile">
-    <el-menu-item v-if="mode === 'horizontal'" index="/login"><img :src="logo" class="logo"></el-menu-item>
-    <el-menu-item index="/login">Home</el-menu-item>
-    <el-menu-item index="1">Tentang LSP</el-menu-item>
-    <el-submenu index="2">
-      <template slot="title">Profile</template>
-      <el-menu-item index="/pemegang-sertifikat">Pemegang Sertifikat</el-menu-item>
-      <el-menu-item index="/assesor">Asesor Kompetensi</el-menu-item>
-      <el-menu-item index="/tuk">TUK</el-menu-item>
-      <el-menu-item index="/kkni">KKNI</el-menu-item>
-      <el-menu-item index="/dudi">DUDI</el-menu-item>
+  <el-menu
+    background-color="#fff"
+    :mode="mode"
+    router
+    class="navbar-mobile"
+  >
+    <el-menu-item
+      v-if="mode === 'horizontal'"
+      index="/login"
+    >
+      <img
+        :src="logo"
+        class="logo"
+      >
+    </el-menu-item>
+    <el-menu-item index="/login">
+      Home
+    </el-menu-item>
+    <el-submenu index="1">
+      <template slot="title">
+        Profile
+      </template>
+      <el-menu-item index="/tentang-lsp">
+        Lembaga Sertifikasi Profesi
+      </el-menu-item>
+      <el-menu-item index="/visi-misi">
+        Visi & Misi
+      </el-menu-item>
+      <el-menu-item index="/struktur-organisasi">
+        Struktur Organisasi
+      </el-menu-item>
+      <el-menu-item index="/stakeholder">
+        Stakeholder
+      </el-menu-item>
+      <el-menu-item index="/komitmen-ketidakberpihakan">
+        Komitmen Ketidakberpihakan
+      </el-menu-item>
+      <el-menu-item index="/rencana-strategis">
+        Rencana Strategis
+      </el-menu-item>
+      <el-menu-item index="/program-kerja">
+        Program Kerja 2024
+      </el-menu-item>
+      <el-menu-item index="/mitra-kerja">
+        Mitra Kerja
+      </el-menu-item>
+      <el-menu-item index="/pemegang-sertifikat">
+        Pemegang Sertifikat
+      </el-menu-item>
+      <el-menu-item index="/jadwal-assesmen">
+        Jadwal Assesmen
+      </el-menu-item>
+      <el-menu-item index="/assesor">
+        Asesor Kompetensi
+      </el-menu-item>
+      <el-menu-item index="/tuk">
+        TUK
+      </el-menu-item>
+      <el-menu-item index="/kkni">
+        KKNI
+      </el-menu-item>
+      <el-menu-item index="/dudi">
+        DUDI
+      </el-menu-item>
     </el-submenu>
-    <el-menu-item index="/form-apl-02">Uji Kompetensi</el-menu-item>
-    <el-menu-item index="/kegiatan">Kegiatan</el-menu-item>
+    <el-menu-item index="/form-apl-02">
+      Uji Kompetensi
+    </el-menu-item>
+    <el-menu-item index="/kegiatan">
+      Kegiatan
+    </el-menu-item>
 
     <template v-if="!isLogged">
-      <el-menu-item style="float: right" index="/login"><el-button>Login</el-button></el-menu-item>
+      <el-menu-item
+        style="float: right"
+        index="/login"
+      >
+        <el-button>Login</el-button>
+      </el-menu-item>
     </template>
     <template v-if="isLogged">
       <el-menu-item style="float: right">
-        <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+        <el-dropdown
+          class="avatar-container right-menu-item hover-effect"
+          trigger="click"
+        >
           <div class="avatar-wrapper">
-            <img src="@/assets/login/logo.png" style="width: 40px; height: 40px;">
+            <img
+              src="@/assets/login/logo.png"
+              style="width: 40px; height: 40px;"
+            >
             <i class="el-icon-caret-bottom" />
           </div>
           <el-dropdown-menu slot="dropdown">
@@ -30,13 +98,19 @@
                 {{ $t('navbar.dashboard') }}
               </el-dropdown-item>
             </router-link>
-            <router-link v-show="userId !== null" :to="`/profile/edit`">
+            <router-link
+              v-show="userId !== null"
+              :to="`/profile/edit`"
+            >
               <el-dropdown-item>
                 {{ $t('navbar.profile') }}
               </el-dropdown-item>
             </router-link>
             <el-dropdown-item divided>
-              <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+              <span
+                style="display:block;"
+                @click="logout"
+              >{{ $t('navbar.logOut') }}</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

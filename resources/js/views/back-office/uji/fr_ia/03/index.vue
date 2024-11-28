@@ -1,7 +1,10 @@
 <template>
   <el-container class="app-container">
     <el-header>
-      <el-page-header content="FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI" @back="$router.back()" />
+      <el-page-header
+        content="FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI"
+        @back="$router.back()"
+      />
     </el-header>
     <el-main>
       <div>
@@ -13,10 +16,12 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="left" min-width="30px">
+          <el-table-column
+            align="left"
+            min-width="30px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.title }}</span>
-
             </template>
           </el-table-column>
           <el-table-column align="left">
@@ -37,9 +42,15 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="left" label="PANDUAN BAGI ASESOR">
+          <el-table-column
+            align="left"
+            label="PANDUAN BAGI ASESOR"
+          >
             <ul>
-              <li v-for="item in panduan" :key="item">
+              <li
+                v-for="item in panduan"
+                :key="item"
+              >
                 {{ item }}
               </li>
             </ul>
@@ -58,12 +69,18 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="left" width="150px">
+          <el-table-column
+            align="left"
+            width="150px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.col1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" width="120px">
+          <el-table-column
+            align="left"
+            width="120px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.col2 }}</span>
             </template>
@@ -71,7 +88,10 @@
           <el-table-column align="left">
             <template slot-scope="scope">
               <ul>
-                <li v-for="item in scope.row.col3" :key="item">
+                <li
+                  v-for="item in scope.row.col3"
+                  :key="item"
+                >
                   {{ item }}
                 </li>
               </ul>
@@ -90,26 +110,61 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="center" min-width="20px" label="No">
+          <el-table-column
+            align="center"
+            min-width="20px"
+            label="No"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.index }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" min-width="150px" label="Pertanyaan">
+          <el-table-column
+            align="left"
+            min-width="150px"
+            label="Pertanyaan"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.pertanyaan }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" min-width="200px" label="Tanggapan">
+          <el-table-column
+            align="left"
+            min-width="200px"
+            label="Tanggapan"
+          >
             <template slot-scope="scope">
-              <el-input v-model="scope.row.tanggapan" type="textarea" :rows="3" placeholder="Isi Tanggapan" label="Tanggapan" />
+              <el-input
+                v-model="scope.row.tanggapan"
+                type="textarea"
+                :rows="3"
+                placeholder="Isi Tanggapan"
+                label="Tanggapan"
+              />
             </template>
           </el-table-column>
-          <el-table-column v-if="roles[0] !== 'user'" align="center" min-width="80px" label="Rekomendasi">
+          <el-table-column
+            v-if="roles[0] !== 'user'"
+            align="center"
+            min-width="80px"
+            label="Rekomendasi"
+          >
             <template slot-scope="scope">
-              <el-select v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
-                <el-option key="kompeten" label="Kompeten" value="kompeten" />
-                <el-option key="belum kompeten" label="Belum Kompeten" value="belum kompeten" />
+              <el-select
+                v-model="scope.row.is_kompeten"
+                class="filter-item"
+                placeholder="B/BK"
+              >
+                <el-option
+                  key="kompeten"
+                  label="Kompeten"
+                  value="kompeten"
+                />
+                <el-option
+                  key="belum kompeten"
+                  label="Belum Kompeten"
+                  value="belum kompeten"
+                />
               </el-select>
             </template>
           </el-table-column>
@@ -124,18 +179,52 @@
           label-width="250px"
           label-position="left"
         >
-          <el-form-item v-if="roles[0] !== 'user'" label="Rekomendasi Assesor">
-            <el-radio v-model="form.rekomendasi_asesor" label="Kompeten" border>Kompeten</el-radio>
-            <el-radio v-model="form.rekomendasi_asesor" label="Belum Kompeten" border>Belum Kompeten</el-radio>
+          <el-form-item
+            v-if="roles[0] !== 'user'"
+            label="Rekomendasi Assesor"
+          >
+            <el-radio
+              v-model="form.rekomendasi_asesor"
+              label="Kompeten"
+              border
+            >
+              Kompeten
+            </el-radio>
+            <el-radio
+              v-model="form.rekomendasi_asesor"
+              label="Belum Kompeten"
+              border
+            >
+              Belum Kompeten
+            </el-radio>
           </el-form-item>
-          <el-form-item v-if="roles[0] !== 'user'" label="Umpan balik untuk asesi">
-            <el-input v-model="form.umpanBalikAsesi" type="textarea" :rows="3" placeholder="Isi umpan balik untuk asesi" label="Umpan Balik Untuk Ases" />
+          <el-form-item
+            v-if="roles[0] !== 'user'"
+            label="Umpan balik untuk asesi"
+          >
+            <el-input
+              v-model="form.umpanBalikAsesi"
+              type="textarea"
+              :rows="3"
+              placeholder="Isi umpan balik untuk asesi"
+              label="Umpan Balik Untuk Ases"
+            />
           </el-form-item>
         </el-form>
         <br>
 
-        <el-button v-if="!$route.params.id_ia_03" @click="onSubmit">Submit</el-button>
-        <el-button v-if="$route.params.id_ia_03 && roles[0] !== 'user'" @click="nilai">Submit Asesor</el-button>
+        <el-button
+          v-if="!$route.params.id_ia_03"
+          @click="onSubmit"
+        >
+          Submit
+        </el-button>
+        <el-button
+          v-if="$route.params.id_ia_03 && roles[0] !== 'user'"
+          @click="nilai"
+        >
+          Submit Asesor
+        </el-button>
       </div>
     </el-main>
   </el-container>
@@ -174,12 +263,17 @@ export default {
       dataTrx: {},
       unitKompetensiTable: [
         {
-          col1: 'Unit Kompetensi',
+          col1: '',
+          col2: 'Kelompok Pekerjaan',
+          col3: [],
+        },
+        {
+          col1: '',
           col2: 'Kode Unit',
           col3: [],
         },
         {
-          col1: 'Unit Kompetensi',
+          col1: '',
           col2: 'Judul Unit',
           col3: [],
         },
@@ -336,8 +430,9 @@ export default {
         element['type'] = 'unitKomp';
         element['index'] = number++;
         kuk.push(element);
-        this.unitKompetensiTable[0].col3.push(element['kode_unit']);
-        this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
+        this.unitKompetensiTable[0].col3 = Array.from(new Set([...this.unitKompetensiTable[0].col3, element['kelompok_pekerjaan']]));
+        this.unitKompetensiTable[1].col3.push(element['kode_unit']);
+        this.unitKompetensiTable[2].col3.push(element['unit_kompetensi']);
         element.elemen.forEach((element, index) => {
           element['type'] = 'elemen';
           kuk.push(element);

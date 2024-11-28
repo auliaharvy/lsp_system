@@ -79,6 +79,11 @@ export const constantRoutes = [
     hidden: true,
   },
   {
+    path: '/jadwal-assesmen',
+    component: () => import('@/views/back-office/jadwal/Index'),
+    hidden: true,
+  },
+  {
     path: '/form-apl-02',
     component: () => import('@/views/frontpage/form-apl-02/index'),
     hidden: true,
@@ -127,6 +132,59 @@ export const constantRoutes = [
     hidden: true,
   },
 
+  {
+    path: '/tentang-lsp',
+    component: () => import('@/views/frontpage/tentang-lsp/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/visi-misi',
+    component: () => import('@/views/frontpage/visi-misi/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/struktur-organisasi',
+    component: () => import('@/views/frontpage/struktur-organisasi/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/stakeholder',
+    component: () => import('@/views/frontpage/stakeholder/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/komitmen-ketidakberpihakan',
+    component: () => import('@/views/frontpage/komitmen-ketidakberpihakan/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/rencana-strategis',
+    component: () => import('@/views/frontpage/rencana-strategis/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/program-kerja',
+    component: () => import('@/views/frontpage/program-kerja/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/mitra-kerja',
+    component: () => import('@/views/frontpage/mitra-kerja/Index'),
+    hidden: true,
+  },
+
+  {
+    path: '/pdf-viewer',
+    component: () => import('@/views/pdf/PdfViewer'),
+    hidden: true,
+  },
   // {
   //   // path: '/preview-page/:id',
   //   path: '/preview-page',

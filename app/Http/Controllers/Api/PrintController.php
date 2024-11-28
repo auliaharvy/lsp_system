@@ -89,6 +89,7 @@ class PrintController extends BaseController
         $dataUjiKomp = $ujiKompController->showPreview($iduji);
         $dataSkemaSertifikasi = $ujiKompController->index(new Request(['idapl01' => $dataUjiKomp->id_apl_01, 'isPrint' => true]));
         $dataSkemaUnit = $skemaController->indexUnit(new Request(['id_skema' => $dataUjiKomp->id_skema]));
+        $dataSkemaUnitByKelompokPekerjaan = $skemaController->indexKelompokPekerjaan(new Request(['id_skema' => $dataUjiKomp->id_skema]));
         $dataSkema = $skemaController->index(new Request(['id_skema' => $dataUjiKomp->id_skema]));
 
         $idapl01 = Arr::get($searchParams, 'idapl01');
@@ -189,8 +190,34 @@ class PrintController extends BaseController
         if ($valueia01 === 'true'){
             $result = $ujiKompController->showIa01($idia01);
             $listDataKuk = array();
+            // setel noelemen string kosong
+            // setel namaelemen string kosong
+            $noelemen = 1;
+            $namaelemen = '';
+            $counter = 0;
             foreach($dataSkemaUnit as $row){
+                /**
+                 * setiap row elemen
+                 * 
+                 * jika noelemen sama dengan counter
+                 *  - buat field noelemen dengan nilai kosong
+                 * selain itu
+                 *  - setel incremental pada counter
+                 *  - buat field noelemen dengan nilai variable counter
+                 *  - setel variable noelemen dengan nilai variable counter
+                 * selesai
+                 */
                 $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, null, $idia01);
+                foreach($data['elemen'] as $row2) {
+                    if($noelemen == $counter) {
+                        $data['elemen'][$counter]['noelemen'] = '';
+                    } else {
+                        $counter++;
+                        $data['elemen'][$counter]['noelemen'] = $counter;
+                        $noelemen = $counter;
+                    }
+                }
+                return response()->json(['data' => $data['elemen']], 200);
                 $data['kode_unit'] = $row->kode_unit;
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
                 $listDataKuk[] = $data;
@@ -198,6 +225,7 @@ class PrintController extends BaseController
             $dataia01 = ['ttd_asesor' => $result['ia_01']->ttd_asesor, 'ttd_asesi' => $result['ia_01']->ttd_asesi];
 
             $datamodule->push(['nama' => 'ia01', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataia01]]);
+            return response()->json(['data' => $datamodule], 200);
         }
 
         if ($valueia02 === 'true'){
@@ -241,15 +269,17 @@ class PrintController extends BaseController
             'datamodule' => $datamodule, 
             'skemaunit' => $dataSkemaUnit, 
             'skemasertifikasi' => $dataSkemaSertifikasi[0], 
-            'asesor' => $asesor
+            'asesor' => $asesor,
+            'kelompok_pekerjaan' => $dataSkemaUnitByKelompokPekerjaan,
+            'nama_kelompok_pekerjaan' => $dataSkemaUnitByKelompokPekerjaan[0]->kelompok_pekerjaan
         );
 
         // $client = new Client(['timeout' => 30]);
         // $pdf = new PDF(['httpClient' => $client]);
         // $pdf::loadView('print.masterprint', compact('data'));
+
         $pdf = \PDF::loadView('print.masterprint', compact('data'));
         $pdf->setPaper('A4','portrait');
-        return $pdf->download();
-        // return $pdf->stream();   
+        return $pdf->stream('nama_file.pdf');
     }
 }

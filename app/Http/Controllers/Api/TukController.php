@@ -41,11 +41,15 @@ class TukController extends BaseController
         $tukQuery = Tuk::query();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
-
+        $orderBy = Arr::get($searchParams, 'order_by', 'nama');
+        $orderType = Arr::get($searchParams, 'order_type', 'ASC');
+        
         if (!empty($keyword)) {
             $tukQuery->where('nama', 'LIKE', '%' . $keyword . '%');
             $tukQuery->orWhere('kode_tuk', 'LIKE', '%' . $keyword . '%');
         }
+
+        $tukQuery->orderBy($orderBy, $orderType);
 
         return MasterResource::collection($tukQuery->paginate($limit));
     }

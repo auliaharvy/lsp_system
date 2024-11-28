@@ -1,129 +1,268 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-input
+        v-model="query.keyword"
+        :placeholder="$t('table.keyword')"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-button
+        v-waves
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-plus"
+        @click="handleCreate"
+      >
         {{ $t('table.add') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button
+        v-waves
+        :loading="downloading"
+        class="filter-item"
+        type="primary"
+        icon="el-icon-download"
+        @click="handleDownload"
+      >
         {{ $t('table.export') }}
       </el-button>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="No" width="80">
+    <el-table
+      v-loading="loading"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+    >
+      <el-table-column
+        align="center"
+        label="No"
+        width="80"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.index }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.code')">
+      <el-table-column
+        align="center"
+        :label="$t('tuk.table.code')"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.kode_tuk }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.name')">
+      <el-table-column
+        align="center"
+        :label="$t('tuk.table.name')"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.nama }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.address')" min-width="150px">
+      <el-table-column
+        align="center"
+        :label="$t('tuk.table.address')"
+        min-width="150px"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.alamat }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.telp')">
+      <el-table-column
+        align="center"
+        :label="$t('tuk.table.telp')"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.no_telp }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('tuk.table.email')">
+      <el-table-column
+        align="center"
+        :label="$t('tuk.table.email')"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="120">
+      <el-table-column
+        align="center"
+        label="Actions"
+        width="120"
+      >
         <template slot-scope="scope">
           <el-button-group>
-            <el-tooltip class="item" effect="dark" content="Update" placement="top-end">
-              <el-button v-permission="['manage user']" type="success" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row)" />
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Update"
+              placement="top-end"
+            >
+              <el-button
+                v-permission="['manage user']"
+                type="success"
+                size="small"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+              />
             </el-tooltip>
           </el-button-group>
         </template>
       </el-table-column>
-
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="query.page"
+      :limit.sync="query.limit"
+      @pagination="getList"
+    />
 
-    <el-dialog :title="$t('tuk.dialog.addNew')" :visible.sync="dialogFormVisible">
-      <div v-loading="tukCreating" class="form-container">
-        <el-form ref="tukForm" :rules="rules" :model="newTuk" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('tuk.table.code')" prop="kode_tuk">
+    <el-dialog
+      :title="$t('tuk.dialog.addNew')"
+      :visible.sync="dialogFormVisible"
+    >
+      <div
+        v-loading="tukCreating"
+        class="form-container"
+      >
+        <el-form
+          ref="tukForm"
+          :rules="rules"
+          :model="newTuk"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
+          <el-form-item
+            :label="$t('tuk.table.code')"
+            prop="kode_tuk"
+          >
             <el-input v-model="newTuk.kode_tuk" />
           </el-form-item>
-          <el-form-item :label="$t('table.name')" prop="nama">
+          <el-form-item
+            :label="$t('table.name')"
+            prop="nama"
+          >
             <el-input v-model="newTuk.nama" />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.address')" prop="alamat">
+          <el-form-item
+            :label="$t('tuk.table.address')"
+            prop="alamat"
+          >
             <el-input v-model="newTuk.alamat" />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.telp')" prop="no_telp">
+          <el-form-item
+            :label="$t('tuk.table.telp')"
+            prop="no_telp"
+          >
             <el-input v-model="newTuk.no_telp" />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.email')" prop="email">
+          <el-form-item
+            :label="$t('tuk.table.email')"
+            prop="email"
+          >
             <el-input v-model="newTuk.email" />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createTuk()">
+          <el-button
+            type="primary"
+            @click="createTuk()"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
 
-    <el-dialog :title="$t('tuk.dialog.addNew') + ' ' + editedTuk.nama" :visible.sync="dialogFormUpdateVisible">
-      <div v-loading="tukCreating" class="form-container">
-        <el-form ref="tukForm" :rules="rules" :model="editedTuk" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('tuk.table.code')" prop="kode_tuk">
+    <el-dialog
+      :title="$t('tuk.dialog.addNew') + ' ' + editedTuk.nama"
+      :visible.sync="dialogFormUpdateVisible"
+    >
+      <div
+        v-loading="tukCreating"
+        class="form-container"
+      >
+        <el-form
+          ref="tukForm"
+          :rules="rules"
+          :model="editedTuk"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
+          <el-form-item
+            :label="$t('tuk.table.code')"
+            prop="kode_tuk"
+          >
             <el-input v-model="editedTuk.kode_tuk" />
           </el-form-item>
-          <el-form-item :label="$t('table.name')" prop="nama">
+          <el-form-item
+            :label="$t('table.name')"
+            prop="nama"
+          >
             <el-input v-model="editedTuk.nama" />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.address')" prop="alamat">
+          <el-form-item
+            :label="$t('tuk.table.address')"
+            prop="alamat"
+          >
             <el-input v-model="editedTuk.alamat" />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.telp')" prop="no_telp">
+          <el-form-item
+            :label="$t('tuk.table.telp')"
+            prop="no_telp"
+          >
             <el-input v-model="editedTuk.no_telp" />
           </el-form-item>
-          <el-form-item :label="$t('tuk.table.email')" prop="email">
+          <el-form-item
+            :label="$t('tuk.table.email')"
+            prop="email"
+          >
             <el-input v-model="editedTuk.email" />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogFormVisible = false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="updateData()">
+          <el-button
+            type="primary"
+            @click="updateData()"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -133,6 +272,12 @@ import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
+      // :headers="['First', 'Last', 'Handle']"
+      // :rows="[
+      //   ['Mark', 'Otto', '@mdo'],
+      //   ['Jacob', 'Thornton', '@fat'],
+      //   ['Larry', 'the Bird', '@twitter']
+      // ]"
 
 const userResource = new UserResource();
 const tukResource = new Resource('tuk');

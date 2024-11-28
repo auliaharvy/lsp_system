@@ -29,10 +29,12 @@
               style="width: 100%"
               :header-cell-style="{ 'text-align': 'center' }"
             >
-              <el-table-column align="left" min-width="30px">
+              <el-table-column
+                align="left"
+                min-width="30px"
+              >
                 <template slot-scope="scope">
                   <span>{{ scope.row.title }}</span>
-
                 </template>
               </el-table-column>
               <el-table-column align="left">
@@ -53,9 +55,15 @@
               style="width: 750px"
               :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
             >
-              <el-table-column align="left" label="PANDUAN BAGI ASESOR">
+              <el-table-column
+                align="left"
+                label="PANDUAN BAGI ASESOR"
+              >
                 <ul>
-                  <li v-for="item in panduan" :key="item">
+                  <li
+                    v-for="item in panduan"
+                    :key="item"
+                  >
                     {{ item }}
                   </li>
                 </ul>
@@ -74,13 +82,20 @@
               style="width: 750px"
               :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
             >
-              <el-table-column align="center" label="No" width="50px">
+              <el-table-column
+                align="center"
+                label="No"
+                width="50px"
+              >
                 <template slot-scope="scope">
                   <span>{{ scope.row.index }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column align="center" label="Kode Unit">
+              <el-table-column
+                align="center"
+                label="Kode Unit"
+              >
                 <template slot-scope="scope">
                   <span>{{ scope.row.kode_unit }}</span>
                 </template>
@@ -115,15 +130,39 @@
               >
                 <template slot="header">
                   <span>K / BK</span>
-                  <el-select v-model="kompeten" class="filter-item" placeholder="B/BK" :key-value="kompeten" @change="allKompeten">
-                    <el-option :key="0" label="Kompeten" :value="0" />
-                    <el-option :key="1" label="Belum Kompeten" :value="1" />
+                  <el-select
+                    v-model="kompeten"
+                    class="filter-item"
+                    placeholder="B/BK"
+                    :key-value="kompeten"
+                    @change="allKompeten"
+                  >
+                    <el-option
+                      :key="0"
+                      label="Kompeten"
+                      :value="0"
+                    />
+                    <el-option
+                      :key="1"
+                      label="Belum Kompeten"
+                      :value="1"
+                    />
                   </el-select>
                 </template>
                 <template slot-scope="scope">
                   <template v-if="scope.row.type === 'kuk'">
-                    <el-radio v-model="scope.row.is_kompeten" :label="0">Kompeten</el-radio>
-                    <el-radio v-model="scope.row.is_kompeten" :label="1">Belum Kompeten</el-radio>
+                    <el-radio
+                      v-model="scope.row.is_kompeten"
+                      :label="0"
+                    >
+                      Kompeten
+                    </el-radio>
+                    <el-radio
+                      v-model="scope.row.is_kompeten"
+                      :label="1"
+                    >
+                      Belum Kompeten
+                    </el-radio>
                   </template>
                 </template>
               </el-table-column>
@@ -153,27 +192,52 @@
               label-width="250px"
               label-position="left"
             >
-              <el-form-item label="Apakah Asesi Kompeten?" prop="kompeten">
-                <el-select v-model="form.status" class="filter-item" placeholder="B/BK">
-                  <el-option :key="0" label="Kompeten" :value="0" />
-                  <el-option :key="1" label="Belum Kompeten" :value="1" />
+              <el-form-item
+                label="Apakah Asesi Kompeten?"
+                prop="kompeten"
+              >
+                <el-select
+                  v-model="form.status"
+                  class="filter-item"
+                  placeholder="B/BK"
+                >
+                  <el-option
+                    :key="0"
+                    label="Kompeten"
+                    :value="0"
+                  />
+                  <el-option
+                    :key="1"
+                    label="Belum Kompeten"
+                    :value="1"
+                  />
                 </el-select>
               </el-form-item>
-              <el-form-item label="Umpan Balik untuk Asesi" prop="umpanBalik">
-                <el-input v-model="form.note" placeholder="Isi umpan balik untuk asesi" />
+              <el-form-item
+                label="Umpan Balik untuk Asesi"
+                prop="umpanBalik"
+              >
+                <el-input
+                  v-model="form.note"
+                  placeholder="Isi umpan balik untuk asesi"
+                />
               </el-form-item>
-
             </el-form>
 
             <br>
 
-            <el-button @click="onSubmit">Submit</el-button>
+            <el-button @click="onSubmit">
+              Submit
+            </el-button>
           </div>
         </el-main>
       </section>
     </vue-html2pdf>
     <el-header>
-      <el-page-header content="FR.IA.01 CEKLIS OBSERVASI AKTIVITAS DI TEMPAT KERJA ATAU TEMPAT KERJA SIMULASI" @back="$router.back()" />
+      <el-page-header
+        content="FR.IA.01 CEKLIS OBSERVASI AKTIVITAS DI TEMPAT KERJA ATAU TEMPAT KERJA SIMULASI"
+        @back="$router.back()"
+      />
     </el-header>
     <el-main v-loading="loading">
       <div>
@@ -185,10 +249,12 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column align="left" min-width="30px">
+          <el-table-column
+            align="left"
+            min-width="30px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.title }}</span>
-
             </template>
           </el-table-column>
           <el-table-column align="left">
@@ -209,9 +275,15 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'left', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="left" label="PANDUAN BAGI ASESOR">
+          <el-table-column
+            align="left"
+            label="PANDUAN BAGI ASESOR"
+          >
             <ul>
-              <li v-for="item in panduan" :key="item">
+              <li
+                v-for="item in panduan"
+                :key="item"
+              >
                 {{ item }}
               </li>
             </ul>
@@ -230,13 +302,29 @@
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
-          <el-table-column align="center" label="No" width="50px">
+          <el-table-column
+            align="center"
+            label="No"
+            width="50px"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.index }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column align="center" label="Kode Unit">
+          <el-table-column
+            align="center"
+            label="Kelompok Pekerjaan"
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.kelompokPekerjaan }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="center"
+            label="Kode Unit"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.kode_unit }}</span>
             </template>
@@ -271,15 +359,38 @@
           >
             <template slot="header">
               <span>K / BK</span>
-              <el-select v-model="kompeten" class="filter-item" placeholder="B/BK" @change="allKompeten">
-                <el-option :key="0" label="Kompeten" :value="0" />
-                <el-option :key="1" label="Belum Kompeten" :value="1" />
+              <el-select
+                v-model="kompeten"
+                class="filter-item"
+                placeholder="B/BK"
+                @change="allKompeten"
+              >
+                <el-option
+                  :key="0"
+                  label="Kompeten"
+                  :value="0"
+                />
+                <el-option
+                  :key="1"
+                  label="Belum Kompeten"
+                  :value="1"
+                />
               </el-select>
             </template>
             <template slot-scope="scope">
               <template v-if="scope.row.type === 'kuk'">
-                <el-radio v-model="scope.row.is_kompeten" :label="0">Kompeten</el-radio>
-                <el-radio v-model="scope.row.is_kompeten" :label="1">Belum Kompeten</el-radio>
+                <el-radio
+                  v-model="scope.row.is_kompeten"
+                  :label="0"
+                >
+                  Kompeten
+                </el-radio>
+                <el-radio
+                  v-model="scope.row.is_kompeten"
+                  :label="1"
+                >
+                  Belum Kompeten
+                </el-radio>
               </template>
               <!-- <el-select v-if="scope.row.type === 'kuk'" v-model="scope.row.is_kompeten" class="filter-item" placeholder="B/BK">
                 <el-option :key="0" label="Kompeten" :value="0" />
@@ -313,18 +424,41 @@
           label-width="250px"
           label-position="left"
         >
-          <el-form-item label="Apakah Asesi Kompeten?" prop="kompeten">
-            <el-select v-if="$route.params.id_ia_01 === null" v-model="form.status" class="filter-item" placeholder="B/BK">
-              <el-option :key="0" label="Kompeten" :value="0" />
-              <el-option :key="1" label="Belum Kompeten" :value="1" />
+          <el-form-item
+            label="Apakah Asesi Kompeten?"
+            prop="kompeten"
+          >
+            <el-select
+              v-if="$route.params.id_ia_01 === null"
+              v-model="form.status"
+              class="filter-item"
+              placeholder="B/BK"
+            >
+              <el-option
+                :key="0"
+                label="Kompeten"
+                :value="0"
+              />
+              <el-option
+                :key="1"
+                label="Belum Kompeten"
+                :value="1"
+              />
             </el-select>
             <div v-else>
               <span v-if="ia01.status === 0">Kompeten</span>
               <span v-if="ia01.status === 1">Belum Kompeten</span>
             </div>
           </el-form-item>
-          <el-form-item label="Umpan Balik untuk Asesi" prop="umpanBalik">
-            <el-input v-if="$route.params.id_ia_01 === null" v-model="form.note" placeholder="Isi umpan balik untuk asesi" />
+          <el-form-item
+            label="Umpan Balik untuk Asesi"
+            prop="umpanBalik"
+          >
+            <el-input
+              v-if="$route.params.id_ia_01 === null"
+              v-model="form.note"
+              placeholder="Isi umpan balik untuk asesi"
+            />
             <span v-else>{{ ia01.note }}</span>
           </el-form-item>
           <el-form-item label="Tanda Tangan Asesor">
@@ -337,7 +471,12 @@
                 :disabled="false"
                 style="border-style: outset"
               />
-              <el-button size="small" @click="clear">Clear</el-button>
+              <el-button
+                size="small"
+                @click="clear"
+              >
+                Clear
+              </el-button>
             </div>
             <el-image
               v-else
@@ -356,7 +495,12 @@
                 :disabled="false"
                 style="border-style: outset"
               />
-              <el-button size="small" @click="clear1">Clear</el-button>
+              <el-button
+                size="small"
+                @click="clear1"
+              >
+                Clear
+              </el-button>
             </div>
             <el-image
               v-else
@@ -369,8 +513,18 @@
 
         <br>
 
-        <el-button v-if="$route.params.id_ia_01 !== null" @click="generateReport">Print</el-button>
-        <el-button v-else @click="onSubmit">Submit</el-button>
+        <el-button
+          v-if="$route.params.id_ia_01 !== null"
+          @click="generateReport"
+        >
+          Print
+        </el-button>
+        <el-button
+          v-else
+          @click="onSubmit"
+        >
+          Submit
+        </el-button>
       </div>
     </el-main>
   </el-container>
@@ -558,7 +712,6 @@ export default {
       // this.selectedUji = ujiDetail;
       var id_apl_01 = this.$route.params.id_apl_01;
       this.listUji = await ujiKomResource.list({ idapl01: id_apl_01 });
-      console.log(this.listUji);
 
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.fileName = 'APL.02 - ' + this.listUji.data[0].nama_peserta + ' - ' + this.listUji.data[0].kode_skema;
@@ -572,20 +725,17 @@ export default {
     async onJadwalSelect() {
       // var id_skema = this.$route.params.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
-      // console.log(this.listSkema);
       // var skemaId = this.listSkema.find((x) => x.id === id_skema);
       // this.selectedSkema = skemaId;
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       // this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
-      // console.log(this.selectedSkema);;
       // this.getKuk();
       var idSkema = this.$route.params.id_skema;
       // var jadwal = this.listJadwal.find((x) => x.id === this.dataTrx.id_jadwal);
       // var skemaId = this.listSkema.find((x) => x.id === id_skema);
       var skemaId = await skemaResource.list({ id_skema: idSkema });
       this.selectedSkema = skemaId.data[0];
-      console.log(skemaId);
       // var tukId = this.listTuk.find((x) => x.id === jadwal.id_tuk);
       this.dataTrx.id_skema = skemaId.id;
       // this.dataTrx.id_tuk = tukId.id;
@@ -595,9 +745,16 @@ export default {
       var number = 1;
       var unitKomp = this.selectedSkema.children;
       var kuk = [];
+      let kelompokPekerjaan = ''
+
       unitKomp.forEach((element, index) => {
+        if(index == 0) element['kelompokPekerjaan'] = element?.kelompok_pekerjaan
+        if(kelompokPekerjaan != element?.kelompok_pekerjaan) {
+          element['index'] = number++
+          element['kelompokPekerjaan'] = element?.kelompok_pekerjaan
+        }
+        kelompokPekerjaan = element?.kelompok_pekerjaan
         element['type'] = 'unitKomp';
-        element['index'] = number++;
         kuk.push(element);
         element.elemen.forEach((element, index) => {
           element['type'] = 'elemen';
@@ -648,7 +805,6 @@ export default {
           this.$router.push({ name: 'uji-komp-list' });
         })
         .catch(error => {
-          console.log(error);
           this.loading = false;
         })
         .finally(() => {

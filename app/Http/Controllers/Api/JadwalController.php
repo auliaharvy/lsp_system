@@ -83,8 +83,8 @@ class JadwalController extends BaseController
         $query->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema');
         $query->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk');
         $query->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
-        ->whereDate('trx_jadwal_asesmen.start_date', '>=', $currentDate) // Jadwal asesmen dari hari ini ke depan
-        ->orderBy('trx_jadwal_asesmen.start_date') // Urutkan berdasarkan tanggal asesmen
+        // ->whereDate('trx_jadwal_asesmen.start_date', '>=', $currentDate) // Jadwal asesmen dari hari ini ke depan
+        // ->orderBy('trx_jadwal_asesmen.start_date') // Urutkan berdasarkan tanggal asesmen
         // ->orderBy('trx_jadwal_asesmen.created_at', 'desc')
         ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor');
 
@@ -108,6 +108,31 @@ class JadwalController extends BaseController
         return JadwalResource::collection($query->paginate($limit));
     }
 
+    public function list(Request $request)
+    {
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $orderBy = Arr::get($searchParams, 'order_by', 'created_at');
+        $orderType = Arr::get($searchParams, 'order_type', 'ASC');
+
+        $query = Jadwal::query();
+        $query->join('mst_skema_sertifikasi as b', 'b.id', '=', 'trx_jadwal_asesmen.id_skema');
+        $query->join('mst_tuk as c', 'c.id', '=', 'trx_jadwal_asesmen.id_tuk');
+        $query->join('mst_asesor as f', 'f.id', '=', 'trx_jadwal_asesmen.id_asesor')
+        ->select('trx_jadwal_asesmen.*', 'b.skema_sertifikasi as nama_skema', 'c.nama as nama_tuk', 'f.nama as nama_asesor');
+
+        if (!empty($keyword)) {
+            $query->where('c.nama', 'LIKE', '%' . $keyword . '%');
+            $query->orWhere('b.skema_sertifikasi', 'LIKE', '%' . $keyword . '%');
+            $query->orWhere('trx_jadwal_asesmen.jadwal', 'LIKE', '%' . $keyword . '%');
+            $query->orWhere('f.nama', 'LIKE', '%' . $keyword . '%');
+        }
+
+        $query->orderBy($orderBy, $orderType);
+
+        return JadwalResource::collection($query->paginate($limit));
+    }
     /**
      * Store a newly created resource in storage.
      *

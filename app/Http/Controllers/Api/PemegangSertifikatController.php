@@ -45,19 +45,23 @@ class PemegangSertifikatController extends BaseController
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
         $keyword = Arr::get($searchParams, 'keyword', '');
         $id = Arr::get($searchParams, 'id', '');
-
+        $orderBy = Arr::get($searchParams, 'order_by', 'nama');
+        $orderType = Arr::get($searchParams, 'order_type', 'ASC');
+    
         if (!empty($keyword)) {
-            $pemegangSertifikatQuery->where('nama', 'LIKE', '%' . $keyword . '%');
-            $pemegangSertifikatQuery->orWhere('no_registrasi', 'LIKE', '%' . $keyword . '%');
-            $pemegangSertifikatQuery->orWhere('skema_sertifikasi', 'LIKE', '%' . $keyword . '%');
-            $pemegangSertifikatQuery->orWhere('no_sertifikat', 'LIKE', '%' . $keyword . '%');
-            $pemegangSertifikatQuery->orWhere('masa_berlaku', 'LIKE', '%' . $keyword . '%');
+            $pemegangSertifikatQuery->where('nama', 'LIKE', '%' . $keyword . '%')
+                ->orWhere('no_registrasi', 'LIKE', '%' . $keyword . '%')
+                ->orWhere('skema_sertifikasi', 'LIKE', '%' . $keyword . '%')
+                ->orWhere('no_sertifikat', 'LIKE', '%' . $keyword . '%')
+                ->orWhere('masa_berlaku', 'LIKE', '%' . $keyword . '%');
         }
-
+    
         if (!empty($id)) {
             $pemegangSertifikatQuery->orWhere('id', $id);
         }
-
+    
+        $pemegangSertifikatQuery->orderBy($orderBy, $orderType);
+    
         return MasterResource::collection($pemegangSertifikatQuery->paginate($limit));
     }
 

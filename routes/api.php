@@ -33,8 +33,10 @@ Route::namespace('Api')->group(function() {
     Route::post('uji-kompetensi-daftar', 'UjiKompController@store');
     Route::get('skema-get', 'SkemaController@index');
     Route::get('unit-kompetensi-get', 'SkemaController@indexUnit');
+    Route::get('unit-kompetensi-get-by-kelompok-pekerjaan', 'SkemaController@indexKelompokPekerjaan');
     Route::get('tuk-get', 'TukController@index');
     Route::get('jadwal-get', 'JadwalController@index');
+    Route::get('jadwal-get-list', 'JadwalController@list');
     Route::post('uji-komp-post', 'UjiKompController@store');
     Route::post('new-user-uji', 'UjiKompController@newUser');
     Route::post('check-user-uji', 'UjiKompController@checkUser');
