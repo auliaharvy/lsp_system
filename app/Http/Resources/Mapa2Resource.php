@@ -20,6 +20,7 @@ class Mapa2Resource extends JsonResource
         return [
             'id' => $this->id,
             'muk' => $this->muk,
+            'versi' => $this->versi,
             'potensi_asesi_1'=> false,
             'potensi_asesi_2'=> false,
             'potensi_asesi_3'=> false,
