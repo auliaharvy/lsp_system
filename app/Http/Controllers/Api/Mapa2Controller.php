@@ -30,18 +30,15 @@ class Mapa2Controller extends BaseController
     const ITEM_PER_PAGE = 15;
 
     // public function indexIa03(Request $request)
-    public function index()
+    public function index(Request $request)
     {
-        $query = MstFrMapa02::query();
+        $versi = $request->query('versi', 1); 
+    
+        $query = MstFrMapa02::query()->where('versi', '=', $versi);
+    
         return Mapa2Resource::collection($query->paginate(100));
-
-
     }
-
-
-
-   
-
+    
     public function store(Request $request)
     {
         $validator = Validator::make(

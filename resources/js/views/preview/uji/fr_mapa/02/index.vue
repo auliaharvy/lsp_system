@@ -96,7 +96,7 @@
           border
           fit
           highlight-current-row
-          :span-method="objectSpanMethod"
+          :span-method="objectSpanMethod1"
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
@@ -127,6 +127,7 @@
           v-loading="loading"
           :data="listMuk"
           border
+          :span-method="objectSpanMethod2"
           fit
           highlight-current-row
           style="width: 100%"
@@ -134,10 +135,10 @@
         >
           <el-table-column align="center" min-width="10px" label="No">
             <template slot-scope="scope">
-              <span>{{ scope.row.index }}</span>
+              <span>{{ getScopeRowIndex(scope.row.index)  }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" min-width="150px" label="MUK">
+          <el-table-column align="left" min-width="150px" :label="getTitleMuk()">
             <template slot-scope="scope">
               <span>{{ scope.row.muk }}</span>
             </template>
@@ -282,20 +283,28 @@ export default {
     this.onResize();
   },
   created() {
-    this.getDataPreview();
+    this.getDataPreview().then((res) => {
+      this.getListUji().then((value) => {
+        this.getUjiKompDetail();
+      });
+    });
     this.getListSkema().then((value) => {
       this.onJadwalSelect();
-    });
-    this.getListUji().then((value) => {
-      this.getUjiKompDetail();
     });
     this.getMuk();
   },
   methods: {
+    getScopeRowIndex(index) {
+      return this.listMuk[0]['versi'] == 2 ? (index > 5 ? (index - 1) : index) : index
+    },
+    getTitleMuk(){
+      return this.listMuk[0]['versi'] == 2 ? 'INSTRUMEN ASESMEN' : 'MUK'
+    },
     async getDataPreview(){
       this.loading = true;
       const data = await preview.get(this.$route.params.iduji);
       this.dataPreview = data;
+      console.log(this.dataPreview)
       this.loading = false;
     },
     allKompeten() {
@@ -317,7 +326,7 @@ export default {
     async getMuk() {
       if (this.dataPreview.id_mapa_02 !== null){
         this.loading = true;
-        const { data } = await mapa2Resource.list();
+        const { data } = await mapa2Resource.list({versi: 2});
         const result = await mapa02Detail.get(this.dataPreview.id);
         this.dataMapa02 = result;
         this.listMuk = data;
@@ -335,7 +344,7 @@ export default {
     },
     async getListUji() {
       this.loading = true;
-      const { data } = await ujiKomResource.list();
+      const { data } = await ujiKomResource.list({idujikomp: this.$route.params.iduji});
       this.listUji = data;
       this.loading = false;
     },
@@ -418,7 +427,6 @@ export default {
           this.$router.push({ name: 'uji-komp-list' });
         })
         .catch(error => {
-          console.log(error);
           this.loading = false;
         })
         .finally(() => {
@@ -459,7 +467,7 @@ export default {
       }
       return isLt2M;
     },
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+    objectSpanMethod1({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
         if (rowIndex % 2 === 0) {
           return {
@@ -473,6 +481,31 @@ export default {
           };
         }
       }
+    },
+    objectSpanMethod2({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        if (rowIndex === 4) {
+          return {
+            rowspan: 2,
+            colspan: 1,
+          };
+        } else if (rowIndex === 5) {
+          return {
+            rowspan: 0,
+            colspan: 0,
+          };
+        } else {
+          return {
+            rowspan: 1,
+            colspan: 1,
+          };
+        }
+      }
+
+      return {
+        rowspan: 1,
+        colspan: 1,
+      };
     },
   },
 };
