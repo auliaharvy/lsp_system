@@ -243,7 +243,7 @@ export default {
         this.loading = false;
       } else {
         this.loading = true;
-        const { data } = await mukMapa02Resource.list();
+        const { data } = await mukMapa02Resource.list({versi: 2});
         // console.log(data);
         this.listMuk = data;
         this.listMuk.forEach((element, index) => {

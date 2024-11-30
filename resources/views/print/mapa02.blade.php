@@ -9,8 +9,7 @@
 					<td class="bg-dark" colspan="7"></td>
 				</tr>
 				<tr>
-					<td rowspan="2">
-						<div>Skema Sertifikasi (KKNI/Okupasi/Klaster)</div>
+					<td ter)</div>
 					</td>
 					<td>
 						<div>Judul</div>
@@ -34,49 +33,38 @@
 					</td>
 				</tr>
 			</table>
-			<table class="table table-bordered mt-10" >
-				<tr>
-					<td class="bg-dark" colspan="7"></td>
-				</tr>
-				<tr>
-					@php $a = 1; @endphp
-					@foreach($skemaUnit as $item)
-						<tr>
-							<td rowspan="2">
-								<div>Unit Kompetensi {{ $a }}</div>
-							</td>
-							<td>
-								<div>Kode Unit</div>
-							</td>
-							<td>
-								<div>:</div>
-							</td>
-							<td colspan="4">
-								<div>{{ $item->kode_unit }}</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div>Judul Unit</div>
-							</td>
-							<td>
-								<div>:</div>
-							</td>
-							<td colspan="4">
-								<div>{{ $item->unit_kompetensi }}</div>
-							</td>
-						</tr>
-						@php $a++; @endphp
-					@endforeach
+			<div class="table-responsive">
+				<table class="table table-bordered tree" style="margin-bottom: 50px;">
+					<tr>
+						<td class="bg-dark text-white text-center align-middle" rowspan="{{ $kelompok_pekerjaan->count() + 1 }}">Kelompok Pekerjaan {{ $nama_kelompok_pekerjaan }}</td>
+						<td class="bg-dark text-white text-center">No</td>
+						<td class="bg-dark text-white text-center">Kode Unit</td>
+						<td class="bg-dark text-white text-center">Judul Unit</td>
 					</tr>
+					@foreach($kelompok_pekerjaan as $row)
+						<tr>
+							<td class="text-center">{{ $loop->iteration }}</td>
+							<td>{{ $row->kode_unit }}</td>
+							<td>{{ $row->unit_kompetensi }}</td>
+						</tr>
+					@endforeach
 				</table>
+			</div>
 				<table class="table table-bordered">
 					<tr>
 						<td class="bg-dark text-white text-center" rowspan="2">
 							<div>No.</div>
 						</td>
 						<td class="bg-dark text-white text-center" rowspan="2">
-							<div>MUK</div>
+							<div>
+								@if ($data[0]->versi == 1)
+										MUK
+								@elseif ($data[0]->versi == 2)
+										INSTRUMEN ASESMEN
+								@else
+										{{ false }}
+								@endif
+							</div>
 						</td>
 						<td class="bg-dark text-white text-center" colspan="5">
 							<div>Potensi Asesi**</div>
@@ -102,7 +90,11 @@
 					@php $a = 1; @endphp
 					@foreach($data as $mapa02)
 					<tr>
-						<td>{{ $a }}</td>
+						@if($a <= 4)
+							<td rowspan="{{$a == 4 ? 2 : 1}}" class="{{$a == 4 ? 'align-middle' : ''}}">{{ $a }}</td>
+						@elseif($a > 5)
+						<td >{{ $a-1 }}</td>
+						@endif
 						<td>{{ $mapa02->muk }}</td>
 						<td>
 							@if ($mapa02->potensi_asesi_1 == 1)
