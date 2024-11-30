@@ -220,12 +220,17 @@ export default {
       dataTrx: {},
       unitKompetensiTable: [
         {
+          col1: '',
+          col2: 'Kelompok Pekerjaan',
+          col3: [],
+        },
+        {
           col1: 'Unit Kompetensi',
           col2: 'Kode Unit',
           col3: [],
         },
         {
-          col1: 'Unit Kompetensi',
+          col1: '',
           col2: 'Judul Unit',
           col3: [],
         },
@@ -394,8 +399,9 @@ export default {
         element['type'] = 'unitKomp';
         element['index'] = number++;
         kuk.push(element);
-        this.unitKompetensiTable[0].col3.push(element['kode_unit']);
-        this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
+        this.unitKompetensiTable[0].col3 = Array.from(new Set([...this.unitKompetensiTable[0].col3, element['kelompok_pekerjaan']]));
+        this.unitKompetensiTable[1].col3.push(element['kode_unit']);
+        this.unitKompetensiTable[2].col3.push(element['unit_kompetensi']);
         element.elemen.forEach((element, index) => {
           element['type'] = 'elemen';
           kuk.push(element);
@@ -468,8 +474,9 @@ export default {
       return isLt2M;
     },
     objectSpanMethod1({ row, column, rowIndex, columnIndex }) {
+      if(rowIndex == 0 && columnIndex == 1) {return {rowspan: 1, colspan: 2 }}
       if (columnIndex === 0) {
-        if (rowIndex % 2 === 0) {
+        if (rowIndex == 1) {
           return {
             rowspan: 2,
             colspan: 1,

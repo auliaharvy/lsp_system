@@ -33,7 +33,7 @@
           border
           fit
           highlight-current-row
-          :span-method="objectSpanMethod"
+          :span-method="objectSpanMethod1"
           style="width: 100%"
           :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
         >
@@ -63,6 +63,7 @@
         <el-table
           v-loading="loading"
           :data="listMuk"
+          :span-method="objectSpanMethod2"
           border
           fit
           highlight-current-row
@@ -71,10 +72,10 @@
         >
           <el-table-column align="center" min-width="10px" label="No">
             <template slot-scope="scope">
-              <span>{{ scope.row.index }}</span>
+              <span>{{ getScopeRowIndex(scope.row.index)  }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" min-width="150px" label="MUK">
+          <el-table-column align="left" min-width="150px" :label="getTitleMuk()">
             <template slot-scope="scope">
               <span>{{ scope.row.muk }}</span>
             </template>
@@ -157,6 +158,11 @@ export default {
       dataTrx: {},
       unitKompetensiTable: [
         {
+          col1: '',
+          col2: 'Kelompok Pekerjaan',
+          col3: [],
+        },
+        {
           col1: 'Unit Kompetensi',
           col2: 'Kode Unit',
           col3: [],
@@ -215,6 +221,12 @@ export default {
     this.getMuk();
   },
   methods: {
+    getScopeRowIndex(index) {
+      return this.listMuk[0]['versi'] == 2 ? (index > 5 ? (index - 1) : index) : index
+    },
+    getTitleMuk(){
+      return this.listMuk[0]['versi'] == 2 ? 'INSTRUMEN ASESMEN' : 'MUK'
+    },
     allKompeten() {
       for (var i = 0; i < this.listKuk.length; i++) {
         var kuk = this.kukList[i];
@@ -256,7 +268,7 @@ export default {
       }
     },
     async getListUji() {
-      const { data } = await ujiKomResource.list();
+      const { data } = await ujiKomResource.list({idujikomp: this.$route.params.iduji});
       this.listUji = data;
     },
     async getListTuk() {
@@ -315,8 +327,9 @@ export default {
         element['type'] = 'unitKomp';
         element['index'] = number++;
         kuk.push(element);
-        this.unitKompetensiTable[0].col3.push(element['kode_unit']);
-        this.unitKompetensiTable[1].col3.push(element['unit_kompetensi']);
+        this.unitKompetensiTable[0].col3 = Array.from(new Set([...this.unitKompetensiTable[0].col3, element['kelompok_pekerjaan']]));
+        this.unitKompetensiTable[1].col3.push(element['kode_unit']);
+        this.unitKompetensiTable[2].col3.push(element['unit_kompetensi']);
         element.elemen.forEach((element, index) => {
           element['type'] = 'elemen';
           kuk.push(element);
@@ -390,9 +403,10 @@ export default {
       }
       return isLt2M;
     },
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+    objectSpanMethod1({ row, column, rowIndex, columnIndex }) {
+      if(rowIndex == 0 && columnIndex == 1) {return {rowspan: 1, colspan: 2 }}
       if (columnIndex === 0) {
-        if (rowIndex % 2 === 0) {
+        if (rowIndex == 1) {
           return {
             rowspan: 2,
             colspan: 1,
@@ -404,6 +418,30 @@ export default {
           };
         }
       }
+    },
+    objectSpanMethod2({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        if (rowIndex === 4) {
+          return {
+            rowspan: 2,
+            colspan: 1,
+          };
+        } else if (rowIndex === 5) {
+          return {
+            rowspan: 0,
+            colspan: 0,
+          };
+        } else {
+          return {
+            rowspan: 1,
+            colspan: 1,
+          };
+        }
+      }
+      return {
+        rowspan: 1,
+        colspan: 1,
+      };
     },
   },
 };

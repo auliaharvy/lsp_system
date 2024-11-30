@@ -377,7 +377,7 @@ export default {
           col3: [],
         },
         {
-          col1: '',
+          col1: 'Unit Kompetensi',
           col2: 'Kode Unit',
           col3: [],
         },
@@ -666,8 +666,9 @@ export default {
       return isLt2M;
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if(rowIndex == 0 && columnIndex == 1) {return {rowspan: 1, colspan: 2 }}
       if (columnIndex === 0) {
-        if (rowIndex % 2 === 0) {
+        if (rowIndex == 1) {
           return {
             rowspan: 2,
             colspan: 1,
