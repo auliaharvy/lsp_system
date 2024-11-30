@@ -9,8 +9,6 @@
 					<td class="bg-dark" colspan="7"></td>
 				</tr>
 				<tr>
-					<td ter)</div>
-					</td>
 					<td>
 						<div>Judul</div>
 					</td>

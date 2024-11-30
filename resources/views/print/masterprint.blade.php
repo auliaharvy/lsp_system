@@ -16,7 +16,9 @@
     'data' => $module['data'],
     'skemaUnit' => $data['skemaunit'],
     'skemaSertifikasi' => $data['skemasertifikasi'],
-    'asesor' => $data['asesor']
+    'asesor' => $data['asesor'],
+    'kelompok_pekerjaan' => $data['kelompok_pekerjaan'],
+    'nama_kelompok_pekerjaan' => $data['nama_kelompok_pekerjaan']
     ])
   <div style="page-break-after: always"></div>
   @endforeach

@@ -190,42 +190,18 @@ class PrintController extends BaseController
         if ($valueia01 === 'true'){
             $result = $ujiKompController->showIa01($idia01);
             $listDataKuk = array();
-            // setel noelemen string kosong
-            // setel namaelemen string kosong
-            $noelemen = 1;
-            $namaelemen = '';
-            $counter = 0;
-            foreach($dataSkemaUnit as $row){
-                /**
-                 * setiap row elemen
-                 * 
-                 * jika noelemen sama dengan counter
-                 *  - buat field noelemen dengan nilai kosong
-                 * selain itu
-                 *  - setel incremental pada counter
-                 *  - buat field noelemen dengan nilai variable counter
-                 *  - setel variable noelemen dengan nilai variable counter
-                 * selesai
-                 */
+            $iteration = 1;
+            foreach ($dataSkemaUnit as $row) {
                 $data['elemen'] = SkemaElemenUnit::getSkemaElemen($row->id, null, $idia01);
-                foreach($data['elemen'] as $row2) {
-                    if($noelemen == $counter) {
-                        $data['elemen'][$counter]['noelemen'] = '';
-                    } else {
-                        $counter++;
-                        $data['elemen'][$counter]['noelemen'] = $counter;
-                        $noelemen = $counter;
-                    }
-                }
-                return response()->json(['data' => $data['elemen']], 200);
                 $data['kode_unit'] = $row->kode_unit;
                 $data['unit_kompetensi'] = $row->unit_kompetensi;
+                $data['no_elemen'] = $iteration;
                 $listDataKuk[] = $data;
+                $iteration++;
             }
             $dataia01 = ['ttd_asesor' => $result['ia_01']->ttd_asesor, 'ttd_asesi' => $result['ia_01']->ttd_asesi];
 
             $datamodule->push(['nama' => 'ia01', 'data' => ['listDataKuk' => $listDataKuk, 'data' => $dataia01]]);
-            return response()->json(['data' => $datamodule], 200);
         }
 
         if ($valueia02 === 'true'){
@@ -280,6 +256,7 @@ class PrintController extends BaseController
 
         $pdf = \PDF::loadView('print.masterprint', compact('data'));
         $pdf->setPaper('A4','portrait');
-        return $pdf->stream('nama_file.pdf');
+        return $pdf->download();
+        // return $pdf->stream('nama_file.pdf');
     }
 }
