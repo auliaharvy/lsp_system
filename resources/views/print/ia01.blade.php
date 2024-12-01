@@ -83,7 +83,7 @@
 				</table>
 			</div>
 			<div class="table-responsive">
-				<table class="table table-bordered tree" style="margin-bottom: 300px;">
+				<table class="table table-bordered tree">
 					<tr>
 						<td class="bg-dark text-white text-center">
 							<div><strong>PANDUAN BAGI ASESOR</strong></div>
@@ -91,36 +91,38 @@
 					</tr>
 					<tr>
 						<td>
-						<div class="styled-list">
-							<div>Lengkapi nama unit kompetensi, elemen, dan kriteria unjuk kerja sesuai kolom dalam tabel.</div>
-							<div>Isi lah standar industri atau tempat kerja.</div>
-							<div>Beri tanda centang ceklis pada kolom "Ya" jika Anda yakin asesai dapat melakukan/
-								mendemonstrasikan tugas sesuai KUK, atau centang x pada kolom "Tidak" bila sebaliknya.</div>
-							<div>Penilaian lanjutan diisi bila hasil belum dapat disimpulkan, untuk itu gunakan metode lain
-								sehingga keputusan dapat dibuat.</div>
-							<div>Isi lah kolom KUK sesuai dengan Unit Kompetensi/SKKNI.</div>
-						</div>
+						<ul>
+							<li>Lengkapi nama unit kompetensi, elemen, dan kriteria unjuk kerja sesuai kolom dalam tabel.</li>
+							<li>Isi lah standar industri atau tempat kerja.</li>
+							<li>Beri tanda centang ceklis pada kolom "Ya" jika Anda yakin asesai dapat melakukan/
+								mendemonstrasikan tugas sesuai KUK, atau centang x pada kolom "Tidak" bila sebaliknya.</li>
+							<li>Penilaian lanjutan diisi bila hasil belum dapat disimpulkan, untuk itu gunakan metode lain
+								sehingga keputusan dapat dibuat.</li>
+							<li>Isi lah kolom KUK sesuai dengan Unit Kompetensi/SKKNI.</li>
+						</ul>
 						</td>
 					</tr>
 				</table>
 			</div>
+			<div style="page-break-after: always"></div>
 			<div class="table-responsive">
-				<table class="table table-bordered tree" style="margin-bottom: 50px;">
-					<tr>
-						<td class="bg-dark text-white text-center align-middle" rowspan="{{ $kelompok_pekerjaan->count() + 1 }}">Kelompok Pekerjaan {{ $nama_kelompok_pekerjaan }}</td>
-						<td class="bg-dark text-white text-center">No</td>
-						<td class="bg-dark text-white text-center">Kode Unit</td>
-						<td class="bg-dark text-white text-center">Judul Unit</td>
-					</tr>
-					@foreach($kelompok_pekerjaan as $row)
-						<tr>
-							<td class="text-center">{{ $loop->iteration }}</td>
-							<td>{{ $row->kode_unit }}</td>
-							<td>{{ $row->unit_kompetensi }}</td>
-						</tr>
-					@endforeach
-				</table>
+					<table class="table table-bordered tree">
+							<tr>
+									<td class="bg-dark text-white text-center align-middle" rowspan="{{ $kelompok_pekerjaan->count() + 1 }}">Kelompok Pekerjaan {{ $nama_kelompok_pekerjaan }}</td>
+									<td class="bg-dark text-white text-center">No</td>
+									<td class="bg-dark text-white text-center">Kode Unit</td>
+									<td class="bg-dark text-white text-center">Judul Unit</td>
+							</tr>
+							@foreach($kelompok_pekerjaan as $row)
+									<tr>
+											<td>{{ $loop->iteration }}</td>
+											<td>{{ $row->kode_unit }}</td>
+											<td>{{ $row->unit_kompetensi }}</td>
+									</tr>
+							@endforeach
+					</table>
 			</div>
+
 			@foreach($data['listDataKuk'] as $row)
 				<div class="table-responsive">
 					<table class="table table-bordered tree">

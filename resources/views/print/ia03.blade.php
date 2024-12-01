@@ -1,135 +1,161 @@
-<div class="container">
+<div class="pr-4 mt-10">
   <h6>FR.IA.03 PERTANYAAN UNTUK MENDUKUNG OBSERVASI</h6>
 </div>
-<div class="container">
+<div class="pr-4">
   <div class="row">
     <div class="col-12">
-      <table class="table">
-        <tr>
-          <td class="bg-dark" colspan="3"></td>
-        </tr>
-        <tr>
-          <td>Skema Sertifikasi</td>
-          <td>:</td>
-          <td>{{ $skemaSertifikasi['skema_sertifikasi']}}</td>
-        </tr>
-        <tr>
-          <td>TUK</td>
-          <td>:</td>
-          <td>{{ $skemaSertifikasi['nama_tuk'] }}</td>
-        </tr>
-        <tr>
-          <td>Nama Asesor</td>
-          <td>:</td>
-          <td>{{ $asesor }}</td>
-        </tr>
-        <tr>
-          <td>Nama Asesi</td>
-          <td>:</td>
-          <td>{{ $skemaSertifikasi['nama_peserta'] }}</td>
-        </tr>
-        <tr>
-          <td>Tanggal</td>
-          <td>:</td>
-          <td>{{ $skemaSertifikasi['mulai'] }}</td>
-        </tr>
-      </table>
-      <table class="table col-12">
-        <tr>
-          <td class="bg-dark text-white" colspan="3">PANDUAN BAGI ASESOR</td>
-        </tr>
-        <tr>
-          <td>
-            <ul>
-              <li>Lengkapi nama unit kompetensi, elemen, kriteria unjuk kerja sesuai kolom dalam tabel.</li>
-              <li>Istilah Acuan Pembanding dengan SOP / spesifikasi produk dari industri / orginasi dari tempat kerja
-                atau simulasi tempat
-                kerja</li>
-              <li>Beri tanda centang pada kolom K jika Anda yakin asesi dapat melakukan/mendemonstrasikan tugas seuai
-                KUK, atau centang
-                pada kolom BK bila sebaliknya.</li>
-              <li>Penilaian lanjut diisi bila hasil belum dapat disimpulkan, untuk itu gunakan metode lain sehingga
-                keputusan dapat dibuat</li>
-            </ul>
-          </td>
-        </tr>
-      </table>
-      <table class="table table-bordered col-md-12">
-        <tr>
-          <td class="bg-dark text-white" colspan="3"></td>
-        </tr>
-        <tr>
-          <td class="justify-content-center" rowspan="2">
-            Uji Kompetensi
-          </td>
-          <td class="justify-content-center">Kode Unit</td>
-          <td>
-            <ul>
-              @foreach ($skemaUnit as $unit)
-              <li>{{ $unit['kode_unit'] }}</li>
-              @endforeach
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td class="justify-content-center">Judul Unit</td>
-          <td>
-            <ul>
-              @foreach ($skemaUnit as $unit)
-              <li>{{ $unit['unit_kompetensi']}}</li>
-              @endforeach
-            </ul>
-          </td>
-        </tr>
-      </table>
+			<div class="table-responsive">
+        <table class="table table-bordered tree">
+          <tr class="no-page-break">
+            <td class="bg-dark" colspan="3"></td>
+          </tr>
+          <tr class="no-page-break">
+            <td>Skema Sertifikasi</td>
+            <td>:</td>
+            <td>{{ $skemaSertifikasi['skema_sertifikasi']}}</td>
+          </tr>
+          <tr class="no-page-break">
+            <td>TUK</td>
+            <td>:</td>
+            <td>{{ $skemaSertifikasi['nama_tuk'] }}</td>
+          </tr>
+          <tr class="no-page-break">
+            <td>Nama Asesor</td>
+            <td>:</td>
+            <td>{{ $asesor }}</td>
+          </tr>
+          <tr class="no-page-break">
+            <td>Nama Asesi</td>
+            <td>:</td>
+            <td>{{ $skemaSertifikasi['nama_peserta'] }}</td>
+          </tr>
+          <tr class="no-page-break">
+            <td>Tanggal</td>
+            <td>:</td>
+            <td>{{ $skemaSertifikasi['mulai'] }}</td>
+          </tr>
+        </table>
+      </div>
+			<div class="table-responsive">
+        <table class="table table-bordered tree">
+          <tr class="no-page-break">
+            <td class="bg-dark text-white" colspan="3">PANDUAN BAGI ASESOR</td>
+          </tr>
+          <tr class="no-page-break">
+            <td>
+              <ul>
+                <li>Formulir ini di isi oleh asesor kompetensi dapat sebelum, pada saat atau setelah melakukan
+                  asesmen dengan methode observasi demonstrasi
+                </li>
+                <li>Pertanyaan dibuat dengan tujuan untuk menggali, dapat berisi pertanyaan yang berkaitan
+                  dengan dimensi kompetensi, batasan variabel dan aspek kritis yang relevan dengan skenario
+                  tugas dan praktik demonstrasi
+                </li>
+                <li>Jika pertanyaan disampaikan sebelum asesi melakukan praktik demonstrasi, maka
+                  pertanyaan dibuat berkaitan dengan aspek K3L, SOP, penggunaan peralatasn dan
+                  perlengkapan.
+                </li>
+                <li>Jika setelah asesi melakukan praktik demonstrasi terdapat item pertanyaan pendukung
+                  observasi telah terpenuhi, maka pertanyaan tersebut tidak perlu ditanyakan lagi dan cukup
+                  memberi catatan bahwa sudah terpenuhi pada saat tugas praktek demonstrasi pada kolom
+                  tanggapan
+                </li>
+                <li>Jika pada saat observasi adalah hal yang perlu dikonfirmasi sedangkan di instrumen daftar
+                  pertanyaan pendukung observasi tidak ada, maka asesor dapat memberikan pertanyaan
+                  dengan syarat pertanyaan harus berkaitan dengan tugas praktek demonstrasi. jika dilakukan,
+                  asesor harus mencatat dalam instrumen pertanyaan pendukung observasi.
+                </li>
+                <li>Tanggapan asesi ditulis pada kolom tanggapan
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+			<div class="table-responsive">
+				<table class="table table-bordered tree" style="margin-bottom: 50px;">
+          <thead>
+            <tr class="no-page-break">
+              <td class="bg-dark text-white text-center align-middle" rowspan="{{ $kelompok_pekerjaan->count() + 1 }}">Kelompok Pekerjaan {{ $nama_kelompok_pekerjaan }}</td>
+              <td class="bg-dark text-white text-center">No</td>
+              <td class="bg-dark text-white text-center">Kode Unit</td>
+              <td class="bg-dark text-white text-center">Judul Unit</td>
+            </tr>
+          </thead>
+					@foreach($kelompok_pekerjaan as $row)
+						<tr class="no-page-break">
+							<td class="text-center">{{ $loop->iteration }}</td>
+							<td>{{ $row->kode_unit }}</td>
+							<td>{{ $row->unit_kompetensi }}</td>
+						</tr>
+					@endforeach
+				</table>
+			</div>
       <table class="col-md-12 table-bordered">
-        <tr>
-          <td class="bg-dark text-white text-center px-2">No.</td>
-          <td class="bg-dark text-white text-center px-2">Pertanyaan</td>
-          <td class="bg-dark text-white text-center px-2">Tanggapan</td>
-          <td class="bg-dark text-white text-center px-2">Rekomendasi</td>
+        <tr class="no-page-break">
+          <td rowspan="2" class="bg-dark text-white text-center px-2">No.</td>
+          <td rowspan="2" class="bg-dark text-white text-center px-2">Pertanyaan</td>
+          <td rowspan="2" class="bg-dark text-white text-center px-2">Tanggapan</td>
+          <td colspan="2" class="bg-dark text-white text-center px-2">Pencapaian</td>
+        </tr>
+        <tr class="no-page-break">
+          <td class="bg-dark text-white text-center px-2">Ya</td>
+          <td class="bg-dark text-white text-center px-2">Tdk</td>
         </tr>
         @php
         $collection = collect( $data['detail'] );
         @endphp
         @foreach ($collection as $key => $val)
-        <tr>
+        <tr class="no-page-break">
           <td class="text-center px-2">{{$key+1}}</td>
           <td class="justify-content-center px-2">{{ $collection[$key]['pertanyaan']}}</td>
           <td class="justify-content-center px-2">{{ $collection[$key]['tanggapan']}}</td>
-          <td class="justify-content-center px-2">{{ $collection[$key]['rekomendasi']}}</td>
+          <td class="justify-content-center px-2">
+            @if ($collection[$key]['tanggapan'] == 1)
+            <input type="checkbox" checked aria-label="Checkbox for following text input">
+            @endif
+          </td>
+          <td class="justify-content-center px-2">
+            @if ($collection[$key]['tanggapan'] == 0)
+            <input type="checkbox" checked aria-label="Checkbox for following text input">
+            @endif
+          </td>
         </tr>
         @endforeach
       </table>
-    </div>
-    <div class="col-12 mt-3">
-      Rekomendasi Asesor :
-      @if ($data['ia_03']['rekomendasi_asesor'] == 'kompeten')
-      <div class="formradio d-inline">
-        <input type="radio" id=radiokompeten checked>
-        <label for="radiokompeten">Kompeten</label>
-      </div>
-      <div class="formradio d-inline">
-        <input type="radio" id=radiobelumkompeten>
-        <label for="radiobelumkompeten">Belum Kompeten</label>
-      </div>
-      @else
-      <div class="formradio d-inline">
-        <input type="radio" id=radiokompeten>
-        <label for="radiokompeten">Kompeten</label>
-      </div>
-      <div class="formradio d-inline">
-        <input type="radio" id=radiobelumkompeten checked>
-        <label for="radiobelumkompeten">Belum Kompeten</label>
-      </div>
-      @endif
-    </div>
-    <div class="col-12 mt-3">
-      <label for="textareakompeten" class="align-top d-inline">Umpan Balik untuk Asesi : </label>
-      <textarea id=textareakompeten class="form-control" cols="80"
-        rows="5">{{ $data['ia_03']['umpan_balik']}}</textarea>
     </div>
   </div>
 </div>
 </div>
 </div>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    thead {
+        display: table-header-group;
+    }
+    tbody {
+        display: table-row-group;
+    }
+    .no-page-break {
+        page-break-inside: avoid;
+    }
+		.styled-list {
+		padding-left: 20px; /* Memberikan ruang di kiri */
+		list-style-type: disc; /* Menggunakan tanda bulat */
+	}
+	.styled-list div {
+		display: list-item; /* Membuat elemen <div> tampil seperti <li> */
+		list-style-position: inside; /* Menampilkan tanda bulat di dalam padding */
+	}
+
+  /* Menjaga kolom pertama tetap di posisi */
+  td:first-child, th:first-child {
+      position: sticky;
+      left: 0;
+      background-color: white;
+      z-index: 2;
+  }
+</style>
