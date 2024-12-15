@@ -210,6 +210,26 @@ const ujiRoutes = {
       hidden: true,
     },
     {
+      path: 'form-ak-07',
+      component: () => import('@/views/back-office/uji/fr_ak/07/index'),
+      name: 'form-ak-07',
+      meta: {
+        title: 'Form AK 07',
+        icon: 'date',
+        permissions: ['manage user'],
+      },
+    },
+    {
+      path: 'preview-ak-07',
+      component: () => import('@/views/preview/uji/fr_ak/07/index'),
+      name: 'preview-ak-07',
+      meta: {
+        title: 'Preview AK 07',
+        icon: 'date',
+        permissions: ['manage user'],
+      },
+    },
+    {
       path: 'form-va',
       component: () => import('@/views/back-office/uji/fr_va/index'),
       name: 'form-va',

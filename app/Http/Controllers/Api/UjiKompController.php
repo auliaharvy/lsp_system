@@ -25,6 +25,9 @@ use App\Laravue\Models\UjiKompAk02;
 use App\Laravue\Models\UjiKompAk02Detail;
 use App\Laravue\Models\UjiKompAk04;
 use App\Laravue\Models\UjiKompAk05;
+use App\Laravue\Models\UjiKompAk07PotensiAsesi;
+use App\Laravue\Models\UjiKompAk07Persyaratan;
+use App\Laravue\Models\UjiKompAk07;
 use App\Laravue\Models\UjiKompAk06;
 use App\Laravue\Models\UjiKompIa01;
 use App\Laravue\Models\UjiKompIa01Detail;
@@ -732,7 +735,44 @@ class UjiKompController extends BaseController
             // 'ak01' => $queryAk01
         ];
     }
+    
+    public function showAk07PotensiAsesi($id)
+    {
+        $showAk07ByIdUjiKomp = UjiKompAk07PotensiAsesi::query()
+            ->join('mst_perangkat_ak_07_potensi_asesi', 'mst_perangkat_ak_07_potensi_asesi.id', '=', 'trx_ak_07_potensi_asesi.id_mst_perangkat_ak_07_potensi_asesi')
+            ->join('trx_uji_komp_ak_07', 'trx_uji_komp_ak_07.id', '=', 'trx_ak_07_potensi_asesi.id_trx_uji_komp_ak_07')
+            ->where('trx_uji_komp_ak_07.id_uji_komp', '=', $id)
+            ->select('trx_ak_07_potensi_asesi.potensi', 'mst_perangkat_ak_07_potensi_asesi.komponen')
+            ->get();
+        return [
+            'data' => $showAk07ByIdUjiKomp,
+        ];
+    }
 
+    public function showAk07Persyaratan($id)
+    {
+        $showAk07ByIdUjiKomp = UjiKompAk07Persyaratan::query()
+            ->join('trx_uji_komp_ak_07', 'trx_uji_komp_ak_07.id', '=', 'trx_ak_07_persyaratan.id_trx_uji_komp_ak_07')
+            ->join('mst_perangkat_ak_07_persyaratan_detail', 'mst_perangkat_ak_07_persyaratan_detail.id', '=', 'trx_ak_07_persyaratan.id_mst_perangkat_ak_07_persyaratan_detail')
+            ->join('mst_perangkat_ak_07_persyaratan', 'mst_perangkat_ak_07_persyaratan.id', '=', 'mst_perangkat_ak_07_persyaratan_detail.id_mst_perangkat_ak_07_persyaratan')
+            ->where('trx_uji_komp_ak_07.id_uji_komp', '=', $id)
+            ->select('trx_ak_07_persyaratan.keterangan',  'mst_perangkat_ak_07_persyaratan_detail.komponen as child_component', 'mst_perangkat_ak_07_persyaratan.komponen as parent_component')
+            ->get();
+        return [
+            'data' => $showAk07ByIdUjiKomp,
+        ];
+    }
+
+    public function showAk07($id)
+    {
+        $showAk07ByIdUjiKomp = UjiKompAk07::query()
+            ->where('trx_uji_komp_ak_07.id_uji_komp', '=', $id)
+            ->get();
+        return [
+            'data' => $showAk07ByIdUjiKomp,
+        ];
+    }
+    
     public function showIa01($id)
     {
        
