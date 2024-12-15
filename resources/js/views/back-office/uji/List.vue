@@ -219,6 +219,13 @@
                     </el-tooltip>
                   </li>
                   <li v-if="query.role !== 'user'" class="list-progress">
+                    <el-tooltip class="item" effect="dark" content="View FR-AK-07" placement="top-start">
+                      <router-link :to="{ name: 'form-ak-07', params: { id_va: scope.row.id_va, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
+                        <span class="link">AK 07  <i v-if="scope.row.id_ak_07 !== null" type="success" class="el-icon-check" /></span>
+                      </router-link>
+                    </el-tooltip>
+                  </li>
+                  <li v-if="query.role !== 'user'" class="list-progress">
                     <el-tooltip class="item" effect="dark" content="View FR-VA" placement="top-start">
                       <router-link :to="{ name: 'form-va', params: { id_va: scope.row.id_va, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
                         <span class="link">VA  <i v-if="scope.row.id_va !== null" type="success" class="el-icon-check" /></span>
