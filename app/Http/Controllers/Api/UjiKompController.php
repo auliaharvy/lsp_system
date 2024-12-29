@@ -61,6 +61,11 @@ use App\Laravue\Models\MstFrIa05;
 use App\Laravue\Models\MstFrIa07;
 use App\Laravue\Models\MstFrAk03;
 use App\Laravue\Models\MstFrAk04;
+use App\Laravue\Models\MstFrAk07PotensiAsesi;
+use App\Laravue\Models\MstFrAk07Persyaratan;
+use App\Laravue\Models\MstFrAk07PersyaratanDetail;
+use App\Laravue\Models\TrxAk07Persyaratan;
+use App\Laravue\Models\TrxAk07PotensiAsesi;
 use App\Laravue\Models\MstFrIa11;
 use App\Http\Controllers\Api\SendEmailController;
 use Illuminate\Http\Request;
@@ -736,7 +741,7 @@ class UjiKompController extends BaseController
         ];
     }
     
-    public function showAk07PotensiAsesi($id)
+    public function previewAk07PotensiAsesi($id)
     {
         $showAk07ByIdUjiKomp = UjiKompAk07PotensiAsesi::query()
             ->join('mst_perangkat_ak_07_potensi_asesi', 'mst_perangkat_ak_07_potensi_asesi.id', '=', 'trx_ak_07_potensi_asesi.id_mst_perangkat_ak_07_potensi_asesi')
@@ -749,19 +754,45 @@ class UjiKompController extends BaseController
         ];
     }
 
-    public function showAk07Persyaratan($id)
+    public function previewAk07Persyaratan($id)
     {
         $showAk07ByIdUjiKomp = UjiKompAk07Persyaratan::query()
             ->join('trx_uji_komp_ak_07', 'trx_uji_komp_ak_07.id', '=', 'trx_ak_07_persyaratan.id_trx_uji_komp_ak_07')
             ->join('mst_perangkat_ak_07_persyaratan_detail', 'mst_perangkat_ak_07_persyaratan_detail.id', '=', 'trx_ak_07_persyaratan.id_mst_perangkat_ak_07_persyaratan_detail')
             ->join('mst_perangkat_ak_07_persyaratan', 'mst_perangkat_ak_07_persyaratan.id', '=', 'mst_perangkat_ak_07_persyaratan_detail.id_mst_perangkat_ak_07_persyaratan')
             ->where('trx_uji_komp_ak_07.id_uji_komp', '=', $id)
-            ->select('trx_ak_07_persyaratan.keterangan',  'mst_perangkat_ak_07_persyaratan_detail.komponen as child_component', 'mst_perangkat_ak_07_persyaratan.komponen as parent_component')
+            ->select('mst_perangkat_ak_07_persyaratan.id', 'trx_ak_07_persyaratan.keterangan',  'mst_perangkat_ak_07_persyaratan_detail.komponen as child_component', 'mst_perangkat_ak_07_persyaratan.komponen as parent_component')
             ->get();
         return [
             'data' => $showAk07ByIdUjiKomp,
         ];
     }
+    
+    public function showAk07PotensiAsesi()
+    {
+        $showAk07ByIdUjiKomp = MstFrAk07PotensiAsesi::query()
+            ->select(
+                'mst_perangkat_ak_07_potensi_asesi.id', 
+                'mst_perangkat_ak_07_potensi_asesi.komponen', 
+                'mst_perangkat_ak_07_potensi_asesi.versi')
+            ->get();
+        return [
+            'data' => $showAk07ByIdUjiKomp,
+        ];
+    }
+
+    public function showAk07Persyaratan()
+    {
+        $showAk07ByIdUjiKomp = MstFrAk07Persyaratan::join(
+            'mst_perangkat_ak_07_persyaratan_detail', 'mst_perangkat_ak_07_persyaratan.id', '=', 'mst_perangkat_ak_07_persyaratan_detail.id_mst_perangkat_ak_07_persyaratan')
+            ->select( 'mst_perangkat_ak_07_persyaratan.id', 'mst_perangkat_ak_07_persyaratan_detail.id as id_mst_detail', 'mst_perangkat_ak_07_persyaratan_detail.komponen as child_component', 'mst_perangkat_ak_07_persyaratan.komponen as parent_component')
+            ->get();
+    
+        return [
+            'data' => $showAk07ByIdUjiKomp,
+        ];
+    }
+    
 
     public function showAk07($id)
     {
@@ -2318,6 +2349,76 @@ class UjiKompController extends BaseController
             
         }
     }
+    public function storeAk07(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesAk02(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $id = $request->get('id_uji_komp');
+                $foundUjiKomp = UjiKomp::where('id', $id)->first();
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $file = $request->get('signature_asesor');
+                $file2 = $request->get('signature_asesi');
+
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $nama_file = $now . '-asesor-' . 'ak-07' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+            
+                $image2 = str_replace('data:image/png;base64,', '', $file2);
+                $image2 = str_replace(' ', '+', $image2);
+                $nama_file2 = $now . '-asesi-' . 'ak-07' . '-' . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file2, base64_decode($image2));
+                
+                $ddAsesmen = [];
+                foreach ($request->get('asesmen') as $item) { $ddAsesmen[] = json_decode($item, true);}
+                $ujikompak07 = UjiKompAk07::create([
+                    'id_uji_komp'=> $request->get('id_uji_komp'),
+                    'acuan_pembanding'=>$ddAsesmen[0]['answer'],
+                    'metode_asesmen'=> $ddAsesmen[1]['answer'],
+                    'instrumen_asesmen'=> $ddAsesmen[2]['answer'],
+                    'ttd_asesor' => $nama_file,
+                    'ttd_asesi' => $nama_file2,
+                ]);
+                foreach ($request->get('potensi_asesi') as $potensi) {
+                    $data_pa = json_decode($potensi);
+                    $trkak07potensiasesi = TrxAk07PotensiAsesi::create([
+                        'id_mst_perangkat_ak_07_potensi_asesi'=> $data_pa->id,
+                        'id_trx_uji_komp_ak_07'=> $ujikompak07->id,
+                        'potensi'=> $data_pa->potensi,
+                    ]);
+                }
+                foreach ($request->get('persyaratan') as $persyaratan) {
+                    $data_psy = json_decode($persyaratan);
+                    $trkak07persyaratan = TrxAk07Persyaratan::create([
+                        'id_mst_perangkat_ak_07_persyaratan_detail'=> $data_psy->id_mst_detail,
+                        'id_trx_uji_komp_ak_07'=> $ujikompak07->id,
+                        'keterangan'=> $data_psy->keterangan,
+                    ]);
+                }
+
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->id_ak_07 = $ujikompak07->id;
+                $foundUjiKomp->persentase = $progress + 5;
+                $foundUjiKomp->save();
+
+                DB::commit();
+                return response()->json(['message' => "Sukses membuat FR AK 07"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+            }
+            
+        }
+    }
     public function storeMapa02(Request $request)
     {
         $validator = Validator::make(
@@ -2413,19 +2514,19 @@ class UjiKompController extends BaseController
 
                 $progress = $foundUjiKomp->persentase;
                 $foundUjiKomp->id_va = $va->id;
-                $persentaseVa = 10;
+                $persentaseVa = 5;
                 $dataSoal = $this->getSoalIa05AndIa07($foundUjiKomp->id_skema);
                 $soalIa05 = $dataSoal['soalIa05'] ?? null;
                 $soalIa07 = $dataSoal['soalIa07'] ?? null;
                 if ($soalIa05 === null && $soalIa07 === null){
-                    $persentaseVa = 25;
+                    $persentaseVa = 20;
                 }
                 if ($soalIa05 && $soalIa07 === null) {
-                    $persentaseVa = 20;
+                    $persentaseVa = 15;
                 }
 
                 if ($soalIa05 === null && $soalIa07) {
-                    $persentaseVa = 20;
+                    $persentaseVa = 15;
                 }
 
                 $foundUjiKomp->persentase = $progress + $persentaseVa;

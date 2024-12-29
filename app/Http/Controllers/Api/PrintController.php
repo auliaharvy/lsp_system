@@ -58,6 +58,7 @@ use Illuminate\Support\Facades\App;
 use GuzzleHttp\Client;
 use Validator;
 use PDF;
+use Carbon\Carbon;
 // use Barryvdh\DomPDF\Facade\Pdf;
 
 /**
@@ -101,6 +102,7 @@ class PrintController extends BaseController
         $idak04 = Arr::get($searchParams, 'idak04');
         $idak05 = Arr::get($searchParams, 'idak05');
         $idak06 = Arr::get($searchParams, 'idak06');
+        $idak07 = Arr::get($searchParams, 'idak07');
         $idia01 = Arr::get($searchParams, 'idia01');
         $idia02 = Arr::get($searchParams, 'idak02');
         $idia03 = Arr::get($searchParams, 'idia03');
@@ -119,6 +121,7 @@ class PrintController extends BaseController
         $valueak04 = Arr::get($searchParams, 'valueak04');
         $valueak05 = Arr::get($searchParams, 'valueak05');
         $valueak06 = Arr::get($searchParams, 'valueak06');
+        $valueak07 = Arr::get($searchParams, 'valueak07');
         $valueia01 = Arr::get($searchParams, 'valueia01');
         $valueia02 = Arr::get($searchParams, 'valueia02');
         $valueia03 = Arr::get($searchParams, 'valueia03');
@@ -186,6 +189,26 @@ class PrintController extends BaseController
             $dataak06 = $ujiKompController->indexAk06($idak06);
             $datamodule->push(['nama' => 'ak06', 'data' => $dataak06]);
         }
+
+        if ($valueak07 === 'true') {
+            $dataak07 = $ujiKompController->showAk07($idak07);
+            $ak07PotensiAsesi = $ujiKompController->previewAk07PotensiAsesi($idak07);
+            $ak07Persyaratan = $ujiKompController->previewAk07Persyaratan($idak07);
+            $indexPreview = $ujiKompController->indexPreview($idak07);
+            $previewcollect = collect($indexPreview);
+            $asesor = $previewcollect[0]['asesor'];
+            $tanggal = Carbon::parse($dataak07['data'][0]['created_at'])->translatedFormat('d/F/Y');
+
+            $dataak07 = [
+                'ak07' => $dataak07,
+                'potensi_asesi' => $ak07PotensiAsesi,
+                'persyaratan' => $ak07Persyaratan,
+                'tanggal' => $tanggal,
+            ];
+            
+            $datamodule->push(['nama' => 'ak07', 'data' => $dataak07]);
+        }
+
 
         if ($valueia01 === 'true'){
             $result = $ujiKompController->showIa01($idia01);

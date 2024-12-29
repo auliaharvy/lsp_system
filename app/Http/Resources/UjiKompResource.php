@@ -23,6 +23,7 @@ class UjiKompResource extends JsonResource
             'id_ak_04' => $this->id_ak_04,
             'id_ak_05' => $this->id_ak_05,
             'id_ak_06' => $this->id_ak_06,
+            'id_ak_07' => $this->id_ak_07,
             'id_apl_01' => $this->id_apl_01,
             'id_apl_02' => $this->id_apl_02,
             'id_asesi' => $this->id_asesi,
