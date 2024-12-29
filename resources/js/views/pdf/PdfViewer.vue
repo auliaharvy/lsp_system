@@ -16,7 +16,7 @@ export default {
         { index: 3, name: 'MAPA 02', nameInDatabase: 'id_mapa_02', idujikom: null, value: false },
         { index: 4, name: 'AK 01', nameInDatabase: 'id_ak_01', idujikom: null, value: false },
         { index: 5, name: 'AK 04', nameInDatabase: 'id_ak_04', idujikom: null, value: false },
-        { index: 6, name: 'IA 01', nameInDatabase: 'id_ia_01', idujikom: 2262, value: true },
+        { index: 6, name: 'IA 01', nameInDatabase: 'id_ia_01', idujikom: null, value: false },
         { index: 7, name: 'IA 02', nameInDatabase: 'id_ia_02', idujikom: null, value: false },
         { index: 8, name: 'IA 03', nameInDatabase: 'id_ia_03', idujikom: null, value: false },
         { index: 9, name: 'IA 05', nameInDatabase: 'id_ia_05', idujikom: null, value: false },
@@ -28,6 +28,7 @@ export default {
         { index: 15, name: 'AK 05', nameInDatabase: 'id_ak_05', idujikom: null, value: false },
         { index: 16, name: 'AK 06', nameInDatabase: 'id_ak_06', idujikom: null, value: false },
         { index: 17, name: 'VA', nameInDatabase: 'id_va', idujikom: null, value: false },
+        { index: 18, name: 'AK07', nameInDatabase: 'id_ak_07', idujikom: 3944, value: true },
       ],
     };
   },
@@ -57,6 +58,7 @@ export default {
         idak05: this.dataUjiKomp[14].idujikom,
         idak06: this.dataUjiKomp[15].idujikom,
         idva: this.dataUjiKomp[16].idujikom,
+        idak07: this.dataUjiKomp[17].idujikom,
         valueapl01: this.dataUjiKomp[0].value,
         valueapl02: this.dataUjiKomp[1].value,
         valuemapa02: this.dataUjiKomp[2].value,
@@ -74,6 +76,7 @@ export default {
         valueak05: this.dataUjiKomp[14].value,
         valueak06: this.dataUjiKomp[15].value,
         valueva: this.dataUjiKomp[16].value,
+        valueak07: this.dataUjiKomp[17].value,
       };
 
       await print.stream(ujikomp)

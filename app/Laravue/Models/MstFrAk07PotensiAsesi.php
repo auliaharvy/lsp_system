@@ -1,6 +1,6 @@
 <?php
 /**
- * File UjiKompAk07.php
+ * File MstFrAk07PotensiAsesi.php
  *
  * @author Aulia Harvy <auliaharvy@gmail.com>
  * @package LSP_System
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Laravue\Models
  */
-class UjiKompAk07 extends Model
+class MstFrAk07PotensiAsesi extends Model
 {
     public $guard_name = 'api';
 
@@ -28,16 +28,6 @@ class UjiKompAk07 extends Model
      * @param $query
      * @return Builder
      */
-    protected $table = "trx_uji_komp_ak_07";
-    protected $fillable = [
-      'id',
-      'id_uji_komp',
-      'acuan_pembanding',
-      'metode_asesmen',
-      'instrumen_asesmen',
-      'ttd_asesor',
-      'ttd_asesi',
-      'created_at',
-      'updated_at'
-    ];
+    protected $table = "mst_perangkat_ak_07_potensi_asesi";
+    protected $fillable = ['id', 'komponen', 'versi', 'created_at', 'updated_at'];
 }

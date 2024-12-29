@@ -87,6 +87,12 @@ Route::namespace('Api')->group(function() {
     // Route::get('detail/ak-05', 'UjiKompController@showAk05');
     Route::get('detail/va/{id}', 'UjiKompController@showVa');
     Route::get('ak-06/{id}', 'UjiKompController@showAk06');
+    Route::get('preview-ak-07-potensi-asesi/{id}', 'UjiKompController@previewAk07PotensiAsesi');
+    Route::get('preview-ak-07-persyaratan/{id}', 'UjiKompController@previewAk07Persyaratan');
+    Route::get('show-ak-07-persyaratan', 'UjiKompController@showAk07Persyaratan');
+    Route::get('show-ak-07-potensi-asesi', 'UjiKompController@showAk07PotensiAsesi');
+    Route::get('ak-07/{id}', 'UjiKompController@showAk07');
+    Route::post('uji-komp-ak-07', 'UjiKompController@storeAk07');
     Route::get('trx-mapa-02/{id}', 'UjiKompController@showMapa02');
 
     Route::apiResource('dashboard', 'DashboardController');

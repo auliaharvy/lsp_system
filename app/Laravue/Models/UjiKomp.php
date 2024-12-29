@@ -32,7 +32,7 @@ class UjiKomp extends Model
     protected $table = "trx_uji_komp";
     protected $fillable = ['id', 'nama_peserta','id_asesi', 'id_apl_01', 'id_apl_02', 'id_mapa_01', 'id_skema', 'id_mapa_02', 'id_ak_01',
                             'id_ak_04', 'id_ia_01', 'id_ia_02', 'id_ia_03', 'id_ia_05', 'id_ia_06', 'id_ia_07', 'id_ia_11', 'id_ak_02', 
-                            'id_ak_03', 'id_ak_05', 'id_ak_06', 'id_va', 'status', 'persentase'];
+                            'id_ak_03', 'id_ak_05', 'id_ak_06', 'id_ak_07', 'id_va', 'status', 'persentase'];
 
     public function getUjiSkema($nik)
         {

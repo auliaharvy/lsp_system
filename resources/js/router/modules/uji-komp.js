@@ -218,6 +218,7 @@ const ujiRoutes = {
         icon: 'date',
         permissions: ['manage user'],
       },
+      hidden: true,
     },
     {
       path: 'preview-ak-07',
@@ -228,6 +229,7 @@ const ujiRoutes = {
         icon: 'date',
         permissions: ['manage user'],
       },
+      hidden: true,
     },
     {
       path: 'form-va',
