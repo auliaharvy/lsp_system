@@ -2362,21 +2362,14 @@ class UjiKompController extends BaseController
             DB::beginTransaction();
             try {
                 $id = $request->get('id_uji_komp');
-                $foundUjiKomp = UjiKomp::where('id', $id)->first();
                 $mytime = Carbon::now();
                 $now = $mytime->toDateString();
                 $file = $request->get('signature_asesor');
-                $file2 = $request->get('signature_asesi');
 
                 $image = str_replace('data:image/png;base64,', '', $file);
                 $image = str_replace(' ', '+', $image);
-                $nama_file = $now . '-asesor-' . 'ak-07' . '-' . '.png';
+                $nama_file = $now . '-asesor-' . 'ak-07' . '-' . $id . '.png';
                 \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
-            
-                $image2 = str_replace('data:image/png;base64,', '', $file2);
-                $image2 = str_replace(' ', '+', $image2);
-                $nama_file2 = $now . '-asesi-' . 'ak-07' . '-' . '.png';
-                \File::put(public_path(). '/uploads/users/signature/' . $nama_file2, base64_decode($image2));
                 
                 $ddAsesmen = [];
                 foreach ($request->get('asesmen') as $item) { $ddAsesmen[] = json_decode($item, true);}
@@ -2386,7 +2379,6 @@ class UjiKompController extends BaseController
                     'metode_asesmen'=> $ddAsesmen[1]['answer'],
                     'instrumen_asesmen'=> $ddAsesmen[2]['answer'],
                     'ttd_asesor' => $nama_file,
-                    'ttd_asesi' => $nama_file2,
                 ]);
                 foreach ($request->get('potensi_asesi') as $potensi) {
                     $data_pa = json_decode($potensi);
@@ -2405,11 +2397,6 @@ class UjiKompController extends BaseController
                     ]);
                 }
 
-                $progress = $foundUjiKomp->persentase;
-                $foundUjiKomp->id_ak_07 = $ujikompak07->id;
-                $foundUjiKomp->persentase = $progress + 5;
-                $foundUjiKomp->save();
-
                 DB::commit();
                 return response()->json(['message' => "Sukses membuat FR AK 07"], 200);
             } catch (\Exception $e) {
@@ -2417,6 +2404,45 @@ class UjiKompController extends BaseController
                 return response()->json(['message' => $e->getMessage()], 400);
             }
             
+        }
+    }
+    public function updateAk07(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            $this->getValidationRulesAk02(),
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 403);
+        } else {
+            DB::beginTransaction();
+            try {
+                $id = $request->get('id_uji_komp');
+                $foundUjiKomp = UjiKomp::where('id', $id)->first();
+                $foundAk07 = UjiKompAk07::where('id', $foundUjiKomp->id_ak_07)->first();
+                $mytime = Carbon::now();
+                $now = $mytime->toDateString();
+                $file = $request->get('signature_asesi');
+
+                $image = str_replace('data:image/png;base64,', '', $file);
+                $image = str_replace(' ', '+', $image);
+                $nama_file = $now . '-asesi-' . 'ak-07' . '-' . $id . '.png';
+                \File::put(public_path(). '/uploads/users/signature/' . $nama_file, base64_decode($image));
+
+                $progress = $foundUjiKomp->persentase;
+                $foundUjiKomp->id_ak_07 = $foundAk07->id;
+                $foundUjiKomp->persentase = $progress + 5;
+                $foundUjiKomp->save();
+                $foundAk07->ttd_asesi = $nama_file;
+                $foundAk07->save();
+
+                DB::commit();
+                return response()->json(['message' => "Sukses membuat FR AK 07"], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => $e->getMessage()], 400);
+            }
         }
     }
     public function storeMapa02(Request $request)

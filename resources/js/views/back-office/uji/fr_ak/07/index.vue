@@ -74,7 +74,8 @@
           </el-table-column>
           <el-table-column align="center">
             <template slot-scope="scope">
-              <el-checkbox v-model="scope.row.potensi" />
+              <span v-if="listUji.data[0].id_ak_07 && scope.row.potensi == 1"><i class="el-icon-success ceklist-icon" /></span>
+              <el-checkbox v-else-if="listUji.data[0].id_ak_07 == null" v-model="scope.row.potensi" />
             </template>
           </el-table-column>
           <el-table-column align="left">
@@ -109,7 +110,8 @@
           >
             <el-table-column align="center">
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.keterangan" />
+                <span v-if="listUji.data[0].id_ak_07 && scope.row.keterangan == 1"><i class="el-icon-success ceklist-icon" /></span>
+                <el-checkbox v-else-if="listUji.data[0].id_ak_07 == null" v-model="scope.row.keterangan" />
               </template>
             </el-table-column>
             <el-table-column align="left">
@@ -168,32 +170,32 @@
             label="Tanda Tangan Asesor"
           >
             <template slot-scope="scope">
-                <div v-if="scope.row.ttd">
-                  <el-image
-                    style="width: 200px; height: 100px"
-                    :src="scope.row.ttd"
-                    fit="contain"
+              <div v-if="scope.row.ttd">
+                <el-image
+                  style="width: 200px; height: 100px"
+                  :src="scope.row.ttd"
+                  fit="contain"
+                />
+              </div>
+              <div v-else>
+                <div>
+                  <vueSignature
+                    ref="signatureAsesor"
+                    :sig-option="optionAsesor"
+                    :w="'300px'"
+                    :h="'150px'"
+                    :disabled="false"
+                    style="border-style: outset"
                   />
+                  <el-button
+                    size="small"
+                    @click="clearTtdAsesor"
+                  >
+                    Clear
+                  </el-button>
                 </div>
-                <div v-else>
-                  <div>
-                    <vueSignature
-                      ref="signatureAsesor"
-                      :sig-option="optionAsesor"
-                      :w="'300px'"
-                      :h="'150px'"
-                      :disabled="false"
-                      style="border-style: outset"
-                    />
-                    <el-button
-                      size="small"
-                      @click="clearTtdAsesor"
-                    >
-                      Clear
-                    </el-button>
-                  </div>
-                </div>
-              </template>
+              </div>
+            </template>
           </el-table-column>
         </el-table>
         <br>
@@ -248,7 +250,10 @@
         </el-table>
         <br>
         <br>
-        <el-button type="primary" @click="submit()">
+        <el-button
+          type="primary"
+          @click="submit()"
+        >
           {{ $t('table.confirm') }}
         </el-button>
         <br>
@@ -265,6 +270,8 @@ import Resource from '@/api/resource';
 const previewResource = new Resource('detail/indexPreview');
 const potensiAsesiResource = new Resource('show-ak-07-potensi-asesi');
 const persyaratanResource = new Resource('show-ak-07-persyaratan');
+const potensiAsesiResource2 = new Resource('preview-ak-07-potensi-asesi');
+const persyaratanResource2 = new Resource('preview-ak-07-persyaratan');
 const ak07Resource = new Resource('ak-07');
 const storeAk07Resource = new Resource('uji-komp-ak-07');
 
@@ -320,10 +327,11 @@ export default {
   },
   created() {
     if(JSON.parse(localStorage.getItem('idujikomp') || null)){ this.idujikomp = localStorage.getItem('idujikomp')}
-    this.getUjiKompDetail();
-    this.getPotensiAsesi();
-    this.getPersyaratan();
-    this.getAk07();
+    this.getUjiKompDetail().then(() => {
+      this.getPotensiAsesi();
+      this.getPersyaratan();
+      this.getAk07();
+    })  
   },
   methods: {
     async getUjiKompDetail() {
@@ -337,11 +345,13 @@ export default {
       this.listTtd[1].name = this.listUji.data[0].nama_peserta;
     },
     async getPotensiAsesi() {
-      let data = await potensiAsesiResource.list();
+      console.log(this.listUji.data[0].id)
+      let data = this.listUji.data[0].id ? await potensiAsesiResource2.get(this.listUji.data[0].id) : await potensiAsesiResource.list()
       this.listPotensiAsesi = data.data;
     },
     async getPersyaratan() {
-      let data = await persyaratanResource.list();
+      console.log(this.listUji.data[0].id)
+      let data = this.listUji.data[0].id ? await persyaratanResource2.get(this.listUji.data[0].id) : await persyaratanResource.list();
       this.listPersyaratan = data.data
     },
     async getAk07() {
@@ -349,8 +359,8 @@ export default {
       this.listAsesmen[0].answer = data.data[0].acuan_pembanding
       this.listAsesmen[1].answer = data.data[0].metode_asesmen
       this.listAsesmen[2].answer = data.data[0].instrumen_asesmen
-      this.listTtd[0].ttd = data.data[0].ttd_asesor;
-      this.listTtd[1].ttd = data.data[0].ttd_asesi;
+      this.listTtd[0].ttd = '/uploads/users/signature/' + data.data[0].ttd_asesor;
+      this.listTtd[1].ttd = '/uploads/users/signature/' + data.data[0].ttd_asesi;
     },
     submit() {
       this.listPotensiAsesi = this.listPotensiAsesi.map(element => {return {...element, potensi: element.potensi == true ? 1 : 0}})

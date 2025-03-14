@@ -295,6 +295,7 @@ export default {
       unit: 'Unit Kompetensi',
       kode_unit: 'Kode Unit',
       unit_kompetensi: 'Unit Kompetensi',
+      kelompok_pekerjaan: 'Kelompok Pekerjaan',
       elemen: 'Nama Elemen',
       kuk: 'Kuk Elemen',
       updateUnit: 'Update Unit Kompetensi',

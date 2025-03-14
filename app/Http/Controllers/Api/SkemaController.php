@@ -467,6 +467,7 @@ class SkemaController extends BaseController
                 $unitKomp = SkemaUnit::where('id', $params['id'])->first();
                 $unitKomp->kode_unit = $params['kode_unit'];
                 $unitKomp->unit_kompetensi = $params['unit_kompetensi'];
+                $unitKomp->kelompok_pekerjaan = $params['kelompok_pekerjaan'];
                 $unitKomp->save();
 
                 DB::commit();
