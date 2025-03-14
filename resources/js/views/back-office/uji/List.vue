@@ -466,7 +466,6 @@
                     </el-tooltip>
                   </li>
                   <li
-                    v-if="query.role !== 'user'"
                     class="list-progress"
                   >
                     <el-tooltip
@@ -475,7 +474,10 @@
                       content="View FR-AK-07"
                       placement="top-start"
                     >
-                      <span @click="handleUji('form-ak-07', scope.row)" style="cursor: pointer;">
+                      <span
+                        style="cursor: pointer;"
+                        @click="handleUji('form-ak-07', scope.row)"
+                      >
                         <span class="link">AK 07 <i
                           v-if="scope.row.id_ak_07 !== null"
                           type="success"

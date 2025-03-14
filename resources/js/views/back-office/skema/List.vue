@@ -103,7 +103,7 @@
                   label="Kelompok Pekerjaan"
                 >
                   <template slot-scope="elemen">
-                    <span>{{ getKelompokPekerjaan(elemen.row.kelompok_pekerjaan) }}</span>
+                    <span>{{ elemen.row.kelompok_pekerjaan }}</span>
                   </template>
                 </el-table-column>
 
@@ -292,7 +292,7 @@
                         type="primary"
                         size="small"
                         icon="el-icon-edit-outline"
-                        @click="handleUpdateSkemaUnit(scope.row, 'unit')"
+                        @click="handleUpdateSkemaUnit(row.row, 'unit')"
                       />
                     </el-tooltip>
                     <el-tooltip
@@ -663,25 +663,25 @@
             <div class="grid-content bg-purple">
               <el-descriptions title="Skema Sertifikasi">
                 <el-descriptions-item label="Kode Skema">
-                  {{ editedSkema.kode_skema }}
+                  {{ editedUnitKomp.kode_skema }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Skema">
-                  {{ editedSkema.skema_sertifikasi }}
+                  {{ editedUnitKomp.skema_sertifikasi }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Kategori">
-                  {{ editedSkema.nama_kategori }}
+                  {{ editedUnitKomp.nama_kategori }}
                 </el-descriptions-item>
                 <el-descriptions-item label="KBLUI">
-                  {{ editedSkema.kblui }}
+                  {{ editedUnitKomp.kblui }}
                 </el-descriptions-item>
                 <el-descriptions-item label="KBJI">
-                  {{ editedSkema.kbji }}
+                  {{ editedUnitKomp.kbji }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Jenjang">
-                  {{ editedSkema.jenjang }}
+                  {{ editedUnitKomp.jenjang }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Kode Sektor">
-                  {{ editedSkema.kode_sektor }}
+                  {{ editedUnitKomp.kode_sektor }}
                 </el-descriptions-item>
               </el-descriptions>
             </div>
@@ -840,6 +840,12 @@
           >
             <el-input v-model="editedUnitKomp.unit_kompetensi" />
           </el-form-item>
+          <el-form-item
+            :label="$t('skema.dialog.kelompok_pekerjaan')"
+            prop="kelompok_pekerjaan"
+          >
+            <el-input v-model="editedUnitKomp.kelompok_pekerjaan" />
+          </el-form-item>
         </el-form>
         <div
           slot="footer"
@@ -992,6 +998,7 @@ export default {
         id_skema: '',
         kode_unit: '',
         unit_kompetensi: '',
+        kelompok_pekerjaan: '',
       },
       editedElemen: {
         id: 0,
@@ -1050,11 +1057,6 @@ export default {
     this.getListKategori();
   },
   methods: {
-    getKelompokPekerjaan(val){
-      if(counterKelompokPekerjaan == 0) nameKelompokPekerjaan = val
-      val == nameKelompokPekerjaan ? counterKelompokPekerjaan++ : counterKelompokPekerjaan = 0
-      return counterKelompokPekerjaan > 0 ? '' : val
-    },
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
@@ -1261,8 +1263,8 @@ export default {
     },
     handleUpdate(skema) {
       this.editedSkema = skema;
+      console.log(this.editedSkema);
       this.dialogFormUpdateVisible = true;
-      // console.log(this.editedSkema);
     },
     handleUpdateSkemaUnit(data, jenisUpdate) {
       this.jenisUpload = jenisUpdate;
@@ -1391,8 +1393,6 @@ export default {
     updateUnit() {
       this.loading = true;
       if (this.jenisUpload === 'unit') {
-        console.log('unit blabal');
-        console.log(this.editedUnitKomp);
         updateUnitResource.store(this.editedUnitKomp).then(() => {
           this.getList();
           this.dialogSkemaUnitVisible = false;

@@ -1,43 +1,144 @@
 <template>
-  <el-container v-if="dataPreview.id_va == null" v-loading="loading" class="app-container">
+  <el-container
+    v-if="dataPreview.id_va == null"
+    v-loading="loading"
+    class="app-container"
+  >
     <el-header>
-      <el-page-header content="FORM FR.VA BELUM DIISI" @back="$router.back()" />
-      <el-dropdown split-button type="primary">
+      <el-page-header
+        content="FORM FR.VA BELUM DIISI"
+        @back="$router.back()"
+      />
+      <el-dropdown
+        split-button
+        type="primary"
+      >
         {{ $route.name }}
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item><router-link :to="{ name: 'preview-apl-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">APL 01</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-apl-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">APL 02</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-mapa-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">MAPA 02</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ak-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">AK 01</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ak-04', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">AK 04</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ia-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">IA 01</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ia-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">IA 02</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ia-03', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">IA 03</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ia-05', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">IA 05</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ia-06', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">IA 06</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ia-07', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">IA 07</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ia-11', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">IA 11</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ak-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">AK 02</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ak-03', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">AK 03</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ak-05', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">AK 05</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-ak-06', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">AK 06</router-link></el-dropdown-item>
-          <el-dropdown-item><router-link :to="{ name: 'preview-va', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">VA</router-link></el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-apl-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              APL 01
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-apl-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              APL 02
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-mapa-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              MAPA 02
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ak-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              AK 01
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ak-04', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              AK 04
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ia-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              IA 01
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ia-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              IA 02
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ia-03', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              IA 03
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ia-05', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              IA 05
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ia-06', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              IA 06
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ia-07', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              IA 07
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ia-11', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              IA 11
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ak-02', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              AK 02
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ak-03', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              AK 03
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ak-05', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              AK 05
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-ak-06', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              AK 06
+            </router-link>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{ name: 'preview-va', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">
+              VA
+            </router-link>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <el-button-group>
-        <router-link :to="{name: 'preview-ak-06', params: { iduji: $route.params.iduji, asesor: $route.params.asesor }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
-        <router-link :to="{name: 'preview-va', params: { iduji: $route.params.iduji, asesor: $route.params.asesor }}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
+        <router-link :to="{name: 'preview-ak-06', params: { iduji: $route.params.iduji, asesor: $route.params.asesor }}">
+          <el-button
+            type="primary"
+            icon="el-icon-arrow-left"
+          >
+            Previous Page
+          </el-button>
+        </router-link>
+        <router-link :to="{name: 'preview-va', params: { iduji: $route.params.iduji, asesor: $route.params.asesor }}">
+          <el-button
+            type="primary"
+            icon="el-icon-arrow-right"
+          >
+            Next Page
+          </el-button>
+        </router-link>
       </el-button-group>
     </el-header>
   </el-container>
-  <el-container v-else class="app-container">
+  <el-container
+    v-else
+    class="app-container"
+  >
     <el-header>
       <!-- TODO Penyesuain dengan form -->
       <span>
-        <el-page-header content="FR.VA MEMBERIKAN KONTRIBUSI DALAM VALIDASI ASESMEN" @back="$router.back()" />
+        <el-page-header
+          content="FR.VA MEMBERIKAN KONTRIBUSI DALAM VALIDASI ASESMEN"
+          @back="$router.back()"
+        />
       </span>
       <span>
-        <el-dropdown split-button type="primary">
+        <el-dropdown
+          split-button
+          type="primary"
+        >
           {{ $route.name }}
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item><router-link :to="{ name: 'preview-apl-01', params:{ iduji: $route.params.iduji, idskema: dataPreview.id_skema, asesor: $route.params.asesor, apl01: dataPreview.id_apl_01, apl02: dataPreview.id_apl_02, mapa02: dataPreview.id_mapa_02, ak01: dataPreview.id_ak_01, ak04: dataPreview.id_ak_04, ia01: dataPreview.id_ia_01, ia02: dataPreview.id_ia_02, ia03: dataPreview.id_ia_03, ia05: dataPreview.id_ia_05, id06: dataPreview.id_ia_06, ia07: dataPreview.id_ia_07, ia11: dataPreview.id_ia_11, ak02: dataPreview.id_ak_02, ak03: dataPreview.id_ak_03, ak05: dataPreview.id_ak_05, ak06: dataPreview.id_ak_06, ak07: dataPreview.id_ak_07, va: dataPreview.id_va }}">APL 01</router-link></el-dropdown-item>
@@ -62,16 +163,30 @@
       </span>
       <span>
         <el-button-group>
-          <router-link :to="{name: 'preview-ak-06', params: { iduji: $route.params.iduji, asesor: $route.params.asesor }}"><el-button type="primary" icon="el-icon-arrow-left">Previous Page</el-button></router-link>
-          <router-link :to="{name: 'preview-va', params: { iduji: $route.params.iduji, asesor: $route.params.asesor }}"><el-button type="primary" icon="el-icon-arrow-right">Next Page</el-button></router-link>
+          <router-link :to="{name: 'preview-ak-06', params: { iduji: $route.params.iduji, asesor: $route.params.asesor }}"><el-button
+            type="primary"
+            icon="el-icon-arrow-left"
+          >Previous Page</el-button></router-link>
+          <router-link :to="{name: 'preview-va', params: { iduji: $route.params.iduji, asesor: $route.params.asesor }}"><el-button
+            type="primary"
+            icon="el-icon-arrow-right"
+          >Next Page</el-button></router-link>
         </el-button-group>
       </span>
     </el-header>
     <el-main>
       <div>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="12">
-            <el-form ref="form" :model="dataTrx" label-width="120px">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="12"
+          >
+            <el-form
+              ref="form"
+              :model="dataTrx"
+              label-width="120px"
+            >
               <el-form-item label="Tim Validasi 1">
                 <span>: {{ dataTrx.tim_validasi_1 }}</span>
               </el-form-item>
@@ -80,8 +195,16 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :sm="24" :md="24" :lg="12">
-            <el-form ref="form" :model="dataTrx" label-width="120px">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="12"
+          >
+            <el-form
+              ref="form"
+              :model="dataTrx"
+              label-width="120px"
+            >
               <el-form-item label="Hari / Tanggal">
                 <!-- <span>{{ dataTrx.hari }} / {{ dataTrx.tanggal }} - {{ dataTrx.bulan }} - {{ dataTrx.tahun }}</span> -->
                 <span>: {{ dataTrx.date }}</span>
@@ -94,8 +217,16 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="120px">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
+            <el-form
+              ref="form"
+              :model="dataTrx"
+              label-width="120px"
+            >
               <el-form-item label="Periode">
                 <span>: {{ dataTrx.periode }}</span>
               </el-form-item>
@@ -103,8 +234,16 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="120px">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
+            <el-form
+              ref="form"
+              :model="dataTrx"
+              label-width="120px"
+            >
               <el-form-item label="Nama Skema">
                 <span>: {{ dataTrx.namaSkema }}</span>
               </el-form-item>
@@ -117,8 +256,16 @@
         <h4>Bagian 1 : Menyiapkan proses validasi</h4>
         <br>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="200px">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
+            <el-form
+              ref="form"
+              :model="dataTrx"
+              label-width="200px"
+            >
               <el-form-item label="Tujuan dan fokus validasi">
                 <span>: {{ dataTrx.tujuan_dan_fokus_validasi }}</span>
               </el-form-item>
@@ -132,7 +279,11 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
             <el-table
               v-loading="loading"
               :data="tableOrangRelevan"
@@ -142,7 +293,11 @@
               style="width: 100%"
               :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white'}"
             >
-              <el-table-column align="left" min-width="80px" label="Orang yang relevan">
+              <el-table-column
+                align="left"
+                min-width="80px"
+                label="Orang yang relevan"
+              >
                 <template slot-scope="scope">
                   <template v-if="scope.row.no === 1">
                     <span>Asesor Kompetensi</span>
@@ -164,10 +319,18 @@
                   </template>
                 </template>
               </el-table-column>
-              <el-table-column align="left" min-width="200px" label="Nama">
+              <el-table-column
+                align="left"
+                min-width="200px"
+                label="Nama"
+              >
                 <template slot-scope="scope">
                   <template v-if="scope.row.no === 1">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item label="1">
                         <span>{{ dataTrx.asesor_1 }}</span>
                       </el-form-item>
@@ -180,35 +343,55 @@
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 2">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.nama_lead_asesor }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 3">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.manager }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 4">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.tenaga_ahli }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 5">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.koordinator_pelatihan }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 6">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.anggota_asosiasi }}</span>
                       </el-form-item>
@@ -216,10 +399,18 @@
                   </template>
                 </template>
               </el-table-column>
-              <el-table-column align="left" min-width="200px" label="Hasil Konfirmasi/diskusi tujuan, fokus & konteks">
+              <el-table-column
+                align="left"
+                min-width="200px"
+                label="Hasil Konfirmasi/diskusi tujuan, fokus & konteks"
+              >
                 <template slot-scope="scope">
                   <template v-if="scope.row.no === 1">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item label="1">
                         <span>{{ dataTrx.hasil_konfirmasi_asesor_1 }}</span>
                       </el-form-item>
@@ -232,35 +423,55 @@
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 2">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.hasil_konfirmasi_lead_asesor }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 3">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.hasil_konfirmasi_manager }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 4">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.hasil_konfirmasi_tenaga_ahli }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 5">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.hasil_konfirmasi_koordinator_pelatihan }}</span>
                       </el-form-item>
                     </el-form>
                   </template>
                   <template v-if="scope.row.no === 6">
-                    <el-form ref="form" :model="dataTrx" label-width="20px">
+                    <el-form
+                      ref="form"
+                      :model="dataTrx"
+                      label-width="20px"
+                    >
                       <el-form-item>
                         <span>{{ dataTrx.hasil_konfirmasi_anggota_asosiasi }}</span>
                       </el-form-item>
@@ -273,8 +484,16 @@
         </el-row>
         <br>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="200px">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
+            <el-form
+              ref="form"
+              :model="dataTrx"
+              label-width="200px"
+            >
               <el-form-item label="Acuan Pembanding">
                 <span>: {{ dataTrx.acuan_pembanding }}</span>
               </el-form-item>
@@ -282,8 +501,16 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="200px">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
+            <el-form
+              ref="form"
+              :model="dataTrx"
+              label-width="200px"
+            >
               <el-form-item label="Dokumen Terkait dan Bahan - Bahan">
                 <span>: {{ dataTrx.dokumen_terkait }}</span>
               </el-form-item>
@@ -293,8 +520,16 @@
         <h4>Bagian 2 : Memberikan kontribusi dalam proses validasi</h4>
         <br>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
-            <el-form ref="form" :model="dataTrx" label-width="200px">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
+            <el-form
+              ref="form"
+              :model="dataTrx"
+              label-width="200px"
+            >
               <el-form-item label="Keterampilan Komunikasi">
                 <span>: {{ dataTrx.keterampilan_komunikasi }}</span>
               </el-form-item>
@@ -302,7 +537,11 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
             <el-table
               v-loading="loading"
               :data="masterData.aspekAspekKegiatan"
@@ -312,51 +551,87 @@
               style="width: 100%"
               :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
             >
-              <el-table-column align="left" min-width="80px" label="Aspek-Aspek Dalam Kegiatan Validasi (Meninjau, Membandingkan, Mengevaluasi)">
+              <el-table-column
+                align="left"
+                min-width="80px"
+                label="Aspek-Aspek Dalam Kegiatan Validasi (Meninjau, Membandingkan, Mengevaluasi)"
+              >
                 <template slot-scope="scope">
                   <span>{{ scope.row.item }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="Pemenuhan terhadap:">
                 <el-table-column label="Aturan Bukti">
-                  <el-table-column align="left" min-width="10px" label="V">
+                  <el-table-column
+                    align="left"
+                    min-width="10px"
+                    label="V"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.aturan_v == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="left" min-width="10px" label="A">
+                  <el-table-column
+                    align="left"
+                    min-width="10px"
+                    label="A"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.aturan_a == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="left" min-width="10px" label="T">
+                  <el-table-column
+                    align="left"
+                    min-width="10px"
+                    label="T"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.aturan_t == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="left" min-width="10px" label="M">
+                  <el-table-column
+                    align="left"
+                    min-width="10px"
+                    label="M"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.aturan_m == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
                 </el-table-column>
                 <el-table-column label="Prinsip Asesmen">
-                  <el-table-column align="left" min-width="10px" label="V">
+                  <el-table-column
+                    align="left"
+                    min-width="10px"
+                    label="V"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.prinsip_v == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="left" min-width="10px" label="R">
+                  <el-table-column
+                    align="left"
+                    min-width="10px"
+                    label="R"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.prinsip_r == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="left" min-width="10px" label="F">
+                  <el-table-column
+                    align="left"
+                    min-width="10px"
+                    label="F"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.prinsip_f == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="left" min-width="10px" label="F">
+                  <el-table-column
+                    align="left"
+                    min-width="10px"
+                    label="F"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.prinsip_f_2 == 1"><i class="el-icon-success ceklist-icon" /></span>
                     </template>
@@ -369,7 +644,11 @@
         <h4>Bagian 3 : Memberikan kontribusi untuk hasil asesmen</h4>
         <br>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
             <el-table
               v-loading="loading"
               :data="listTemuanValidasi"
@@ -379,12 +658,20 @@
               style="width: 100%"
               :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
             >
-              <el-table-column align="left" min-width="80px" label="Temuan-temuan validasi :">
+              <el-table-column
+                align="left"
+                min-width="80px"
+                label="Temuan-temuan validasi :"
+              >
                 <template slot-scope="{row}">
                   <span>{{ row.temuan }}</span>
                 </template>
               </el-table-column>
-              <el-table-column align="left" min-width="80px" label="Rekomendasi-rekomendasi untuk meningkatkan praktek asesmen">
+              <el-table-column
+                align="left"
+                min-width="80px"
+                label="Rekomendasi-rekomendasi untuk meningkatkan praktek asesmen"
+              >
                 <template slot-scope="{row}">
                   <span>{{ row.rekomendasi }}</span>
                 </template>
@@ -395,7 +682,11 @@
         <h4>Rencana Implementasi  perubahan/perbaikan pelaksanaan asesmen :</h4>
         <br>
         <el-row :gutter="20">
-          <el-col :sm="24" :md="24" :lg="24">
+          <el-col
+            :sm="24"
+            :md="24"
+            :lg="24"
+          >
             <el-table
               v-loading="loading"
               :data="listRencanaImplementasi"
@@ -406,17 +697,29 @@
               :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
             >
               <el-table-column label="Rencana Implementasi  perubahan/perbaikan pelaksanaan asesmen :">
-                <el-table-column align="left" min-width="80px" label="Kegiatan Perbaikan sesuai Rekomendasi">
+                <el-table-column
+                  align="left"
+                  min-width="80px"
+                  label="Kegiatan Perbaikan sesuai Rekomendasi"
+                >
                   <template slot-scope="{row}">
                     <span>{{ row.kegiatan }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="left" min-width="80px" label="Waktu Penyelesaian">
+                <el-table-column
+                  align="left"
+                  min-width="80px"
+                  label="Waktu Penyelesaian"
+                >
                   <template slot-scope="{row}">
                     <span>{{ row.waktu }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="left" min-width="80px" label="Penanggungjawab">
+                <el-table-column
+                  align="left"
+                  min-width="80px"
+                  label="Penanggungjawab"
+                >
                   <template slot-scope="{row}">
                     <span>{{ row.penanggung_jawab }}</span>
                   </template>
