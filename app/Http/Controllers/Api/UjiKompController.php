@@ -2420,7 +2420,7 @@ class UjiKompController extends BaseController
             try {
                 $id = $request->get('id_uji_komp');
                 $foundUjiKomp = UjiKomp::where('id', $id)->first();
-                $foundAk07 = UjiKompAk07::where('id', $foundUjiKomp->id_ak_07)->first();
+                $foundAk07 = UjiKompAk07::where('id_uji_komp', $id)->first();
                 $mytime = Carbon::now();
                 $now = $mytime->toDateString();
                 $file = $request->get('signature_asesi');
