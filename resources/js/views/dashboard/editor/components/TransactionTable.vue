@@ -317,6 +317,7 @@ export default {
       loading: true,
       dialog: false,
       dialogVisible: false,
+      data: null,
       query: {
         page: 1,
         limit: 5,
@@ -367,7 +368,7 @@ export default {
     ]),
     allUnchecked() {
       return !this.dataUjiKomp.every(item => !item.value);
-    },
+    }
   },
   created() {
     this.fetchData();
@@ -506,7 +507,7 @@ export default {
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
-      this.total = meta.total;
+      this.total = meta?.total;
       this.loading = false;
     },
     async getListJadwal() {

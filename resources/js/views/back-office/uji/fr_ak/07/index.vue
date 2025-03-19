@@ -74,8 +74,12 @@
           </el-table-column>
           <el-table-column align="center">
             <template slot-scope="scope">
-              <span v-if="listUji.data[0].id_ak_07 && scope.row.potensi == 1"><i class="el-icon-success ceklist-icon" /></span>
-              <el-checkbox v-else-if="listUji.data[0].id_ak_07 == null" v-model="scope.row.potensi" />
+              <span v-if="ttdAsesorPng && scope.row.potensi == 1"><i class="el-icon-success ceklist-icon" /></span>
+              <span v-else-if="ttdAsesorPng && scope.row.potensi == 0"></span>
+              <el-checkbox
+                v-else-if="['admin', 'assesor'].includes(roles[0])"
+                v-model="scope.row.potensi"
+              />
             </template>
           </el-table-column>
           <el-table-column align="left">
@@ -110,8 +114,12 @@
           >
             <el-table-column align="center">
               <template slot-scope="scope">
-                <span v-if="listUji.data[0].id_ak_07 && scope.row.keterangan == 1"><i class="el-icon-success ceklist-icon" /></span>
-                <el-checkbox v-else-if="listUji.data[0].id_ak_07 == null" v-model="scope.row.keterangan" />
+                <span v-if="ttdAsesorPng && scope.row.keterangan == 1"><i class="el-icon-success ceklist-icon" /></span>
+                <span v-else-if="ttdAsesorPng && scope.row.keterangan == 0"></span>
+                <el-checkbox
+                  v-else-if="['admin', 'assesor'].includes(roles[0])"
+                  v-model="scope.row.keterangan"
+                />
               </template>
             </el-table-column>
             <el-table-column align="left">
@@ -143,13 +151,15 @@
             </el-table-column>
             <el-table-column align="left">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.answer" />
+                <span v-if="['admin', 'assesor'].includes(roles[0]) || (roles[0] == 'user' && (scope.row.answer != undefined || scope.row.answer != null || scope.row.answer != ''))">{{ scope.row.answer }}</span>
+                <el-input v-else v-model="scope.row.answer" />
               </template>
             </el-table-column>
           </el-table-column>
         </el-table>
         <br>
         <el-table
+          v-if="['assesor', 'admin'].includes(roles[0]) || (roles[0] == 'user' && ttdAsesorPng)"
           v-loading="loading"
           :data="[listTtd[0]]"
           fit
@@ -170,7 +180,7 @@
             label="Tanda Tangan Asesor"
           >
             <template slot-scope="scope">
-              <div v-if="scope.row.ttd">
+              <div v-if="ttdAsesorPng">
                 <el-image
                   style="width: 200px; height: 100px"
                   :src="scope.row.ttd"
@@ -182,7 +192,6 @@
                   <vueSignature
                     ref="signatureAsesor"
                     :sig-option="optionAsesor"
-                    :w="'300px'"
                     :h="'150px'"
                     :disabled="false"
                     style="border-style: outset"
@@ -200,6 +209,7 @@
         </el-table>
         <br>
         <el-table
+          v-if="['user', 'admin'].includes(roles[0]) || (roles[0] == 'admin' && ttdAsesiPng)"
           v-loading="loading"
           :data="[listTtd[1]]"
           fit
@@ -220,7 +230,7 @@
             label="Tanda Tangan Asesi"
           >
             <template slot-scope="scope">
-              <div v-if="scope.row.ttd">
+              <div v-if="ttdAsesiPng">
                 <el-image
                   style="width: 200px; height: 100px"
                   :src="scope.row.ttd"
@@ -232,7 +242,6 @@
                   <vueSignature
                     ref="signatureAsesi"
                     :sig-option="optionAsesi"
-                    :w="'300px'"
                     :h="'150px'"
                     :disabled="false"
                     style="border-style: outset"
@@ -251,6 +260,7 @@
         <br>
         <br>
         <el-button
+          v-if="allowButtonSaveForAsesor || allowButtonSaveForAsesi"
           type="primary"
           @click="submit()"
         >
@@ -267,13 +277,15 @@
 import { mapGetters } from 'vuex';
 import vueSignature from 'vue-signature/src/components/vueSignature.vue';
 import Resource from '@/api/resource';
+import checkRole from '@/utils/role';
 const previewResource = new Resource('detail/indexPreview');
-const potensiAsesiResource = new Resource('show-ak-07-potensi-asesi');
-const persyaratanResource = new Resource('show-ak-07-persyaratan');
-const potensiAsesiResource2 = new Resource('preview-ak-07-potensi-asesi');
-const persyaratanResource2 = new Resource('preview-ak-07-persyaratan');
+const showPotensiAsesiResource = new Resource('show-ak-07-potensi-asesi');
+const showPersyaratanResource = new Resource('show-ak-07-persyaratan');
+const previewPotensiAsesiResource = new Resource('preview-ak-07-potensi-asesi');
+const previewPersyaratanResource = new Resource('preview-ak-07-persyaratan');
 const ak07Resource = new Resource('ak-07');
-const storeAk07Resource = new Resource('uji-komp-ak-07');
+const storeAk07Resource = new Resource('store-uji-komp-ak-07');
+const updateAk07Resource = new Resource('update-uji-komp-ak-07')
 
 export default {
   components: {
@@ -310,12 +322,19 @@ export default {
       labelPosition: 'left',
       optionAsesi: { penColor: 'rgb(0, 0, 0)', backgroundColor: 'rgb(255,255,255)'},
       optionAsesor: { penColor: 'rgb(0, 0, 0)', backgroundColor: 'rgb(255,255,255)'},
-      ttdAsesorPng: null,
-      ttdAsesiPng: null
+      ttdAsesorPng: false,
+      ttdAsesiPng: false,
+      loading: false
     };
   },
   computed: {
-    ...mapGetters(['userId']),
+    ...mapGetters(['userId', 'roles']),
+    allowButtonSaveForAsesor(){
+      return this.ttdAsesorPng == false && ['assesor', 'admin'].includes(this.roles[0])
+    },
+    allowButtonSaveForAsesi(){
+      return this.ttdAsesiPng == false && ['user', 'admin'].includes(this.roles[0])
+    }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
@@ -328,66 +347,93 @@ export default {
   created() {
     if(JSON.parse(localStorage.getItem('idujikomp') || null)){ this.idujikomp = localStorage.getItem('idujikomp')}
     this.getUjiKompDetail().then(() => {
-      this.getPotensiAsesi();
-      this.getPersyaratan();
-      this.getAk07();
+      this.getAk07().then(() => {
+        this.getPotensiAsesi();
+        this.getPersyaratan();
+      })
     })  
   },
   methods: {
+    checkRole,
     async getUjiKompDetail() {
       this.listUji = await previewResource.get(this.idujikomp);
-      this.headerTable[0].content = this.listUji.data[0].skema_sertifikasi;
-      this.headerTable[1].content = this.listUji.data[0].nama_tuk;
-      this.headerTable[2].content = this.listUji.data[0].asesor;
-      this.headerTable[3].content = this.listUji.data[0].nama_peserta;
-      this.headerTable[4].content = this.listUji.data[0].mulai;
-      this.listTtd[0].name = this.listUji.data[0].asesor;
-      this.listTtd[1].name = this.listUji.data[0].nama_peserta;
+      this.headerTable[0].content = this.listUji?.data[0]?.skema_sertifikasi;
+      this.headerTable[1].content = this.listUji?.data[0]?.nama_tuk;
+      this.headerTable[2].content = this.listUji?.data[0]?.asesor;
+      this.headerTable[3].content = this.listUji?.data[0]?.nama_peserta;
+      this.headerTable[4].content = this.listUji?.data[0]?.mulai;
+      this.listTtd[0].name = this.listUji?.data[0]?.asesor;
+      this.listTtd[1].name = this.listUji?.data[0]?.nama_peserta;
     },
     async getPotensiAsesi() {
-      console.log(this.listUji.data[0].id)
-      let data = this.listUji.data[0].id ? await potensiAsesiResource2.get(this.listUji.data[0].id) : await potensiAsesiResource.list()
-      this.listPotensiAsesi = data.data;
+      let data = this.ttdAsesorPng ? await previewPotensiAsesiResource.get(this.listUji?.data[0]?.id) : await showPotensiAsesiResource.list()
+      this.listPotensiAsesi = data?.data;
     },
     async getPersyaratan() {
-      console.log(this.listUji.data[0].id)
-      let data = this.listUji.data[0].id ? await persyaratanResource2.get(this.listUji.data[0].id) : await persyaratanResource.list();
-      this.listPersyaratan = data.data
+      let data = this.ttdAsesorPng ? await previewPersyaratanResource.get(this.listUji?.data[0]?.id) : await showPersyaratanResource.list();
+      this.listPersyaratan = data?.data
+
     },
     async getAk07() {
       let data = await ak07Resource.get(this.idujikomp);
-      this.listAsesmen[0].answer = data.data[0].acuan_pembanding
-      this.listAsesmen[1].answer = data.data[0].metode_asesmen
-      this.listAsesmen[2].answer = data.data[0].instrumen_asesmen
-      this.listTtd[0].ttd = '/uploads/users/signature/' + data.data[0].ttd_asesor;
-      this.listTtd[1].ttd = '/uploads/users/signature/' + data.data[0].ttd_asesi;
+      this.ttdAsesorPng = data?.data[0]?.ttd_asesor !== undefined && data?.data[0]?.ttd_asesor !== null && data?.data[0]?.ttd_asesor !== '' ? true : false
+      this.ttdAsesiPng = data?.data[0]?.ttd_asesi !== undefined && data?.data[0]?.ttd_asesi !== null && data?.data[0]?.ttd_asesi !== '' ? true : false
+      this.listAsesmen[0].answer = data?.data[0]?.acuan_pembanding
+      this.listAsesmen[1].answer = data?.data[0]?.metode_asesmen
+      this.listAsesmen[2].answer = data?.data[0]?.instrumen_asesmen
+      this.listTtd[0].ttd = '/uploads/users/signature/' + data?.data[0]?.ttd_asesor ?? '';
+      this.listTtd[1].ttd = '/uploads/users/signature/' + data?.data[0]?.ttd_asesi ?? '';
     },
     submit() {
       this.listPotensiAsesi = this.listPotensiAsesi.map(element => {return {...element, potensi: element.potensi == true ? 1 : 0}})
       this.listPersyaratan = this.listPersyaratan.map(element => {return {...element, keterangan: element.keterangan == true ? 1 : 0}})
+      if(this.allowButtonSaveForAsesor) this.submitAsesor()
+      if(this.allowButtonSaveForAsesi) this.submitAsesi()
+    },
+    submitAsesor() {
+      this.listPotensiAsesi = this.listPotensiAsesi.map(element => {return {...element, potensi: element.potensi == true ? 1 : 0}})
+      this.listPersyaratan = this.listPersyaratan.map(element => {return {...element, keterangan: element.keterangan == true ? 1 : 0}})
       const formData = new FormData();
       formData.append('id_uji_komp', this.idujikomp);
-      formData.append('signature_asesor', this.$refs.signatureAsesor.save());
-      formData.append('signature_asesi', this.$refs.signatureAsesi.save());
+      formData.append('signature_asesor', this.$refs.signatureAsesor?.save())
       this.listAsesmen.forEach(element => {formData.append('asesmen[]', JSON.stringify(element))});
       this.listPotensiAsesi.forEach(element => { formData.append('potensi_asesi[]', JSON.stringify(element)) });
       this.listPersyaratan.forEach(element => { formData.append('persyaratan[]', JSON.stringify(element)) });
       storeAk07Resource.store(formData)
-        .then(response => {
-          this.$message({
-            message: 'FR AK 07 has been Submited successfully.',
-            type: 'success',
-            duration: 5 * 1000,
-          });
-          this.$router.push({ name: 'uji-komp-list' });
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-        })
-        .finally(() => {
-          this.loading = false;
+      .then(response => {
+        this.$message({
+          message: 'FR AK 07 has been Submited successfully.',
+          type: 'error',
+          duration: 5 * 1000,
         });
+        this.$router.push({ name: 'uji-komp-list' });
+      })
+      .catch(error => {
+        this.loading = false;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+    },
+    submitAsesi() {
+      const formData = new FormData();
+      formData.append('id_uji_komp', this.idujikomp);
+      formData.append('signature_asesi', this.$refs.signatureAsesi?.save());
+      updateAk07Resource.store(formData)
+      .then(response => {
+        this.$message({
+          message: 'FR AK 07 has been Submited successfully.',
+          type: 'success',
+          duration: 5 * 1000,
+        });
+        this.$router.push({ name: 'uji-komp-list' });
+      })
+      .catch(error => {
+        this.loading = false;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
     },
     clearTtdAsesi() {
       this.$refs.signatureAsesi.clear();
