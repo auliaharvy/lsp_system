@@ -29,8 +29,19 @@
           :value="item.id"
         />
       </el-select>
-      <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-input
+        v-model="query.keyword"
+        :placeholder="$t('table.keyword')"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-button
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >
         {{ $t('table.search') }}
       </el-button>
     </div>
@@ -42,233 +53,515 @@
       style="width: 100%;padding-top: 15px;"
       :header-cell-style="{ 'text-align': 'center', 'background': '#324157', 'color': 'white' }"
     >
-      <el-table-column label="No" width="50" align="center">
+      <el-table-column
+        label="No"
+        width="50"
+        align="center"
+      >
         <template slot-scope="scope">
           {{ scope.row.index }}
         </template>
       </el-table-column>
-      <el-table-column align="left" :label="$t('uji.table.schedule')" min-width="100px">
+      <el-table-column
+        align="left"
+        :label="$t('uji.table.schedule')"
+        min-width="100px"
+      >
         <template slot-scope="scope">
           <span> {{ scope.row.jadwal }} </span>
         </template>
       </el-table-column>
-      <el-table-column align="left" :label="$t('uji.table.skema')" min-width="150px">
+      <el-table-column
+        align="left"
+        :label="$t('uji.table.skema')"
+        min-width="150px"
+      >
         <template slot-scope="scope">
           <span> {{ scope.row.kode_skema }} / {{ scope.row.skema_sertifikasi }} </span>
         </template>
       </el-table-column>
 
-      <el-table-column align="left" :label="$t('jadwal.table.asesor')">
+      <el-table-column
+        align="left"
+        :label="$t('jadwal.table.asesor')"
+      >
         <template slot-scope="scope">
           {{ scope.row.asesor }}
         </template>
       </el-table-column>
 
-      <el-table-column align="left" :label="$t('uji.table.asesi')">
+      <el-table-column
+        align="left"
+        :label="$t('uji.table.asesi')"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.nama_peserta }} ({{ scope.row.email_peserta }})</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('uji.table.mulai')">
+      <el-table-column
+        align="center"
+        :label="$t('uji.table.mulai')"
+      >
         <template slot-scope="scope">
           <span> {{ scope.row.mulai }} </span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Status">
+      <el-table-column
+        align="center"
+        label="Status"
+      >
         <template slot-scope="scope">
-          <el-progress type="dashboard" :percentage="scope.row.persentase" :color="colors" />
+          <el-progress
+            type="dashboard"
+            :percentage="scope.row.persentase"
+            :color="colors"
+          />
           <br>
-          <el-tag v-if="scope.row.status === 1" type="success" effect="dark"> Selesai </el-tag>
-          <el-tag v-if="scope.row.status === 0" type="danger" effect="dark"> Belum Selesai </el-tag>
+          <el-tag
+            v-if="scope.row.status === 1"
+            type="success"
+            effect="dark"
+          >
+            Selesai
+          </el-tag>
+          <el-tag
+            v-if="scope.row.status === 0"
+            type="danger"
+            effect="dark"
+          >
+            Belum Selesai
+          </el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="query.role !== 'user'" align="center" label="Action">
+      <el-table-column
+        v-if="query.role !== 'user'"
+        align="center"
+        label="Action"
+      >
         <template slot-scope="scope">
           <router-link :to="{ name: 'preview-apl-01', params:{ iduji: scope.row.id, asesor: scope.row.asesor }}">
-            <el-button type="primary" icon="el-icon-view">Preview</el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-view"
+            >
+              Preview
+            </el-button>
           </router-link>
           <!-- <el-button style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="generateReport(scope.row.id)">Print</el-button> -->
           <!-- <el-button v-if="scope.row.status === 1" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button> -->
-          <el-button v-if="scope.row.persentase > 99" style="margin-top: 10px;" type="warning" icon="el-icon-view" @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)">Print</el-button>
+          <el-button
+            v-if="scope.row.persentase > 99"
+            style="margin-top: 10px;"
+            type="warning"
+            icon="el-icon-view"
+            @click="showDialogPrint(scope.row.id, scope.row.asesor, scope.row.nama_peserta)"
+          >
+            Print
+          </el-button>
           <el-dialog
             v-loading="loading"
             title="Download Data"
             :visible.sync="dialogVisible"
             width="50%"
           >
-            <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">Check all</el-checkbox>
+            <el-checkbox
+              v-model="checkAll"
+              :indeterminate="isIndeterminate"
+              @change="handleCheckAllChange"
+            >
+              Check all
+            </el-checkbox>
             <!-- <el-checkbox-group v-model="checkedDataUjiKomp" @change="handleCheckedCitiesChange"> -->
             <!-- <el-checkbox v-for="ujiKomp in dataUjiKomp" :key="ujiKomp" :label="ujiKomp" style="">
                 <div style="font-weight: 400;">{{ ujiKomp }}</div>
               </el-checkbox> -->
-            <table v-loading="loading" style="width: 100%;">
+            <table
+              v-loading="loading"
+              style="width: 100%;"
+            >
               <tr style="width: 100%;">
                 <td style="width: 25%;">
-                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
+                  <div
+                    v-for="ujiKomp in dataUjiKomp"
+                    :key="ujiKomp.index"
+                    :label="ujiKomp"
+                    style="width: 25%; text-align: left;"
+                  >
                     <!-- <el-checkbox v-if="ujiKomp.index < 5">{{ ujiKomp.name }})</el-checkbox> -->
-                    <el-checkbox v-if="ujiKomp.index < 5" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
+                    <el-checkbox
+                      v-if="ujiKomp.index < 5"
+                      v-model="ujiKomp.value"
+                      @change="handleCheckedCitiesChange"
+                    >
+                      {{ ujiKomp.name }}
+                    </el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
-                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 4 && ujiKomp.index < 9" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
+                  <div
+                    v-for="ujiKomp in dataUjiKomp"
+                    :key="ujiKomp.index"
+                    :label="ujiKomp"
+                    style="width: 25%; text-align: left;"
+                  >
+                    <el-checkbox
+                      v-if="ujiKomp.index > 4 && ujiKomp.index < 9"
+                      v-model="ujiKomp.value"
+                      @change="handleCheckedCitiesChange"
+                    >
+                      {{ ujiKomp.name }}
+                    </el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
-                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 8 && ujiKomp.index < 13" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
+                  <div
+                    v-for="ujiKomp in dataUjiKomp"
+                    :key="ujiKomp.index"
+                    :label="ujiKomp"
+                    style="width: 25%; text-align: left;"
+                  >
+                    <el-checkbox
+                      v-if="ujiKomp.index > 8 && ujiKomp.index < 13"
+                      v-model="ujiKomp.value"
+                      @change="handleCheckedCitiesChange"
+                    >
+                      {{ ujiKomp.name }}
+                    </el-checkbox>
                   </div>
                 </td>
                 <td style="width: 25%;">
-                  <div v-for="ujiKomp in dataUjiKomp" :key="ujiKomp.index" :label="ujiKomp" style="width: 25%; text-align: left;">
-                    <el-checkbox v-if="ujiKomp.index > 12 && ujiKomp.index < 18" v-model="ujiKomp.value" @change="handleCheckedCitiesChange">{{ ujiKomp.name }}</el-checkbox>
+                  <div
+                    v-for="ujiKomp in dataUjiKomp"
+                    :key="ujiKomp.index"
+                    :label="ujiKomp"
+                    style="width: 25%; text-align: left;"
+                  >
+                    <el-checkbox
+                      v-if="ujiKomp.index > 12 && ujiKomp.index < 18"
+                      v-model="ujiKomp.value"
+                      @change="handleCheckedCitiesChange"
+                    >
+                      {{ ujiKomp.name }}
+                    </el-checkbox>
                   </div>
                 </td>
               </tr>
             </table>
             <!-- </el-checkbox-group> -->
-            <span v-if="allUnchecked" slot="footer" class="dialog-footer">
+            <span
+              v-if="allUnchecked"
+              slot="footer"
+              class="dialog-footer"
+            >
               <!-- <el-button @click="dialogVisible = false">Cancel</el-button> -->
-              <el-button type="primary" @click="generateReport()">Print</el-button>
+              <el-button
+                type="primary"
+                @click="generateReport()"
+              >Print</el-button>
             </span>
           </el-dialog>
         </template>
       </el-table-column>s
 
-      <el-table-column v-if="query.role !== 'user'" type="expand">
+      <el-table-column
+        v-if="query.role !== 'user'"
+        type="expand"
+      >
         <template slot-scope="scope">
           <el-row :gutter="20">
-            <el-col class="table-expand" :span="4">
+            <el-col
+              class="table-expand"
+              :span="4"
+            >
               <div class="grid-content">
                 <ul>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-APL-01" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-APL-01"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-apl-01', params: { id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">APL 01  <i v-if="scope.row.id_apl_01 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">APL 01  <i
+                          v-if="scope.row.id_apl_01 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-APL-02" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-APL-02"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-apl-02', params: { asesor: scope.row.asesor ,id_apl_01: scope.row.id_apl_01, id_apl_02: scope.row.id_apl_02, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">APL 02  <i v-if="scope.row.id_apl_02 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">APL 02  <i
+                          v-if="scope.row.id_apl_02 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    MAPA 01  <i v-if="scope.row.id_mapa_01 !== null" type="success" class="el-icon-check" />
+                    MAPA 01  <i
+                      v-if="scope.row.id_mapa_01 !== null"
+                      type="success"
+                      class="el-icon-check"
+                    />
                   </li>
                   <li class="list-progress">
-                    Skema  <i v-if="scope.row.id_skema !== null" type="success" class="el-icon-check" />
+                    Skema  <i
+                      v-if="scope.row.id_skema !== null"
+                      type="success"
+                      class="el-icon-check"
+                    />
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-MAPA-02" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-MAPA-02"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-mapa-02', params: { id_mapa_02: scope.row.id_mapa_02, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">MAPA 02  <i v-if="scope.row.id_mapa_02 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">MAPA 02  <i
+                          v-if="scope.row.id_mapa_02 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-IA-01"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ak-01', params: { id_ak_01: scope.row.id_ak_01, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">AK 01  <i v-if="scope.row.id_ak_01 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">AK 01  <i
+                          v-if="scope.row.id_ak_01 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
                     <router-link :to="{ name: 'form-ak-04', params: { id_ak_04: scope.row.id_ak_04, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                      <span class="link">AK 04  <i v-if="scope.row.id_ak_04!== null" type="success" class="el-icon-check" /></span>
+                      <span class="link">AK 04  <i
+                        v-if="scope.row.id_ak_04!== null"
+                        type="success"
+                        class="el-icon-check"
+                      /></span>
                     </router-link>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-IA-01"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ia-01', params: { id_ia_01: scope.row.id_ia_01, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">IA 01  <i v-if="scope.row.id_ia_01 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">IA 01  <i
+                          v-if="scope.row.id_ia_01 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-IA-02" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-IA-02"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ia-02', params: { id_ia_02: scope.row.id_ia_02, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">IA 02  <i v-if="scope.row.id_ia_02 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">IA 02  <i
+                          v-if="scope.row.id_ia_02 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                 </ul>
               </div>
             </el-col>
-            <el-col class="table-expand" :span="4">
+            <el-col
+              class="table-expand"
+              :span="4"
+            >
               <div class="grid-content">
                 <ul>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-IA-01" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-IA-01"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ia-03', params: { id_ia_03: scope.row.id_ia_03, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">IA 03  <i v-if="scope.row.id_ia_03 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">IA 03  <i
+                          v-if="scope.row.id_ia_03 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-IA-05" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-IA-05"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ia-05', params: { id_ia_05: scope.row.id_ia_05, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">IA 05  <i v-if="scope.row.id_ia_05!== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">IA 05  <i
+                          v-if="scope.row.id_ia_05!== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-IA-06" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-IA-06"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ia-06', params: { id_ia_06: scope.row.id_ia_06, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">IA 06  <i v-if="scope.row.id_ia_06!== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">IA 06  <i
+                          v-if="scope.row.id_ia_06!== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-IA-07" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-IA-07"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ia-07', params: { id_ia_07: scope.row.id_ia_07, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">IA 07  <i v-if="scope.row.id_ia_07!== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">IA 07  <i
+                          v-if="scope.row.id_ia_07!== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-IA-11" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-IA-11"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ia-11', params: { id_ia_11: scope.row.id_ia_11, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">IA 11  <i v-if="scope.row.id_ia_11!== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">IA 11  <i
+                          v-if="scope.row.id_ia_11!== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-AK-02" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-AK-02"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ak-02', params: { id_ak_02: scope.row.id_ak_02, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">AK 02  <i v-if="scope.row.id_ak_02!== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">AK 02  <i
+                          v-if="scope.row.id_ak_02!== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-AK-03" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-AK-03"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ak-03', params: { id_ak_03: scope.row.id_ak_03, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">AK 03  <i v-if="scope.row.id_ak_03!== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">AK 03  <i
+                          v-if="scope.row.id_ak_03!== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-AK-05" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-AK-05"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ak-05', params: { id_ak_05: scope.row.id_ak_05, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">AK 05  <i v-if="scope.row.id_ak_05 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">AK 05  <i
+                          v-if="scope.row.id_ak_05 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-AK-06" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-AK-06"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-ak-06', params: { id_ak_06: scope.row.id_ak_06, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">AK 06  <i v-if="scope.row.id_ak_06 !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">AK 06  <i
+                          v-if="scope.row.id_ak_06 !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
                   <li class="list-progress">
-                    <el-tooltip class="item" effect="dark" content="View FR-VA" placement="top-start">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="View FR-VA"
+                      placement="top-start"
+                    >
                       <router-link :to="{ name: 'form-va', params: { id_va: scope.row.id_va, id_apl_01: scope.row.id_apl_01, id_skema: scope.row.id_skema, id_uji: scope.row.id }}">
-                        <span class="link">VA  <i v-if="scope.row.id_va !== null" type="success" class="el-icon-check" /></span>
+                        <span class="link">VA  <i
+                          v-if="scope.row.id_va !== null"
+                          type="success"
+                          class="el-icon-check"
+                        /></span>
                       </router-link>
                     </el-tooltip>
                   </li>
@@ -279,7 +572,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="query.page"
+      :limit.sync="query.limit"
+      @pagination="getList"
+    />
   </div>
 </template>
 <script>
