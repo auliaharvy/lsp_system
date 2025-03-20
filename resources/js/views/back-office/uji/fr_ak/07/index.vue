@@ -75,7 +75,7 @@
           <el-table-column align="center">
             <template slot-scope="scope">
               <span v-if="ttdAsesorPng && scope.row.potensi == 1"><i class="el-icon-success ceklist-icon" /></span>
-              <span v-else-if="ttdAsesorPng && scope.row.potensi == 0"></span>
+              <span v-else-if="ttdAsesorPng && scope.row.potensi == 0" />
               <el-checkbox
                 v-else-if="['admin', 'assesor'].includes(roles[0])"
                 v-model="scope.row.potensi"
@@ -115,7 +115,7 @@
             <el-table-column align="center">
               <template slot-scope="scope">
                 <span v-if="ttdAsesorPng && scope.row.keterangan == 1"><i class="el-icon-success ceklist-icon" /></span>
-                <span v-else-if="ttdAsesorPng && scope.row.keterangan == 0"></span>
+                <span v-else-if="ttdAsesorPng && scope.row.keterangan == 0" />
                 <el-checkbox
                   v-else-if="['admin', 'assesor'].includes(roles[0])"
                   v-model="scope.row.keterangan"
@@ -151,8 +151,11 @@
             </el-table-column>
             <el-table-column align="left">
               <template slot-scope="scope">
-                <span v-if="['admin', 'assesor'].includes(roles[0]) || (roles[0] == 'user' && (scope.row.answer != undefined || scope.row.answer != null || scope.row.answer != ''))">{{ scope.row.answer }}</span>
-                <el-input v-else v-model="scope.row.answer" />
+                <el-input
+                  v-if="['admin', 'assesor'].includes(roles[0]) && hasFilledForm == false"
+                  v-model="scope.row.answer"
+                />
+                <span v-else>{{ scope.row.answer }}</span>
               </template>
             </el-table-column>
           </el-table-column>
@@ -209,7 +212,7 @@
         </el-table>
         <br>
         <el-table
-          v-if="['user', 'admin'].includes(roles[0]) || (roles[0] == 'admin' && ttdAsesiPng)"
+          v-if="['user', 'admin'].includes(roles[0]) || (roles[0] == 'assesor' && ttdAsesiPng)"
           v-loading="loading"
           :data="[listTtd[1]]"
           fit
@@ -293,6 +296,7 @@ export default {
   },
   data() {
     return {
+      hasFilledForm: false,
       listPotensiAsesi: [],
       listPersyaratan: [],
       listAsesmen: [
@@ -376,6 +380,7 @@ export default {
     },
     async getAk07() {
       let data = await ak07Resource.get(this.idujikomp);
+      this.hasFilledForm = Array.isArray(data) ? (data.lenght ? true : false) : (data?.data?.length ? true : false)
       this.ttdAsesorPng = data?.data[0]?.ttd_asesor !== undefined && data?.data[0]?.ttd_asesor !== null && data?.data[0]?.ttd_asesor !== '' ? true : false
       this.ttdAsesiPng = data?.data[0]?.ttd_asesi !== undefined && data?.data[0]?.ttd_asesi !== null && data?.data[0]?.ttd_asesi !== '' ? true : false
       this.listAsesmen[0].answer = data?.data[0]?.acuan_pembanding
@@ -403,7 +408,7 @@ export default {
       .then(response => {
         this.$message({
           message: 'FR AK 07 has been Submited successfully.',
-          type: 'error',
+          type: 'success',
           duration: 5 * 1000,
         });
         this.$router.push({ name: 'uji-komp-list' });

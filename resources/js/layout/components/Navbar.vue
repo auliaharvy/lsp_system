@@ -1,25 +1,52 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb
+      id="breadcrumb-container"
+      class="breadcrumb-container"
+    />
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <search
+          id="header-search"
+          class="right-menu-item"
+        />
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <screenfull
+          id="screenfull"
+          class="right-menu-item hover-effect"
+        />
 
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
+        <el-tooltip
+          :content="$t('navbar.size')"
+          effect="dark"
+          placement="bottom"
+        >
+          <size-select
+            id="size-select"
+            class="right-menu-item hover-effect"
+          />
         </el-tooltip>
 
         <lang-select class="right-menu-item hover-effect" />
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="click"
+      >
         <div class="avatar-wrapper">
-          <img src="@/assets/login/logo.png" class="user-avatar">
+          <img
+            src="@/assets/login/logo.png"
+            class="user-avatar"
+          >
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -28,21 +55,37 @@
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>
-          <router-link v-show="userId !== null" :to="`/profile/edit`">
+          <router-link
+            v-show="userId !== null"
+            :to="`/profile/edit`"
+          >
             <el-dropdown-item>
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+            <span
+              style="display:block;"
+              @click="logout"
+            >{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
     <!-- dialog set user tanda tangan -->
-    <el-dialog v-loading="loading" title="Akun anda belum ada tanda tangan silakan buat" :visible.sync="dialogTtd" :close-on-click-modal="false">
+    <el-dialog
+      v-loading="loading"
+      title="Akun anda belum ada tanda tangan silakan buat"
+      :visible.sync="dialogTtd"
+      :close-on-click-modal="false"
+    >
       <div class="form-container">
-        <el-form ref="setReferenceForm" label-position="left" label-width="150px" style="max-width: 500px;">
+        <el-form
+          ref="setReferenceForm"
+          label-position="left"
+          label-width="150px"
+          style="max-width: 500px;"
+        >
           <el-form-item label="Tanda Tangan">
             <vueSignature
               ref="signature"
@@ -52,14 +95,25 @@
               :disabled="false"
               style="border-style: outset"
             />
-            <el-button size="small" @click="clear">Clear</el-button>
+            <el-button
+              size="small"
+              @click="clear"
+            >
+              Clear
+            </el-button>
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <!-- <el-button @click="dialogTtd = false">
             {{ $t('table.cancel') }}
           </el-button> -->
-          <el-button type="primary" @click="saveSign">
+          <el-button
+            type="primary"
+            @click="saveSign"
+          >
             {{ $t('table.confirm') }}
           </el-button>
         </div>
